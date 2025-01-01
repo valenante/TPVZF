@@ -1,0 +1,114 @@
+/* Fondo del modal superpuesto */
+.modal-overlay-carritoModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Contenido del modal */
+  .modal-content-carritoModal {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    font-family: 'Roboto', sans-serif; /* Fuente moderna y fina */
+    color: #333; /* Texto más elegante */
+    position: relative;
+  }
+  
+  /* Botón para cerrar el modal */
+  .modal-close-carritoModal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: rgb(84, 20, 108);
+  }
+  
+  /* Lista de productos */
+  .modal-items-carritoModal {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+  
+  .modal-item-carritoModal {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Título del producto */
+  .item-title-carritoModal {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  /* Detalles del producto */
+  .item-details-carritoModal {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 3px 0;
+  }
+  
+  /* Precio del producto */
+  .item-price-carritoModal {
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgb(84, 20, 108);
+  }
+  
+  /* Botón de eliminar */
+  .btn-delete-carritoModal {
+    background-color: #ff4d4d;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-delete-carritoModal:hover {
+    background-color: #ff1a1a;
+  }
+  
+  /* Total del carrito */
+  .total-carritoModal {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-top: 20px;
+    color: rgb(84, 20, 108);
+  }
+  
+  /* Botón de enviar pedido */
+  .btn-submit-carritoModal {
+    background-color: rgb(84, 20, 108);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-submit-carritoModal:hover {
+    background-color: rgba(84, 20, 108, 0.8);
+  }
+  

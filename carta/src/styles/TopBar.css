@@ -1,0 +1,10 @@
+/* Estilo para la barra superior */
+.top-bar {
+    padding: 10px 0; /* Espaciado vertical */
+  }
+  
+  .top-bar-logo {
+    height: 6em; /* Altura ajustada del logo */
+    object-fit: contain; /* Asegura que el logo mantenga proporciones */
+  }
+  

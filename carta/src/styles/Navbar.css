@@ -1,0 +1,75 @@
+/* Estilo para el navbar */
+.navbar {
+    display: flex;
+    justify-content: center; /* Centrar contenido horizontalmente */
+    align-items: center; /* Centrar contenido verticalmente */
+    padding: 10px 20px;
+    background-color: #ffffff; /* Fondo blanco */
+    margin-bottom: 2em;
+  }
+  
+  /* Estilo para el select */
+  .navbar-select {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid rgb(84, 20, 108);
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: rgb(84, 20, 108);
+    outline: none;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .navbar-select:hover {
+    background-color: rgba(84, 20, 108, 0.1);
+  }
+  
+  /* Estilo para el ícono del carrito */
+  .carrito-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgb(84, 20, 108);
+    font-size: 20px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .carrito-icono:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Otros estilos permanecen iguales */
+  
+  
+  /* Modal del carrito (opcional, por si se usa) */
+  .carrito-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 2px solid rgb(84, 20, 108);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Otros elementos del modal */
+  .carrito-modal button {
+    background-color: rgb(84, 20, 108);
+    color: #ffffff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .carrito-modal button:hover {
+    background-color: rgba(84, 20, 108, 0.8);
+  }
+  

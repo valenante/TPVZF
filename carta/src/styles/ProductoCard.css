@@ -1,0 +1,83 @@
+/* Estilo para la tarjeta del producto */
+.producto-card-prodCard {
+  border-bottom: 5px solid rgb(84, 20, 108); /* Borde inferior más grueso */
+  margin-bottom: 2em;
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  color: #333; /* Texto moderno */
+}
+
+/* Hover para la tarjeta */
+.producto-card-prodCard:hover {
+  transform: translateY(-5px); /* Pequeño desplazamiento al pasar el mouse */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+}
+
+/* Contenedor principal de contenido */
+.producto-card-content-prodCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px; /* Espaciado entre columnas */
+}
+
+/* Columna izquierda: Nombre y descripción */
+.producto-info-prodCard {
+  flex: 6; /* Ocupa el 70% */
+  text-align: left;
+}
+
+.producto-info-prodCard h3 {
+  font-size: 1.5rem;
+  color: rgb(84, 20, 108);
+  margin-bottom: 10px;
+}
+
+.producto-info-prodCard p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.producto-info-prodCard span {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: rgb(84, 20, 108);
+  margin-bottom: 15px;
+}
+
+/* Botón de agregar al carrito */
+.agregar-carrito-btn-prodCard {
+  background-color: rgb(84, 20, 108);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.agregar-carrito-btn-prodCard:hover {
+  background-color: rgba(84, 20, 108, 0.8);
+  transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el mouse */
+}
+
+/* Columna derecha: Imagen */
+.producto-img-container-prodCard {
+  flex: 4; /* Ocupa el 30% */
+  text-align: right;
+}
+
+.producto-img-container-prodCard img {
+  width: 35%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}

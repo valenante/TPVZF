@@ -1,0 +1,126 @@
+/* Fondo del modal superpuesto */
+.modal-detalle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que esté sobre otros elementos */
+  }
+  
+  /* Contenido del modal */
+  .modal-contenido-detalle {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    font-family: 'Roboto', sans-serif; /* Fuente moderna y fina */
+    color: #333;
+    position: relative;
+    overflow-y: auto; /* Permite scroll si hay mucho contenido */
+    max-height: 80%;
+  }
+  
+  /* Títulos y descripciones */
+  .modal-contenido-detalle h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: rgb(84, 20, 108); /* Morado */
+  }
+  
+  .modal-contenido-detalle p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  
+  /* Ingredientes y opciones */
+  .modal-contenido-detalle h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: rgb(84, 20, 108); /* Morado */
+  }
+  
+  .modal-contenido-detalle ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+  
+  .modal-contenido-detalle ul li {
+    margin-bottom: 10px;
+  }
+  
+  .modal-contenido-detalle label {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  /* Cantidad */
+  .cantidad-detalle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .cantidad-detalle button {
+    background-color: rgb(84, 20, 108);
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .cantidad-detalle button:hover {
+    background-color: rgba(84, 20, 108, 0.8);
+  }
+  
+  /* Botones */
+  .modal-botones-detalle {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .modal-botones-detalle button {
+    background-color: #ddd;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .modal-botones-detalle button:hover {
+    background-color: #ccc;
+  }
+  
+  .modal-botones-detalle button:last-child {
+    background-color: rgb(84, 20, 108);
+    color: #fff;
+  }
+  
+  .modal-botones-detalle button:last-child:hover {
+    background-color: rgba(84, 20, 108, 0.8);
+  }
+
+  .ingrediente-label-detalle input{
+    font-size: 1rem;
+    color: #333;
+    margin: 5px;
+    line-height: 1.5;
+  }
+  
