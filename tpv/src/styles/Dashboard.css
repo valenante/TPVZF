@@ -1,0 +1,30 @@
+.mesa {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    text-align: center;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .mesa.disponible {
+    background-color: green;
+  }
+  
+  .mesa.ocupada {
+    background-color: orange;
+  }
+  
+  .mesa.reservada {
+    background-color: blue;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
