@@ -11,6 +11,28 @@ exports.getProductos = async (req, res) => {
     }
 };
 
+exports.getCategorias = async (req, res) => {
+    const { type } = req.params;
+    try {
+        const categorias = await Producto.distinct('categoria', { tipo: type });
+        res.status(200).json({ categorias });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener las categorías' });
+    }
+};
+
+exports.getProductosByCategoria = async (req, res) => {
+    const { type, categoria } = req.params;
+    try {
+        const productos = await Producto.find({ tipo: type, categoria });
+        res.status(200).json(productos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener los productos' });
+    }
+}
+
 // Obtener un producto por ID
 exports.getProductoById = async (req, res) => {
     const { id } = req.params;

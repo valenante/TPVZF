@@ -13,6 +13,12 @@ router.get('/:id', [
     check('id', 'El ID debe ser un ID de MongoDB válido').isMongoId()
 ], productosController.getProductoById);
 
+//Obtener categorias de productos
+router.get('/categorias/:type', productosController.getCategorias);
+
+//Obtener productos por categoria
+router.get('/:type/:categoria', productosController.getProductosByCategoria);
+
 // Crear un nuevo producto (solo usuarios autenticados y con rol admin)
 router.post(
     '/',
