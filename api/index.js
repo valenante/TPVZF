@@ -32,7 +32,7 @@ const server = http.createServer(app); // Crear el servidor HTTP
 
 // Configuración de CORS
 const corsOptions = {
-  origin: 'http://192.168.1.133:3001', // Dirección del frontend
+  origin: '*', // Dirección del frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
   credentials: true, // Permitir envío de cookies si es necesario
 };
@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 });
 
 // Variables de entorno y configuración de MongoDB
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/ZF";
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/dataBaseZF";
 const PORT = process.env.PORT || 3000;
 
 // Log inicial
