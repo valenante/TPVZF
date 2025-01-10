@@ -14,10 +14,13 @@ router.get('/:id', [
 ], productosController.getProductoById);
 
 //Obtener categorias de productos
-router.get('/categorias/:type', productosController.getCategorias);
+router.get('/categories/:type', productosController.getCategoriasByType);
 
 //Obtener productos por categoria
-router.get('/:type/:categoria', productosController.getProductosByCategoria);
+router.get('/category/:category', productosController.getProductosByCategory);
+
+//Editar producto
+router.put('/:id', productosController.updateProducto);
 
 // Crear un nuevo producto (solo usuarios autenticados y con rol admin)
 router.post(
