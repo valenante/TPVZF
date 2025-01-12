@@ -137,12 +137,20 @@ exports.getPedidoById = async (req, res) => {
     }
 };
 
-//Obtener pedidos pendientes
+// Obtener pedidos pendientes
 exports.getPedidosPendientes = async (req, res) => {
     try {
-        const pedidos = await Pedido.find({ estado: 'pendiente' })
+        const { tipo } = req.query; // Obtener el tipo de la consulta (plato o bebida)
+        
+        const filter = { estado: 'pendiente' };
+        if (tipo) {
+            filter['productos.tipo'] = tipo; // Filtrar productos por tipo si se especifica
+        }
+
+        const pedidos = await Pedido.find(filter)
             .populate('mesa')
             .populate('productos.producto'); // Expande los detalles del producto
+        
         res.status(200).json(pedidos);
     } catch (error) {
         console.error('Error al obtener pedidos pendientes:', error);
@@ -150,15 +158,25 @@ exports.getPedidosPendientes = async (req, res) => {
     }
 };
 
-//Obtener pedidos finalizados
+// Obtener pedidos finalizados
 exports.getPedidosFinalizados = async (req, res) => {
     try {
+        const { tipo } = req.query; // Obtener el tipo de la consulta (plato o bebida)
         const hace20Minutos = new Date(Date.now() - 20 * 60 * 1000); // Fecha límite
-        const pedidosFinalizados = await Pedido.find({
+
+        const filter = {
             estado: 'listo',
             fecha: { $gte: hace20Minutos },
-        }).populate('mesa')
+        };
+
+        if (tipo) {
+            filter['productos.tipo'] = tipo; // Filtrar productos por tipo si se especifica
+        }
+
+        const pedidosFinalizados = await Pedido.find(filter)
+            .populate('mesa')
             .populate('productos.producto'); // Expande los detalles del producto
+        
         res.status(200).json(pedidosFinalizados);
     } catch (error) {
         console.error('Error al obtener pedidos finalizados:', error);
