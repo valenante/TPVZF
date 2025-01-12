@@ -11,28 +11,6 @@ exports.getProductos = async (req, res) => {
     }
 };
 
-exports.getCategorias = async (req, res) => {
-    const { type } = req.params;
-    try {
-        const categorias = await Producto.distinct('categoria', { tipo: type });
-        res.status(200).json({ categorias });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener las categorías' });
-    }
-};
-
-exports.getProductosByCategoria = async (req, res) => {
-    const { type, categoria } = req.params;
-    try {
-        const productos = await Producto.find({ tipo: type, categoria });
-        res.status(200).json(productos);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener los productos' });
-    }
-}
-
 // Obtener un producto por ID
 exports.getProductoById = async (req, res) => {
     const { id } = req.params;
@@ -47,6 +25,55 @@ exports.getProductoById = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener el producto' });
     }
 };
+
+exports.getCategoriasByType = async (req, res) => {
+    const { type } = req.params;
+    console.log("Tipo de producto:", type); // Esto debería mostrar 'platos' o 'bebidas'
+
+    try {
+        const categorias = await Producto.distinct('categoria', { tipo: type });
+        console.log("Categorías encontradas en el backend:", categorias); // Esto debería mostrar ['especiales']
+        
+        res.status(200).json({ categories: categorias });
+    } catch (error) {
+        console.error("Error al obtener categorías:", error);
+        res.status(500).json({ error: 'Error al obtener las categorías' });
+    }
+};
+
+//Editar producto
+exports.updateProducto = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const productoActualizado = await Producto.findByIdAndUpdate
+        (id, req.body, { new: true });
+        if (req.file) {
+            productoActualizado.img = `/images/${req.file.filename}`;
+        }
+        if (!productoActualizado) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        res.status(200).json(productoActualizado);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ error: 'Error al actualizar el producto. Verifica los datos enviados.' });
+    }
+}
+
+exports.getProductosByCategory = async (req, res) => {
+    const { category } = req.params;
+    console.log("Categoría de producto:", category); // Esto debería mostrar 'especiales'
+
+    try {
+        const productos = await Producto.find({ categoria: category });
+        console.log("Productos encontrados en el backend:", productos); // Esto debería mostrar los productos de la categoría 'especiales'
+        
+        res.status(200).json({ products: productos });
+    } catch (error) {
+        console.error("Error al obtener productos por categoría:", error);
+        res.status(500).json({ error: 'Error al obtener los productos' });
+    }
+}
 
 // Crear un nuevo producto
 exports.createProducto = async (req, res) => {
