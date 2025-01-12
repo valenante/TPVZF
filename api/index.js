@@ -51,6 +51,9 @@ app.use(compression());
 // Middleware para parsear JSON
 app.use(express.json());
 
+// Middleware para interpretar datos codificados en la URL
+app.use(express.urlencoded({ extended: true }));
+
 // Middleware para compartir `io` con las rutas
 app.use((req, res, next) => {
   req.io = io; // Compartir la instancia de Socket.IO con los controladores
