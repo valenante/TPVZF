@@ -10,7 +10,7 @@ const getToken = () => localStorage.getItem('token');
 
 // Configurar Axios con la base URL y el interceptor
 const api = axios.create({
-  baseURL: 'http://192.168.179.10:3000/api', // Ajusta según tu backend
+  baseURL: `http://${window.location.hostname}:3000/api`
 });
 
 api.interceptors.request.use(

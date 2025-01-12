@@ -9,10 +9,14 @@ const Carta = () => {
     cargarProductos(); // Cargar productos al montar el componente
   }, [cargarProductos]);
 
-  // Filtrar productos por categoría seleccionada
-  const productosFiltrados = categoriaSeleccionada
-    ? productos.filter((producto) => producto.categoria === categoriaSeleccionada)
-    : productos;
+  // Filtrar productos por categoría seleccionada y por estado habilitado
+  const productosFiltrados = productos.filter((producto) => {
+    const esCategoriaValida = categoriaSeleccionada
+      ? producto.categoria === categoriaSeleccionada
+      : true; // Si no hay categoría seleccionada, incluir todos
+    const estaHabilitado = producto.estado === "habilitado";
+    return esCategoriaValida && estaHabilitado;
+  });
 
   return (
     <div className="productos-grid">

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importar `useNavigate`
 import api from '../utils/api'; // Configuración de Axios
 import '../styles/Dashboard.css'; // Estilos CSS
+import Navbar from '../components/Navbar/Navbar'; // Importar el componente
 
 const Dashboard = () => {
   const [mesas, setMesas] = useState([]);
@@ -25,12 +26,9 @@ const Dashboard = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div>
-      <nav className="navbar">
-        <button>Platos</button>
-        <button>Bebidas</button>
-        <button>Reservas</button>
-      </nav>
       <div className="dashboard">
         {mesas.map((mesa) => (
           <div
@@ -44,6 +42,7 @@ const Dashboard = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 

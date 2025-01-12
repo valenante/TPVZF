@@ -36,35 +36,41 @@ const CarritoModal = ({ cerrarModal }) => {
   const enviarPedido = async () => {
     try {
       const carritoId = localStorage.getItem('carritoMongoId');
-
+  
       // Datos para el pedido
       const pedido = {
         mesa: mesaId, // Reemplaza esto con el ID de la mesa
+        cartId: carritoId,
         productos: carrito.items.map((item) => ({
-          producto: item.productId._id,
-          cantidad: item.cantidad,
-          opciones: item.opciones || {},
-          ingredientes: item.ingredientes || [],
+          producto: item.productId._id, // Referencia al producto original
+          nombre: item.productId.nombre, // Nombre del producto
+          tipo: item.productId.tipo, // Tipo (plato, bebida)
+          categoria: item.productId.categoria, // Categoría del producto
+          cantidad: item.cantidad, // Cantidad pedida
+          total: item.productId.precios.precioBase * item.cantidad, // Total del producto
+          precios: item.productId.precios, // Detalle de precios
+          ingredientesEliminados: item.ingredientesEliminados || [], // Ingredientes eliminados
+          especificaciones: item.especificaciones || [], // Especificaciones adicionales
         })),
         total: carrito.items.reduce((total, item) => {
-          const producto = item.productId;
-          return total + producto.precios.precioBase * item.cantidad;
+          const precioBase = item.productId.precios.precioBase;
+          return total + precioBase * item.cantidad;
         }, 0),
         comensales: 2, // Ejemplo: Número de personas
-        cartId: carritoId,
+        alergias: carrito.alergias || '', // Información de alergias (opcional)
       };
-
+  
+      // Enviar el pedido al servidor
       const response = await api.post('/pedidos', pedido);
-
+  
+      // Limpiar el carrito y cerrar el modal
       localStorage.removeItem('carritoMongoId');
       cargarCarrito();
       cerrarModal();
-
     } catch (error) {
       console.error('Error al enviar el pedido:', error);
     }
   };
-
 
   const calcularTotal = () => {
     return carrito.items?.reduce((total, item) => {

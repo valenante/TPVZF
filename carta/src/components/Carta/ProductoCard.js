@@ -5,6 +5,11 @@ import '../../styles/ProductoCard.css';
 const ProductoCard = ({ producto }) => {
   const [mostrarModal, setMostrarModal] = useState(false); // Estado para manejar el modal
 
+  // Verificar si el producto está habilitado
+  if (producto.estado !== 'habilitado') {
+    return null; // No renderizar si el producto no está habilitado
+  }
+
   const abrirModal = () => setMostrarModal(true);
   const cerrarModal = () => setMostrarModal(false);
 
@@ -34,7 +39,6 @@ const ProductoCard = ({ producto }) => {
         />
       )}
     </div>
-
   );
 };
 
