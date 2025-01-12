@@ -9,8 +9,6 @@ exports.createPedido = async (req, res) => {
     try {
         const { mesa, productos, total, comensales, alergias, pan, cartId } = req.body;
 
-        console.log(cartId, 'este es el mamadisimo cartId');
-
         console.log(productos);
 
         // Buscar la mesa usando el ObjectId
@@ -94,7 +92,7 @@ exports.createPedido = async (req, res) => {
 
         console.log(cartId);
 
-        if(cartId){
+        if (cartId) {
             await Cart.findByIdAndDelete(cartId);
             console.log('Carrito eliminado con éxito:', cartId);
         }
@@ -138,6 +136,59 @@ exports.getPedidoById = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener el pedido' });
     }
 };
+
+//Obtener pedidos pendientes
+exports.getPedidosPendientes = async (req, res) => {
+    try {
+        const pedidos = await Pedido.find({ estado: 'pendiente' })
+            .populate('mesa')
+            .populate('productos.producto'); // Expande los detalles del producto
+        res.status(200).json(pedidos);
+    } catch (error) {
+        console.error('Error al obtener pedidos pendientes:', error);
+        res.status(500).json({ error: 'Error al obtener pedidos pendientes' });
+    }
+};
+
+//Obtener pedidos finalizados
+exports.getPedidosFinalizados = async (req, res) => {
+    try {
+        const hace20Minutos = new Date(Date.now() - 20 * 60 * 1000); // Fecha límite
+        const pedidosFinalizados = await Pedido.find({
+            estado: 'listo',
+            fecha: { $gte: hace20Minutos },
+        }).populate('mesa')
+            .populate('productos.producto'); // Expande los detalles del producto
+        res.status(200).json(pedidosFinalizados);
+    } catch (error) {
+        console.error('Error al obtener pedidos finalizados:', error);
+        res.status(500).json({ error: 'Error al obtener pedidos finalizados' });
+    }
+};
+
+//Actualizar el estado de un producto en un pedido
+exports.updateProducto = async (req, res) => {
+    try {
+        const { pedidoId, productoId } = req.params;
+        const { estadoPreparacion } = req.body;
+
+        const pedido = await Pedido.findById(pedidoId);
+        if (!pedido) return res.status(404).json({ error: 'Pedido no encontrado' });
+
+        const producto = pedido.productos.id(productoId);
+        if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
+
+        console.log(producto);
+
+        producto.estado = estadoPreparacion;
+        await pedido.save();
+
+        res.status(200).json({ message: 'Producto actualizado correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar producto:', error);
+        res.status(500).json({ error: 'Error al actualizar producto' });
+    }
+}
 
 // Actualizar un pedido por ID
 exports.updatePedido = async (req, res) => {
