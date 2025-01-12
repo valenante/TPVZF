@@ -35,8 +35,6 @@ const PedidoSchema = new mongoose.Schema({
       opcionesPersonalizables: [opcionPersonalizableSchema], // Opciones personalizables para el cliente
       especificaciones: { type: [String], default: [] }, // Ejemplo: "Sin sal", "Extra picante"
 
-      // Estado y tipo de preparación
-      estadoVis: { type: String, enum: ['habilitado', 'deshabilitado'], default: 'habilitado' },
       estado: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
       tipoPedido: { type: String, enum: ['copa', 'botella', 'individual', 'compartir'], required: false }, // Tipo general de pedido
       total: { type: Number, required: true },

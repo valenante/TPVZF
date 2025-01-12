@@ -188,7 +188,7 @@ exports.getPedidosFinalizados = async (req, res) => {
 exports.updateProducto = async (req, res) => {
     try {
         const { pedidoId, productoId } = req.params;
-        const { estadoPreparacion } = req.body;
+        const { estado } = req.body;
 
         const pedido = await Pedido.findById(pedidoId);
         if (!pedido) return res.status(404).json({ error: 'Pedido no encontrado' });
@@ -198,7 +198,7 @@ exports.updateProducto = async (req, res) => {
 
         console.log(producto);
 
-        producto.estado = estadoPreparacion;
+        producto.estado = estado;
         await pedido.save();
 
         res.status(200).json({ message: 'Producto actualizado correctamente' });
