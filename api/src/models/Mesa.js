@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const mesaSchema = new mongoose.Schema({
+const mesaSchema = new Schema({
   numero: { type: Number, required: true }, // Número de la mesa
   estado: { type: String, enum: ['abierta', 'cerrada'], default: 'abierta' }, // Estado actual
-  pedidos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pedido' }], // Pedidos activos en la mesa
+  pedidos: [{ type: Schema.Types.ObjectId, ref: 'Pedido' }], // Pedidos activos en la mesa
   inicio: { type: Date, default: Date.now }, // Hora en que se abrió la mesa
   tokenLider: {
     type: String,
@@ -19,4 +19,4 @@ const mesaSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Mesa', mesaSchema);
+export default model('Mesa', mesaSchema);

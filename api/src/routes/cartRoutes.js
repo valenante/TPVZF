@@ -1,11 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const cartController = require('../controllers/cartController');
-const { check } = require('express-validator');
-const authController = require('../controllers/authController');
+import { Router } from 'express';
+const router = Router();
+import { getCart, addToCart, updateCartItem, removeFromCart, clearCart } from '../controllers/cartController.js';
+import { check } from 'express-validator';
 
 // Obtener el carrito
-router.get('/', cartController.getCart);
+router.get('/', getCart);
 
 // Agregar un producto al carrito
 router.post(
@@ -14,7 +13,7 @@ router.post(
     check('productId', 'El ID del producto es obligatorio.').isMongoId(),
     check('cantidad', 'La cantidad debe ser un número positivo.').isInt({ min: 1 }),
   ],
-  cartController.addToCart
+  addToCart
 );
 
 // Actualizar un producto del carrito
@@ -24,13 +23,13 @@ router.put(
     check('itemId', 'El ID del item es obligatorio.').isMongoId(),
     check('cantidad', 'La cantidad debe ser un número positivo.').isInt({ min: 1 }),
   ],
-  cartController.updateCartItem
+  updateCartItem
 );
 
 // Eliminar un producto del carrito
-router.delete('/:itemId', cartController.removeFromCart);
+router.delete('/:itemId', removeFromCart);
 
 // Vaciar el carrito
-router.delete('/',  cartController.clearCart);
+router.delete('/',  clearCart);
 
-module.exports = router;
+export default router;

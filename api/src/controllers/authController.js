@@ -1,8 +1,8 @@
-const User = require('../models/Usuario'); // Modelo de usuario
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const TokenRevocado = require('../models/TokenRevocado');
-const logger = require('../../utils/logger');
+import User from '../models/Usuario.js'; // Modelo de usuario
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import TokenRevocado from '../models/TokenRevocado.js';
+import logger from '../../utils/logger.js';
 
 // Generar access token
 const generarAccessToken = (user) => {
@@ -22,7 +22,7 @@ const generarRefreshToken = (user) => {
   );
 };
 
-exports.renovarToken = async (req, res) => {
+export const renovarToken = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
@@ -51,7 +51,7 @@ exports.renovarToken = async (req, res) => {
   }
 };
 
-exports.logout = async (req, res) => {
+export const logout = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
@@ -78,7 +78,7 @@ exports.logout = async (req, res) => {
   }
 };
 
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
@@ -122,7 +122,7 @@ exports.register = async (req, res) => {
 };
 
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -158,7 +158,7 @@ exports.login = async (req, res) => {
 };
 
 
-exports.protegerRuta = (req, res, next) => {
+export const protegerRuta = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del encabezado
 
   if (!token) {

@@ -1,17 +1,23 @@
-const { createLogger, format, transports } = require('winston');
+import { createLogger, format, transports } from "winston";
 
 const logger = createLogger({
-  level: 'info', // Cambia a 'debug' o 'error' según el nivel de detalle que necesites
+  level: "info",
   format: format.combine(
-    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     format.printf(({ timestamp, level, message }) => {
       return `${timestamp} [${level.toUpperCase()}]: ${message}`;
     })
   ),
   transports: [
-    new transports.Console(), // Log en la consola
-    new transports.File({ filename: 'logs/app.log' }) // Log en un archivo
+    new transports.Console(),
+    new transports.File({ filename: "logs/app.log" }),
   ],
 });
 
-module.exports = logger;
+// Exportar funciones individuales
+export const info = logger.info.bind(logger);
+export const error = logger.error.bind(logger);
+export const warn = logger.warn.bind(logger);
+
+// Exportar logger completo como alternativa
+export default logger;

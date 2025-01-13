@@ -1,8 +1,8 @@
-const express = require('express');
-const { check, validationResult } = require('express-validator');
-const router = express.Router();
-const authController = require('../controllers/authController');
-const rateLimit = require('express-rate-limit');
+import { Router } from 'express';
+import { check, validationResult } from 'express-validator';
+const router = Router();
+import { login, register, renovarToken, logout } from '../controllers/authController.js';
+import rateLimit from 'express-rate-limit';
 
 // Middleware para limitar intentos de inicio de sesión
 const loginLimiter = rateLimit({
@@ -26,7 +26,7 @@ router.post(
     }
     next();
   },
-  authController.login
+  login
 );
 
 // Ruta de registro de usuario
@@ -47,19 +47,13 @@ router.post(
     }
     next();
   },
-  authController.register
+  register
 );
 
-// Ruta protegida de ejemplo
-router.get('/perfil', authController.protegerRuta, (req, res) => {
-  res.status(200).json({ message: 'Acceso autorizado', user: req.user });
-});
-
-
 // Endpoint para renovar token
-router.post('/refresh-token', authController.renovarToken);
+router.post('/refresh-token', renovarToken);
 
 // Endpoint para cerrar sesión
-router.post('/logout', authController.logout);
+router.post('/logout', logout);
 
-module.exports = router;
+export default router;

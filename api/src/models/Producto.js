@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 // Subesquema para precios específicos
-const precioSchema = new mongoose.Schema({
+const precioSchema = new Schema({
   precioBase: { type: Number, required: true }, // Precio general
   tapa: { type: Number, default: null }, // Opcional para platos
   racion: { type: Number, default: null }, // Opcional para platos
@@ -10,13 +10,13 @@ const precioSchema = new mongoose.Schema({
 }, { _id: false });
 
 // Subesquema para presentaciones y opciones personalizables
-const opcionPersonalizableSchema = new mongoose.Schema({
+const opcionPersonalizableSchema = new Schema({
   tipo: { type: String, required: true }, // Ejemplo: "queso", "acompañamiento"
   opciones: { type: [String], default: [] }, // Ejemplo: ["cheddar", "mozzarella"]
 }, { _id: false });
 
 // Modelo principal
-const productoSchema = new mongoose.Schema({
+const productoSchema = new Schema({
   // Información general
   nombre: { type: String, required: true },
   tipo: { type: String, enum: ['plato', 'bebida'], required: true }, // Diferencia entre plato y bebida
@@ -64,10 +64,10 @@ const productoSchema = new mongoose.Schema({
   tipoPedido: { type: String, enum: ['copa', 'botella', 'individual', 'compartir'], required: false }, // Tipo general de pedido
 
   // Relaciones
-  ventas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Venta' }], // Relación con las ventas
-  valoraciones: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ValoracionPlato' }], // Relación con valoraciones
+  ventas: [{ type: Schema.Types.ObjectId, ref: 'Venta' }], // Relación con las ventas
+  valoraciones: [{ type: Schema.Types.ObjectId, ref: 'ValoracionPlato' }], // Relación con valoraciones
 
   // Fechas de creación y actualización
 }, { timestamps: true });
 
-module.exports = mongoose.model('Producto', productoSchema);
+export default model('Producto', productoSchema);

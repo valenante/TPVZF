@@ -1,11 +1,10 @@
-const Mesa = require('../models/Mesa');
-const Pedido = require('../models/Pedido');
-const Venta = require('../models/Ventas');
-const Producto = require('../models/Producto');
-const Cart = require('../models/Cart');
+import Pedido from '../models/Pedido.js';
+import Mesa from '../models/Mesa.js';
+import Venta from '../models/Ventas.js';
+import Cart from '../models/Cart.js';
 
 // Crear un nuevo pedido
-exports.createPedido = async (req, res) => {
+export const createPedido = async (req, res) => {
     try {
         const { mesa, productos, total, comensales, alergias, pan, cartId } = req.body;
 
@@ -112,7 +111,7 @@ exports.createPedido = async (req, res) => {
 };
 
 // Obtener todos los pedidos
-exports.getPedidos = async (req, res) => {
+export const getPedidos = async (req, res) => {
     try {
         const pedidos = await Pedido.find().populate('mesa').populate('productos.productoId');
         res.status(200).json(pedidos);
@@ -123,7 +122,7 @@ exports.getPedidos = async (req, res) => {
 };
 
 // Obtener un pedido por ID
-exports.getPedidoById = async (req, res) => {
+export const getPedidoById = async (req, res) => {
     const { id } = req.params;
     try {
         const pedido = await Pedido.findById(id).populate('mesa').populate('productos.productoId');
@@ -138,7 +137,7 @@ exports.getPedidoById = async (req, res) => {
 };
 
 // Obtener pedidos pendientes
-exports.getPedidosPendientes = async (req, res) => {
+export const getPedidosPendientes = async (req, res) => {
     try {
         const { tipo } = req.query; // Obtener el tipo de la consulta (plato o bebida)
         
@@ -159,7 +158,7 @@ exports.getPedidosPendientes = async (req, res) => {
 };
 
 // Obtener pedidos finalizados
-exports.getPedidosFinalizados = async (req, res) => {
+export const getPedidosFinalizados = async (req, res) => {
     try {
         const { tipo } = req.query; // Obtener el tipo de la consulta (plato o bebida)
         const hace20Minutos = new Date(Date.now() - 20 * 60 * 1000); // Fecha límite
@@ -185,7 +184,7 @@ exports.getPedidosFinalizados = async (req, res) => {
 };
 
 //Actualizar el estado de un producto en un pedido
-exports.updateProducto = async (req, res) => {
+export const updateProducto = async (req, res) => {
     try {
         const { pedidoId, productoId } = req.params;
         const { estado } = req.body;
@@ -209,7 +208,7 @@ exports.updateProducto = async (req, res) => {
 }
 
 // Actualizar un pedido por ID
-exports.updatePedido = async (req, res) => {
+export const updatePedido = async (req, res) => {
     const { id } = req.params;
     const { productos, total, comensales, alergias, pan, estado } = req.body;
 
@@ -239,7 +238,7 @@ exports.updatePedido = async (req, res) => {
 };
 
 // Eliminar un pedido por ID
-exports.deletePedido = async (req, res) => {
+export const deletePedido = async (req, res) => {
     const { id } = req.params;
 
     try {

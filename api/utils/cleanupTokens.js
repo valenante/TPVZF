@@ -1,4 +1,4 @@
-const TokenRevocado = require('../src/models/TokenRevocado');
+import TokenRevocado from '../src/models/TokenRevocado.js';
 
 const limpiarTokensExpirados = async () => {
   try {
@@ -9,4 +9,4 @@ const limpiarTokensExpirados = async () => {
   }
 };
 
-module.exports = limpiarTokensExpirados;
+export default limpiarTokensExpirados;

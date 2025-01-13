@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const tokenRevocadoSchema = new mongoose.Schema({
-  token: { type: String, required: true }, // Almacena el refresh token
-  expiracion: { type: Date, required: true }, // Fecha de expiración del token
-}, { timestamps: true });
+const TokenRevocadoSchema = new mongoose.Schema({
+  token: { type: String, required: true },
+  expiracion: { type: Date, required: true },
+});
 
-module.exports = mongoose.model('TokenRevocado', tokenRevocadoSchema);
+const TokenRevocado = mongoose.model('TokenRevocado', TokenRevocadoSchema);
+
+export default TokenRevocado;

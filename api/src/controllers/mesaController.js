@@ -1,8 +1,8 @@
-const Mesa = require('../models/Mesa'); // Modelo de mesas activas
-const MesaCerrada = require('../models/MesaCerrada'); // Modelo de historial de mesas
+import Mesa from '../models/Mesa.js';
+import MesaCerrada from '../models/MesaCerrada.js';
 
 // Obtener todas las mesas activas
-exports.getMesas = async (req, res) => {
+export const getMesas = async (req, res) => {
     try {
         const mesas = await Mesa.find().populate('pedidos');
         res.status(200).json(mesas);
@@ -13,7 +13,7 @@ exports.getMesas = async (req, res) => {
 };
 
 // Obtener una mesa activa por ID
-exports.getMesaById = async (req, res) => {
+export const getMesaById = async (req, res) => {
     const { id } = req.params;
     try {
         const mesa = await Mesa.findById(id).populate('pedidos');
@@ -28,7 +28,7 @@ exports.getMesaById = async (req, res) => {
 };
 
 // Abrir una nueva mesa
-exports.abrirMesa = async (req, res) => {
+export const abrirMesa = async (req, res) => {
     const { numero } = req.body;
     try {
         // Verificar si la mesa ya está abierta
@@ -52,7 +52,7 @@ exports.abrirMesa = async (req, res) => {
 };
 
 // Cerrar una mesa
-exports.cerrarMesa = async (req, res) => {
+export const cerrarMesa = async (req, res) => {
     const { id } = req.params;
     const { total } = req.body; // Total acumulado para la mesa
 
@@ -87,7 +87,7 @@ exports.cerrarMesa = async (req, res) => {
 };
 
 // Obtener historial de mesas cerradas
-exports.getHistorialMesas = async (req, res) => {
+export const getHistorialMesas = async (req, res) => {
     const { numero, desde, hasta } = req.query;
 
     try {
@@ -109,7 +109,7 @@ exports.getHistorialMesas = async (req, res) => {
 
 
 //Obtener el ID de una mesa por su número
-exports.getMesaByNumero = async (req, res) => {
+export const getMesaByNumero = async (req, res) => {
     const { numero } = req.params;
     try {
         const mesa = await Mesa.findOne({ numero });

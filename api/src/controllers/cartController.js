@@ -1,6 +1,6 @@
-const Cart = require('../models/Cart'); // Modelo de carrito
+import Cart from '../models/Cart.js';
 
-exports.initCart = async (req, res) => {
+export const initCart = async (req, res) => {
   const { cartId } = req.body; // Recibe el UUID generado por el frontend
 
   try {
@@ -21,7 +21,7 @@ exports.initCart = async (req, res) => {
 };
 
 // Obtener los productos del carrito
-exports.getCart = async (req, res) => {
+export const getCart = async (req, res) => {
   try {
     const tempCartId = req.headers['x-cart-id']; // Leer el identificador del carrito
 
@@ -41,7 +41,7 @@ exports.getCart = async (req, res) => {
   }
 };
 
-exports.addToCart = async (req, res) => {
+export const addToCart = async (req, res) => {
   const { productId, cantidad, opciones, ingredientes, cartId } = req.body;
 
   try {
@@ -91,7 +91,7 @@ exports.addToCart = async (req, res) => {
 
 
 // Actualizar la cantidad de un producto en el carrito
-exports.updateCartItem = async (req, res) => {
+export const updateCartItem = async (req, res) => {
   const { tempCartId, itemId, cantidad } = req.body;
 
   if (!tempCartId) {
@@ -118,7 +118,7 @@ exports.updateCartItem = async (req, res) => {
   }
 };
 
-exports.removeFromCart = async (req, res) => {
+export const removeFromCart = async (req, res) => {
   const { itemId } = req.params;
   const cartId = req.headers['x-cart-id']; // Obtener el identificador del carrito desde los encabezados
 
@@ -181,7 +181,7 @@ exports.removeFromCart = async (req, res) => {
 
 
 // Vaciar el carrito
-exports.clearCart = async (req, res) => {
+export const clearCart = async (req, res) => {
   const { tempCartId } = req.body;
 
   if (!tempCartId) {

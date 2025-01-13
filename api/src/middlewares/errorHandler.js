@@ -1,11 +1,11 @@
-const logger = require('../../utils/logger'); // Asegúrate de tener `winston` configurado
+import { error as _error } from '../../utils/logger.js'; // Asegúrate de tener `winston` configurado
 
 const errorHandler = (err, req, res, next) => {
   // Determina el estado HTTP (500 si no se especifica)
   const status = err.status || 500;
 
   // Loggea el error en consola y en el logger
-  logger.error(`[${req.method}] ${req.url} - ${err.message}`);
+  _error(`[${req.method}] ${req.url} - ${err.message}`);
   console.error(err.stack);
 
   // Responde al cliente con un mensaje estándar
@@ -17,4 +17,4 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-module.exports = errorHandler;
+export default errorHandler;

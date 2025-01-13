@@ -1,9 +1,9 @@
-const Venta = require('../models/Ventas');
-const Producto = require('../models/Producto');
-const Pedido = require('../models/Pedido');
+import Venta from '../models/Ventas.js';
+import Producto from '../models/Producto.js';
+import Pedido from '../models/Pedido.js';
 
 // Obtener todas las ventas
-exports.getVentas = async (req, res) => {
+export const getVentas = async (req, res) => {
     try {
         const ventas = await Venta.find().populate('productoId pedidoId');
         res.status(200).json(ventas);
@@ -14,7 +14,7 @@ exports.getVentas = async (req, res) => {
 };
 
 // Obtener una venta por ID
-exports.getVentaById = async (req, res) => {
+export const getVentaById = async (req, res) => {
     const { id } = req.params;
     try {
         const venta = await Venta.findById(id).populate('productoId pedidoId');
@@ -29,7 +29,7 @@ exports.getVentaById = async (req, res) => {
 };
 
 // Crear una nueva venta
-exports.createVenta = async (req, res) => {
+export const createVenta = async (req, res) => {
     const { productoId, pedidoId, cantidad } = req.body;
 
     try {
@@ -68,7 +68,7 @@ exports.createVenta = async (req, res) => {
 };
 
 // Actualizar una venta por ID
-exports.updateVenta = async (req, res) => {
+export const updateVenta = async (req, res) => {
     const { id } = req.params;
     const { cantidad } = req.body;
 
@@ -101,7 +101,7 @@ exports.updateVenta = async (req, res) => {
 };
 
 // Eliminar una venta por ID
-exports.deleteVenta = async (req, res) => {
+export const deleteVenta = async (req, res) => {
     const { id } = req.params;
 
     try {

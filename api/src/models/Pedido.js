@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 // Subesquema para precios específicos
-const precioSchema = new mongoose.Schema({
+const precioSchema = new Schema({
   precioBase: { type: Number, required: true }, // Precio general
   tapa: { type: Number, default: null }, // Opcional para platos
   racion: { type: Number, default: null }, // Opcional para platos
@@ -10,21 +10,21 @@ const precioSchema = new mongoose.Schema({
 }, { _id: false });
 
 // Subesquema para presentaciones y opciones personalizables
-const opcionPersonalizableSchema = new mongoose.Schema({
+const opcionPersonalizableSchema = new Schema({
   tipo: { type: String, required: true }, // Ejemplo: "queso", "acompañamiento"
   opciones: { type: [String], default: [] }, // Ejemplo: ["cheddar", "mozzarella"]
 }, { _id: false });
 
-const PedidoSchema = new mongoose.Schema({
-  mesa: { type: mongoose.Schema.Types.ObjectId, ref: 'Mesa', required: true },
-  usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Opcional
+const PedidoSchema = new Schema({
+  mesa: { type: Schema.Types.ObjectId, ref: 'Mesa', required: true },
+  usuario: { type: Schema.Types.ObjectId, ref: 'User' }, // Opcional
   alergias: { type: String, default: '' }, // Alergias o intolerancias
   comensales: { type: Number, required: true },
   estado: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
   fecha: { type: Date, default: Date.now },
   productos: [
     {
-      producto: { type: mongoose.Schema.Types.ObjectId, ref: 'Producto', required: true },
+      producto: { type: Schema.Types.ObjectId, ref: 'Producto', required: true },
       cantidad: { type: Number, required: true },
       eliminado: { type: Boolean, default: false }, // Indica si se eliminó
       tipo: { type: String, enum: ['plato', 'bebida'], required: true }, // Diferencia entre plato y bebida
@@ -44,4 +44,4 @@ total: { type: Number, required: true },
 
 });
 
-module.exports = mongoose.model('Pedido', PedidoSchema);
+export default model('Pedido', PedidoSchema);

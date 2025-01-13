@@ -1,7 +1,6 @@
-const Producto = require('../models/Producto'); // Importar el modelo
-
+import Producto from '../models/Producto.js';
 // Obtener todos los productos
-exports.getProductos = async (req, res) => {
+export const getProductos = async (req, res) => {
     try {
         const productos = await Producto.find();
         res.status(200).json(productos);
@@ -12,7 +11,7 @@ exports.getProductos = async (req, res) => {
 };
 
 // Obtener un producto por ID
-exports.getProductoById = async (req, res) => {
+export const getProductoById = async (req, res) => {
     const { id } = req.params;
     try {
         const producto = await Producto.findById(id);
@@ -26,7 +25,7 @@ exports.getProductoById = async (req, res) => {
     }
 };
 
-exports.getCategoriasByType = async (req, res) => {
+export const getCategoriasByType = async (req, res) => {
     const { type } = req.params;
     console.log("Tipo de producto:", type); // Esto debería mostrar 'platos' o 'bebidas'
 
@@ -42,7 +41,7 @@ exports.getCategoriasByType = async (req, res) => {
 };
 
 //Editar producto
-exports.updateProducto = async (req, res) => {
+export const updateProducto = async (req, res) => {
     const { id } = req.params;
     try {
         const productoActualizado = await Producto.findByIdAndUpdate
@@ -60,7 +59,7 @@ exports.updateProducto = async (req, res) => {
     }
 }
 
-exports.getProductosByCategory = async (req, res) => {
+export const getProductosByCategory = async (req, res) => {
     const { category } = req.params;
     console.log("Categoría de producto:", category); // Esto debería mostrar 'especiales'
 
@@ -76,7 +75,7 @@ exports.getProductosByCategory = async (req, res) => {
 }
 
 // Crear un nuevo producto
-exports.createProducto = async (req, res) => {
+export const createProducto = async (req, res) => {
     try {
         const nuevoProducto = new Producto(req.body);
         if (req.file) {
@@ -94,30 +93,8 @@ exports.createProducto = async (req, res) => {
     }
 };
 
-// Actualizar un producto por ID
-exports.updateProducto = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const productoActualizado = await Producto.findByIdAndUpdate(id, req.body, { new: true });
-        if (req.file) {
-            productoActualizado.img = `/images/${req.file.filename}`;
-        }
-        if (!productoActualizado) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
-
-        // Emitir evento de actualización de producto
-        req.io.emit('productoActualizado', productoActualizado);
-
-        res.status(200).json(productoActualizado);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ error: 'Error al actualizar el producto. Verifica los datos enviados.' });
-    }
-};
-
 // Eliminar un producto por ID
-exports.deleteProducto = async (req, res) => {
+export const deleteProducto = async (req, res) => {
     const { id } = req.params;
     try {
         const productoEliminado = await Producto.findByIdAndDelete(id);

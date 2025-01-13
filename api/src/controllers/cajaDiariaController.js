@@ -1,7 +1,7 @@
-const CajaDiaria = require('../models/CajaDiaria');
+import CajaDiaria from '../models/CajaDiaria.js';
 
 // Obtener todos los registros de caja diaria
-exports.getCajaDiaria = async (req, res) => {
+export const getCajaDiaria = async (req, res) => {
     try {
         const registros = await CajaDiaria.find().sort({ fecha: -1 }); // Ordenar por fecha descendente
         res.status(200).json(registros);
@@ -12,7 +12,7 @@ exports.getCajaDiaria = async (req, res) => {
 };
 
 // Obtener un registro de caja diaria por ID
-exports.getCajaDiariaById = async (req, res) => {
+export const getCajaDiariaById = async (req, res) => {
     const { id } = req.params;
     try {
         const registro = await CajaDiaria.findById(id);
@@ -27,7 +27,7 @@ exports.getCajaDiariaById = async (req, res) => {
 };
 
 // Crear un nuevo registro de caja diaria
-exports.createCajaDiaria = async (req, res) => {
+export const createCajaDiaria = async (req, res) => {
     const { fecha, ingresos, egresos, saldoInicial, saldoFinal } = req.body;
 
     try {
@@ -56,7 +56,7 @@ exports.createCajaDiaria = async (req, res) => {
 };
 
 // Actualizar un registro de caja diaria por ID
-exports.updateCajaDiaria = async (req, res) => {
+export const updateCajaDiaria = async (req, res) => {
     const { id } = req.params;
     const { ingresos, egresos, saldoInicial, saldoFinal } = req.body;
 
@@ -83,7 +83,7 @@ exports.updateCajaDiaria = async (req, res) => {
 };
 
 // Eliminar un registro de caja diaria por ID
-exports.deleteCajaDiaria = async (req, res) => {
+export const deleteCajaDiaria = async (req, res) => {
     const { id } = req.params;
 
     try {

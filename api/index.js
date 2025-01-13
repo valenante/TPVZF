@@ -1,34 +1,34 @@
-const limpiarTokensExpirados = require("./utils/cleanupTokens");
+import limpiarTokensExpirados from "./utils/cleanupTokens.js";
 
 // Ejecutar limpieza de tokens cada 1 hora
 setInterval(() => {
   limpiarTokensExpirados();
 }, 3600000); // 1 hora en milisegundos
 
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const compression = require("compression");
-const logger = require("./utils/logger");
-const http = require("http");
-const { Server } = require("socket.io");
-const cors = require("cors");
-const mesaRoutes = require("./src/routes/mesaRoutes"); // Importar rutas de mesas
-const productoRoutes = require("./src/routes/productosRoutes"); // Importar rutas de productos
-const authRoutes = require("./src/routes/authRoutes"); // Importar rutas de autenticación
-const pedidosRoutes = require("./src/routes/pedidosRoutes"); // Importar rutas de pedidos
-const ventasRoutes = require("./src/routes/ventasRoutes"); // Importar rutas de ventas
-const cartRoutes = require("./src/routes/cartRoutes"); // Importar rutas de carrito
-const errorHandler = require("./src/middlewares/errorHandler");
-const notFoundHandler = require("./src/middlewares/notFoundHandler");
-
+import express, { json, urlencoded } from "express";
+import { connect } from "mongoose";
+import { config } from "dotenv";
+import compression from "compression";
+import { info, error as _error } from "./utils/logger.js";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import cors from "cors";
+import mesaRoutes from "./src/routes/mesaRoutes.js"; // Importar rutas de mesas
+import productoRoutes from "./src/routes/productosRoutes.js"; // Importar rutas de productos
+import authRoutes from "./src/routes/authRoutes.js"; // Importar rutas de autenticación
+import pedidosRoutes from "./src/routes/pedidosRoutes.js"; // Importar rutas de pedidos
+import ventasRoutes from "./src/routes/ventasRoutes.js"; // Importar rutas de ventas
+import cartRoutes from "./src/routes/cartRoutes.js"; // Importar rutas de carrito
+import passwordRoutes from "./src/routes/passwordRoutes.js";
+import errorHandler from "./src/middlewares/errorHandler.js";
+import notFoundHandler from "./src/middlewares/notFoundHandler.js";
 
 // Configurar dotenv para variables de entorno
-dotenv.config();
+config();
 
 // Inicializar la aplicación Express
 const app = express();
-const server = http.createServer(app); // Crear el servidor HTTP
+const server = createServer(app); // Crear el servidor HTTP
 
 // Configuración de CORS
 const corsOptions = {
@@ -49,10 +49,10 @@ const io = new Server(server, {
 app.use(compression());
 
 // Middleware para parsear JSON
-app.use(express.json());
+app.use(json());
 
 // Middleware para interpretar datos codificados en la URL
-app.use(express.urlencoded({ extended: true }));
+app.use(urlencoded({ extended: true }));
 
 // Middleware para compartir `io` con las rutas
 app.use((req, res, next) => {
@@ -65,20 +65,19 @@ const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/dataBaseZF
 const PORT = process.env.PORT || 3000;
 
 // Log inicial
-logger.info("Aplicación iniciada correctamente");
+info("Aplicación iniciada correctamente");
 
 // Conexión a MongoDB
-mongoose
-  .connect(MONGO_URI, {
+connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    logger.info("Conectado a MongoDB");
+    info("Conectado a MongoDB");
     console.log("Conectado a MongoDB");
   })
   .catch((error) => {
-    logger.error(`Error al conectar a MongoDB: ${error.message}`);
+    _error(`Error al conectar a MongoDB: ${error.message}`);
     console.error("Error al conectar a MongoDB:", error);
   });
 
@@ -89,24 +88,25 @@ app.use("/api/auth", authRoutes); // Rutas de autenticación
 app.use("/api/pedidos", pedidosRoutes); // Rutas de pedidos
 app.use("/api/ventas", ventasRoutes); // Rutas de ventas
 app.use("/api/cart", cartRoutes); // Rutas de carrito
+app.use("/api/password", passwordRoutes); // Rutas de contraseña
 
 app.use(notFoundHandler);
 app.use(errorHandler);
 
 // Ruta de ejemplo
 app.get("/", (req, res) => {
-  logger.info("Se recibió una solicitud en la ruta raíz");
+  info("Se recibió una solicitud en la ruta raíz");
   res.send("¡Bienvenido a la API de ZF!");
 });
 
 // Manejo de errores no capturados
 process.on("uncaughtException", (error) => {
-  logger.error(`Excepción no capturada: ${error.message}`);
+  _error(`Excepción no capturada: ${error.message}`);
   process.exit(1); // Finalizar la aplicación
 });
 
 process.on("unhandledRejection", (reason) => {
-  logger.error(`Promesa no manejada: ${reason}`);
+  _error(`Promesa no manejada: ${reason}`);
   process.exit(1); // Finalizar la aplicación
 });
 
@@ -127,6 +127,6 @@ io.on("connection", (socket) => {
 
 // Iniciar el servidor
 server.listen(PORT, () => {
-  logger.info(`Servidor escuchando en el puerto ${PORT}`);
+  info(`Servidor escuchando en el puerto ${PORT}`);
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
