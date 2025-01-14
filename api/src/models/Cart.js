@@ -6,10 +6,12 @@ const CartItemSchema = new Schema({
   cantidad: { type: Number, required: true, default: 1 },
   opciones: { type: Object, default: {} }, // Opciones personalizables
   ingredientes: { type: [String], default: [] }, // Ingredientes personalizados
+  nombre: { type: String, required: true },
 });
 
 const CartSchema = new Schema({
   items: [CartItemSchema],
+  mesa: { type: String, required: true },
 }, { timestamps: true });
 
 export default model('Cart', CartSchema);

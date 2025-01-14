@@ -2,6 +2,7 @@ import { Router } from 'express';
 const router = Router();
 import { getCart, addToCart, updateCartItem, removeFromCart, clearCart } from '../controllers/cartController.js';
 import { check } from 'express-validator';
+import verifyLeader from '../middlewares/verifyLeader.js';
 
 // Obtener el carrito
 router.get('/', getCart);
@@ -27,7 +28,7 @@ router.put(
 );
 
 // Eliminar un producto del carrito
-router.delete('/:itemId', removeFromCart);
+router.delete('/:itemId', removeFromCart, verifyLeader);
 
 // Vaciar el carrito
 router.delete('/',  clearCart);

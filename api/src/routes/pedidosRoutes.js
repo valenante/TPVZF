@@ -1,6 +1,7 @@
 import { Router } from 'express';
 const router = Router();
 import { getPedidos, getPedidoById, getPedidosPendientes, getPedidosFinalizados, createPedido, updatePedido, updateProducto, deletePedido } from '../controllers/pedidosController.js';
+import verifyLeader from '../middlewares/verifyLeader.js';
 
 // Obtener todos los pedidos
 router.get('/', getPedidos);
@@ -15,7 +16,7 @@ router.get('/pendientes/pendientes', getPedidosPendientes);
 router.get('/finalizados/finalizados', getPedidosFinalizados);
 
 // Crear un nuevo pedido
-router.post('/', createPedido);
+router.post('/', createPedido, verifyLeader);
 
 // Actualizar un pedido por ID
 router.put('/:id', updatePedido);

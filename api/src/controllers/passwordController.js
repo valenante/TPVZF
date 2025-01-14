@@ -68,3 +68,16 @@ export const updatePassword = async (req, res) => {
     res.status(500).json({ error: "Error al actualizar la contraseña" });
   }
 };
+
+export const validatePassword = async (req, res) => {
+  const { password } = req.body;
+  try {
+    const config = await Password.findOne({ clave: "contraseñaDelDía" });
+    if (config && config.valor === password) {
+      return res.status(200).json({ valid: true });
+    }
+    res.status(200).json({ valid: false });
+  } catch (error) {
+    res.status(500).json({ error: "Error al validar la contraseña" });
+  }
+};

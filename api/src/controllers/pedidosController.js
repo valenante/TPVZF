@@ -2,6 +2,7 @@ import Pedido from '../models/Pedido.js';
 import Mesa from '../models/Mesa.js';
 import Venta from '../models/Ventas.js';
 import Cart from '../models/Cart.js';
+import Producto from '../models/Producto.js';
 
 // Crear un nuevo pedido
 export const createPedido = async (req, res) => {

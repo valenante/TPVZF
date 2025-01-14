@@ -1,5 +1,83 @@
 import Mesa from '../models/Mesa.js';
 import MesaCerrada from '../models/MesaCerrada.js';
+import { v4 as uuidv4 } from "uuid"; // Generador de UUID
+
+export const checkTokenLider = async (req, res) => {
+    //Conseguir el mesaId de los params
+    const { mesaId } = req.params;
+    console.log(req.params);
+  
+    if (!mesaId) {
+      return res.status(400).json({ error: "El número de la mesa es obligatorio" });
+    }
+  
+    try {
+      const mesaDoc = await Mesa.findById(mesaId);  
+  
+      if (!mesaDoc) {
+        return res.status(404).json({ error: "Mesa no encontrada" });
+      }
+  
+      res.status(200).json({ tokenLider: mesaDoc.tokenLider || null });
+      console.log("TokenLider:", mesaDoc.tokenLider);
+    } catch (error) {
+      console.error("Error al verificar el tokenLider:", error);
+      console.log("TokenLider:", null);
+      res.status(500).json({ error: "Error al procesar la solicitud" });
+    }
+  };
+
+  export const checkTokenLiderByNumber = async (req, res) => {
+    const { mesa } = req.query; // Obtener el número de mesa desde los query params
+  
+    if (!mesa) {
+      return res.status(400).json({ error: 'El número de la mesa es obligatorio' });
+    }
+  
+    try {
+      // Buscar la mesa por su número
+      const mesaDoc = await Mesa.findOne({ numero: mesa });
+  
+      if (!mesaDoc) {
+        return res.status(404).json({ error: 'Mesa no encontrada' });
+      }
+  
+      // Retornar el tokenLider si existe o null si no existe
+      res.status(200).json({ tokenLider: mesaDoc.tokenLider || null });
+    } catch (error) {
+      console.error('Error al verificar el tokenLider:', error);
+      res.status(500).json({ error: 'Error al procesar la solicitud' });
+    }
+  };
+
+  export const createTokenLider = async (req, res) => {
+    const { mesa } = req.body;
+  
+    if (!mesa) {
+      return res.status(400).json({ error: "El número de la mesa es obligatorio" });
+    }
+  
+    try {
+      const mesaDoc = await Mesa.findOne({ numero: mesa });
+  
+      if (!mesaDoc) {
+        return res.status(404).json({ error: "Mesa no encontrada" });
+      }
+  
+      if (mesaDoc.tokenLider) {
+        return res.status(400).json({ error: "El tokenLider ya existe para esta mesa" });
+      }
+  
+      mesaDoc.tokenLider = uuidv4();
+      await mesaDoc.save();
+  
+      res.status(201).json({ tokenLider: mesaDoc.tokenLider });
+    } catch (error) {
+      console.error("Error al crear el tokenLider:", error);
+      res.status(500).json({ error: "Error al procesar la solicitud" });
+    }
+  };  
+
 
 // Obtener todas las mesas activas
 export const getMesas = async (req, res) => {
