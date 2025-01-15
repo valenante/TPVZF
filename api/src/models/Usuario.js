@@ -3,7 +3,6 @@ import { hash, compare } from 'bcrypt';
 
 const userSchema = new Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true },
   role: { type: String, enum: ['admin', 'user'], default: 'user' }, // Rol del usuario
 }, { timestamps: true });

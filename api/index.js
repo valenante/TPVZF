@@ -12,6 +12,7 @@ import compression from "compression";
 import { info, error as _error } from "./utils/logger.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import dotenv from 'dotenv';
 import cors from "cors";
 import mesaRoutes from "./src/routes/mesaRoutes.js"; // Importar rutas de mesas
 import productoRoutes from "./src/routes/productosRoutes.js"; // Importar rutas de productos
@@ -29,6 +30,8 @@ config();
 // Inicializar la aplicación Express
 const app = express();
 const server = createServer(app); // Crear el servidor HTTP
+dotenv.config();
+
 
 // Configuración de CORS
 const corsOptions = {

@@ -1,6 +1,5 @@
 import User from '../models/Usuario.js'; // Modelo de usuario
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import TokenRevocado from '../models/TokenRevocado.js';
 import logger from '../../utils/logger.js';
 
@@ -79,17 +78,11 @@ export const logout = async (req, res) => {
 };
 
 export const register = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, password, role } = req.body;
 
   try {
-    // Verificar que el correo no esté en uso
-    const usuarioExistente = await User.findOne({ email });
-    if (usuarioExistente) {
-      return res.status(400).json({ error: 'El correo ya está en uso.' });
-    }
-
     // Crear el usuario
-    const nuevoUsuario = new User({ name, email, password, role });
+    const nuevoUsuario = new User({ name, password, role });
     await nuevoUsuario.save();
 
     // Generar tokens
@@ -110,7 +103,6 @@ export const register = async (req, res) => {
       user: {
         id: nuevoUsuario._id,
         name: nuevoUsuario.name,
-        email: nuevoUsuario.email,
         role: nuevoUsuario.role,
       },
       accessToken, // Devuelve el access token en el cuerpo de la respuesta
@@ -170,7 +162,6 @@ export const protegerRuta = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verificar token
     req.user = decoded; // Guardar los datos del usuario en req.user
 
-    logger.info(`Acceso autorizado para el usuario: ${decoded.email} con rol: ${decoded.role}`);
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
