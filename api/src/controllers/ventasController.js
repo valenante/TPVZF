@@ -17,7 +17,7 @@ export const getVentas = async (req, res) => {
 export const getVentaById = async (req, res) => {
     const { id } = req.params;
     try {
-        const venta = await Venta.findById(id).populate('productoId pedidoId');
+        const venta = await Venta.findById(id).populate('cantidad');
         if (!venta) {
             return res.status(404).json({ error: 'Venta no encontrada' });
         }

@@ -9,8 +9,6 @@ export const createPedido = async (req, res) => {
     try {
         const { mesa, productos, total, comensales, alergias, pan, cartId } = req.body;
 
-        console.log(productos);
-
         // Buscar la mesa usando el ObjectId
         const mesaExistente = await Mesa.findById(mesa);
 
