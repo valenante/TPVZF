@@ -23,6 +23,7 @@ import cartRoutes from "./src/routes/cartRoutes.js"; // Importar rutas de carrit
 import passwordRoutes from "./src/routes/passwordRoutes.js";
 import errorHandler from "./src/middlewares/errorHandler.js";
 import notFoundHandler from "./src/middlewares/notFoundHandler.js";
+import cajaRoutes from "./src/routes/cajaRoutes.js"; // Importar rutas de caja
 
 // Configurar dotenv para variables de entorno
 config();
@@ -92,6 +93,7 @@ app.use("/api/pedidos", pedidosRoutes); // Rutas de pedidos
 app.use("/api/ventas", ventasRoutes); // Rutas de ventas
 app.use("/api/cart", cartRoutes); // Rutas de carrito
 app.use("/api/password", passwordRoutes); // Rutas de contraseña
+app.use("/api/caja", cajaRoutes); // Rutas de caja
 
 app.use(notFoundHandler);
 app.use(errorHandler);

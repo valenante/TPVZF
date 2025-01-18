@@ -37,7 +37,7 @@ export const checkTokenLider = async (req, res) => {
     try {
       // Buscar la mesa por su número
       const mesaDoc = await Mesa.findOne({ numero: mesa });
-  
+
       if (!mesaDoc) {
         return res.status(404).json({ error: 'Mesa no encontrada' });
       }
@@ -50,33 +50,35 @@ export const checkTokenLider = async (req, res) => {
     }
   };
 
-  export const createTokenLider = async (req, res) => {
-    const { mesa } = req.body;
-  
-    if (!mesa) {
-      return res.status(400).json({ error: "El número de la mesa es obligatorio" });
+export const createTokenLider = async (req, res) => {
+  const { mesa } = req.body;
+
+  if (!mesa) {
+    return res.status(400).json({ error: "El número de la mesa es obligatorio" });
+  }
+
+  try {
+    const mesaDoc = await Mesa.findOne({ numero: mesa });
+
+    if (!mesaDoc) {
+      return res.status(404).json({ error: "Mesa no encontrada" });
     }
-  
-    try {
-      const mesaDoc = await Mesa.findOne({ numero: mesa });
-  
-      if (!mesaDoc) {
-        return res.status(404).json({ error: "Mesa no encontrada" });
-      }
-  
-      if (mesaDoc.tokenLider) {
-        return res.status(400).json({ error: "El tokenLider ya existe para esta mesa" });
-      }
-  
-      mesaDoc.tokenLider = uuidv4();
-      await mesaDoc.save();
-  
-      res.status(201).json({ tokenLider: mesaDoc.tokenLider });
-    } catch (error) {
-      console.error("Error al crear el tokenLider:", error);
-      res.status(500).json({ error: "Error al procesar la solicitud" });
+
+    if (mesaDoc.tokenLider) {
+      return res.status(400).json({ error: "El tokenLider ya existe para esta mesa" });
     }
-  };  
+
+    // Generar tokenLider y cambiar estado a "abierto"
+    mesaDoc.tokenLider = uuidv4();
+    mesaDoc.estado = "abierta";
+    await mesaDoc.save();
+
+    res.status(201).json({ tokenLider: mesaDoc.tokenLider, estado: mesaDoc.estado });
+  } catch (error) {
+    console.error("Error al crear el tokenLider:", error);
+    res.status(500).json({ error: "Error al procesar la solicitud" });
+  }
+};
 
 
 // Obtener todas las mesas activas
@@ -129,39 +131,47 @@ export const abrirMesa = async (req, res) => {
     }
 };
 
-// Cerrar una mesa
 export const cerrarMesa = async (req, res) => {
-    const { id } = req.params;
-    const { total } = req.body; // Total acumulado para la mesa
+  const { id } = req.params; // ID de la mesa
+  const { metodoPago } = req.body; // Efectivo y tarjeta
 
-    try {
-        // Buscar la mesa activa
-        const mesa = await Mesa.findById(id).populate('pedidos');
-        if (!mesa) {
-            return res.status(404).json({ error: 'Mesa no encontrada o ya cerrada' });
-        }
-
-        // Crear un registro en el historial
-        const mesaCerrada = new MesaCerrada({
-            numero: mesa.numero,
-            pedidos: mesa.pedidos,
-            total,
-            inicio: mesa.inicio,
-            cierre: new Date(),
-        });
-        await mesaCerrada.save();
-
-        // Eliminar la mesa activa
-        await Mesa.findByIdAndDelete(id);
-
-        // Emitir evento de cierre de mesa
-        req.io.emit('mesaCerrada', mesaCerrada);
-
-        res.status(200).json({ message: 'Mesa cerrada y registrada en el historial', mesaCerrada });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al cerrar la mesa' });
+  try {
+    const mesa = await Mesa.findById(id).populate('pedidos');
+    if (!mesa) {
+      return res.status(404).json({ error: 'Mesa no encontrada' });
     }
+
+    const { efectivo = 0, tarjeta = 0 } = metodoPago || {};
+
+    // Verificar que la suma de efectivo y tarjeta sea igual al total
+    if (efectivo + tarjeta !== mesa.total) {
+      return res.status(400).json({ error: 'Los montos no coinciden con el total de la mesa.' });
+    }
+
+    // Crear registro en `mesasCerradas`
+    const mesaCerrada = new MesaCerrada({
+      numero: mesa.numero,
+      pedidos: mesa.pedidos.map((pedido) => pedido._id),
+      total: mesa.total,
+      inicio: mesa.inicio,
+      cierre: new Date(),
+      metodoPago: { efectivo, tarjeta },
+    });
+
+    await mesaCerrada.save();
+
+    //Restablecer valores de mesa abierta
+    mesa.estado = 'cerrada';
+    mesa.total = 0;
+    mesa.pedidos = [];
+    mesa.tokenLider = null;
+    await mesa.save();
+
+    res.status(200).json({ message: 'Mesa cerrada con éxito', mesaCerrada });
+  } catch (error) {
+    console.error('Error al cerrar la mesa:', error);
+    res.status(500).json({ error: 'Error al cerrar la mesa' });
+  }
 };
 
 // Obtener historial de mesas cerradas
