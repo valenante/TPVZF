@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 // Subesquema para precios específicos
 const precioSchema = new Schema({
-  precioBase: { type: Number, required: true }, // Precio general
+  precioBase: { type: Number, default: null}, // Precio general
   tapa: { type: Number, default: null }, // Opcional para platos
   racion: { type: Number, default: null }, // Opcional para platos
   copa: { type: Number, default: null }, // Opcional para bebidas
@@ -19,7 +19,7 @@ const opcionPersonalizableSchema = new Schema({
 const productoSchema = new Schema({
   // Información general
   nombre: { type: String, required: true },
-  tipo: { type: String, enum: ['plato', 'bebida'], required: true }, // Diferencia entre plato y bebida
+  tipo: { type: String, enum: ['plato', 'tapaRacion', 'bebida'], required: true }, // Diferencia entre plato y bebida
   categoria: { type: String, required: true }, // Ej: "entrante", "plato principal", "refresco", "licor"
   descripcion: { type: String, default: '' },
   img: { type: String, required: true },

@@ -7,7 +7,7 @@ import Producto from '../models/Producto.js';
 // Crear un nuevo pedido
 export const createPedido = async (req, res) => {
     try {
-        const { mesa, productos, total, comensales, alergias, pan, cartId } = req.body;
+        const { mesa, productos, total, comensales, alergias, pan, cartId, precioSeleccionado } = req.body;
 
         // Buscar la mesa usando el ObjectId
         const mesaExistente = await Mesa.findById(mesa);
@@ -25,6 +25,7 @@ export const createPedido = async (req, res) => {
             alergias,
             pan,
             mesa: mesaExistente._id, // Asignar el ObjectId de la mesa
+            precioSeleccionado,
         });
 
         // Redondear el total del pedido a dos decimales
@@ -45,11 +46,8 @@ export const createPedido = async (req, res) => {
         // Guardar la mesa actualizada
         await mesaExistente.save();
 
-        console.log(productos);
-
         // Crear ventas para cada producto del pedido
         for (const producto of productos) {
-            console.log(`Procesando producto con ID ${producto._id}, cantidad: ${producto.cantidad}`);
 
             // Crear la venta
             const venta = new Venta({
@@ -59,36 +57,28 @@ export const createPedido = async (req, res) => {
                 total,
             });
 
-            console.log('Venta a guardar:', venta);
 
             // Guardar la venta en la base de datos
             await venta.save();
-            console.log('Venta guardada con éxito:', venta);
 
             // Ahora, agregar la venta directamente al producto en la colección de productos
             const productoEnDB = await Producto.findById(producto.producto);
-            console.log('Buscando producto en la base de datos para agregar la venta:', productoEnDB);
 
             if (productoEnDB) {
                 // Añadimos la venta al campo `ventas` del producto
                 productoEnDB.ventas.push(venta._id);
-                console.log('Venta asociada al producto:', productoEnDB);
 
                 // Guardar el producto con la venta asociada
                 await productoEnDB.save();
-                console.log('Producto actualizado con la venta');
 
                 // **Restar la cantidad al stock del producto**
                 productoEnDB.stock -= producto.cantidad; // Restar la cantidad vendida al stock
                 await productoEnDB.save(); // Guardar la actualización del stock
-                console.log(`Stock actualizado para el producto ${productoEnDB.nombre}: ${productoEnDB.stock}`);
             } else {
                 console.error('Producto no encontrado en la base de datos:', producto.productoId);
                 return res.status(400).json({ error: 'Producto no encontrado en la base de datos' });
             }
         }
-
-        console.log(cartId);
 
         if (cartId) {
             await Cart.findByIdAndDelete(cartId);
@@ -108,6 +98,84 @@ export const createPedido = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+export const agregarProductoAlPedido = async (req, res) => {
+    const { mesaId } = req.params;
+    const { productos } = req.body;
+    const { precioSeleccionado } = req.body;
+
+    // Validar datos entrantes
+    if (!productos || !productos.producto || !productos.cantidad || !productos.total || !productos.precioSeleccionado) {
+        console.log("Faltan datos obligatorios:", productos, productos.producto, productos.cantidad, productos.total, productos.precioSeleccionado);
+        return res.status(400).json({
+            error: "Faltan datos obligatorios: `producto`, `cantidad`, `total` y `precios`.",
+        });
+    }
+
+    try {
+        // Encontrar la mesa y popular los pedidos
+        const mesa = await Mesa.findById(mesaId).populate("pedidos"); // Popular los pedidos relacionados
+        console.log(mesa, "Mesa con pedidos");
+
+        if (!mesa) {
+            return res.status(404).json({ error: "Mesa no encontrada" });
+        }
+
+        // Buscar un pedido pendiente dentro de los pedidos de la mesa
+        const pedidoExistente = mesa.pedidos.find((p) => p.estado === "pendiente");
+        console.log(pedidoExistente, "Pedido existente");
+
+        if (pedidoExistente) {
+            // Agregar el producto al pedido existente
+            pedidoExistente.productos.push({
+                producto: productos.producto,
+                cantidad: productos.cantidad,
+                total: productos.total,
+                tipo: productos.tipo,
+                categoria: productos.categoria,
+                precioSeleccionado: productos.precioSeleccionado,
+            });
+            pedidoExistente.total += productos.total; // Actualizar el total del pedido
+            await pedidoExistente.save();
+        } else {
+            // Crear un nuevo pedido con el producto
+            const nuevoPedido = new Pedido({
+                mesa: mesa._id,
+                productos: [
+                    {
+                        producto: productos.producto,
+                        cantidad: productos.cantidad,
+                        total: productos.total,
+                        precios: productos.precios,
+                        tipo: productos.tipo,
+                        categoria: productos.categoria,
+                        precioSeleccionado: productos.precioSeleccionado,
+                    },
+                ],
+                estado: "pendiente",
+                total: productos.total,
+            });
+
+            // Guardar el nuevo pedido
+            const pedidoGuardado = await nuevoPedido.save();
+
+            // Asociar el nuevo pedido a la mesa
+            mesa.pedidos.push(pedidoGuardado._id);
+        }
+
+        // Actualizar el total de la mesa
+        mesa.total += productos.total;
+
+        // Guardar la mesa actualizada
+        await mesa.save();
+
+        res.json(mesa);
+    } catch (error) {
+        console.error("Error al agregar producto:", error);
+        res.status(500).json({ error: "Error al agregar producto" });
+    }
+};
+
 
 // Obtener todos los pedidos
 export const getPedidos = async (req, res) => {
@@ -139,7 +207,7 @@ export const getPedidoById = async (req, res) => {
 export const getPedidosPendientes = async (req, res) => {
     try {
         const { tipo } = req.query; // Obtener el tipo de la consulta (plato o bebida)
-        
+
         const filter = { estado: 'pendiente' };
         if (tipo) {
             filter['productos.tipo'] = tipo; // Filtrar productos por tipo si se especifica
@@ -148,7 +216,7 @@ export const getPedidosPendientes = async (req, res) => {
         const pedidos = await Pedido.find(filter)
             .populate('mesa')
             .populate('productos.producto'); // Expande los detalles del producto
-        
+
         res.status(200).json(pedidos);
     } catch (error) {
         console.error('Error al obtener pedidos pendientes:', error);
@@ -174,7 +242,7 @@ export const getPedidosFinalizados = async (req, res) => {
         const pedidosFinalizados = await Pedido.find(filter)
             .populate('mesa')
             .populate('productos.producto'); // Expande los detalles del producto
-        
+
         res.status(200).json(pedidosFinalizados);
     } catch (error) {
         console.error('Error al obtener pedidos finalizados:', error);
@@ -186,7 +254,9 @@ export const getPedidosFinalizados = async (req, res) => {
 export const updateProducto = async (req, res) => {
     try {
         const { pedidoId, productoId } = req.params;
-        const { estado } = req.body;
+        const { estadoPreparacion } = req.body;
+
+        console.log('Hola', pedidoId, productoId, estadoPreparacion);
 
         const pedido = await Pedido.findById(pedidoId);
         if (!pedido) return res.status(404).json({ error: 'Pedido no encontrado' });
@@ -196,7 +266,7 @@ export const updateProducto = async (req, res) => {
 
         console.log(producto);
 
-        producto.estado = estado;
+        producto.estadoPreparacion = estadoPreparacion;
         await pedido.save();
 
         res.status(200).json({ message: 'Producto actualizado correctamente' });

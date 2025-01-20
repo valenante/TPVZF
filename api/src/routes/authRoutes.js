@@ -16,7 +16,6 @@ router.post(
   '/login',
   loginLimiter,
   [
-    check('email', 'El correo no es válido').isEmail().normalizeEmail(),
     check('password', 'La contraseña es obligatoria').notEmpty(),
   ],
   (req, res, next) => {
@@ -35,9 +34,9 @@ router.post(
   [
     check('name', 'El nombre es obligatorio').notEmpty(),
     check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }),
-    check('role', 'El rol debe ser admin, usuario o manager')
+    check('role', 'El rol debe ser admin, camarero o cocinero')
       .optional()
-      .isIn(['admin', 'usuario', 'manager']),
+      .isIn(['admin', 'camarero', 'cocinero']),
   ],
   (req, res, next) => {
     const errors = validationResult(req);
