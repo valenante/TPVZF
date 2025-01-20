@@ -7,6 +7,7 @@ const CartItemSchema = new Schema({
   opciones: { type: Object, default: {} }, // Opciones personalizables
   ingredientes: { type: [String], default: [] }, // Ingredientes personalizados
   nombre: { type: String, required: true },
+  precioSeleccionado: { type: Number, required: true }, // Precio seleccionado por el usuario
 });
 
 const CartSchema = new Schema({

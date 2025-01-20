@@ -4,7 +4,7 @@ import { hash, compare } from 'bcrypt';
 const userSchema = new Schema({
   name: { type: String, required: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['admin', 'user'], default: 'user' }, // Rol del usuario
+  role: { type: String, enum: ['admin', 'camarero', 'cocinero'], default: 'user' }, // Rol del usuario
 }, { timestamps: true });
 
 // Encriptar contraseña antes de guardar

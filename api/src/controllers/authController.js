@@ -6,7 +6,7 @@ import logger from '../../utils/logger.js';
 // Generar access token
 const generarAccessToken = (user) => {
   return jwt.sign(
-    { id: user._id, email: user.email, role: user.role },
+    { id: user._id, name: user.name, role: user.role },
     process.env.JWT_SECRET,
     { expiresIn: '1h' } // Token válido por 1 hora
   );
@@ -115,17 +115,19 @@ export const register = async (req, res) => {
 
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { name, password } = req.body;
+
+  console.log(name, password);
 
   try {
-    const usuario = await User.findOne({ email });
+    const usuario = await User.findOne({ name });
     if (!usuario) {
-      return res.status(404).json({ error: 'Correo o contraseña incorrectos.' });
+      return res.status(404).json({ error: 'Usuario o contraseña incorrectos.' });
     }
 
     const contrasenaValida = await usuario.comparePassword(password);
     if (!contrasenaValida) {
-      return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
+      return res.status(401).json({ error: 'Usuario o contraseña incorrectos.' });
     }
 
     // Generar tokens
@@ -139,15 +141,24 @@ export const login = async (req, res) => {
       sameSite: 'strict', // Protección CSRF
     });
 
+    // Enviar respuesta con el token y los datos del usuario
     res.status(200).json({
       message: 'Inicio de sesión exitoso',
       accessToken,
+      user: {
+        id: usuario._id,
+        name: usuario.name,
+        role: usuario.role,
+      },
     });
+
+    console.log(accessToken, refreshToken);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al iniciar sesión.' });
   }
 };
+
 
 
 export const protegerRuta = (req, res, next) => {

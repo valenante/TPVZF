@@ -53,7 +53,7 @@ router.put(
 
 // Eliminar un producto por ID (solo usuarios autenticados y con rol admin)
 router.delete(
-    '/:id',
+    '/:pedidoId/:id',
     authMiddleware,
     checkRole(['admin']), // Solo los administradores pueden eliminar productos
     [

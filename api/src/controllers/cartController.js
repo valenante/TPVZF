@@ -42,7 +42,7 @@ export const getCart = async (req, res) => {
 };
 
 export const addToCart = async (req, res) => {
-  const { productId, cantidad, opciones, ingredientes, cartId, mesa, nombre } = req.body;
+  const { productId, cantidad, opciones, ingredientes, cartId, mesa, nombre, precioSeleccionado } = req.body;
 
   try {
     // Validar que `productId` esté presente
@@ -51,6 +51,8 @@ export const addToCart = async (req, res) => {
     }
 
     let cart;
+
+    console.log(cartId);
 
     if (cartId) {
       // Buscar el carrito existente
@@ -70,7 +72,7 @@ export const addToCart = async (req, res) => {
       cart.items[itemIndex].cantidad += cantidad;
     } else {
       // Agregar un nuevo producto al carrito
-      cart.items.push({ productId, cantidad, opciones, ingredientes, nombre });
+      cart.items.push({ productId, cantidad, opciones, ingredientes, nombre, precioSeleccionado });
     }
 
     // Guardar el carrito en la base de datos
