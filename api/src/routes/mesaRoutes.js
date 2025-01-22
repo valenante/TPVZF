@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import { getMesas, getMesaById, abrirMesa, cerrarMesa, getHistorialMesas, getMesaByNumero, createTokenLider, checkTokenLider, checkTokenLiderByNumber } from '../controllers/mesaController.js';
+import { getMesas, getMesaById, abrirMesa, cerrarMesa, obtenerMesasCerradas ,getHistorialMesas, getMesaByNumero, createTokenLider, checkTokenLider, checkTokenLiderByNumber } from '../controllers/mesaController.js';
 
 // Rutas
 router.get('/', getMesas); // Obtener todas las mesas activas
@@ -12,7 +12,7 @@ router.get('/:numeroMesa', getMesaByNumero); // Obtener una mesa activa por núm
 router.get("/token-lider/token-lider/check/:mesaId", checkTokenLider);
 router.get('/token-lider/token-lider/check', checkTokenLiderByNumber);
 router.post("/token-lider/token-lider", createTokenLider);
-
+router.get("/mesas-cerradas/mesas-cerradas", obtenerMesasCerradas);
 
 
 export default router;

@@ -99,6 +99,8 @@ export const createProducto = async (req, res) => {
 export const deleteProducto = async (req, res) => {
     const { pedidoId, id: productoId } = req.params; // IDs del pedido y del producto
     const { motivo } = req.body; // Motivo de eliminación enviado en el cuerpo de la solicitud
+
+    console.log(productoId, 'nananepico')
   
     try {
       // Obtener el token del encabezado de autorización
@@ -120,7 +122,7 @@ export const deleteProducto = async (req, res) => {
   
       // Buscar el producto en el pedido
       const productoEliminado = pedido.productos.find(
-        (producto) => producto._id.toString() === productoId
+        (producto) => producto.producto.toString() === productoId
       );
   
       if (!productoEliminado) {
@@ -129,7 +131,7 @@ export const deleteProducto = async (req, res) => {
   
       // Filtrar el producto del pedido y recalcular el total
       pedido.productos = pedido.productos.filter(
-        (producto) => producto._id.toString() !== productoId
+        (producto) => producto.producto.toString() !== productoId
       );
   
       pedido.total = pedido.productos.reduce((total, producto) => {
@@ -137,14 +139,16 @@ export const deleteProducto = async (req, res) => {
       }, 0);
   
       await pedido.save();
+
+      console.log(productoEliminado.producto, 'ruta')
   
       // Registrar la eliminación en la colección `Eliminaciones`
       const eliminacion = new Eliminacion({
-        producto: productoEliminado._id,
+        producto: productoEliminado.producto,
         pedido: pedidoId,
         cantidad: productoEliminado.cantidad || 1, // Si no tienes cantidad, asume 1 por defecto
         motivo: motivo || "Sin motivo especificado",
-        usuario: usuarioId, // Usuario que eliminó el producto
+        user: usuarioId, // Usuario que eliminó el producto
         mesa: pedido.mesa,
       });
   

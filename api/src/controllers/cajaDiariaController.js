@@ -99,3 +99,31 @@ export const deleteCajaDiaria = async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar el registro de caja diaria.' });
     }
 };
+
+export const obtenerCajasPorRango = async (req, res) => {
+  const { fechaInicio, fechaFin } = req.query;
+
+  console.log(fechaInicio, fechaFin);
+
+  try {
+    // Verifica que las fechas estén presentes
+    if (!fechaInicio || !fechaFin) {
+      return res.status(400).json({ error: 'Debe proporcionar un rango de fechas.' });
+    }
+
+    // Consulta las cajas en el rango de fechas
+    const cajas = await CajaDiaria.find({
+      fecha: {
+        $gte: new Date(fechaInicio),
+        $lte: new Date(fechaFin),
+      },
+    }).sort({ fecha: 1 }); // Ordena por fecha ascendente
+
+    console.log(cajas);
+
+    res.status(200).json(cajas);
+  } catch (error) {
+    console.error('Error al obtener cajas:', error);
+    res.status(500).json({ error: 'Error al obtener cajas.' });
+  }
+};

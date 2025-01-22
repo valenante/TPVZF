@@ -210,3 +210,27 @@ export const getMesaByNumero = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener la mesa' });
     }
 };
+
+export const obtenerMesasCerradas = async (req, res) => {
+  try {
+    const mesasCerradas = await MesaCerrada.find({})
+      .populate({
+        path: 'pedidos', // Relación con pedidos
+        populate: {
+          path: 'productos', // Relación con productos dentro de los pedidos
+          select: 'producto cantidad total', // Selecciona los campos relevantes
+          populate: {
+            path: 'producto', // Relación con el nombre del producto
+            select: 'nombre', // Solo obtén el nombre del producto
+          },
+        },
+      })
+      .sort({ cierre: -1 }); // Ordenar por cierre descendente
+
+    res.status(200).json(mesasCerradas);
+  } catch (error) {
+    console.error('Error al obtener las mesas cerradas:', error);
+    res.status(500).json({ error: 'Error al obtener las mesas cerradas.' });
+  }
+};
+

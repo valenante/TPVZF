@@ -24,6 +24,8 @@ import passwordRoutes from "./src/routes/passwordRoutes.js";
 import errorHandler from "./src/middlewares/errorHandler.js";
 import notFoundHandler from "./src/middlewares/notFoundHandler.js";
 import cajaRoutes from "./src/routes/cajaRoutes.js"; // Importar rutas de caja
+import eliminacionRoutes from "./src/routes/eliminacionRoutes.js"; // Importar rutas de eliminaciones
+import cajaDiariaRoutes from "./src/routes/cajaDiariaRoutes.js"; // Importar rutas de caja diaria
 
 // Configurar dotenv para variables de entorno
 config();
@@ -94,6 +96,8 @@ app.use("/api/ventas", ventasRoutes); // Rutas de ventas
 app.use("/api/cart", cartRoutes); // Rutas de carrito
 app.use("/api/password", passwordRoutes); // Rutas de contraseña
 app.use("/api/caja", cajaRoutes); // Rutas de caja
+app.use("/api/eliminaciones", eliminacionRoutes); // Rutas de eliminaciones
+app.use("/api/cajaDiaria", cajaDiariaRoutes); // Rutas de caja diaria
 
 app.use(notFoundHandler);
 app.use(errorHandler);

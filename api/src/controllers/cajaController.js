@@ -3,6 +3,7 @@ import Password from "../models/Password.js";
 import CajaDiaria from "../models/CajaDiaria.js";
 import Pedido from "../models/Pedido.js";
 import Cart from "../models/Cart.js";
+import Eliminaciones from "../models/Eliminacion.js";
 import Mesa from "../models/Mesa.js";
 import PDFDocument from "pdfkit";
 import nodemailer from "nodemailer";
@@ -56,6 +57,7 @@ export const cerrarCaja = async (req, res) => {
         await Pedido.deleteMany({});
         await Cart.deleteMany({});
         await Mesa.updateMany({}, { $set: { total: 0, pedidos: [] } });
+        await Eliminaciones.deleteMany({});
 
         // Generar PDF
         const pdfBuffer = await generarPDF(mesasCerradas, total);

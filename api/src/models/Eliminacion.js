@@ -5,7 +5,7 @@ const EliminacionSchema = new Schema({
   pedido: { type: Schema.Types.ObjectId, ref: 'Pedido', required: true },
   cantidad: { type: Number, required: true },
   fecha: { type: Date, default: Date.now },
-  usuario: { type: Schema.Types.ObjectId, ref: 'Usuario', required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   mesa: { type: Schema.Types.ObjectId, ref: 'Mesa', required: true }, // Agregar referencia a la mesa
 });
 
