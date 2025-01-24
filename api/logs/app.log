@@ -811,3 +811,184 @@ u2025-01-13 14:54:55 [INFO]: Aplicación iniciada correctamente
 2025-01-22 17:06:37 [INFO]: Aplicación iniciada correctamente
 2025-01-22 17:06:37 [INFO]: Servidor escuchando en el puerto 3000
 2025-01-22 17:06:37 [INFO]: Conectado a MongoDB
+2025-01-22 17:25:12 [INFO]: Aplicación iniciada correctamente
+2025-01-22 17:25:12 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-22 17:25:12 [INFO]: Conectado a MongoDB
+2025-01-22 17:29:36 [INFO]: Aplicación iniciada correctamente
+2025-01-22 17:29:36 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-22 17:29:36 [INFO]: Conectado a MongoDB
+2025-01-22 17:30:03 [INFO]: Aplicación iniciada correctamente
+2025-01-22 17:30:03 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-22 17:30:03 [INFO]: Conectado a MongoDB
+2025-01-22 17:30:31 [INFO]: Aplicación iniciada correctamente
+2025-01-22 17:30:31 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-22 17:30:31 [INFO]: Conectado a MongoDB
+2025-01-22 17:33:34 [INFO]: Aplicación iniciada correctamente
+2025-01-22 17:33:34 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-22 17:33:34 [INFO]: Conectado a MongoDB
+2025-01-22 17:36:12 [INFO]: Aplicación iniciada correctamente
+2025-01-22 17:36:12 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-22 17:36:12 [INFO]: Conectado a MongoDB
+2025-01-22 17:37:47 [INFO]: Aplicación iniciada correctamente
+2025-01-22 17:37:47 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-22 17:37:47 [INFO]: Conectado a MongoDB
+2025-01-22 17:40:19 [INFO]: Aplicación iniciada correctamente
+2025-01-22 17:40:19 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-22 17:40:19 [INFO]: Conectado a MongoDB
+2025-01-22 17:43:34 [INFO]: Aplicación iniciada correctamente
+2025-01-22 17:43:34 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-22 17:43:34 [INFO]: Conectado a MongoDB
+2025-01-23 23:21:03 [INFO]: Aplicación iniciada correctamente
+2025-01-23 23:21:03 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-23 23:21:03 [INFO]: Conectado a MongoDB
+2025-01-23 23:46:08 [INFO]: Aplicación iniciada correctamente
+2025-01-23 23:46:08 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-23 23:46:08 [INFO]: Conectado a MongoDB
+2025-01-23 23:58:56 [INFO]: Aplicación iniciada correctamente
+2025-01-23 23:58:56 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-23 23:58:56 [INFO]: Conectado a MongoDB
+2025-01-23 23:59:44 [INFO]: Aplicación iniciada correctamente
+2025-01-23 23:59:44 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-23 23:59:44 [INFO]: Conectado a MongoDB
+2025-01-24 00:12:54 [ERROR]: Promesa no manejada: TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.
+2025-01-24 00:13:13 [INFO]: Aplicación iniciada correctamente
+2025-01-24 00:13:13 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 00:13:13 [INFO]: Conectado a MongoDB
+2025-01-24 00:13:16 [ERROR]: Promesa no manejada: TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.
+2025-01-24 00:13:25 [INFO]: Aplicación iniciada correctamente
+2025-01-24 00:13:25 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 00:13:25 [INFO]: Conectado a MongoDB
+2025-01-24 00:13:28 [ERROR]: Promesa no manejada: TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.
+2025-01-24 15:10:38 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:10:39 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:10:39 [INFO]: Conectado a MongoDB
+2025-01-24 15:12:32 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:12:32 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:12:32 [INFO]: Conectado a MongoDB
+2025-01-24 15:13:51 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:13:51 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:13:51 [INFO]: Conectado a MongoDB
+2025-01-24 15:14:14 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:14:14 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:14:14 [INFO]: Conectado a MongoDB
+2025-01-24 15:14:16 [ERROR]: Promesa no manejada: TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.
+2025-01-24 15:22:48 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:22:48 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:22:48 [INFO]: Conectado a MongoDB
+2025-01-24 15:23:50 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:23:50 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:23:50 [INFO]: Conectado a MongoDB
+2025-01-24 15:32:08 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:32:08 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:32:08 [INFO]: Conectado a MongoDB
+2025-01-24 15:35:43 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:35:43 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:35:43 [INFO]: Conectado a MongoDB
+2025-01-24 15:38:16 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:38:16 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:38:16 [INFO]: Conectado a MongoDB
+2025-01-24 15:39:58 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:39:58 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:39:58 [INFO]: Conectado a MongoDB
+2025-01-24 15:40:52 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:40:52 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:40:52 [INFO]: Conectado a MongoDB
+2025-01-24 15:42:49 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:42:49 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:42:49 [INFO]: Conectado a MongoDB
+2025-01-24 15:43:09 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:43:09 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:43:09 [INFO]: Conectado a MongoDB
+2025-01-24 15:48:04 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:48:04 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:48:04 [INFO]: Conectado a MongoDB
+2025-01-24 15:48:26 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:48:26 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:48:26 [INFO]: Conectado a MongoDB
+2025-01-24 15:48:49 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:48:49 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:48:49 [INFO]: Conectado a MongoDB
+2025-01-24 15:49:10 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:49:10 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:49:10 [INFO]: Conectado a MongoDB
+2025-01-24 15:52:00 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:52:00 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:52:00 [INFO]: Conectado a MongoDB
+2025-01-24 15:55:12 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:55:12 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:55:12 [INFO]: Conectado a MongoDB
+2025-01-24 15:55:42 [INFO]: Aplicación iniciada correctamente
+2025-01-24 15:55:42 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 15:55:42 [INFO]: Conectado a MongoDB
+2025-01-24 16:05:45 [INFO]: Aplicación iniciada correctamente
+2025-01-24 16:05:45 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 16:05:45 [INFO]: Conectado a MongoDB
+2025-01-24 16:09:48 [INFO]: Aplicación iniciada correctamente
+2025-01-24 16:09:48 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 16:09:48 [INFO]: Conectado a MongoDB
+2025-01-24 16:10:27 [INFO]: Aplicación iniciada correctamente
+2025-01-24 16:10:27 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 16:10:27 [INFO]: Conectado a MongoDB
+2025-01-24 16:12:43 [INFO]: Aplicación iniciada correctamente
+2025-01-24 16:12:43 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 16:12:43 [INFO]: Conectado a MongoDB
+2025-01-24 16:13:17 [INFO]: Aplicación iniciada correctamente
+2025-01-24 16:13:17 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 16:13:17 [INFO]: Conectado a MongoDB
+2025-01-24 16:13:28 [INFO]: Aplicación iniciada correctamente
+2025-01-24 16:13:28 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 16:13:28 [INFO]: Conectado a MongoDB
+2025-01-24 22:53:15 [INFO]: Aplicación iniciada correctamente
+2025-01-24 22:53:15 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 22:53:15 [INFO]: Conectado a MongoDB
+2025-01-24 22:53:35 [INFO]: Aplicación iniciada correctamente
+2025-01-24 22:53:35 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 22:53:35 [INFO]: Conectado a MongoDB
+2025-01-24 22:55:19 [INFO]: Aplicación iniciada correctamente
+2025-01-24 22:55:19 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 22:55:19 [INFO]: Conectado a MongoDB
+2025-01-24 22:58:13 [INFO]: Aplicación iniciada correctamente
+2025-01-24 22:58:13 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 22:58:13 [INFO]: Conectado a MongoDB
+2025-01-24 22:58:45 [INFO]: Aplicación iniciada correctamente
+2025-01-24 22:58:45 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 22:58:45 [INFO]: Conectado a MongoDB
+2025-01-24 23:00:43 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:00:43 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:00:43 [INFO]: Conectado a MongoDB
+2025-01-24 23:01:19 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:01:19 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:01:19 [INFO]: Conectado a MongoDB
+2025-01-24 23:01:34 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:01:34 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:01:34 [INFO]: Conectado a MongoDB
+2025-01-24 23:04:21 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:04:22 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:04:22 [INFO]: Conectado a MongoDB
+2025-01-24 23:04:38 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:04:38 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:04:38 [INFO]: Conectado a MongoDB
+2025-01-24 23:04:54 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:04:54 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:04:54 [INFO]: Conectado a MongoDB
+2025-01-24 23:10:46 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:10:46 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:10:46 [INFO]: Conectado a MongoDB
+2025-01-24 23:15:33 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:15:33 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:15:33 [INFO]: Conectado a MongoDB
+2025-01-24 23:18:06 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:18:06 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:18:06 [INFO]: Conectado a MongoDB
+2025-01-24 23:36:33 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:36:33 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:36:33 [INFO]: Conectado a MongoDB
+2025-01-24 23:44:22 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:44:22 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:44:22 [INFO]: Conectado a MongoDB
+2025-01-24 23:51:02 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:51:02 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:51:02 [INFO]: Conectado a MongoDB
+2025-01-24 23:53:14 [INFO]: Aplicación iniciada correctamente
+2025-01-24 23:53:14 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-24 23:53:14 [INFO]: Conectado a MongoDB

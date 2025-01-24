@@ -331,3 +331,29 @@ export const deletePedido = async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar el pedido' });
     }
 };
+
+// Endpoint para verificar si todos los pedidos de una mesa están listos
+export const verificarPedidosMesa = async (req, res) => {
+    const { numeroMesa } = req.params;
+  
+    if (!numeroMesa || isNaN(Number(numeroMesa))) {
+      console.error("Número de mesa no válido:", numeroMesa);
+      return res.status(400).json({ error: "Número de mesa no válido." });
+    }
+  
+    try {
+      const mesa = await Mesa.findOne({ numero: Number(numeroMesa) });
+      if (!mesa) {
+        return res.status(404).json({ error: "Mesa no encontrada." });
+      }
+  
+      const pedidos = await Pedido.find({ mesa: mesa._id });
+      const todosListos = pedidos.every((pedido) => pedido.estado === "listo");
+  
+      res.status(200).json({ todosListos });
+    } catch (error) {
+      console.error("Error al verificar pedidos de la mesa:", error);
+      res.status(500).json({ error: "Error al verificar pedidos de la mesa." });
+    }
+  };
+  

@@ -26,6 +26,8 @@ import notFoundHandler from "./src/middlewares/notFoundHandler.js";
 import cajaRoutes from "./src/routes/cajaRoutes.js"; // Importar rutas de caja
 import eliminacionRoutes from "./src/routes/eliminacionRoutes.js"; // Importar rutas de eliminaciones
 import cajaDiariaRoutes from "./src/routes/cajaDiariaRoutes.js"; // Importar rutas de caja diaria
+import valoracionesRoutes from "./src/routes/valoracionesRoutes.js"; // Importar rutas de 
+import cuentaRoutes from "./src/routes/cuentaRoutes.js"; // Importar rutas de cuenta
 
 // Configurar dotenv para variables de entorno
 config();
@@ -98,6 +100,8 @@ app.use("/api/password", passwordRoutes); // Rutas de contraseña
 app.use("/api/caja", cajaRoutes); // Rutas de caja
 app.use("/api/eliminaciones", eliminacionRoutes); // Rutas de eliminaciones
 app.use("/api/cajaDiaria", cajaDiariaRoutes); // Rutas de caja diaria
+app.use("/api/valoraciones", valoracionesRoutes); // Rutas de valoraciones
+app.use("/api/cuenta", cuentaRoutes); // Rutas de cuenta
 
 app.use(notFoundHandler);
 app.use(errorHandler);
@@ -139,3 +143,5 @@ server.listen(PORT, () => {
   info(`Servidor escuchando en el puerto ${PORT}`);
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+
+export {io};
