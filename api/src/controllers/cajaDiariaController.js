@@ -103,8 +103,6 @@ export const deleteCajaDiaria = async (req, res) => {
 export const obtenerCajasPorRango = async (req, res) => {
   const { fechaInicio, fechaFin } = req.query;
 
-  console.log(fechaInicio, fechaFin);
-
   try {
     // Verifica que las fechas estén presentes
     if (!fechaInicio || !fechaFin) {
@@ -118,9 +116,6 @@ export const obtenerCajasPorRango = async (req, res) => {
         $lte: new Date(fechaFin),
       },
     }).sort({ fecha: 1 }); // Ordena por fecha ascendente
-
-    console.log(cajas);
-
     res.status(200).json(cajas);
   } catch (error) {
     console.error('Error al obtener cajas:', error);

@@ -44,7 +44,6 @@ export const createOrUpdatePassword = async (req, res) => {
 // Actualizar contraseña
 export const updatePassword = async (req, res) => {
   const { valor } = req.body;
-  console.log("valor", valor);
 
   if (!valor) {
     return res.status(400).json({ error: "El campo 'valor' es obligatorio" });

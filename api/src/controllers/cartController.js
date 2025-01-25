@@ -52,8 +52,6 @@ export const addToCart = async (req, res) => {
 
     let cart;
 
-    console.log(cartId);
-
     if (cartId) {
       // Buscar el carrito existente
       cart = await Cart.findById(cartId);

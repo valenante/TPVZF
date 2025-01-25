@@ -71,7 +71,6 @@ export const crearValoraciones = async (req, res) => {
         return res.status(404).json({ error: "No se encontró la mesa especificada." });
       }
 
-      console.log(`TokenLider eliminado de la mesa: ${mesaId}`);
     } else {
       console.warn("No se proporcionó un ID de mesa para eliminar el tokenLider.");
     }
@@ -112,7 +111,6 @@ export const obtenerProductosValorados = async (req, res) => {
     });
 
     res.status(200).json(productosConValoraciones);
-    console.log(productosConValoraciones);
   } catch (error) {
     console.error("Error al obtener productos valorados:", error);
     res.status(500).json({ error: "Error al obtener productos valorados." });

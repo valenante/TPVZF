@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid"; // Generador de UUID
 export const checkTokenLider = async (req, res) => {
     //Conseguir el mesaId de los params
     const { mesaId } = req.params;
-    console.log(req.params);
   
     if (!mesaId) {
       return res.status(400).json({ error: "El número de la mesa es obligatorio" });
@@ -19,10 +18,8 @@ export const checkTokenLider = async (req, res) => {
       }
   
       res.status(200).json({ tokenLider: mesaDoc.tokenLider || null });
-      console.log("TokenLider:", mesaDoc.tokenLider);
     } catch (error) {
       console.error("Error al verificar el tokenLider:", error);
-      console.log("TokenLider:", null);
       res.status(500).json({ error: "Error al procesar la solicitud" });
     }
   };
@@ -231,6 +228,42 @@ export const obtenerMesasCerradas = async (req, res) => {
   } catch (error) {
     console.error('Error al obtener las mesas cerradas:', error);
     res.status(500).json({ error: 'Error al obtener las mesas cerradas.' });
+  }
+};
+
+
+export const recuperarMesa = async (req, res) => {
+  const { mesaId } = req.params; // ID de la mesa cerrada
+  try {
+    // Obtener la mesa cerrada
+    const mesaCerrada = await MesaCerrada.findById(mesaId);
+    if (!mesaCerrada) {
+      return res.status(404).json({ error: 'Mesa cerrada no encontrada.' });
+    }
+
+    // Buscar la mesa activa correspondiente
+    const mesaActiva = await Mesa.findOne({ numero: mesaCerrada.numero });
+    if (!mesaActiva) {
+      return res.status(404).json({ error: 'Mesa activa no encontrada.' });
+    }
+
+    // Transferir los datos de la mesa cerrada a la activa
+    mesaActiva.pedidos = mesaCerrada.pedidos;
+    mesaActiva.total = mesaCerrada.total;
+    mesaActiva.inicio = mesaCerrada.inicio;
+    mesaActiva.estado = 'abierta'; // Cambiar el estado a abierta
+    mesaActiva.updatedAt = new Date();
+
+    // Guardar la mesa activa
+    await mesaActiva.save();
+
+    // Eliminar o marcar la mesa cerrada como recuperada
+    await MesaCerrada.findByIdAndDelete(mesaId);
+
+    res.status(200).json({ message: 'Mesa recuperada con éxito.' });
+  } catch (error) {
+    console.error('Error al recuperar la mesa:', error);
+    res.status(500).json({ error: 'Error al recuperar la mesa.' });
   }
 };
 

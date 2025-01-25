@@ -50,6 +50,7 @@ export const updateProducto = async (req, res) => {
     try {
         const productoActualizado = await Producto.findByIdAndUpdate
         (id, req.body, { new: true });
+
         if (req.file) {
             productoActualizado.img = `/images/${req.file.filename}`;
         }
@@ -68,7 +69,6 @@ export const getProductosByCategory = async (req, res) => {
 
     try {
         const productos = await Producto.find({ categoria: category });
-        console.log("Productos encontrados en el backend:", productos); // Esto debería mostrar los productos de la categoría 'especiales'
         
         res.status(200).json({ products: productos });
     } catch (error) {
@@ -100,7 +100,6 @@ export const deleteProducto = async (req, res) => {
     const { pedidoId, id: productoId } = req.params; // IDs del pedido y del producto
     const { motivo } = req.body; // Motivo de eliminación enviado en el cuerpo de la solicitud
 
-    console.log(productoId, 'nananepico')
   
     try {
       // Obtener el token del encabezado de autorización
@@ -139,8 +138,6 @@ export const deleteProducto = async (req, res) => {
       }, 0);
   
       await pedido.save();
-
-      console.log(productoEliminado.producto, 'ruta')
   
       // Registrar la eliminación en la colección `Eliminaciones`
       const eliminacion = new Eliminacion({
@@ -154,15 +151,12 @@ export const deleteProducto = async (req, res) => {
   
       await eliminacion.save();
   
-      console.log('Depurando 1')
 
       // Actualizar el total de la mesa
       const mesa = await Mesa.findById(pedido.mesa).populate("pedidos");
       if (!mesa) {
         return res.status(404).json({ error: "Mesa no encontrada." });
       }
-
-      console.log('Depurando 2')
   
       // Recalcular el total de la mesa sumando los totales de todos sus pedidos
       mesa.total = mesa.pedidos.reduce((totalMesa, pedido) => {

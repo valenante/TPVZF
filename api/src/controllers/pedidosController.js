@@ -82,7 +82,6 @@ export const createPedido = async (req, res) => {
 
         if (cartId) {
             await Cart.findByIdAndDelete(cartId);
-            console.log('Carrito eliminado con éxito:', cartId);
         }
 
         // Emitir un evento con el nuevo pedido para los clientes conectados
@@ -106,7 +105,6 @@ export const agregarProductoAlPedido = async (req, res) => {
 
     // Validar datos entrantes
     if (!productos || !productos.producto || !productos.cantidad || !productos.total || !productos.precioSeleccionado) {
-        console.log("Faltan datos obligatorios:", productos, productos.producto, productos.cantidad, productos.total, productos.precioSeleccionado);
         return res.status(400).json({
             error: "Faltan datos obligatorios: `producto`, `cantidad`, `total` y `precios`.",
         });
@@ -115,7 +113,6 @@ export const agregarProductoAlPedido = async (req, res) => {
     try {
         // Encontrar la mesa y popular los pedidos
         const mesa = await Mesa.findById(mesaId).populate("pedidos"); // Popular los pedidos relacionados
-        console.log(mesa, "Mesa con pedidos");
 
         if (!mesa) {
             return res.status(404).json({ error: "Mesa no encontrada" });
@@ -123,7 +120,6 @@ export const agregarProductoAlPedido = async (req, res) => {
 
         // Buscar un pedido pendiente dentro de los pedidos de la mesa
         const pedidoExistente = mesa.pedidos.find((p) => p.estado === "pendiente");
-        console.log(pedidoExistente, "Pedido existente");
 
         if (pedidoExistente) {
             // Agregar el producto al pedido existente
@@ -256,15 +252,11 @@ export const updateProducto = async (req, res) => {
         const { pedidoId, productoId } = req.params;
         const { estadoPreparacion } = req.body;
 
-        console.log('Hola', pedidoId, productoId, estadoPreparacion);
-
         const pedido = await Pedido.findById(pedidoId);
         if (!pedido) return res.status(404).json({ error: 'Pedido no encontrado' });
 
         const producto = pedido.productos.id(productoId);
         if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
-
-        console.log(producto);
 
         producto.estadoPreparacion = estadoPreparacion;
         await pedido.save();
