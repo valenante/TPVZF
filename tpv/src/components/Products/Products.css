@@ -1,0 +1,60 @@
+/* Contenedor principal */
+.products--products {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* Ocupa toda la altura de la pantalla */
+  }
+  
+  /* Contenedor de categorías */
+  .categories--products {
+    text-align: center;
+  }
+  
+  /* Título de categorías */
+  .titulo-categorias--products {
+    font-size: 1.8rem;
+    color: #FFFFFF; /* Blanco */
+    margin-bottom: 20px;
+  }
+  
+  /* Mensaje de carga */
+  .cargando-categorias--products {
+    font-size: 1.2rem;
+    color: #FF6700; /* Naranja vibrante */
+    margin-top: 10px;
+  }
+  
+  /* Contenedor de botones */
+  .buttons--products {
+    display: grid; /* Diseño en grid */
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
+    gap: 20px; /* Espaciado entre botones */
+    justify-items: center; /* Centrar botones horizontalmente */
+    align-items: center; /* Centrar botones verticalmente */
+  }
+  
+  /* Botones estilizados */
+  .button--products {
+    background-color: #6A0DAD; /* Morado profundo */
+    color: #FFFFFF; /* Texto blanco */
+    border: 2px solid #FF6700;
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 15px 30px; /* Tamaño del botón */
+    font-size: 1.2rem; /* Tamaño del texto */
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  
+  /* Hover y efecto de interacción */
+  .button--products:hover {
+    background-color: #FF6700; /* Naranja vibrante */
+    transform: scale(1.1); /* Ampliar ligeramente */
+  }
+  
+  /* Animación en el clic */
+  .button--products:active {
+    transform: scale(0.95); /* Reducir ligeramente */
+  }
+  

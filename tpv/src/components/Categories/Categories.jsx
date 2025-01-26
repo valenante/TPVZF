@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useCategorias } from "../../context/CategoriasContext";
 import EditProduct from "./EditProducts";
-import CrearProducto from "./CrearProducto";
+import CrearProducto from "./CrearProducto"
+import "./Categories.css";
 
 const Categories = ({ category }) => {
   const [editingProduct, setEditingProduct] = useState(null); // Producto en edición
@@ -44,38 +45,57 @@ const Categories = ({ category }) => {
   };
 
   return (
-    <div className="categories">
-      <h2>Productos en la categoría: {category}</h2>
-      {editingProduct ? (
-        <EditProduct
-          product={editingProduct}
-          onSave={handleSave}
-          onCancel={handleCancel}
-          onDelete={handleDeleteProduct}
-        />
+    <div className="categories--categories">
+  {editingProduct ? (
+    <EditProduct
+      product={editingProduct}
+      onSave={handleSave}
+      onCancel={handleCancel}
+      onDelete={handleDeleteProduct}
+    />
+  ) : (
+    <>
+      {products.length === 0 ? (
+        <p className="sin-productos--categories">No hay productos en esta categoría.</p>
       ) : (
-        <>
-          {products.length === 0 ? (
-            <p>No hay productos en esta categoría.</p>
-          ) : (
-            <ul>
-              {products.map((product) => (
-                <li key={product._id}>
-                  {product.nombre} - {product.descripcion}
-                  <button onClick={() => handleEdit(product)}>Editar</button>
-                  <button onClick={() => handleDeleteProduct(product._id)}>Eliminar</button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
+        <div className="productos-grid--categories">
+          {products.slice(0, 8).map((product) => (
+            <div key={product._id} className="producto-card--categories">
+              <p>{product.nombre}</p>
+              <div className="producto-botones--categories">
+                <button onClick={() => handleEdit(product)} className="boton-editar--categories">
+                  Editar
+                </button>
+                <button
+                  onClick={() => handleDeleteProduct(product._id)}
+                  className="boton-eliminar--categories"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
-      <button onClick={() => setMostrarFormulario(true)}>Crear Producto</button>
-      {mostrarFormulario && (
-        <CrearProducto onClose={() => setMostrarFormulario(false)} />
-      )}
-    </div>
+    </>
+  )}
+
+  <button
+    onClick={() => setMostrarFormulario(true)}
+    className="boton-crear--categories"
+  >
+    Crear Producto
+  </button>
+
+  {mostrarFormulario && (
+    <>
+      <div className="crear-producto-overlay--crear" onClick={() => setMostrarFormulario(false)}></div>
+      <CrearProducto onClose={() => setMostrarFormulario(false)} />
+    </>
+  )}
+</div>
+
   );
-};
+};  
 
 export default Categories;

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import Products from "../components/Products/Products";
 import { CategoriasContext } from "../context/CategoriasContext";
+import "../styles/ProductsMenu.css";
 
 const ProductsPage = () => {
   const [selectedType, setSelectedType] = useState(null);
@@ -17,17 +18,20 @@ const ProductsPage = () => {
   };
 
   return (
-    <div className="products-page">
-      {!selectedType ? (
-        <div className="buttons">
-          <h1>Selecciona un tipo de producto:</h1>
-          <button onClick={() => handleTypeSelection("bebida")}>Bebidas</button>
-          <button onClick={() => handleTypeSelection("plato")}>Platos</button>
-        </div>
-      ) : (
-        <Products type={selectedType} categories={categories} />
-      )}
-    </div>
+      <div className="products-page--productos">
+        {!selectedType ? (
+          <div className="buttons--productos">
+            <button onClick={() => handleTypeSelection("bebida")} className="button--productos">
+              Bebidas
+            </button>
+            <button onClick={() => handleTypeSelection("plato")} className="button--productos">
+              Platos
+            </button>
+          </div>
+        ) : (
+          <Products type={selectedType} categories={categories} />
+        )}
+      </div>    
   );
 };
 

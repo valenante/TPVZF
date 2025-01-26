@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./EditProducts.css";
 
 const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
   const [formData, setFormData] = useState({ ...product });
@@ -94,112 +95,136 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
   const hasErrors = Object.values(errors).some((error) => error);
 
   return (
-    <div className="edit-product">
-      <h2>Editar Producto</h2>
-      <form onSubmit={handleSubmit} noValidate>
-        {/* Formulario existente */}
-        <label>
+    <div className="edit-product--editar">
+      <form onSubmit={handleSubmit} className="form--editar" noValidate>
+        {/* Nombre */}
+        <label className="label--editar">
           Nombre:
           <input
             type="text"
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
+            className="input--editar"
           />
         </label>
-        {errors.nombre && <p className="error">{errors.nombre}</p>}
-
-        <label>
+        {errors.nombre && <p className="error--editar">{errors.nombre}</p>}
+  
+        {/* Descripción */}
+        <label className="label--editar">
           Descripción:
           <textarea
             name="descripcion"
             value={formData.descripcion}
             onChange={handleChange}
+            className="textarea--editar"
           />
         </label>
-        {errors.descripcion && <p className="error">{errors.descripcion}</p>}
-
-        <label>
+        {errors.descripcion && <p className="error--editar">{errors.descripcion}</p>}
+  
+        {/* Categoría */}
+        <label className="label--editar">
           Categoría:
           <input
             type="text"
             name="categoria"
             value={formData.categoria}
             onChange={handleChange}
+            className="input--editar"
           />
         </label>
-        {errors.categoria && <p className="error">{errors.categoria}</p>}
-
-        <label>
+        {errors.categoria && <p className="error--editar">{errors.categoria}</p>}
+  
+        {/* Tipo */}
+        <label className="label--editar">
           Tipo:
           <input
             type="text"
             name="tipo"
             value={formData.tipo}
             onChange={handleChange}
+            className="input--editar"
           />
         </label>
-        {errors.tipo && <p className="error">{errors.tipo}</p>}
-
-        <fieldset>
-          <legend>Precios</legend>
-          <label>
+        {errors.tipo && <p className="error--editar">{errors.tipo}</p>}
+  
+        {/* Precios */}
+        <fieldset className="fieldset--editar">
+          <legend className="legend--editar">Precios</legend>
+          <label className="label--editar">
             Precio Base:
             <input
               type="number"
               name="precios.precioBase"
               value={formData.precios.precioBase || ""}
               onChange={handleChange}
+              className="input--editar"
             />
           </label>
-          {errors["precios.precioBase"] && <p className="error">{errors["precios.precioBase"]}</p>}
-
-          <label>
+          {errors["precios.precioBase"] && (
+            <p className="error--editar">{errors["precios.precioBase"]}</p>
+          )}
+  
+          <label className="label--editar">
             Precio Tapa:
             <input
               type="number"
               name="precios.tapa"
               value={formData.precios.tapa || ""}
               onChange={handleChange}
+              className="input--editar"
             />
           </label>
-          {errors["precios.tapa"] && <p className="error">{errors["precios.tapa"]}</p>}
-
-          <label>
+          {errors["precios.tapa"] && (
+            <p className="error--editar">{errors["precios.tapa"]}</p>
+          )}
+  
+          <label className="label--editar">
             Precio Ración:
             <input
               type="number"
               name="precios.racion"
               value={formData.precios.racion || ""}
               onChange={handleChange}
+              className="input--editar"
             />
           </label>
-          {errors["precios.racion"] && <p className="error">{errors["precios.racion"]}</p>}
+          {errors["precios.racion"] && (
+            <p className="error--editar">{errors["precios.racion"]}</p>
+          )}
         </fieldset>
-
-        <label>
-          Estado:
+  
+        {/* Estado */}
+        <label className="label--editar estado--editar">
           <input
             type="checkbox"
             name="estado"
             checked={formData.estado === "habilitado"}
             onChange={handleChange}
+            className="checkbox--editar"
           />
           Habilitado
         </label>
-
-        <button type="submit" disabled={hasErrors}>
-          Guardar
-        </button>
-        <button type="button" onClick={onCancel}>
-          Cancelar
-        </button>
-        <button type="button" onClick={handleDelete} className="delete-button">
-          Eliminar
-        </button>
+  
+        {/* Botones */}
+        <div className="botones--editar">
+          <button type="submit" disabled={hasErrors} className="boton--editar">
+            Guardar
+          </button>
+          <button type="button" onClick={onCancel} className="boton--editar">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="delete-button--editar"
+          >
+            Eliminar
+          </button>
+        </div>
       </form>
     </div>
   );
-};
+};  
 
 export default EditProduct;

@@ -1,0 +1,82 @@
+/* Contenedor principal */
+.edit-product--editar {
+    height: 60vh;
+    width: 50vw;
+    max-width: 50vh;
+    overflow-y: auto;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f5f5f5; /* Gris claro */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Título */
+  .titulo--editar {
+    font-size: 1.8rem;
+    color: #6a0dad; /* Morado profundo */
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Formulario */
+  .form--editar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Etiquetas */
+  .label--editar {
+    font-size: 1rem;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  /* Inputs */
+  .input--editar,
+  .textarea--editar {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .textarea--editar {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  /* Checkboxes */
+  .estado--editar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .checkbox--editar {
+    transform: scale(1.2);
+  }
+  
+  /* Fieldset */
+  .fieldset--editar {
+    border: 1px solid #6a0dad;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .legend--editar {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #6a0dad;
+  }
+  
+  /* Errores */
+  .error--editar {
+    font-size: 0.9rem;
+    color: #ff6700;
+  }
+  
+  

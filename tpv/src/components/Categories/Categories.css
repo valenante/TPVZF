@@ -1,0 +1,123 @@
+/* Contenedor principal */
+.categories--categories {
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+/* Título */
+.titulo-categoria--categories {
+    font-size: 1.8rem;
+    color: #6A0DAD;
+    /* Morado profundo */
+    margin-bottom: 20px;
+}
+
+/* Mensaje de sin productos */
+.sin-productos--categories {
+    font-size: 1.2rem;
+    color: #FF6700;
+    /* Naranja vibrante */
+    margin-top: 10px;
+}
+
+/* Grid de productos */
+.productos-grid--categories {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 columnas */
+    gap: 20px;
+    /* Espaciado entre los productos */
+    justify-items: center;
+    /* Centrar los productos */
+    align-items: center;
+    /* Centrar los productos verticalmente */
+}
+
+/* Cuadrados de productos */
+.producto-card--categories {
+    background-color: #6A0DAD;
+    /* Blanco */
+    color: white;
+    border-radius: 10px;
+    /* Bordes redondeados */
+    border: 2px solid #FF6700;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+    max-width: 150px;
+    /* Tamaño máximo */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover en productos */
+.producto-card--categories:hover {
+    transform: scale(1.05);
+    /* Ampliar ligeramente */
+}
+
+/* Botones dentro de productos */
+.producto-botones--categories {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.boton-editar--categories,
+.boton-eliminar--categories {
+    background-color: #FF6700;
+    /* Naranja vibrante */
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-editar--categories:hover {
+    background-color: #6A0DAD;
+    /* Morado profundo */
+}
+
+.boton-eliminar--categories:hover {
+    background-color: #FF3B3B;
+    /* Rojo */
+}
+
+/* Botón para crear productos */
+.boton-crear--categories {
+    background-color: #6A0DAD;
+    /* Morado profundo */
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-crear--categories:hover {
+    background-color: #FF6700;
+    /* Naranja vibrante */
+    transform: scale(1.05);
+}
+
+/* Responsive: Cambiar a 2 columnas en pantallas pequeñas */
+@media (max-width: 768px) {
+    .products--products {
+        display: flex;
+        justify-content: start;
+        height: 80vh;
+    }
+
+    .productos-grid--categories {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columnas para pantallas pequeñas */
+    }
+}

@@ -1,0 +1,152 @@
+/* Fondo oscuro para el modal de crear */
+.crear-producto-overlay--crear {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  /* Fondo semitransparente */
+  z-index: 999;
+}
+
+/* Modal de crear */
+.crear-producto-modal--crear {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 70vh;
+  width: fit-content;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+  /* Gris claro */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* Título */
+.titulo--crear {
+  font-size: 1.8rem;
+  color: #6a0dad;
+  /* Morado profundo */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Formulario */
+.form--crear {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Grupos de inputs en dos columnas */
+.form-group--crear {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* Dos columnas iguales */
+  gap: 20px;
+  /* Espaciado entre columnas */
+}
+
+/* Etiquetas */
+.label--crear {
+  font-size: 1rem;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Inputs y textarea */
+.input--crear,
+.textarea--crear {
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.textarea--crear {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Fieldset */
+.fieldset--crear {
+  border: 1px solid #6a0dad;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.legend--crear {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #6a0dad;
+}
+
+/* Botones */
+.botones--crear {
+  display: flex;
+  justify-content: space-between;
+}
+
+.boton--crear {
+  background-color: #6a0dad;
+  /* Morado profundo */
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton--crear:hover {
+  background-color: #ff6700;
+  /* Naranja vibrante */
+  transform: scale(1.05);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .crear-producto-modal--crear {
+    padding: 15px;
+  }
+
+  .form-group--crear {
+    grid-template-columns: 1fr;
+    /* Una sola columna en pantallas pequeñas */
+  }
+
+  .botones--crear {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* Responsivo: Ajustar inputs en pantallas pequeñas */
+@media (max-width: 768px) {
+  .edit-product--editar {
+    width: 90%;
+    /* Ocupa el 90% del ancho de la pantalla */
+    max-width: none;
+    /* Ajustar altura automáticamente */
+    padding: 15px;
+  }
+
+  .fieldset--editar .label--editar {
+    flex: 1 1 100%;
+    /* Los inputs ocupan el 100% del ancho en pantallas pequeñas */
+  }
+
+  .input--editar,
+  .textarea--editar {
+    font-size: 0.9rem;
+    /* Ajustar tamaño de fuente en pantallas pequeñas */
+  }
+}
