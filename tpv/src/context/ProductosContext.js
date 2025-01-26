@@ -1,6 +1,6 @@
-import React, { createContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useState, useCallback, useEffect, useContext } from 'react';
 import api from '../utils/api';
-import socket from '../utils/socket';
+import { SocketContext } from '../utils/socket'; // Importa el contexto de Socket.IO
 
 export const ProductosContext = createContext();
 
@@ -10,6 +10,9 @@ export const ProductosProvider = ({ children }) => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
   const [carrito, setCarrito] = useState({ items: [] });
   const [mesaId, setMesaId] = useState(null);
+
+  // Obtener el socket desde el contexto
+  const { socket } = useContext(SocketContext);
 
   const cargarCarrito = useCallback(async () => {
     try {
@@ -34,6 +37,8 @@ export const ProductosProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    if (!socket) return; // Si no hay conexión de socket, salir
+
     // Escuchar el evento "carritoActualizado" para actualizar el carrito
     socket.on('carritoActualizado', ({ cartId, totalItems }) => {
       localStorage.setItem('carritoMongoId', cartId);
@@ -51,7 +56,7 @@ export const ProductosProvider = ({ children }) => {
       socket.off('nuevoPedido');
       socket.off('carritoActualizado');
     };
-  }, [cargarCarrito]);
+  }, [socket, cargarCarrito]);
 
   const cargarProductos = useCallback(async () => {
     try {
@@ -83,8 +88,6 @@ export const ProductosProvider = ({ children }) => {
     }
   }, []);
   
-  
-
   return (
     <ProductosContext.Provider
       value={{

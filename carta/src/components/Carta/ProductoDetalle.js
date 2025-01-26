@@ -1,13 +1,18 @@
-import api from '../../utils/api'; // Importar la configuración de Axios desde utils/api.js
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
-import '../../styles/ModalDetalle.css';
+import React, { useState } from "react";
+import { useSearchParams, useParams } from "react-router-dom";
+import ReactDOM from "react-dom";
+import api from "../../utils/api";
+import "../../styles/ModalDetalle.css";
 
-const ProductoDetalle = ({ producto, cerrarModal }) => {
+const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
   const [cantidad, setCantidad] = useState(1);
   const [ingredientesSeleccionados, setIngredientesSeleccionados] = useState([...producto.ingredientes]);
   const [ingredientesEliminados, setIngredientesEliminados] = useState([]);
   const [opcionesSeleccionadas, setOpcionesSeleccionadas] = useState({});
+  const [searchParams] = useSearchParams();
+  const { numeroMesa } = useParams();
+  const mesa = numeroMesa;
+  const nombre = searchParams.get("nombre");
 
   const manejarCantidad = (incremento) => {
     setCantidad((prev) => Math.max(1, prev + incremento));
@@ -33,29 +38,32 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
   const agregarAlCarrito = async () => {
     const carritoId = localStorage.getItem('carritoMongoId');
 
-    // Preparar el objeto del pedido
+    const cartId = carritoId;
+  
     const pedido = {
-      productId: producto._id, // Asegúrate de que esto tenga el `_id` del producto
+      cartId,
+      productId: producto._id,
       cantidad,
-      ingredientes: ingredientesSeleccionados.filter((ing) => !producto.ingredientes.includes(ing)), // Solo ingredientes eliminados
+      ingredientes: ingredientesEliminados, // Solo ingredientes eliminados
       opciones: opcionesSeleccionadas,
-      cartId: carritoId, // Identificador del carrito
+      precioSeleccionado: seleccionPrecio, // Asegúrate de incluir este campo
+      total: seleccionPrecio * cantidad, // Calcular el total basado en el precio seleccionado
+      mesa,
+      nombre,
     };
-
+  
     try {
-    const response = await api.post('/cart', pedido);
-    const { _id: nuevoCartId } = response.data;
-
-    if (!carritoId) {
-      // Guardar el nuevo `cartId` en el local storage
-      localStorage.setItem('carritoMongoId', nuevoCartId);
+      const response = await api.post('/cart', pedido);
+      const { _id: nuevoCartId } = response.data;
+  
+      if (!carritoId) {
+        localStorage.setItem('carritoMongoId', nuevoCartId);
+      }
+      cerrarModal();
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
     }
-    cerrarModal();
-  } catch (error) {
-    console.error('Error al agregar al carrito:', error);
-  }
-};
-
+  };  
 
   return ReactDOM.createPortal(
     <div className="modal-detalle">
@@ -63,12 +71,11 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
         <h2>Personaliza tu {producto.nombre}</h2>
         <p>{producto.descripcion}</p>
 
-        {/* Ingredientes */}
         <h4>Ingredientes:</h4>
         <ul>
           {producto.ingredientes.map((ingrediente) => (
             <li key={ingrediente}>
-              <label className='ingrediente-label-detalle'>
+              <label>
                 <input
                   type="checkbox"
                   checked={ingredientesSeleccionados.includes(ingrediente)}
@@ -80,7 +87,6 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
           ))}
         </ul>
 
-        {/* Opciones personalizables */}
         {producto.opcionesPersonalizables.length > 0 && (
           <>
             <h4>Opciones:</h4>
@@ -88,7 +94,7 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
               <div key={opcion.tipo}>
                 <h5>{opcion.tipo}</h5>
                 {opcion.opciones.map((op) => (
-                  <label className='ingrediente-label-detalle' key={op}>
+                  <label key={op}>
                     <input
                       type="radio"
                       name={opcion.tipo}
@@ -104,22 +110,20 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
           </>
         )}
 
-        {/* Cantidad */}
         <h4>Cantidad:</h4>
-        <div className="cantidad-detalle">
+        <div>
           <button onClick={() => manejarCantidad(-1)}>-</button>
           <span>{cantidad}</span>
           <button onClick={() => manejarCantidad(1)}>+</button>
         </div>
 
-        {/* Botones */}
-        <div className="modal-botones-detalle">
+        <div>
           <button onClick={cerrarModal}>Cancelar</button>
           <button onClick={agregarAlCarrito}>Agregar al carrito</button>
         </div>
       </div>
     </div>,
-    document.body // Renderiza el modal en el cuerpo del documento
+    document.body
   );
 };
 

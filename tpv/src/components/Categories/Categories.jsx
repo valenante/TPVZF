@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from "react";
-import api from "../../utils/api";
+import { useCategorias } from "../../context/CategoriasContext";
 import EditProduct from "./EditProducts";
 import CrearProducto from "./CrearProducto";
 
 const Categories = ({ category }) => {
-  const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null); // Producto en edición
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
-  const fetchProducts = async (category) => {
-    if (!category) {
-      console.error("Categoría inválida:", category);
-      return;
-    }
+  const { products, fetchProducts, updateProduct, deleteProduct } = useCategorias();
 
-    try {
-      const response = await api.get(`/productos/category/${encodeURIComponent(category)}`);
-      setProducts(response.data.products);
-    } catch (error) {
-      console.error("Error al obtener productos:", error);
+  useEffect(() => {
+    // Evita hacer solicitudes si no hay una categoría válida
+    if (category) {
+      fetchProducts(category); // Cargar productos desde el contexto
     }
-  };
+  }, [category]); // Llama a fetchProducts solo cuando la categoría cambia
 
   const handleEdit = (product) => {
     setEditingProduct(product); // Selecciona el producto para editar
@@ -28,12 +22,7 @@ const Categories = ({ category }) => {
 
   const handleSave = async (updatedProduct) => {
     try {
-      await api.put(`/productos/${updatedProduct._id}`, updatedProduct); // Actualiza en el backend
-      setProducts((prev) =>
-        prev.map((prod) =>
-          prod._id === updatedProduct._id ? updatedProduct : prod
-        )
-      );
+      await updateProduct(updatedProduct); // Usa el método del contexto
       setEditingProduct(null); // Cierra el editor
     } catch (error) {
       console.error("Error al guardar producto:", error);
@@ -42,22 +31,17 @@ const Categories = ({ category }) => {
 
   const handleDeleteProduct = async (id) => {
     try {
-      await api.delete(`/productos/${id}`);
-      fetchProducts(); // Refresca la lista de productos
+      await deleteProduct(id); // Usa el método del contexto
+      await fetchProducts(category); // Refresca los productos después de eliminar
       alert("Producto eliminado con éxito.");
     } catch (error) {
-      console.error("Error al eliminar producto:", error.response?.data || error.message);
+      console.error("Error al eliminar producto:", error);
     }
   };
-  
 
   const handleCancel = () => {
     setEditingProduct(null); // Cancela la edición
   };
-
-  useEffect(() => {
-    fetchProducts(category);
-  }, [category]);
 
   return (
     <div className="categories">
@@ -72,21 +56,24 @@ const Categories = ({ category }) => {
       ) : (
         <>
           {products.length === 0 ? (
-            <p>Cargando productos...</p>
+            <p>No hay productos en esta categoría.</p>
           ) : (
             <ul>
               {products.map((product) => (
                 <li key={product._id}>
                   {product.nombre} - {product.descripcion}
                   <button onClick={() => handleEdit(product)}>Editar</button>
+                  <button onClick={() => handleDeleteProduct(product._id)}>Eliminar</button>
                 </li>
               ))}
             </ul>
           )}
         </>
       )}
-      <CrearProducto onClose={() => setMostrarFormulario(false)}/>
-
+      <button onClick={() => setMostrarFormulario(true)}>Crear Producto</button>
+      {mostrarFormulario && (
+        <CrearProducto onClose={() => setMostrarFormulario(false)} />
+      )}
     </div>
   );
 };

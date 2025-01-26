@@ -1,0 +1,79 @@
+/* Navbar container */
+.navbar--navbar {
+    background-color: #6A0DAD; /* Morado Profundo */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para efecto */
+  }
+
+  /* Estilo para el logo en el navbar */
+.navbar-logo--navbar {
+    width: 40px; /* Ancho fijo para hacerlo pequeño */
+    height: auto; /* Mantiene la proporción original */
+    border-radius: 5px; /* Opcional: Bordes ligeramente redondeados */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animación al pasar el cursor */
+  }
+  
+  /* Hover effect para el logo */
+  .navbar-logo--navbar:hover {
+    transform: scale(1.1); /* Ampliar ligeramente al pasar el cursor */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Agregar sombra */
+  }
+  
+  
+  /* Navbar list */
+  .navbar-list--navbar {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Navbar items */
+  .navbar-item--navbar {
+    font-size: 1.2rem; /* Tamaño de fuente base */
+    font-weight: bold;
+  }
+  
+  /* Navbar links */
+  .navbar-link--navbar {
+    text-decoration: none;
+    color: #FFFFFF; /* Blanco */
+    transition: color 0.3s ease;
+  }
+  
+  /* Hover effect for links */
+  .navbar-link--navbar:hover {
+    color: #FF6700; /* Naranja vibrante */
+  }
+  
+  /* Responsive: Navbar for small screens */
+@media (max-width: 768px) {
+    /* Cambiar estructura del navbar */
+    .navbar--navbar {
+      flex-direction: column; /* Coloca logo y lista en filas separadas */
+      align-items: center; /* Centra el contenido */
+    }
+  
+    /* Lista del navbar en fila */
+    .navbar-list--navbar {
+      flex-direction: row; /* Cambiar a fila */
+      justify-content: center; /* Centra las columnas */
+      gap: 20px; /* Espaciado entre columnas */
+    }
+  
+    /* Cada ítem ocupa una columna */
+    .navbar-item--navbar {
+      font-size: 1.2rem; /* Reducir tamaño de fuente */
+      flex: 1 1 30%; /* Cada elemento ocupa un 30% del ancho disponible */
+      text-align: center; /* Centrar el texto */
+      max-width: 100px; /* Limitar el ancho máximo */
+    }
+  
+    .navbar-link--navbar {
+      font-size: 1.1rem; /* Aún más pequeño en pantallas pequeñas */
+    }
+  }

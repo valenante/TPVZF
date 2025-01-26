@@ -1,34 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Products from "../components/Products/Products";
-import api from '../utils/api'; // Configuración de Axios
+import { CategoriasContext } from "../context/CategoriasContext";
 
 const ProductsPage = () => {
   const [selectedType, setSelectedType] = useState(null);
-  const [categories, setCategories] = useState([]);
+  const { categories, fetchCategories } = useContext(CategoriasContext);
 
-  const fetchCategories = async (type) => {
-    try {
-      const response = await api.get(`/productos/categories/${type}`);
-      console.log("Categorías recibidas en el frontend:", response.data.categories);
-      setCategories(response.data.categories); // Usa los datos directamente
-    } catch (error) {
-      console.error("Error al obtener categorías:", error);
-    }
-  };  
-  // Cuando el usuario selecciona un tipo, obtenemos las categorías
   useEffect(() => {
     if (selectedType) {
-      fetchCategories(selectedType);
+      fetchCategories(selectedType); // Llama solo cuando `selectedType` cambia
     }
-  }, [selectedType]);
+  }, [selectedType, fetchCategories]);
+
+  const handleTypeSelection = (type) => {
+    setSelectedType(type);
+  };
 
   return (
     <div className="products-page">
       {!selectedType ? (
         <div className="buttons">
           <h1>Selecciona un tipo de producto:</h1>
-          <button onClick={() => setSelectedType("bebida")}>Bebidas</button>
-          <button onClick={() => setSelectedType("plato")}>Platos</button>
+          <button onClick={() => handleTypeSelection("bebida")}>Bebidas</button>
+          <button onClick={() => handleTypeSelection("plato")}>Platos</button>
         </div>
       ) : (
         <Products type={selectedType} categories={categories} />

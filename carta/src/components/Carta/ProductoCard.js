@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import ProductoDetalle from './ProductoDetalle';
-import '../../styles/ProductoCard.css';
+import React, { useState } from "react";
+import ProductoDetalle from "./ProductoDetalle";
+import "../../styles/ProductoCard.css";
 
-const ProductoCard = ({ producto }) => {
-  const [mostrarModal, setMostrarModal] = useState(false); // Estado para manejar el modal
-
-  // Verificar si el producto está habilitado
-  if (producto.estado !== 'habilitado') {
-    return null; // No renderizar si el producto no está habilitado
-  }
+const ProductoCard = ({ producto, estrellas }) => {
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [seleccionPrecio, setSeleccionPrecio] = useState(
+    producto.precios.tapa !== null && producto.precios.tapa >= 0
+      ? producto.precios.tapa
+      : producto.precios.precioBase
+  );
 
   const abrirModal = () => setMostrarModal(true);
   const cerrarModal = () => setMostrarModal(false);
@@ -16,17 +16,35 @@ const ProductoCard = ({ producto }) => {
   return (
     <div className="producto-card-prodCard">
       <div className="producto-card-content-prodCard">
-        {/* Columna izquierda: Nombre y descripción */}
         <div className="producto-info-prodCard">
           <h3>{producto.nombre}</h3>
           <p>{producto.descripcion}</p>
-          <span>{producto.precios.precioBase} €</span>
+          <p>
+            <strong>Valoración:</strong>{" "}
+            {estrellas ? `${estrellas} estrellas` : "Sin valoraciones"}
+          </p>
+          <span>
+            {producto.tipo === "tapaRacion" ? (
+              <select value={seleccionPrecio} onChange={(e) => setSeleccionPrecio(Number(e.target.value))}>
+                {producto.precios.tapa !== null && (
+                  <option value={producto.precios.tapa}>
+                    Tapa - {producto.precios.tapa} €
+                  </option>
+                )}
+                {producto.precios.racion !== null && (
+                  <option value={producto.precios.racion}>
+                    Ración - {producto.precios.racion} €
+                  </option>
+                )}
+              </select>
+            ) : (
+              `${producto.precios.precioBase} €`
+            )}
+          </span>
           <button onClick={abrirModal} className="agregar-carrito-btn-prodCard">
             Agregar al carrito
           </button>
         </div>
-
-        {/* Columna derecha: Imagen */}
         <div className="producto-img-container-prodCard">
           <img src={producto.img} alt={producto.nombre} />
         </div>
@@ -36,6 +54,7 @@ const ProductoCard = ({ producto }) => {
         <ProductoDetalle
           producto={producto}
           cerrarModal={cerrarModal}
+          seleccionPrecio={seleccionPrecio}
         />
       )}
     </div>

@@ -1,30 +1,124 @@
-.mesa {
-    width: 100px;
-    height: 100px;
-    margin: 10px;
-    text-align: center;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .mesa.disponible {
-    background-color: green;
-  }
-  
-  .mesa.ocupada {
-    background-color: orange;
-  }
-  
-  .mesa.reservada {
-    background-color: blue;
-  }
-  
-  .navbar {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-  }
-  
+/* General container for the dashboard */
+.container--dashboard {
+  padding: 20px;
+  background-color: #6A0DAD; /* Morado Profundo */
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-right: #F5F5F5 2px solid; /* Borde gris claro */
+  min-height: 50vh;
+}
+
+/* Subnavbar styling */
+.subnavbar--dashboard {
+  margin-bottom: 20px;
+}
+
+/* Dashboard grid layout */
+.dashboard--dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+/* Mesa individual styling - Responsive */
+.mesa--dashboard {
+  background-color: #F5F5F5; /* Gris Claro */
+  border-radius: 10px;
+  padding: 5%; /* Relative padding */
+  width: 6vw; /* Relative width based on viewport width */
+  height: 6vw; /* Relative height to maintain square shape */
+  max-width: 100px; /* Limit max size for smaller screens */
+  max-height: 100px; /* Limit max size for smaller screens */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8vw; /* Relative font size based on viewport width */
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+/* Hover effect */
+.mesa--dashboard:hover {
+  transform: translateY(-3%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Mesa number styling */
+.mesa-number--dashboard {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* Estado styling */
+.mesa--dashboard.abierta--dashboard {
+  background-color: #FF6700; /* Naranja Vibrante */
+  color: white;
+}
+
+.mesa--dashboard.cerrada--dashboard {
+  background-color: #f7f7f7; /* Verde Menta */
+  color: black;
+}
+
+/* Contenedor principal para centrar el formulario */
+.search-container--dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 60vh; 
+  width: 43vh;
+}
+
+/* Input de búsqueda */
+.search-input--dashboard {
+  width: 100%;
+  max-width: 18vh;
+  padding: 15px; /* Espacio interno */
+  margin-top: 15vh;
+  font-size: 1.2rem; /* Texto más grande */
+  border: 2px solid #6A0DAD; /* Borde morado */
+  border-radius: 10px; /* Bordes redondeados */
+  outline: none; /* Quitar contorno al hacer foco */
+  transition: border-color 0.3s ease;
+}
+
+/* Efecto al enfocar el input */
+.search-input--dashboard:focus {
+  border-color: #FF6700; /* Cambiar a naranja al enfocar */
+}
+
+/* Botón de búsqueda */
+.search-button--dashboard {
+  width: auto;
+  margin-top: 2vh;
+  max-width: 300; /* Limitar ancho máximo */
+  padding: 15px; /* Espacio interno */
+  font-size: 1.2rem; /* Texto más grande */
+  font-weight: bold; /* Texto en negrita */
+  color: #FFFFFF; /* Texto blanco */
+  background-color: #FF6700; /* Naranja Vibrante */
+  border: 2px solid #6A0DAD; /* Borde morado */
+  border-radius: 10px; /* Bordes redondeados */
+  cursor: pointer; /* Cambiar cursor al pasar por encima */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover del botón */
+.search-button--dashboard:hover {
+  background-color: #6A0DAD; /* Cambiar a morado */
+  border-color: #FF6700; /* Cambiar borde a naranja */
+  transform: scale(1.01); /* Ampliar ligeramente */
+}
+
+/* Active del botón */
+.search-button--dashboard:active {
+  transform: scale(0.98); /* Reducir ligeramente al hacer clic */
+  background-color: #FF6700; /* Volver a naranja */
+  border-color: #6A0DAD; /* Borde morado */
+}

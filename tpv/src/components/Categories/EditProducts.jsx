@@ -21,10 +21,6 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
       case "tipo":
         if (!value.trim()) error = "El tipo es obligatorio.";
         break;
-      case "precios.precioBase":
-        if (!value) error = "El precio base es obligatorio.";
-        else if (value <= 0) error = "El precio base debe ser mayor a 0.";
-        break;
       case "precios.tapa":
       case "precios.racion":
         if (value && value <= 0) error = "El precio debe ser mayor a 0 si está definido.";

@@ -59,6 +59,7 @@ const Cocina = () => {
   const marcarPedidoComoListo = async (pedidoId) => {
     try {
       await api.put(`/pedidos/${pedidoId}`, { estado: 'listo' });
+      console.log(pedidos)
       cargarPedidos(); // Recargar la lista de pedidos
     } catch (error) {
       console.error('Error al marcar pedido como listo:', error);
@@ -82,9 +83,9 @@ const Cocina = () => {
         <p>No hay pedidos pendientes</p>
       ) : (
         pedidos.map((pedido) => {
-          const todosProductosListos = pedido.productos.every(
-            (producto) => producto.estado === 'listo'
-          );
+          const todosProductosListos = pedido.productos
+            .filter((producto) => ['plato', 'tapaRacion'].includes(producto.tipo)) // Filtrar productos de tipo plato o tapaRacion
+            .every((producto) => producto.estadoPreparacion === 'listo');
 
           return (
             <div key={pedido._id} className="pedido">
@@ -94,12 +95,14 @@ const Cocina = () => {
               <p><strong>Tiempo desde el pedido:</strong> {calcularTiempoTranscurrido(pedido.fecha)}</p>
               <h4>Productos:</h4>
               <ul>
-                {pedido.productos.map((producto) => (
+                {pedido.productos.filter(
+                  (producto) => ['plato', 'tapaRacion'].includes(producto.tipo)
+                ).map((producto) => (
                   <li key={producto._id}>
                     <label>
                       <input
                         type="checkbox"
-                        checked={producto.estado === 'listo'}
+                        checked={producto.estadoPreparacion === 'listo'}
                         onChange={() => marcarProductoComoListo(pedido._id, producto._id)}
                       />
                       {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
@@ -113,6 +116,7 @@ const Cocina = () => {
                   </li>
                 ))}
               </ul>
+
               <p><strong>Total:</strong> {pedido.total.toFixed(2)} €</p>
               <button
                 onClick={() => marcarPedidoComoListo(pedido._id)}

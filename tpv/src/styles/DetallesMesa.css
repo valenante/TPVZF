@@ -1,0 +1,121 @@
+/* Contenedor principal */
+.detalle-mesa--mesadetalles {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+    min-height: 90vh;
+  }
+  
+/* Contenido principal centrado */
+.contenido-mesa--mesadetalles {
+  width: 60%;
+  background-color: #FFFFFF; /* Blanco */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Ocultar contenido que exceda los límites */
+}
+  /* Títulos */
+  .titulo-mesa--mesadetalles {
+    font-size: 2rem;
+    color: #6A0DAD; /* Morado profundo */
+    margin-bottom: 10px;
+  }
+  
+  .pedidos-titulo--mesadetalles,
+  .productos-titulo--mesadetalles {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
+  /* Textos */
+  .estado-mesa--mesadetalles,
+  .total-mesa--mesadetalles,
+  .pedido-comensales--mesadetalles,
+  .pedido-alergias--mesadetalles,
+  .pedido-estado--mesadetalles,
+  .total-pedido--mesadetalles {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  /* Lista de pedidos con scroll */
+.lista-pedidos--mesadetalles {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-height: 90vh; /* Altura máxima para la lista de pedidos */
+  overflow-y: auto; /* Hacer scroll vertical */
+  scrollbar-width: thin; /* Estilo de scrollbar para navegadores compatibles */
+}
+
+/* Estilo del scrollbar */
+.lista-pedidos--mesadetalles::-webkit-scrollbar {
+  width: 8px;
+}
+
+.lista-pedidos--mesadetalles::-webkit-scrollbar-thumb {
+  background-color: #6A0DAD; /* Morado profundo */
+  border-radius: 4px;
+}  
+  /* Lista de pedidos */
+  .lista-pedidos--mesadetalles,
+  .lista-productos--mesadetalles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+/* Cada pedido con altura limitada */
+.pedido--mesadetalles {
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #F5F5F5; /* Gris claro */
+  border-radius: 5px;
+  max-height: 30vh; /* Altura máxima por pedido */
+  overflow-y: auto; /* Scroll dentro de cada pedido si excede el límite */
+}
+
+/* Estilo del scrollbar dentro de los pedidos */
+.pedido--mesadetalles::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pedido--mesadetalles::-webkit-scrollbar-thumb {
+  background-color: #FF6700; /* Naranja vibrante */
+  border-radius: 4px;
+}
+  /* Botones */
+  .boton-eliminar--mesadetalles,
+  .boton-cerrar--mesadetalles {
+    background-color: #FF6700; /* Naranja vibrante */
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin:  10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .boton-eliminar--mesadetalles:hover,
+  .boton-cerrar--mesadetalles:hover {
+    background-color: #6A0DAD; /* Morado profundo */
+    transform: scale(1.05);
+  }
+  
+  /* RightBar (40%) */
+  .rightbar--mesadetalles {
+    width: 40%;
+    background-color: #FFFFFF; /* Blanco */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  

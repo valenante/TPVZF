@@ -10,6 +10,7 @@ const CartaPage = () => {
   const { numeroMesa } = useParams();
   const { obtenerMesaId } = useContext(ProductosContext);
 
+
   useEffect(() => {
     if (numeroMesa) {
       obtenerMesaId(numeroMesa);

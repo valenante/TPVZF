@@ -21,9 +21,8 @@ const Barra = () => {
   // Función para cargar pedidos pendientes de bebidas
   const cargarPedidos = async () => {
     try {
-      // Agregamos el tipo como query parameter
       const response = await api.get('/pedidos/pendientes/pendientes', {
-        params: { tipo: 'bebida' }, // Aquí especificamos que queremos solo las bebidas
+        params: { tipo: 'bebida' },
       });
       console.log('Pedidos de bebidas pendientes:', response.data);
       setPedidos(response.data);
@@ -35,36 +34,30 @@ const Barra = () => {
   // Escuchar evento `nuevoPedido` y recargar pedidos de bebidas
   useEffect(() => {
     socket.on('nuevoPedido', () => {
-      cargarPedidos(); // Recargar solo los pedidos de bebidas
+      cargarPedidos();
     });
 
-    // Cleanup del evento para evitar duplicados
     return () => {
       socket.off('nuevoPedido');
     };
   }, []);
 
-  // Marcar un producto como listo
+  // Marcar un producto como listo y eliminarlo de la lista
   const marcarProductoComoListo = async (pedidoId, productoId) => {
     try {
-      await api.put(`/pedidos/${pedidoId}/producto/${productoId}`, { estado: 'listo' });
-      cargarPedidos(); // Recargar la lista de pedidos de bebidas
+      await api.put(`/pedidos/${pedidoId}/producto/${productoId}`, { estadoPreparacion: 'listo' });
+      // Filtrar el producto marcado como listo y actualizar la lista de pedidos
+      setPedidos((prevPedidos) =>
+        prevPedidos.map((pedido) => ({
+          ...pedido,
+          productos: pedido.productos.filter((producto) => producto._id !== productoId),
+        })).filter((pedido) => pedido.productos.length > 0) // Eliminar pedidos sin productos
+      );
     } catch (error) {
       console.error('Error al marcar producto como listo:', error);
     }
   };
 
-  // Marcar el pedido entero como listo
-  const marcarPedidoComoListo = async (pedidoId) => {
-    try {
-      await api.put(`/pedidos/${pedidoId}`, { estado: 'listo' });
-      cargarPedidos();
-    } catch (error) {
-      console.error('Error al marcar pedido como listo:', error);
-    }
-  };
-
-  // Cargar pedidos pendientes al montar el componente y configurar actualización periódica
   useEffect(() => {
     cargarPedidos();
     const interval = setInterval(cargarPedidos, 30000); // Actualizar cada 30 segundos
@@ -81,47 +74,35 @@ const Barra = () => {
       {pedidos.length === 0 ? (
         <p>No hay pedidos de bebidas pendientes</p>
       ) : (
-        pedidos.map((pedido) => {
-          const todosProductosListos = pedido.productos.every(
-            (producto) => producto.estado === 'listo'
-          );
-
-          return (
-            <div key={pedido._id} className="pedido">
-              <h3>Mesa: {pedido.mesa.numero}</h3>
-              <p>Comensales: {pedido.comensales}</p>
-              {pedido.alergias && <p><strong>Alergias:</strong> {pedido.alergias}</p>}
-              <p><strong>Tiempo desde el pedido:</strong> {calcularTiempoTranscurrido(pedido.fecha)}</p>
-              <h4>Bebidas:</h4>
-              <ul>
-                {pedido.productos
-                  .filter((producto) => producto.tipo === 'bebida')
-                  .map((producto) => (
-                    <li key={producto._id}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={producto.estado === 'listo'}
-                          onChange={() => marcarProductoComoListo(pedido._id, producto._id)}
-                        />
-                        {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
-                      </label>
-                      {producto.especificaciones.length > 0 && (
-                        <p><strong>Especificaciones:</strong> {producto.especificaciones.join(", ")}</p>
-                      )}
-                    </li>
-                  ))}
-              </ul>
-              <p><strong>Total:</strong> {pedido.total.toFixed(2)} €</p>
-              <button
-                onClick={() => marcarPedidoComoListo(pedido._id)}
-                disabled={!todosProductosListos}
-              >
-                Terminar Pedido
-              </button>
-            </div>
-          );
-        })
+        pedidos.map((pedido) => (
+          <div key={pedido._id} className="pedido">
+            <h3>Mesa: {pedido.mesa.numero}</h3>
+            <p>Comensales: {pedido.comensales}</p>
+            {pedido.alergias && <p><strong>Alergias:</strong> {pedido.alergias}</p>}
+            <p><strong>Tiempo desde el pedido:</strong> {calcularTiempoTranscurrido(pedido.fecha)}</p>
+            <h4>Bebidas:</h4>
+            <ul>
+              {pedido.productos
+                .filter((producto) => producto.tipo === 'bebida')
+                .map((producto) => (
+                  <li key={producto._id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={producto.estadoPreparacion === 'listo'}
+                        onChange={() => marcarProductoComoListo(pedido._id, producto._id)}
+                      />
+                      {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
+                    </label>
+                    {producto.especificaciones.length > 0 && (
+                      <p><strong>Especificaciones:</strong> {producto.especificaciones.join(", ")}</p>
+                    )}
+                  </li>
+                ))}
+            </ul>
+            <p><strong>Total:</strong> {pedido.total.toFixed(2)} €</p>
+          </div>
+        ))
       )}
     </div>
   );

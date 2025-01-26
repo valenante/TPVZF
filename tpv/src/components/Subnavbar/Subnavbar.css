@@ -1,0 +1,78 @@
+/* Contenedor del SubNavbar */
+.subnavbar--subnavbar {
+    background-color: #6A0DAD; /* Morado profundo */
+    padding: 10px 20px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    border-top: 1px solid white;
+  }
+  
+  /* Encabezado del SubNavbar (menú hamburguesa en pantalla pequeña) */
+  .subnavbar-header--subnavbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+/* Botón de hamburguesa (pantallas grandes: ocultar) */
+.hamburger-button--subnavbar {
+    display: none; /* Ocultarlo por defecto */
+  }
+  
+  /* Menú del SubNavbar */
+  .subnavbar-menu--subnavbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+/* Botones del SubNavbar */
+.subnavbar-button--subnavbar {
+    background-color: #FF6700; /* Naranja vibrante */
+    color: #FFFFFF; /* Texto blanco */
+    border: none; /* Eliminar bordes */
+    border-radius: 5px; /* Bordes redondeados opcionales */
+    padding: 10px 15px; /* Espaciado interno */
+    cursor: pointer; /* Cambiar cursor al pasar por encima */
+    transition: transform 0.2s ease, background-color 0.3s ease; /* Animación */
+    font-size: 1rem; /* Tamaño de fuente */
+  }
+  
+  
+  /* Hover en botones */
+  .subnavbar-button--subnavbar:hover {
+    background-color: #FFFFFF;
+    color: #FF6700;
+    transform: scale(1.05);
+  }
+  
+  /* Estilos específicos para cerrar caja */
+  .btn-cerrar-caja--subnavbar {
+    background-color: #6A0DAD;
+  }
+  
+  /* Responsive: SubNavbar en pantallas pequeñas */
+  @media (max-width: 768px) {
+    .subnavbar-menu--subnavbar {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+  
+    .subnavbar-menu--subnavbar.open--subnavbar {
+      display: flex;
+    }
+  
+    .subnavbar-menu--subnavbar.closed--subnavbar {
+      display: none;
+    }
+  
+    .hamburger-button--subnavbar {
+      display: block;
+    }
+  }
+  
