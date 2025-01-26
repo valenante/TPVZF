@@ -38,20 +38,24 @@ const server = createServer(app); // Crear el servidor HTTP
 dotenv.config();
 
 
-// Configuración de CORS
 const corsOptions = {
-  origin: '*', // Dirección del frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-  credentials: true, // Permitir envío de cookies si es necesario
+  origin: ["http://localhost:3002", "http://172.20.10.7:3002", "http://localhost:3001", "http://172.20.10.7:3001", "http://localhost:3000", "http://172.20.10.7:3000"], // Orígenes permitidos
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization",'X-Cart-ID'], // Encabezados permitidos
+  credentials: true, // Permitir envío de cookies
 };
+
 
 app.use(cors(corsOptions)); // Habilitar CORS con opciones específicas
 const io = new Server(server, {
   cors: {
-    origin: '*', // Permitir acceso desde cualquier origen (modifícalo según tu entorno)
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: ["http://localhost:3002", "http://172.20.10.7:3002", "http://localhost:3001", "http://172.20.10.7:3001", "http://localhost:3000", "http://172.20.10.7:3000"], // Orígenes permitidos
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization",'X-Cart-ID'],
+    credentials: true,
   },
 });
+
 
 // Middleware de compresión HTTP
 app.use(compression());
@@ -123,18 +127,20 @@ process.on("unhandledRejection", (reason) => {
   process.exit(1); // Finalizar la aplicación
 });
 
-// Configuración de Socket.IO
+import debug from "debug";
+
+const debugLog = debug("socket.io");
+debugLog.enabled = true; // Activa logs de Socket.IO
+
+io.on("connection", (socket) => {
+  debugLog(`Cliente conectado: ${socket.id}`);
+});
+
 io.on("connection", (socket) => {
   console.log(`Cliente conectado: ${socket.id}`);
 
-  // Ejemplo: Escuchar eventos personalizados
-  socket.on("mensaje", (data) => {
-    console.log(`Mensaje recibido: ${data}`);
-  });
-
-  // Desconexión
-  socket.on("disconnect", () => {
-    console.log(`Cliente desconectado: ${socket.id}`);
+  socket.on("disconnect", (reason) => {
+    console.log(`Cliente desconectado: ${socket.id}, motivo: ${reason}`);
   });
 });
 
