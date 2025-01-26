@@ -97,89 +97,127 @@ export const createProducto = async (req, res) => {
 };
 
 export const deleteProducto = async (req, res) => {
-    const { pedidoId, id: productoId } = req.params; // IDs del pedido y del producto
-    const { motivo } = req.body; // Motivo de eliminación enviado en el cuerpo de la solicitud
+  const { pedidoId, id: productoId } = req.params; // IDs del pedido y del producto
+  const { motivo } = req.body; // Motivo de eliminación enviado en el cuerpo de la solicitud
 
-  
-    try {
-      // Obtener el token del encabezado de autorización
-      const token = req.headers.authorization?.split(" ")[1]; // "Bearer <token>"
-  
-      if (!token) {
-        return res.status(401).json({ error: "Token no proporcionado." });
+  try {
+    // Obtener el token del encabezado de autorización
+    const token = req.headers.authorization?.split(" ")[1]; // "Bearer <token>"
+    if (!token) {
+      return res.status(401).json({ error: "Token no proporcionado." });
+    }
+
+    // Decodificar el token para obtener el usuarioId
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const usuarioId = decoded.id; // Usuario que realiza la eliminación
+
+    // Encontrar el pedido
+    const pedido = await Pedido.findById(pedidoId);
+    if (!pedido) {
+      return res.status(404).json({ error: "Pedido no encontrado." });
+    }
+
+    // Buscar el producto en el pedido
+    const productoEliminado = pedido.productos.find(
+      (producto) => producto.producto.toString() === productoId
+    );
+
+    if (!productoEliminado) {
+      return res.status(404).json({ error: "Producto no encontrado en el pedido." });
+    }
+
+    // Filtrar el producto del pedido y recalcular el total
+    pedido.productos = pedido.productos.filter(
+      (producto) => producto.producto.toString() !== productoId
+    );
+
+    pedido.total = pedido.productos.reduce((total, producto) => {
+      return total + (producto.total || 0); // Asegurar que cada producto tenga un total válido
+    }, 0);
+
+    // Si el pedido no tiene productos después de la eliminación, eliminar el pedido
+    if (pedido.productos.length === 0) {
+      await Pedido.findByIdAndDelete(pedidoId);
+
+      // Actualizar el total de la mesa para reflejar la eliminación del pedido
+      const mesa = await Mesa.findById(pedido.mesa).populate("pedidos");
+      if (!mesa) {
+        return res.status(404).json({ error: "Mesa no encontrada." });
       }
-  
-      // Decodificar el token para obtener el usuarioId
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const usuarioId = decoded.id; // Usuario que realiza la eliminación
-  
-      // Encontrar el pedido
-      const pedido = await Pedido.findById(pedidoId);
-      if (!pedido) {
-        return res.status(404).json({ error: "Pedido no encontrado." });
-      }
-  
-      // Buscar el producto en el pedido
-      const productoEliminado = pedido.productos.find(
-        (producto) => producto.producto.toString() === productoId
-      );
-  
-      if (!productoEliminado) {
-        return res.status(404).json({ error: "Producto no encontrado en el pedido." });
-      }
-  
-      // Filtrar el producto del pedido y recalcular el total
-      pedido.productos = pedido.productos.filter(
-        (producto) => producto.producto.toString() !== productoId
-      );
-  
-      pedido.total = pedido.productos.reduce((total, producto) => {
-        return total + (producto.total || 0); // Asegurar que cada producto tenga un total válido
+
+      mesa.pedidos = mesa.pedidos.filter((p) => p._id.toString() !== pedidoId);
+
+      // Recalcular el total de la mesa
+      mesa.total = mesa.pedidos.reduce((totalMesa, pedido) => {
+        return totalMesa + (pedido.total || 0);
       }, 0);
-  
-      await pedido.save();
-  
+
+      await mesa.save();
+
       // Registrar la eliminación en la colección `Eliminaciones`
       const eliminacion = new Eliminacion({
         producto: productoEliminado.producto,
         pedido: pedidoId,
         cantidad: productoEliminado.cantidad || 1, // Si no tienes cantidad, asume 1 por defecto
         motivo: motivo || "Sin motivo especificado",
-        user: usuarioId, // Usuario que eliminó el producto
+        user: usuarioId,
         mesa: pedido.mesa,
       });
-  
-      await eliminacion.save();
-  
 
-      // Actualizar el total de la mesa
-      const mesa = await Mesa.findById(pedido.mesa).populate("pedidos");
-      if (!mesa) {
-        return res.status(404).json({ error: "Mesa no encontrada." });
-      }
-  
-      // Recalcular el total de la mesa sumando los totales de todos sus pedidos
-      mesa.total = mesa.pedidos.reduce((totalMesa, pedido) => {
-        return totalMesa + (pedido.total || 0);
-      }, 0);
-  
-      await mesa.save();
-  
-      res.json({
-        message: "Producto eliminado y registrado con éxito.",
+      await eliminacion.save();
+
+      return res.json({
+        message: "Producto eliminado y pedido eliminado con éxito.",
         mesa: {
           id: mesa._id,
           total: mesa.total,
         },
-        pedido: {
-          id: pedido._id,
-          total: pedido.total,
-          productos: pedido.productos,
-        },
+        pedido: null,
       });
-    } catch (error) {
-      console.error("Error al eliminar producto:", error);
-      res.status(500).json({ error: "Error al eliminar producto." });
     }
-  };
-  
+
+    // Guardar el pedido actualizado
+    await pedido.save();
+
+    // Actualizar el total de la mesa
+    const mesa = await Mesa.findById(pedido.mesa).populate("pedidos");
+    if (!mesa) {
+      return res.status(404).json({ error: "Mesa no encontrada." });
+    }
+
+    // Recalcular el total de la mesa sumando los totales de todos sus pedidos
+    mesa.total = mesa.pedidos.reduce((totalMesa, pedido) => {
+      return totalMesa + (pedido.total || 0);
+    }, 0);
+
+    await mesa.save();
+
+    // Registrar la eliminación en la colección `Eliminaciones`
+    const eliminacion = new Eliminacion({
+      producto: productoEliminado.producto,
+      pedido: pedidoId,
+      cantidad: productoEliminado.cantidad || 1,
+      motivo: motivo || "Sin motivo especificado",
+      user: usuarioId,
+      mesa: pedido.mesa,
+    });
+
+    await eliminacion.save();
+
+    res.json({
+      message: "Producto eliminado y registrado con éxito.",
+      mesa: {
+        id: mesa._id,
+        total: mesa.total,
+      },
+      pedido: {
+        id: pedido._id,
+        total: pedido.total,
+        productos: pedido.productos,
+      },
+    });
+  } catch (error) {
+    console.error("Error al eliminar producto:", error);
+    res.status(500).json({ error: "Error al eliminar producto." });
+  }
+};

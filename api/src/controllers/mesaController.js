@@ -234,7 +234,7 @@ export const obtenerMesasCerradas = async (req, res) => {
 
 export const recuperarMesa = async (req, res) => {
   const { mesaId } = req.params; // ID de la mesa cerrada
-  try {
+    try {
     // Obtener la mesa cerrada
     const mesaCerrada = await MesaCerrada.findById(mesaId);
     if (!mesaCerrada) {

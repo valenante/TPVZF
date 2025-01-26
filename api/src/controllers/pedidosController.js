@@ -176,7 +176,7 @@ export const agregarProductoAlPedido = async (req, res) => {
 // Obtener todos los pedidos
 export const getPedidos = async (req, res) => {
     try {
-        const pedidos = await Pedido.find().populate('mesa').populate('productos.productoId');
+        const pedidos = await Pedido.find().populate('mesa').populate('productos.producto');
         res.status(200).json(pedidos);
     } catch (error) {
         console.error('Error al obtener los pedidos:', error);
