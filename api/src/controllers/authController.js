@@ -22,7 +22,9 @@ const generarRefreshToken = (user) => {
 };
 
 export const renovarToken = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+  const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
+
+  console.log('Refresh token recibido:', refreshToken);
 
   if (!refreshToken) {
     return res.status(401).json({ error: 'Refresh token no proporcionado.' });
@@ -51,29 +53,48 @@ export const renovarToken = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+  // Obtener el token del cuerpo de la solicitud o de las cookies
+  const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
+
+  console.log('Refresh token recibido:', refreshToken);
 
   if (!refreshToken) {
     return res.status(400).json({ error: 'No se proporcionó refresh token para el cierre de sesión.' });
   }
 
   try {
+    // Verificar si el token es válido
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
-    // Agregar el token a la lista negra
+    // Crear un registro en la base de datos para revocar el token
     const tokenRevocado = new TokenRevocado({
       token: refreshToken,
-      expiracion: new Date(decoded.exp * 1000), // Convertir el tiempo de expiración de segundos a milisegundos
+      expiracion: new Date(decoded.exp * 1000), // Convertir la expiración a milisegundos
     });
 
-    await tokenRevocado.save();
+    await tokenRevocado.save(); // Guardar en la base de datos
 
-    // Limpiar la cookie
-    res.clearCookie('refreshToken');
+    // Limpiar la cookie en el cliente
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
+      sameSite: 'Strict', // Protección CSRF
+    });
 
     res.status(200).json({ message: 'Cierre de sesión exitoso.' });
   } catch (error) {
-    return res.status(400).json({ error: 'Error al cerrar sesión o token inválido.' });
+    if (error.name === 'JsonWebTokenError') {
+      console.error('Token inválido:', error.message);
+      return res.status(401).json({ error: 'El token proporcionado es inválido.' });
+    }
+
+    if (error.name === 'TokenExpiredError') {
+      console.warn('Intento de cerrar sesión con un token expirado:', error.message);
+      return res.status(401).json({ error: 'El token ya ha expirado.' });
+    }
+
+    console.error('Error inesperado al cerrar sesión:', error);
+    res.status(500).json({ error: 'Ocurrió un error inesperado al cerrar sesión.' });
   }
 };
 
@@ -151,15 +172,11 @@ export const login = async (req, res) => {
         role: usuario.role,
       },
     });
-
-    console.log(accessToken, refreshToken);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al iniciar sesión.' });
   }
 };
-
-
 
 export const protegerRuta = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del encabezado

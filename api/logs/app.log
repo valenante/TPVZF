@@ -1190,3 +1190,91 @@ u2025-01-13 14:54:55 [INFO]: Aplicación iniciada correctamente
 2025-01-26 18:46:43 [INFO]: Aplicación iniciada correctamente
 2025-01-26 18:46:43 [INFO]: Servidor escuchando en el puerto 3000
 2025-01-26 18:46:43 [INFO]: Conectado a MongoDB
+2025-01-26 19:25:58 [INFO]: Aplicación iniciada correctamente
+2025-01-26 19:25:58 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 19:25:58 [INFO]: Conectado a MongoDB
+2025-01-26 19:44:03 [ERROR]: Promesa no manejada: TypeError: Cannot read properties of undefined (reading 'refreshToken')
+2025-01-26 19:44:14 [INFO]: Aplicación iniciada correctamente
+2025-01-26 19:44:14 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 19:44:14 [INFO]: Conectado a MongoDB
+2025-01-26 19:44:16 [ERROR]: Promesa no manejada: TypeError: Cannot read properties of undefined (reading 'refreshToken')
+2025-01-26 19:45:27 [INFO]: Aplicación iniciada correctamente
+2025-01-26 19:45:27 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 19:45:27 [INFO]: Conectado a MongoDB
+2025-01-26 19:45:31 [ERROR]: Promesa no manejada: TypeError: Cannot read properties of undefined (reading 'refreshToken')
+2025-01-26 19:46:34 [INFO]: Aplicación iniciada correctamente
+2025-01-26 19:46:34 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 19:46:34 [INFO]: Conectado a MongoDB
+2025-01-26 19:47:44 [INFO]: Aplicación iniciada correctamente
+2025-01-26 19:47:44 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 19:47:44 [INFO]: Conectado a MongoDB
+2025-01-26 19:48:27 [INFO]: Aplicación iniciada correctamente
+2025-01-26 19:48:27 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 19:48:27 [INFO]: Conectado a MongoDB
+2025-01-26 20:14:43 [INFO]: Aplicación iniciada correctamente
+2025-01-26 20:14:43 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 20:14:43 [INFO]: Conectado a MongoDB
+2025-01-26 20:23:37 [INFO]: Aplicación iniciada correctamente
+2025-01-26 20:23:37 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 20:23:37 [INFO]: Conectado a MongoDB
+2025-01-26 20:29:51 [INFO]: Aplicación iniciada correctamente
+2025-01-26 20:29:51 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 20:29:51 [INFO]: Conectado a MongoDB
+2025-01-26 20:40:04 [ERROR]: Promesa no manejada: TypeError: Cannot read properties of undefined (reading 'refreshToken')
+2025-01-26 20:43:54 [INFO]: Aplicación iniciada correctamente
+2025-01-26 20:43:54 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 20:43:54 [INFO]: Conectado a MongoDB
+2025-01-26 21:03:00 [INFO]: Aplicación iniciada correctamente
+2025-01-26 21:03:00 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 21:03:00 [INFO]: Conectado a MongoDB
+2025-01-26 21:17:35 [INFO]: Aplicación iniciada correctamente
+2025-01-26 21:17:35 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 21:17:35 [INFO]: Conectado a MongoDB
+2025-01-26 21:18:12 [INFO]: Aplicación iniciada correctamente
+2025-01-26 21:18:12 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 21:18:12 [INFO]: Conectado a MongoDB
+2025-01-26 21:20:39 [INFO]: Aplicación iniciada correctamente
+2025-01-26 21:20:39 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 21:20:39 [INFO]: Conectado a MongoDB
+2025-01-26 23:06:31 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:06:31 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:06:31 [INFO]: Conectado a MongoDB
+2025-01-26 23:06:42 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:06:42 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:06:42 [INFO]: Conectado a MongoDB
+2025-01-26 23:07:17 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:07:17 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:07:17 [INFO]: Conectado a MongoDB
+2025-01-26 23:09:26 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:09:26 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:09:26 [INFO]: Conectado a MongoDB
+2025-01-26 23:09:35 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:09:35 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:09:35 [INFO]: Conectado a MongoDB
+2025-01-26 23:09:49 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:09:49 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:09:49 [INFO]: Conectado a MongoDB
+2025-01-26 23:10:35 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:10:35 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:10:35 [INFO]: Conectado a MongoDB
+2025-01-26 23:11:04 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:11:04 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:11:04 [INFO]: Conectado a MongoDB
+2025-01-26 23:11:32 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:11:32 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:11:32 [INFO]: Conectado a MongoDB
+2025-01-26 23:13:34 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:13:34 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:13:34 [INFO]: Conectado a MongoDB
+2025-01-26 23:14:04 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:14:04 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:14:04 [INFO]: Conectado a MongoDB
+2025-01-26 23:24:50 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:24:50 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:24:50 [INFO]: Conectado a MongoDB
+2025-01-26 23:26:24 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:26:24 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:26:24 [INFO]: Conectado a MongoDB
+2025-01-26 23:35:46 [INFO]: Aplicación iniciada correctamente
+2025-01-26 23:35:46 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-26 23:35:46 [INFO]: Conectado a MongoDB

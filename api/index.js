@@ -14,6 +14,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import dotenv from 'dotenv';
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import mesaRoutes from "./src/routes/mesaRoutes.js"; // Importar rutas de mesas
 import productoRoutes from "./src/routes/productosRoutes.js"; // Importar rutas de productos
 import authRoutes from "./src/routes/authRoutes.js"; // Importar rutas de autenticación
@@ -62,6 +63,9 @@ app.use(compression());
 
 // Middleware para parsear JSON
 app.use(json());
+
+// Middleware para parsear cookies
+app.use(cookieParser());
 
 // Middleware para interpretar datos codificados en la URL
 app.use(urlencoded({ extended: true }));
