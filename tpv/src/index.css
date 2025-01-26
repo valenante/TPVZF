@@ -1,6 +1,7 @@
 /* Fondo global */
 html, body {
   background-color: #6A0DAD; /* Fondo morado */
+  font-family: 'Roboto', sans-serif;
 }
 
 /* Eliminar subrayado en enlaces por defecto */

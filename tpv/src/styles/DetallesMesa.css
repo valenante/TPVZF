@@ -96,6 +96,7 @@
     background-color: #FF6700; /* Naranja vibrante */
     color: #FFFFFF;
     border: none;
+    font-size: 20px;
     border-radius: 5px;
     padding: 10px 15px;
     margin:  10px;
@@ -119,3 +120,14 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
+  /* Media Query para pantallas pequeñas */
+@media (max-width: 768px) {
+  .detalle-mesa--mesadetalles {
+    flex-direction: column; /* Cambiar a columnas */
+  }
+
+  .contenido-mesa--mesadetalles,
+  .rightbar--mesadetalles {
+    width: auto; /* Ocupan el ancho completo */
+  }
+}

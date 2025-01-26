@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useCategorias } from "../../context/CategoriasContext";
 import api from "../../utils/api";
+import "./EstadisticasFinal.css";
 
 const EstadisticasFinal = ({ category }) => {
   const { products, fetchProducts } = useCategorias();
@@ -74,31 +75,31 @@ const EstadisticasFinal = ({ category }) => {
   }, [category, products, fetchProducts, selectedDate]);
 
   return (
-    <div className="estadisticas-final">
-      <h2>Estadísticas de la categoría: {category}</h2>
+    <div className="estadisticas-final--estadisticas">
+      <h2 className="titulo--estadisticas">{category}</h2>
 
       {/* Selector de fecha */}
-      <div className="filtro-fecha">
-        <h4>Filtrar por fecha:</h4>
+      <div className="filtro-fecha--estadisticas">
         <DatePicker
           selected={selectedDate}
           onChange={(date) => setSelectedDate(date)}
           dateFormat="yyyy-MM-dd"
           isClearable
           placeholderText="Selecciona una fecha"
+          className="date-picker--estadisticas"
         />
       </div>
 
       {filteredProducts.length === 0 ? (
-        <p>Cargando productos...</p>
+        <p className="mensaje-carga--estadisticas">Cargando productos...</p>
       ) : (
-        <ul>
+        <ul className="lista-productos--estadisticas">
           {filteredProducts.map((product) => (
-            <li key={product._id}>
-              <strong>Producto:</strong> {product.nombre} <br />
-              <strong>Total Vendido:</strong>{" "}
+            <li key={product._id} className="producto--estadisticas">
+              <strong className="producto-titulo--estadisticas">Producto:</strong> {product.nombre} <br />
+              <strong className="producto-total--estadisticas">Total Vendido:</strong>{" "}
               {estadisticas[product._id]?.totalCantidad || 0} unidades <br />
-              <strong>Total Ingresos:</strong>{" "}
+              <strong className="producto-ingresos--estadisticas">Total Ingresos:</strong>{" "}
               {estadisticas[product._id]?.totalIngresos?.toFixed(2) || 0} € <br />
             </li>
           ))}

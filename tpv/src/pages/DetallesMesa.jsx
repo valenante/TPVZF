@@ -147,7 +147,7 @@ const DetalleMesa = () => {
     <div className="detalle-mesa--mesadetalles">
       <div className="contenido-mesa--mesadetalles">
         <h1 className="titulo-mesa--mesadetalles">Mesa {mesa.numero}</h1>
-        <p className="total-mesa--mesadetalles">Total Actual: {mesa.total} €</p>
+        <p className="total-mesa--mesadetalles">Total Mesa: {mesa.total} €</p>
         <p className="pedidos-titulo--mesadetalles">Pedidos:</p>
         <ul className="lista-pedidos--mesadetalles">
           {mesa?.pedidos?.length > 0 ? (

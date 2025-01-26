@@ -11,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import { obtenerCajasPorRango } from "./ObtenerCajasPorRango";
+import "./CajaDiaria.css";
 
 // Registrar componentes necesarios de Chart.js
 ChartJS.register(
@@ -72,27 +73,41 @@ const GraficoCajaDiaria = () => {
   };
 
   return (
-    <div>
-      <h1>Gráfico de Caja Diaria</h1>
-      <div>
-        <label>Fecha Inicio:</label>
-        <input
-          type="date"
-          value={fechaInicio}
-          onChange={(e) => setFechaInicio(e.target.value)}
-        />
-        <label>Fecha Fin:</label>
-        <input
-          type="date"
-          value={fechaFin}
-          onChange={(e) => setFechaFin(e.target.value)}
-        />
-        <button onClick={manejarCambioDeRango}>Actualizar Gráfico</button>
+    <div className="caja-diaria--caja-diaria">
+      <h1 className="titulo--caja-diaria">Gráfico de Caja Diaria</h1>
+      <div className="filtros--caja-diaria">
+        <div className="fechas--caja-diaria">
+          <div className="fecha-item--caja-diaria">
+            <label className="label--caja-diaria">Fecha Inicio:</label>
+            <input
+              type="date"
+              value={fechaInicio}
+              onChange={(e) => setFechaInicio(e.target.value)}
+              className="input--caja-diaria"
+            />
+          </div>
+          <div className="fecha-item--caja-diaria">
+            <label className="label--caja-diaria">Fecha Fin:</label>
+            <input
+              type="date"
+              value={fechaFin}
+              onChange={(e) => setFechaFin(e.target.value)}
+              className="input--caja-diaria"
+            />
+          </div>
+        </div>
+        <button onClick={manejarCambioDeRango} className="boton--caja-diaria">
+          Actualizar Gráfico
+        </button>
       </div>
-      {error && <p>{error}</p>}
-      {Array.isArray(datos) && datos.length === 0 && !error && <p>No hay datos para mostrar.</p>}
+      {error && <p className="error--caja-diaria">{error}</p>}
+      {Array.isArray(datos) && datos.length === 0 && !error && (
+        <p className="mensaje--caja-diaria">No hay datos para mostrar.</p>
+      )}
       {Array.isArray(datos) && datos.length > 0 && (
-        <Line key={JSON.stringify(datos)} data={data} />
+        <div className="grafico-container--caja-diaria">
+          <Line key={JSON.stringify(datos)} data={data} />
+        </div>
       )}
     </div>
   );

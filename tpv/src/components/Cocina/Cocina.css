@@ -1,0 +1,136 @@
+/* Contenedor Principal */
+.cocina--cocina {
+    padding: 10px;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 5px solid #6a0dad;
+    border-radius: 15px;
+}
+
+/* Título */
+.titulo--cocina {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #ffffff;
+}
+
+/* Botón Finalizados */
+.boton-finalizados--cocina {
+    padding: 10px 25px;
+    background-color: #ff6700;
+    border: none;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    align-self: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.boton-finalizados--cocina:hover {
+    background-color: #e55b00;
+    transform: scale(1.05);
+}
+
+/* Mensaje Vacío */
+.mensaje-vacio--cocina {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #6a0dad;
+    font-style: italic;
+}
+
+/* Contenedor de Pedidos */
+.pedidos-container--cocina {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Card de Pedido */
+.pedido-card--cocina {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.pedido-card--cocina:hover {
+    transform: scale(1.03);
+}
+
+/* Encabezado del Pedido */
+.pedido-header--cocina {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #6a0dad;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.pedido-header--cocina h3 {
+    font-size: 1.5rem;
+    color: #ff6700;
+    margin: 0;
+}
+
+.pedido-header--cocina p {
+    font-size: 1rem;
+    color: #333;
+    margin: 0;
+}
+
+.alergias--cocina {
+    font-size: 1rem;
+    color: #e55b00;
+    font-weight: bold;
+}
+
+/* Lista de Productos */
+.productos-list--cocina {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.producto-item--cocina label {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.producto-item--cocina label:hover {
+    color: #6a0dad;
+}
+
+/* Botón Terminar Pedido */
+.boton-terminar--cocina {
+    margin-top: auto; /* Empuja el botón hacia el fondo */
+    padding: 10px 25px;
+    background-color: #6a0dad;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.boton-terminar--cocina:hover {
+    transform: scale(1.05);
+}
+
+.boton-terminar--cocina:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}

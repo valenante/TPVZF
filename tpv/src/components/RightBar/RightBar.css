@@ -1,128 +1,159 @@
+/* Estilo general */
+:root {
+  --font-size-normal: 1.2rem;
+  --font-size-large: 1.4rem;
+  --font-weight-normal: 400;
+  --font-weight-bold: 600;
+}
+
 /* Contenedor principal del RightBar */
 .right-bar--rightbar {
-    background-color: #F5F5F5; /* Gris claro */
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  background-color: #F5F5F5; /* Gris claro */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Filtros de tipo */
+.filtros-tipo--rightbar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.boton-tipo--rightbar {
+  background-color: #FFFFFF; /* Blanco */
+  border: 2px solid #6A0DAD; /* Morado */
+  color: #6A0DAD;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-normal);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.boton-tipo--rightbar.activo--rightbar {
+  background-color: #6A0DAD; /* Morado activo */
+  color: #FFFFFF; /* Texto blanco */
+}
+
+.boton-tipo--rightbar:hover {
+  background-color: #FF6700; /* Naranja vibrante */
+  color: #FFFFFF;
+}
+
+/* Categorías */
+.categorias--rightbar {
+  padding: 10px;
+}
+
+.titulo-categorias--rightbar {
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+  color: #6A0DAD;
+  margin-bottom: 10px;
+}
+
+.lista-categorias--rightbar {
+  list-style: none;
+  padding: 0;
+}
+
+.categoria--rightbar {
+  padding: 10px;
+  cursor: pointer;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 5px;
+}
+
+.categoria--rightbar.seleccionada--rightbar {
+  background-color: #FF6700; /* Naranja vibrante */
+  color: #FFFFFF; /* Blanco */
+}
+
+.categoria--rightbar:hover {
+  background-color: #6A0DAD; /* Morado */
+  color: #FFFFFF; /* Blanco */
+}
+
+/* Productos */
+.productos--rightbar {
+  padding: 10px;
+}
+
+.titulo-productos--rightbar {
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+  color: #6A0DAD;
+  margin-bottom: 10px;
+}
+
+.lista-productos--rightbar {
+  list-style: none;
+  padding: 0;
+}
+
+.producto--rightbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.producto-info--rightbar {
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  color: #333333;
+}
+
+.select-precio--rightbar {
+  margin-left: 10px;
+  padding: 5px;
+  border: 1px solid #CCCCCC;
+  border-radius: 5px;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+}
+
+/* Botón agregar */
+.boton-agregar--rightbar {
+  background-color: #FF6700; /* Naranja */
+  color: #FFFFFF; /* Blanco */
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.boton-agregar--rightbar:hover {
+  background-color: #6A0DAD; /* Morado */
+  transform: scale(1.05);
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 768px) {
+  :root {
+    --font-size-normal: 1.2rem;
+    --font-size-large: 1.4rem;
+    --font-weight-normal: 400;
+    --font-weight-bold: 800;
   }
-  
-  /* Filtros de tipo */
-  .filtros-tipo--rightbar {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
+
   .boton-tipo--rightbar {
-    background-color: #FFFFFF; /* Blanco */
-    border: 2px solid #6A0DAD; /* Morado */
-    color: #6A0DAD;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 12px 18px;
   }
-  
-  .boton-tipo--rightbar.activo--rightbar {
-    background-color: #6A0DAD; /* Morado activo */
-    color: #FFFFFF; /* Texto blanco */
-  }
-  
-  .boton-tipo--rightbar:hover {
-    background-color: #FF6700; /* Naranja vibrante */
-    color: #FFFFFF;
-  }
-  
-  /* Categorías */
-  .categorias--rightbar {
-    padding: 10px;
-  }
-  
-  .titulo-categorias--rightbar {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #6A0DAD;
-    margin-bottom: 10px;
-  }
-  
-  .lista-categorias--rightbar {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .categoria--rightbar {
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    border-radius: 5px;
-  }
-  
-  .categoria--rightbar.seleccionada--rightbar {
-    background-color: #FF6700; /* Naranja vibrante */
-    color: #FFFFFF; /* Blanco */
-  }
-  
-  .categoria--rightbar:hover {
-    background-color: #6A0DAD; /* Morado */
-    color: #FFFFFF; /* Blanco */
-  }
-  
-  /* Productos */
-  .productos--rightbar {
-    padding: 10px;
-  }
-  
-  .titulo-productos--rightbar {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #6A0DAD;
-    margin-bottom: 10px;
-  }
-  
-  .lista-productos--rightbar {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .producto--rightbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #E0E0E0;
-  }
-  
-  .producto-info--rightbar {
-    font-size: 1rem;
-    color: #333333;
-  }
-  
-  .select-precio--rightbar {
-    margin-left: 10px;
-    padding: 5px;
-    border: 1px solid #CCCCCC;
-    border-radius: 5px;
-    font-size: 0.9rem;
-  }
-  
-  /* Botón agregar */
+
   .boton-agregar--rightbar {
-    background-color: #FF6700; /* Naranja */
-    color: #FFFFFF; /* Blanco */
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    padding: 12px 18px;
   }
-  
-  .boton-agregar--rightbar:hover {
-    background-color: #6A0DAD; /* Morado */
-    transform: scale(1.05);
-  }
-  
+}

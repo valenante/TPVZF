@@ -1,0 +1,114 @@
+/* Contenedor del modal */
+.modal--cuenta {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Contenido del modal */
+  .modal-content--cuenta {
+    background-color: #ffffff; /* Blanco */
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  /* Título */
+  .titulo--cuenta {
+    font-size: 1.8rem;
+    color: #6a0dad; /* Morado profundo */
+    margin-bottom: 20px;
+  }
+  
+  /* Total */
+  .total--cuenta {
+    font-size: 1.4rem;
+    color: #333333;
+    margin-bottom: 20px;
+  }
+  
+  /* Etiquetas */
+  .label--cuenta {
+    font-size: 1rem;
+    color: #555555;
+    display: block;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  
+  /* Inputs */
+  .input--cuenta {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  /* Mensaje de error */
+  .error--cuenta {
+    color: #ff0000;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Botones */
+  .botones--cuenta {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .boton-cancelar--cuenta,
+  .boton-confirmar--cuenta {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .boton-cancelar--cuenta {
+    background-color: #cccccc; /* Gris */
+    color: #333333;
+  }
+  
+  .boton-cancelar--cuenta:hover {
+    background-color: #999999;
+  }
+  
+  .boton-confirmar--cuenta {
+    background-color: #ff6700; /* Naranja vibrante */
+    color: #ffffff;
+  }
+  
+  .boton-confirmar--cuenta:hover {
+    background-color: #e55b00;
+  }
+  
+  /* Animación de entrada */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  

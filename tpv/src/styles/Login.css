@@ -1,0 +1,107 @@
+/* Contenedor principal */
+.login--login {
+    display: flex;
+    flex-direction: column;
+    width: 50vh;
+    height: 50vh;
+    margin: 10vh auto;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5; /* Gris claro */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Título */
+  .titulo--login {
+    font-size: 2rem;
+    color: #6a0dad; /* Morado profundo */
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Formulario */
+  .formulario--login {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Entradas */
+  .input--login {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #6a0dad; /* Morado profundo */
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .input--login:focus {
+    outline: none;
+    border-color: #ff6700; /* Naranja vibrante */
+    box-shadow: 0 0 5px rgba(255, 103, 0, 0.5);
+  }
+  
+  /* Errores */
+  .error--login {
+    font-size: 0.9rem;
+    color: #ff0000; /* Rojo */
+    font-style: italic;
+  }
+  
+  /* Botón */
+  .boton--login {
+    padding: 10px;
+    background-color: #6a0dad; /* Morado profundo */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .boton--login:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .boton--login:hover:not(:disabled) {
+    background-color: #ff6700; /* Naranja vibrante */
+    transform: scale(1.05);
+  }
+  
+  /* Estilos para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .login--login {
+      width: 90%;
+      height: auto;
+      padding: 15px;
+    }
+  
+    .titulo--login {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+  
+    .formulario--login {
+      gap: 10px;
+    }
+  
+    .input--login {
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+  
+    .boton--login {
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+  
+    .error--login {
+      font-size: 0.8rem;
+    }
+  }
+  

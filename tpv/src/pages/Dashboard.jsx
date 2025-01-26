@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { io } from "socket.io-client"; // Cliente de Socket.IO
 import api from "../utils/api";
 import "../styles/Dashboard.css";
 import SubNavbar from "../components/Subnavbar/Subnavbar";
+import io from "socket.io-client";
 
 const Dashboard = () => {
   const [mesas, setMesas] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Detecta si la pantalla es pequeña
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
-  const socket = io(process.env.REACT_APP_SOCKET_URL); // URL del servidor Socket.IO
+  const socketRef = useRef(null); // Referencia al socket
 
   useEffect(() => {
     const fetchMesas = async () => {
@@ -24,14 +24,23 @@ const Dashboard = () => {
 
     fetchMesas();
 
-    // Escuchar eventos de Socket.IO
-    socket.on("mesa-abierta", (mesaActualizada) => {
-      setMesas((prevMesas) =>
-        prevMesas.map((mesa) =>
-          mesa._id === mesaActualizada._id ? { ...mesa, estado: mesaActualizada.estado } : mesa
-        )
-      );
-    });
+    // Inicializar el socket si no está creado
+    if (!socketRef.current) {
+      socketRef.current = io(process.env.REACT_APP_SOCKET_URL, {
+        transports: ["websocket"],
+      });
+
+      // Escuchar eventos de Socket.IO
+      socketRef.current.on("mesa-abierta", (mesaActualizada) => {
+        setMesas((prevMesas) =>
+          prevMesas.map((mesa) =>
+            mesa._id === mesaActualizada._id
+              ? { ...mesa, estado: mesaActualizada.estado }
+              : mesa
+          )
+        );
+      });
+    }
 
     // Actualiza el estado si la ventana cambia de tamaño
     const handleResize = () => {
@@ -41,10 +50,13 @@ const Dashboard = () => {
 
     // Limpiar la conexión cuando el componente se desmonte
     return () => {
-      socket.disconnect();
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
       window.removeEventListener("resize", handleResize);
     };
-  }, [socket]);
+  }, []);
 
   const handleMesaClick = (mesaId) => {
     navigate(`/mesas/${mesaId}`);
@@ -52,19 +64,17 @@ const Dashboard = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    
-    // Convertir ambos valores a cadenas y asegurarse de que estén en el mismo formato
+
     const mesaEncontrada = mesas.find(
       (mesa) => mesa.numero.toString() === searchInput.trim()
     );
-  
+
     if (mesaEncontrada) {
       handleMesaClick(mesaEncontrada._id);
     } else {
       alert("Mesa no encontrada");
     }
   };
-  
 
   return (
     <>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api"; // Importa la configuración de axios
+import "./MesasCerradas.css"; // Importa el archivo de estilos
 
 const MesasCerradas = () => {
   const [mesas, setMesas] = useState([]);
@@ -26,52 +27,54 @@ const MesasCerradas = () => {
   }
 
   return (
-    <div>
-      <h1>Mesas Cerradas</h1>
+    <div className="mesas-cerradas--mesas-cerradas">
+      <h1 className="titulo--mesas-cerradas">Mesas Cerradas</h1>
       {mesas.length === 0 ? (
-        <p>No hay mesas cerradas.</p>
+        <p className="mensaje-vacio--mesas-cerradas">No hay mesas cerradas.</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Número</th>
-              <th>Hora de Apertura</th>
-              <th>Hora de Cierre</th>
-              <th>Total (€)</th>
-              <th>Método de Pago</th>
-              <th>Productos</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mesas.map((mesa) => (
-              <tr key={mesa._id}>
-                <td>{mesa.numero}</td>
-                <td>{new Date(mesa.inicio).toLocaleTimeString()}</td>
-                <td>{new Date(mesa.cierre).toLocaleTimeString()}</td>
-                <td>{mesa.total.toFixed(2)} €</td>
-                <td>
-                  {mesa.metodoPago.efectivo > 0 && `Efectivo: ${mesa.metodoPago.efectivo} €`}
-                  {mesa.metodoPago.tarjeta > 0 && ` | Tarjeta: ${mesa.metodoPago.tarjeta} €`}
-                </td>
-                <td>
-                  {mesa.pedidos.map((pedido) => (
-                    <div key={pedido._id}>
-                      <strong>Pedido:</strong>
-                      {pedido.productos.map((producto, index) => (
-                        <div key={producto._id || index}>
-                          - {producto.producto.nombre}: x{producto.cantidad}, {producto.total.toFixed(2)} €
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </td>
+        <div className="tabla-container--mesas-cerradas">
+          <table className="tabla--mesas-cerradas">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Hora de Apertura</th>
+                <th>Hora de Cierre</th>
+                <th>Total (€)</th>
+                <th>Método de Pago</th>
+                <th>Productos</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {mesas.map((mesa) => (
+                <tr key={mesa._id}>
+                  <td>{mesa.numero}</td>
+                  <td>{new Date(mesa.inicio).toLocaleTimeString()}</td>
+                  <td>{new Date(mesa.cierre).toLocaleTimeString()}</td>
+                  <td>{mesa.total.toFixed(2)} €</td>
+                  <td>
+                    {mesa.metodoPago.efectivo > 0 && `Efectivo: ${mesa.metodoPago.efectivo} €`}
+                    {mesa.metodoPago.tarjeta > 0 && ` | Tarjeta: ${mesa.metodoPago.tarjeta} €`}
+                  </td>
+                  <td>
+                    {mesa.pedidos.map((pedido) => (
+                      <div key={pedido._id}>
+                        <strong>Pedido:</strong>
+                        {pedido.productos.map((producto, index) => (
+                          <div key={producto._id || index}>
+                            - {producto.producto.nombre}: x{producto.cantidad}, {producto.total.toFixed(2)} €
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
-  );
-};
+  )
+}; 
 
 export default MesasCerradas;

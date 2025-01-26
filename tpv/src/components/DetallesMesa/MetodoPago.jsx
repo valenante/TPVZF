@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./MetodoPago.css";
 
 const MetodoPagoModal = ({ total, onClose, onConfirm }) => {
   const [efectivo, setEfectivo] = useState(0);
@@ -17,29 +18,33 @@ const MetodoPagoModal = ({ total, onClose, onConfirm }) => {
   };
 
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <h2>Método de Pago</h2>
-        <p>Total: {total} €</p>
-        <label>
+    <div className="modal--cuenta">
+      <div className="modal-content--cuenta">
+        <h2 className="titulo--cuenta">Método de Pago</h2>
+        <p className="total--cuenta">Total: {total} €</p>
+        <label className="label--cuenta">
           Efectivo:
           <input
             type="number"
             value={efectivo}
             onChange={(e) => setEfectivo(Number(e.target.value))}
+            className="input--cuenta"
           />
         </label>
-        <label>
+        <label className="label--cuenta">
           Tarjeta:
           <input
             type="number"
             value={tarjeta}
             onChange={(e) => setTarjeta(Number(e.target.value))}
+            className="input--cuenta"
           />
         </label>
-        {error && <p className="error">{error}</p>}
-        <button onClick={onClose}>Cancelar</button>
-        <button onClick={handleConfirm}>Confirmar</button>
+        {error && <p className="error--cuenta">{error}</p>}
+        <div className="botones--cuenta">
+          <button onClick={onClose} className="boton-cancelar--cuenta">Cancelar</button>
+          <button onClick={handleConfirm} className="boton-confirmar--cuenta">Confirmar</button>
+        </div>
       </div>
     </div>
   );

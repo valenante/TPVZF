@@ -1,0 +1,80 @@
+/* Contenedor principal */
+.mesas-cerradas--mesas-cerradas {
+    padding: 20px;
+    background-color: #f5f5f5; /* Gris claro */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Título */
+  .titulo--mesas-cerradas {
+    font-size: 2rem;
+    color: #6a0dad; /* Morado profundo */
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Mensaje vacío */
+  .mensaje-vacio--mesas-cerradas {
+    font-size: 1.4rem;
+    color: #6a0dad;
+    text-align: center;
+    font-style: italic;
+  }
+  
+  /* Contenedor de la tabla */
+  .tabla-container--mesas-cerradas {
+    max-height: 70vh; /* Altura máxima */
+    overflow-y: auto; /* Scroll vertical */
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    background-color: #ffffff; /* Fondo blanco */
+  }
+  
+  /* Tabla */
+  .tabla--mesas-cerradas {
+    width: 100%;
+    border-collapse: collapse; /* Eliminar espacios entre celdas */
+    font-size: 1rem;
+    text-align: left;
+  }
+  
+  .tabla--mesas-cerradas thead th {
+    background-color: #6a0dad; /* Morado profundo */
+    color: #ffffff; /* Blanco */
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .tabla--mesas-cerradas tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0; /* Línea de separación */
+  }
+  
+  .tabla--mesas-cerradas tr:nth-child(even) {
+    background-color: #f9f9f9; /* Fila alterna */
+  }
+  
+  .tabla--mesas-cerradas tr:hover {
+    background-color: #ff6700; /* Naranja vibrante */
+    color: #ffffff; /* Texto blanco */
+  }
+  
+  /* Scroll personalizado */
+  .tabla-container--mesas-cerradas::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .tabla-container--mesas-cerradas::-webkit-scrollbar-thumb {
+    background-color: #6a0dad; /* Morado profundo */
+    border-radius: 4px;
+  }
+  
+  .tabla-container--mesas-cerradas::-webkit-scrollbar-thumb:hover {
+    background-color: #ff6700; /* Naranja vibrante */
+  }
+  

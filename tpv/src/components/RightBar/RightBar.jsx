@@ -65,7 +65,6 @@ const RightBar = ({ mesaId, agregarProducto }) => {
       </div>
   
       <div className="categorias--rightbar">
-        <h4 className="titulo-categorias--rightbar">Categorías</h4>
         <ul className="lista-categorias--rightbar">
           {categories.map((categoria) => (
             <li

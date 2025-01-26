@@ -1,0 +1,133 @@
+/* Overlay del modal */
+.modal-overlay--cerrar-caja {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+/* Contenedor principal del modal */
+.modal-content--cerrar-caja {
+    background-color: #ffffff; /* Blanco */
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+    align-items: center; /* Centra horizontalmente el contenido */
+    justify-content: center; /* Centra verticalmente el contenido */
+  }  
+  
+  /* Título */
+  .titulo--cerrar-caja {
+    font-size: 1.8rem;
+    color: #6a0dad; /* Morado profundo */
+    margin-bottom: 10px;
+  }
+  
+  /* Mensaje de carga */
+  .mensaje-carga--cerrar-caja {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #999999;
+  }
+  
+  /* Total de caja */
+  .total-caja--cerrar-caja {
+    font-size: 1.2rem;
+    color: #333333;
+  }
+  
+  /* Input de contraseña */
+  .input--cerrar-caja {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #6a0dad; /* Morado profundo */
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333333;
+  }
+  
+  .input--cerrar-caja:focus {
+    outline: none;
+    border-color: #ff6700; /* Naranja vibrante */
+    box-shadow: 0 0 5px rgba(255, 103, 0, 0.5);
+  }
+  
+  /* Acciones del modal */
+  .modal-actions--cerrar-caja {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  /* Botones */
+  .boton--cerrar-caja,
+  .boton-cancelar--cerrar-caja {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .boton--cerrar-caja {
+    background-color: #6a0dad; /* Morado profundo */
+    color: #ffffff;
+  }
+  
+  .boton--cerrar-caja:hover {
+    background-color: #ff6700; /* Naranja vibrante */
+    transform: scale(1.05);
+  }
+  
+  .boton-cancelar--cerrar-caja {
+    background-color: #cccccc; /* Gris claro */
+    color: #333333;
+  }
+  
+  .boton-cancelar--cerrar-caja:hover {
+    background-color: #999999; /* Gris más oscuro */
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    /* Adaptar el modal a pantallas pequeñas */
+    .modal-content--cerrar-caja {
+      padding: 30px;
+      width: 70%; /* Ocupa casi todo el ancho de la pantalla */
+      max-width: none; /* Elimina el límite fijo de ancho */
+      gap: 10px; /* Reduce el espacio entre los elementos */
+    }
+    
+    .modal-content--cerrar-caja h2 {
+        font-size: 1.5rem; /* Reduce el tamaño del título */
+      }
+    
+      .modal-content--cerrar-caja p {
+        font-size: 1rem; /* Reduce el tamaño del texto general */
+      }
+    
+      .modal-content--cerrar-caja input {
+        font-size: 0.9rem; /* Reduce el tamaño del texto en el input */
+        padding: 8px; /* Ajusta el relleno del input */
+      }
+    
+      .modal-content--cerrar-caja button {
+        font-size: 1rem; /* Reduce el tamaño del texto en los botones */
+        padding: 8px 12px; /* Ajusta el tamaño de los botones */
+      }
+    };
+    

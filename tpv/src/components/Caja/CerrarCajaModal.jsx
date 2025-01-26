@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../../utils/api";
+import "./CerrarCajaModal.css";
 
 const CerrarCajaModal = ({ onClose }) => {
   const [password, setPassword] = useState("");
@@ -47,28 +48,41 @@ const CerrarCajaModal = ({ onClose }) => {
   };
 
   return (
-    <div className="modal">
-      <h2>Cerrar Caja</h2>
-      {isLoading ? (
-        <p>Cargando total de caja...</p>
-      ) : error ? (
-        <p className="error">{error}</p>
-      ) : (
-        <>
-          <p>Total de caja: {totalCaja.toFixed(2)} €</p>
-          <input
-            type="password"
-            placeholder="Introduce la contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && <p className="error">{error}</p>}
-          <button onClick={handleCerrarCaja}>Cerrar Caja</button>
-          <button onClick={onClose}>Cancelar</button>
-        </>
-      )}
+    <div className="modal-overlay--cerrar-caja">
+      <div className="modal-content--cerrar-caja">
+        <h2 className="titulo--cerrar-caja">Cerrar Caja</h2>
+        {isLoading ? (
+          <p className="mensaje-carga--cerrar-caja">Cargando total de caja...</p>
+        ) : error ? (
+          <p className="error--cerrar-caja">{error}</p>
+        ) : (
+          <>
+            <p className="total-caja--cerrar-caja">Total de caja: {totalCaja.toFixed(2)} €</p>
+            <input
+              type="password"
+              className="input--cerrar-caja"
+              placeholder="Introduce la contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {error && <p className="error--cerrar-caja">{error}</p>}
+            <div className="modal-actions--cerrar-caja">
+              <button
+                onClick={handleCerrarCaja}
+                className="boton--cerrar-caja"
+                disabled={isLoading}
+              >
+                {isLoading ? "Cerrando..." : "Cerrar Caja"}
+              </button>
+              <button onClick={onClose} className="boton-cancelar--cerrar-caja">
+                Cancelar
+              </button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
-  );
+  );  
 };
 
 export default CerrarCajaModal;

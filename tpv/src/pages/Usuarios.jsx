@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import api from "../utils/api";
+import "../styles/Usuarios.css";
 
 const CrearUsuario = () => {
   const [formData, setFormData] = useState({
@@ -80,54 +81,59 @@ const CrearUsuario = () => {
   };
 
   return (
-    <div className="crear-usuario">
-      <h2>Crear Usuario</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nombre:
-          <input
-            type="text"
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleChange}
-          />
-        </label>
-        {errors.nombre && <p className="error">{errors.nombre}</p>}
+    <div className="crear-usuario--register">
+      <h2 className="titulo--register">Crear Usuario</h2>
+      <form onSubmit={handleSubmit} className="formulario--register">
+        <input
+          type="text"
+          name="nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+          className="input--register"
+          placeholder="Nombre"
+        />
+        {errors.nombre && <p className="error--register">{errors.nombre}</p>}
 
-        <label>
-          Contraseña:
-          <input
-            type="password"
-            name="contraseña"
-            value={formData.contraseña}
-            onChange={handleChange}
-          />
-        </label>
-        {errors.contraseña && <p className="error">{errors.contraseña}</p>}
+        <input
+          type="password"
+          name="contraseña"
+          value={formData.contraseña}
+          onChange={handleChange}
+          className="input--register"
+          placeholder="Contraseña"
+        />
+        {errors.contraseña && <p className="error--register">{errors.contraseña}</p>}
 
-        <label>
-          Confirmar Contraseña:
-          <input
-            type="password"
-            name="confirmarContraseña"
-            value={formData.confirmarContraseña}
-            onChange={handleChange}
-          />
-        </label>
-        {errors.confirmarContraseña && <p className="error">{errors.confirmarContraseña}</p>}
+        <input
+          type="password"
+          name="confirmarContraseña"
+          value={formData.confirmarContraseña}
+          onChange={handleChange}
+          className="input--register"
+          placeholder="Confirmar Contraseña"
+        />
+        {errors.confirmarContraseña && (
+          <p className="error--register">{errors.confirmarContraseña}</p>
+        )}
 
-        <label>
-          role:
-          <select name="role" value={formData.role} onChange={handleChange}>
-            <option value="">Selecciona un role</option>
-            <option value="admin">Admin</option>
-            <option value="cocinero">Cocinero</option>
-            <option value="camarero">Camarero</option>
-          </select>
-        </label>
-        {errors.role && <p className="error">{errors.role}</p>}
+        <select
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+          className="select--register"
+        >
+          <option value="">Selecciona un rol</option>
+          <option value="admin">Admin</option>
+          <option value="cocinero">Cocinero</option>
+          <option value="camarero">Camarero</option>
+        </select>
+        {errors.role && <p className="error--register">{errors.role}</p>}
 
-        <button type="submit" disabled={isLoading}>
+        <button
+          type="submit"
+          className="boton--register"
+          disabled={isLoading}
+        >
           {isLoading ? "Creando..." : "Crear Usuario"}
         </button>
       </form>

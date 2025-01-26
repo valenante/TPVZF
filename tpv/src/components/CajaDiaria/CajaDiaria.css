@@ -1,0 +1,141 @@
+/* Contenedor principal */
+.caja-diaria--caja-diaria {
+    padding: 20px;
+    background-color: #f5f5f5; /* Gris claro */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Título */
+.titulo--caja-diaria {
+    font-size: 2rem;
+    color: #6a0dad; /* Morado profundo */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de filtros */
+.filtros--caja-diaria {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Contenedor de las fechas en fila */
+.fechas--caja-diaria {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Espacio entre los campos de fecha */
+    width: 100%;
+}
+
+/* Contenedor individual de cada fecha */
+.fecha-item--caja-diaria {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}  
+
+/* Etiquetas */
+.label--caja-diaria {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Entradas de fecha */
+.input--caja-diaria {
+    width: 200px;
+    padding: 8px;
+    border: 1px solid #6a0dad; /* Morado profundo */
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.input--caja-diaria:focus {
+    outline: none;
+    border-color: #ff6700; /* Naranja vibrante */
+    box-shadow: 0 0 5px rgba(255, 103, 0, 0.5);
+}
+
+/* Botón */
+.boton--caja-diaria {
+    padding: 10px 20px;
+    background-color: #6a0dad; /* Morado profundo */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.boton--caja-diaria:hover {
+    background-color: #ff6700; /* Naranja vibrante */
+    transform: scale(1.05);
+}
+
+/* Mensajes */
+.error--caja-diaria {
+    font-size: 1rem;
+    color: #ff0000; /* Rojo */
+    font-style: italic;
+    text-align: center;
+}
+
+.mensaje--caja-diaria {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #999;
+    text-align: center;
+}
+
+/* Contenedor del gráfico */
+.grafico-container--caja-diaria {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Adaptaciones para pantallas pequeñas */
+@media (max-width: 768px) {
+    .caja-diaria--caja-diaria {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .titulo--caja-diaria {
+        font-size: 1.5rem;
+    }
+
+    .input--caja-diaria {
+        width: 150px;
+        padding: 6px;
+        font-size: 0.9rem;
+    }
+
+    .boton--caja-diaria {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    .mensaje--caja-diaria,
+    .error--caja-diaria {
+        font-size: 0.9rem;
+    }
+
+    .grafico-container--caja-diaria {
+        padding: 15px;
+    }
+}

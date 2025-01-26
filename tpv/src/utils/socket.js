@@ -8,21 +8,28 @@ export const SocketProvider = ({ children }) => {
   const [cuentaSolicitada, setCuentaSolicitada] = useState(null); // Almacenar la solicitud de cuenta
 
   useEffect(() => {
-    // Conectar al servidor de WebSocket
-    const socket = io(process.env.REACT_APP_SOCKET_URL);
-    setSocket(socket);
+    if (!socket) {
+      // Solo crear una conexión si no existe
+      const socketInstance = io(process.env.REACT_APP_SOCKET_URL, {
+        transports: ["websocket"],
+        reconnectionAttempts: 5, // Limita los intentos de reconexión
+        reconnectionDelay: 1000, // Tiempo entre intentos
+      });
+      setSocket(socketInstance);
 
-    // Escuchar el evento de cuenta solicitada
-    socket.on("cuentaSolicitada", (data) => {
-      console.log(`Evento recibido: Mesa ${data.numeroMesa} quiere la cuenta`);
-      setCuentaSolicitada(data); // Actualizar el estado con la solicitud
-    });
+      // Escuchar eventos
+      socketInstance.on("cuentaSolicitada", (data) => {
+        console.log(`Evento recibido: Mesa ${data.numeroMesa} quiere la cuenta`);
+        setCuentaSolicitada(data); // Actualizar el estado con la solicitud
+      });
 
-    // Limpiar la conexión al desmontar
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+      // Desconectar al desmontar
+      return () => {
+        console.log("Desconectando el socket");
+        socketInstance.disconnect();
+      };
+    }
+  }, [socket]); // Solo ejecutar si el socket es nulo
 
   return (
     <SocketContext.Provider value={{ socket, cuentaSolicitada, setCuentaSolicitada }}>
@@ -30,4 +37,3 @@ export const SocketProvider = ({ children }) => {
     </SocketContext.Provider>
   );
 };
-

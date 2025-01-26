@@ -5,23 +5,28 @@ const Products = ({ type, categories }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   return (
-    <div className="products">
+    <div className="products--products">
       {!selectedCategory ? (
-        <div className="categories">
-          <h2>Categorías de {type}</h2>
+        <div className="categories--products">
           {categories.length === 0 ? (
-            <p>Cargando categorías...</p>
+            <p className="cargando-categorias--products">Cargando categorías...</p>
           ) : (
-            categories.map((category, index) => (
-              <button key={index} onClick={() => setSelectedCategory(category)}>
-                {category}
-              </button>
-            ))
+            <div className="buttons--products">
+              {categories.map((category, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedCategory(category)}
+                  className="button--products"
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           )}
         </div>
       ) : (
-        <EstadisticasFinal category={selectedCategory} />
-      )}
+          <EstadisticasFinal category={selectedCategory} />
+        )}
     </div>
   );
 };

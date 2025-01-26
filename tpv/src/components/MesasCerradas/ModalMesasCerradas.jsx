@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
+import "./ModalMesasCerradas.css";
 
 const RecuperarMesaModal = ({ onClose }) => {
   const [mesasCerradas, setMesasCerradas] = useState([]);
@@ -40,19 +41,20 @@ const RecuperarMesaModal = ({ onClose }) => {
   };
 
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <h2>Recuperar Mesa</h2>
+    <div className="modal--recuperar">
+      <div className="modal-content--recuperar">
+        <h2 className="titulo--recuperar">Recuperar Mesa</h2>
         {mesasCerradas.length === 0 ? (
-          <p>No hay mesas cerradas disponibles.</p>
+          <p className="mensaje-vacio--recuperar">No hay mesas cerradas disponibles.</p>
         ) : (
-          <ul>
+          <ul className="lista-mesas--recuperar">
             {mesasCerradas.map((mesa) => (
-              <li key={mesa._id}>
+              <li key={mesa._id} className="mesa-item--recuperar">
                 Mesa {mesa.numero}
                 <button
                   onClick={() => recuperarMesa(mesa._id)}
                   disabled={recuperando}
+                  className="boton-recuperar--recuperar"
                 >
                   Recuperar
                 </button>
@@ -60,10 +62,10 @@ const RecuperarMesaModal = ({ onClose }) => {
             ))}
           </ul>
         )}
-        <button onClick={onClose}>Cerrar</button>
+        <button onClick={onClose} className="boton-cerrar--recuperar">Cerrar</button>
       </div>
     </div>
-  );
+  );  
 };
 
 export default RecuperarMesaModal;

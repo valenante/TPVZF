@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
+import "../styles/Login.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ name: "", password: "" });
@@ -54,36 +55,34 @@ const Login = () => {
   };
 
   return (
-    <div className="login">
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-            Nombre de usuario:
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Contraseña:
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        {error && <p className="error">{error}</p>}
-        <button type="submit" disabled={isLoading}>
+    <div className="login--login">
+      <h2 className="titulo--login">Iniciar Sesión</h2>
+      <form onSubmit={handleSubmit} className="formulario--login">
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          className="input--login"
+          placeholder="Nombre de usuario"
+        />
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          className="input--login"
+          placeholder="Contraseña"
+        />
+        {error && <p className="error--login">{error}</p>}
+        <button type="submit" disabled={isLoading} className="boton--login">
           {isLoading ? "Iniciando sesión..." : "Ingresar"}
         </button>
       </form>
     </div>
-  );
+  );  
 };
 
 export default Login;

@@ -1,0 +1,80 @@
+/* Contenedor principal */
+.eliminaciones--eliminaciones {
+    padding: 20px;
+    background-color: #f5f5f5; /* Gris claro */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    max-width: 80vw;
+    margin: 20px auto;
+    overflow-x: auto; /* Scroll horizontal si es necesario */
+  }
+  
+  /* Título */
+  .titulo--eliminaciones {
+    font-size: 2rem;
+    color: #6a0dad; /* Morado profundo */
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Tabla */
+  .tabla--eliminaciones {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    background-color: #ffffff; /* Blanco */
+    border-radius: 10px;
+    overflow: hidden; /* Asegura bordes redondeados */
+  }
+  
+  .tabla--eliminaciones th,
+  .tabla--eliminaciones td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0; /* Línea delgada */
+  }
+  
+  .tabla--eliminaciones th {
+    background-color: #6a0dad; /* Morado profundo */
+    color: #ffffff; /* Texto blanco */
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .tabla--eliminaciones td {
+    font-size: 0.9rem;
+    color: #333333; /* Gris oscuro */
+    text-align: center;
+  }
+  
+  /* Filas */
+  .fila--eliminaciones:nth-child(odd) {
+    background-color: #f9f9f9; /* Fondo alternado */
+  }
+  
+  .fila--eliminaciones:nth-child(even) {
+    background-color: #ffffff; /* Fondo blanco */
+  }
+  
+  .fila--eliminaciones:hover {
+    background-color: #ff6700; /* Naranja vibrante */
+    color: #ffffff; /* Texto blanco */
+    cursor: pointer;
+  }
+  
+  /* Scroll horizontal en pantallas pequeñas */
+  @media (max-width: 768px) {
+    .eliminaciones--eliminaciones {
+      padding: 15px;
+      font-size: 0.9rem;
+    }
+  
+    .titulo--eliminaciones {
+      font-size: 1.5rem;
+    }
+  
+    .tabla--eliminaciones th,
+    .tabla--eliminaciones td {
+      padding: 10px;
+    }
+  }
+  

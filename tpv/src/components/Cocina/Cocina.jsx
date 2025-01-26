@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import io from 'socket.io-client'
 import PedidosFinalizados from './PedidosFinalizados';
+import './Cocina.css';
 
 // Conectar al servidor de Socket.io
-const socket = io('http://172.20.10.7:3000');
+const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const Cocina = () => {
   const [pedidos, setPedidos] = useState([]);
@@ -73,63 +74,78 @@ const Cocina = () => {
   }, []);
 
   return (
-    <div className="cocina">
-      <h1>Pedidos Pendientes</h1>
-      <button onClick={() => setMostrarFinalizados(true)}>Ver Pedidos Finalizados</button>
+    <div className="cocina--cocina">
+      <h1 className="titulo--cocina">Pedidos Pendientes</h1>
+      <button
+        onClick={() => setMostrarFinalizados(true)}
+        className="boton-finalizados--cocina"
+      >
+        Ver Pedidos Finalizados
+      </button>
       {mostrarFinalizados && (
         <PedidosFinalizados onClose={() => setMostrarFinalizados(false)} />
       )}
       {pedidos.length === 0 ? (
-        <p>No hay pedidos pendientes</p>
+        <p className="mensaje-vacio--cocina">No hay pedidos pendientes</p>
       ) : (
-        pedidos.map((pedido) => {
-          const todosProductosListos = pedido.productos
-            .filter((producto) => ['plato', 'tapaRacion'].includes(producto.tipo)) // Filtrar productos de tipo plato o tapaRacion
-            .every((producto) => producto.estadoPreparacion === 'listo');
-
-          return (
-            <div key={pedido._id} className="pedido">
-              <h3>Mesa: {pedido.mesa.numero}</h3>
-              <p>Comensales: {pedido.comensales}</p>
-              {pedido.alergias && <p><strong>Alergias:</strong> {pedido.alergias}</p>}
-              <p><strong>Tiempo desde el pedido:</strong> {calcularTiempoTranscurrido(pedido.fecha)}</p>
-              <h4>Productos:</h4>
-              <ul>
-                {pedido.productos.filter(
-                  (producto) => ['plato', 'tapaRacion'].includes(producto.tipo)
-                ).map((producto) => (
-                  <li key={producto._id}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={producto.estadoPreparacion === 'listo'}
-                        onChange={() => marcarProductoComoListo(pedido._id, producto._id)}
-                      />
-                      {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
-                    </label>
-                    {producto.ingredientesEliminados.length > 0 && (
-                      <p><strong>Sin:</strong> {producto.ingredientesEliminados.join(", ")}</p>
-                    )}
-                    {producto.especificaciones.length > 0 && (
-                      <p><strong>Especificaciones:</strong> {producto.especificaciones.join(", ")}</p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-
-              <p><strong>Total:</strong> {pedido.total.toFixed(2)} €</p>
-              <button
-                onClick={() => marcarPedidoComoListo(pedido._id)}
-                disabled={!todosProductosListos}
-              >
-                Terminar Pedido
-              </button>
-            </div>
-          );
-        })
+        <div className="pedidos-container--cocina">
+          {pedidos.map((pedido) => {
+            const todosProductosListos = pedido.productos
+              .filter((producto) => ["plato", "tapaRacion"].includes(producto.tipo))
+              .every((producto) => producto.estadoPreparacion === "listo");
+  
+            return (
+              <div key={pedido._id} className="pedido-card--cocina">
+                <div className="pedido-header--cocina">
+                  <h3>Mesa {pedido.mesa.numero}</h3>
+                  <p>Comensales: {pedido.comensales}</p>
+                  {pedido.alergias && <p className="alergias--cocina">Alergias: {pedido.alergias}</p>}
+                </div>
+                <p>
+                <strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}
+              </p>
+                <ul className="productos-list--cocina">
+                  {pedido.productos
+                    .filter((producto) => ["plato", "tapaRacion"].includes(producto.tipo))
+                    .map((producto) => (
+                      <li key={producto._id} className="producto-item--cocina">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={producto.estadoPreparacion === "listo"}
+                            onChange={() =>
+                              marcarProductoComoListo(pedido._id, producto._id)
+                            }
+                          />
+                          {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
+                        </label>
+                        {producto.ingredientesEliminados.length > 0 && (
+                          <p>
+                            <strong>Sin:</strong> {producto.ingredientesEliminados.join(", ")}
+                          </p>
+                        )}
+                        {producto.especificaciones.length > 0 && (
+                          <p>
+                            <strong>Especificaciones:</strong> {producto.especificaciones.join(", ")}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                </ul>
+                <button
+                  onClick={() => marcarPedidoComoListo(pedido._id)}
+                  disabled={!todosProductosListos}
+                  className="boton-terminar--cocina"
+                >
+                  Terminar Pedido
+                </button>
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );
-};
+};  
 
 export default Cocina;
