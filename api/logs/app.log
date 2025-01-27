@@ -1278,3 +1278,59 @@ u2025-01-13 14:54:55 [INFO]: Aplicación iniciada correctamente
 2025-01-26 23:35:46 [INFO]: Aplicación iniciada correctamente
 2025-01-26 23:35:46 [INFO]: Servidor escuchando en el puerto 3000
 2025-01-26 23:35:46 [INFO]: Conectado a MongoDB
+2025-01-27 16:57:20 [INFO]: Aplicación iniciada correctamente
+2025-01-27 16:57:20 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 16:57:20 [INFO]: Conectado a MongoDB
+2025-01-27 16:59:19 [INFO]: Aplicación iniciada correctamente
+2025-01-27 16:59:19 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 16:59:19 [INFO]: Conectado a MongoDB
+2025-01-27 17:05:27 [INFO]: Aplicación iniciada correctamente
+2025-01-27 17:05:27 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 17:05:27 [INFO]: Conectado a MongoDB
+2025-01-27 17:05:33 [ERROR]: [POST] /api/auth/login - invalid csrf token
+2025-01-27 17:05:36 [ERROR]: [POST] /api/auth/refresh-token - invalid csrf token
+2025-01-27 17:05:36 [ERROR]: [POST] /api/auth/refresh-token - invalid csrf token
+2025-01-27 17:05:38 [ERROR]: [POST] /api/auth/login - invalid csrf token
+2025-01-27 17:05:39 [ERROR]: [POST] /api/auth/login - invalid csrf token
+2025-01-27 17:05:41 [ERROR]: [POST] /api/auth/login - invalid csrf token
+2025-01-27 17:05:51 [INFO]: Aplicación iniciada correctamente
+2025-01-27 17:05:51 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 17:05:51 [INFO]: Conectado a MongoDB
+2025-01-27 17:07:39 [ERROR]: [POST] /api/auth/logout - invalid csrf token
+2025-01-27 17:07:54 [ERROR]: [POST] /api/auth/refresh-token - invalid csrf token
+2025-01-27 17:07:54 [ERROR]: [POST] /api/auth/refresh-token - invalid csrf token
+2025-01-27 17:07:54 [ERROR]: [POST] /api/auth/refresh-token - invalid csrf token
+2025-01-27 17:07:54 [ERROR]: [POST] /api/auth/refresh-token - invalid csrf token
+2025-01-27 17:07:54 [ERROR]: [POST] /api/auth/refresh-token - invalid csrf token
+2025-01-27 17:07:54 [ERROR]: [POST] /api/auth/refresh-token - invalid csrf token
+2025-01-27 17:08:01 [ERROR]: [POST] /api/auth/logout - invalid csrf token
+2025-01-27 17:08:41 [INFO]: Aplicación iniciada correctamente
+2025-01-27 17:08:41 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 17:08:41 [INFO]: Conectado a MongoDB
+2025-01-27 22:37:40 [INFO]: Aplicación iniciada correctamente
+2025-01-27 22:37:40 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 22:37:40 [INFO]: Conectado a MongoDB
+2025-01-27 22:39:21 [INFO]: Aplicación iniciada correctamente
+2025-01-27 22:39:21 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 22:39:21 [INFO]: Conectado a MongoDB
+2025-01-27 22:40:36 [INFO]: Aplicación iniciada correctamente
+2025-01-27 22:40:36 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 22:40:36 [INFO]: Conectado a MongoDB
+2025-01-27 22:51:40 [INFO]: Aplicación iniciada correctamente
+2025-01-27 22:51:40 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 22:51:40 [INFO]: Conectado a MongoDB
+2025-01-27 22:52:19 [INFO]: Aplicación iniciada correctamente
+2025-01-27 22:52:19 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 22:52:19 [INFO]: Conectado a MongoDB
+2025-01-27 22:55:32 [INFO]: Aplicación iniciada correctamente
+2025-01-27 22:55:32 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 22:55:32 [INFO]: Conectado a MongoDB
+2025-01-27 22:57:50 [INFO]: Aplicación iniciada correctamente
+2025-01-27 22:57:50 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 22:57:50 [INFO]: Conectado a MongoDB
+2025-01-27 22:58:22 [INFO]: Aplicación iniciada correctamente
+2025-01-27 22:58:22 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 22:58:22 [INFO]: Conectado a MongoDB
+2025-01-27 23:14:04 [INFO]: Aplicación iniciada correctamente
+2025-01-27 23:14:04 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-27 23:14:04 [INFO]: Conectado a MongoDB
