@@ -4,6 +4,9 @@ const router = Router();
 import { login, register, renovarToken, logout } from '../controllers/authController.js';
 import { logAndNotifyLogin } from '../middlewares/failedSesionMiddleware.js';
 import rateLimit from 'express-rate-limit';
+import csrf from "csurf";
+const csrfProtection = csrf({ cookie: true });
+
 
 // Middleware para limitar intentos de inicio de sesión
 const loginLimiter = rateLimit({
@@ -40,6 +43,7 @@ router.post(
 // Ruta de registro de usuario
 router.post(
   '/register',
+  csrfProtection, // Protección CSRF
   [
     check('name', 'El nombre es obligatorio').notEmpty(),
     check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }),

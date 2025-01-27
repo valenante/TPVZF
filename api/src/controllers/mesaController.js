@@ -267,3 +267,59 @@ export const recuperarMesa = async (req, res) => {
   }
 };
 
+export const crearMesa = async (req, res) => {
+  try {
+    const { numero } = req.body;
+
+    // Verificar si el número de la mesa ya existe
+    const mesaExistente = await Mesa.findOne({ numero });
+    if (mesaExistente) {
+      return res.status(400).json({ error: `La mesa número ${numero} ya existe.` });
+    }
+
+    // Crear la nueva mesa
+    const nuevaMesa = new Mesa({
+      numero,
+      inicio: new Date(),
+      cierre: null,
+      estado: 'cerrada',
+      total: 0,
+      metodoPago: { efectivo: 0, tarjeta: 0 }, // Inicializa método de pago vacío
+      pedidos: [], // Inicializa con pedidos vacíos
+    });
+
+    await nuevaMesa.save(); // Guarda la mesa en la base de datos
+
+    res.status(201).json({ message: "Mesa creada exitosamente", mesa: nuevaMesa });
+  } catch (error) {
+    console.error("Error al crear la mesa:", error);
+    res.status(500).json({ error: "Hubo un problema al crear la mesa." });
+  }
+};
+
+export const eliminarMesa = async (req, res) => {
+  try {
+    const { numero } = req.query; // Obtiene el número de la mesa del cuerpo de la solicitud
+
+    // Verificar que el número fue proporcionado
+    if (!numero) {
+      return res.status(400).json({ error: "El número de la mesa es obligatorio." });
+    }
+
+    // Buscar y eliminar la mesa por su número
+    const mesaEliminada = await Mesa.findOneAndDelete({ numero });
+
+    // Si no se encontró la mesa, devolver un error
+    if (!mesaEliminada) {
+      return res.status(404).json({ error: `No se encontró una mesa con el número ${numero}.` });
+    }
+
+    res.status(200).json({
+      message: `Mesa número ${numero} eliminada exitosamente.`,
+      mesa: mesaEliminada,
+    });
+  } catch (error) {
+    console.error("Error al eliminar la mesa:", error);
+    res.status(500).json({ error: "Hubo un problema al eliminar la mesa." });
+  }
+};
