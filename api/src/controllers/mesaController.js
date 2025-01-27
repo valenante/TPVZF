@@ -130,7 +130,7 @@ export const abrirMesa = async (req, res) => {
 
 export const cerrarMesa = async (req, res) => {
   const { id } = req.params; // ID de la mesa
-  const { metodoPago } = req.body; // Efectivo y tarjeta
+  const { metodoPago } = req.body; // Efectivo, tarjeta y propina
 
   try {
     const mesa = await Mesa.findById(id).populate('pedidos');
@@ -138,12 +138,19 @@ export const cerrarMesa = async (req, res) => {
       return res.status(404).json({ error: 'Mesa no encontrada' });
     }
 
-    const { efectivo = 0, tarjeta = 0 } = metodoPago || {};
+    const { efectivo = 0, tarjeta = 0, propina = 0 } = metodoPago || {};
 
-    // Verificar que la suma de efectivo y tarjeta sea igual al total
-    if (efectivo + tarjeta !== mesa.total) {
-      return res.status(400).json({ error: 'Los montos no coinciden con el total de la mesa.' });
+    const totalPagado = efectivo + tarjeta;
+    const totalMesa = mesa.total;
+
+    // Permitir que el total pagado sea igual o mayor al total de la mesa (considerando propina)
+    if (totalPagado < totalMesa) {
+      return res.status(400).json({
+        error: `El monto ingresado (${totalPagado} €) es menor que el total de la mesa (${totalMesa} €).`,
+      });
     }
+
+    const propinaCalculada = totalPagado > totalMesa ? totalPagado - totalMesa : propina;
 
     // Crear registro en `mesasCerradas`
     const mesaCerrada = new MesaCerrada({
@@ -152,19 +159,23 @@ export const cerrarMesa = async (req, res) => {
       total: mesa.total,
       inicio: mesa.inicio,
       cierre: new Date(),
-      metodoPago: { efectivo, tarjeta },
+      metodoPago: { efectivo, tarjeta, propina: propinaCalculada },
     });
 
     await mesaCerrada.save();
 
-    //Restablecer valores de mesa abierta
+    // Restablecer valores de mesa abierta
     mesa.estado = 'cerrada';
     mesa.total = 0;
     mesa.pedidos = [];
     mesa.tokenLider = null;
     await mesa.save();
 
-    res.status(200).json({ message: 'Mesa cerrada con éxito', mesaCerrada });
+    res.status(200).json({
+      message: 'Mesa cerrada con éxito',
+      mesaCerrada,
+      propina: propinaCalculada,
+    });
   } catch (error) {
     console.error('Error al cerrar la mesa:', error);
     res.status(500).json({ error: 'Error al cerrar la mesa' });

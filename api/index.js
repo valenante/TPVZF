@@ -41,7 +41,7 @@ dotenv.config();
 
 
 const corsOptions = {
-  origin: ["http://localhost:3002", "http://172.20.10.8:3002", "http://localhost:3001", "http://172.20.10.8:3001", "http://localhost:3000", "http://172.20.10.8:3000"], // Orígenes permitidos
+  origin: ["http://localhost:3002", "http://172.20.10.7:3002", "http://localhost:3001", "http://172.20.10.7:3001", "http://localhost:3000", "http://172.20.10.7:3000"], // Orígenes permitidos
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization",'X-Cart-ID'], // Encabezados permitidos
   credentials: true, // Permitir envío de cookies
@@ -51,7 +51,7 @@ const corsOptions = {
 app.use(cors(corsOptions)); // Habilitar CORS con opciones específicas
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3002", "http://172.20.10.8:3002", "http://localhost:3001", "http://172.20.10.8:3001", "http://localhost:3000", "http://172.20.10.8:3000"], // Orígenes permitidos
+    origin: ["http://localhost:3002", "http://172.20.10.7:3002", "http://localhost:3001", "http://172.20.10.7:3001", "http://localhost:3000", "http://172.20.10.7:3000"], // Orígenes permitidos
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization",'X-Cart-ID'],
     credentials: true,

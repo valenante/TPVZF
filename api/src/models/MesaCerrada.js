@@ -14,7 +14,8 @@ const mesaCerradaSchema = new Schema({
     tarjeta: {
         type: Number,
         default: 0
-    }
+    },
+    propina: { type: Number, default: 0 }, // Campo para la propina
 }
 });
 
