@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { check, validationResult } from 'express-validator';
 const router = Router();
 import { login, register, renovarToken, logout } from '../controllers/authController.js';
+import { logAndNotifyLogin } from '../middlewares/failedSesionMiddleware.js';
 import rateLimit from 'express-rate-limit';
 
 // Middleware para limitar intentos de inicio de sesión
@@ -11,10 +12,18 @@ const loginLimiter = rateLimit({
   message: 'Demasiados intentos fallidos. Por favor, inténtalo de nuevo más tarde.',
 });
 
+// Middleware para registrar intentos de inicio de sesión
+const logIntentoLogin = (req, res, next) => {
+  const { name } = req.body;
+  next();
+};
+
 // Ruta de inicio de sesión
 router.post(
   '/login',
   loginLimiter,
+  logIntentoLogin,
+  logAndNotifyLogin,
   [
     check('password', 'La contraseña es obligatoria').notEmpty(),
   ],

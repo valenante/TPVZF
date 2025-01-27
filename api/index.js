@@ -12,6 +12,7 @@ import compression from "compression";
 import { info, error as _error } from "./utils/logger.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import session from 'express-session';
 import dotenv from 'dotenv';
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -40,7 +41,7 @@ dotenv.config();
 
 
 const corsOptions = {
-  origin: ["http://localhost:3002", "http://172.20.10.7:3002", "http://localhost:3001", "http://172.20.10.7:3001", "http://localhost:3000", "http://172.20.10.7:3000"], // Orígenes permitidos
+  origin: ["http://localhost:3002", "http://172.20.10.8:3002", "http://localhost:3001", "http://172.20.10.8:3001", "http://localhost:3000", "http://172.20.10.8:3000"], // Orígenes permitidos
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization",'X-Cart-ID'], // Encabezados permitidos
   credentials: true, // Permitir envío de cookies
@@ -50,13 +51,26 @@ const corsOptions = {
 app.use(cors(corsOptions)); // Habilitar CORS con opciones específicas
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3002", "http://172.20.10.7:3002", "http://localhost:3001", "http://172.20.10.7:3001", "http://localhost:3000", "http://172.20.10.7:3000"], // Orígenes permitidos
+    origin: ["http://localhost:3002", "http://172.20.10.8:3002", "http://localhost:3001", "http://172.20.10.8:3001", "http://localhost:3000", "http://172.20.10.8:3000"], // Orígenes permitidos
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization",'X-Cart-ID'],
     credentials: true,
   },
 });
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET, // Clave secreta para firmar la cookie
+    resave: false, // No guarda la sesión si no hay cambios
+    saveUninitialized: false, // No crea sesiones vacías
+    cookie: {
+      httpOnly: true, // Solo accesible desde el servidor
+      secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
+      sameSite: 'Strict', // Protege contra ataques CSRF
+      maxAge: 15 * 60 * 1000, // Duración en milisegundos
+    },
+  })
+);
 
 // Middleware de compresión HTTP
 app.use(compression());
@@ -151,7 +165,6 @@ io.on("connection", (socket) => {
 // Iniciar el servidor
 server.listen(PORT, () => {
   info(`Servidor escuchando en el puerto ${PORT}`);
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
 
 export {io};

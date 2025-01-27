@@ -24,8 +24,6 @@ const generarRefreshToken = (user) => {
 export const renovarToken = async (req, res) => {
   const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
 
-  console.log('Refresh token recibido:', refreshToken);
-
   if (!refreshToken) {
     return res.status(401).json({ error: 'Refresh token no proporcionado.' });
   }
@@ -55,8 +53,6 @@ export const renovarToken = async (req, res) => {
 export const logout = async (req, res) => {
   // Obtener el token del cuerpo de la solicitud o de las cookies
   const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
-
-  console.log('Refresh token recibido:', refreshToken);
 
   if (!refreshToken) {
     return res.status(400).json({ error: 'No se proporcionó refresh token para el cierre de sesión.' });
@@ -138,43 +134,76 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { name, password } = req.body;
 
-  console.log(name, password);
-
   try {
-    const usuario = await User.findOne({ name });
-    if (!usuario) {
+    const user = await User.findOne({ name });
+    if (!user) {
+      req.session.failedAttempts = (req.session.failedAttempts || 0) + 1;
+      await req.session.save(); // Guardar la sesión después de modificarla
       return res.status(404).json({ error: 'Usuario o contraseña incorrectos.' });
     }
 
-    const contrasenaValida = await usuario.comparePassword(password);
-    if (!contrasenaValida) {
+    // Verifica si la cuenta está bloqueada
+    if (user.isBlocked) {
+      const timeLeft = Math.ceil((user.blockedUntil - Date.now()) / 60000);
+      return res.status(403).json({
+        error: `Cuenta bloqueada. Intenta nuevamente en ${timeLeft} minutos.`,
+      });
+    }
+
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      req.session.failedAttempts = (req.session.failedAttempts || 0) + 1;
+
+      if (req.session.failedAttempts >= 5) {
+        user.isBlocked = true;
+        user.blockedUntil = new Date(Date.now() + 15 * 60 * 1000); // Bloqueo de 15 minutos
+        await user.save();
+        await req.session.save(); // Guardar la sesión después de bloquear la cuenta
+        return res.status(403).json({ error: 'Cuenta bloqueada por múltiples intentos fallidos.' });
+      }
+
+      await req.session.save(); // Guardar la sesión después de incrementar intentos fallidos
       return res.status(401).json({ error: 'Usuario o contraseña incorrectos.' });
     }
 
-    // Generar tokens
-    const accessToken = generarAccessToken(usuario);
-    const refreshToken = generarRefreshToken(usuario);
+    // Restablece el contador de intentos fallidos en sesión
+    req.session.failedAttempts = 0;
 
-    // Enviar el refresh token en una cookie segura
+    // Establecer información adicional en la sesión
+    req.session.user = {
+      id: user._id,
+      name: user.name,
+      role: user.role,
+    };
+
+    await req.session.save(); // Guardar la sesión después de configurarla
+
+    // Generar tokens
+    const accessToken = generarAccessToken(user);
+    const refreshToken = generarRefreshToken(user);
+
+    // Establecer el refresh token como cookie
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true, // Solo accesible desde el servidor
-      secure: process.env.NODE_ENV === 'production', // Solo en HTTPS en producción
-      sameSite: 'strict', // Protección CSRF
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días en milisegundos
     });
 
-    // Enviar respuesta con el token y los datos del usuario
-    res.status(200).json({
+    console.log('[DEPURACIÓN] Refresh token configurado en la cookie:', refreshToken);
+
+    return res.status(200).json({
       message: 'Inicio de sesión exitoso',
       accessToken,
       user: {
-        id: usuario._id,
-        name: usuario.name,
-        role: usuario.role,
+        id: user._id,
+        name: user.name,
+        role: user.role,
       },
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al iniciar sesión.' });
+    console.error('[ERROR] Problema en el inicio de sesión:', error);
+    return res.status(500).json({ error: 'Error interno del servidor.' });
   }
 };
 
