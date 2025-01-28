@@ -1365,3 +1365,6 @@ u2025-01-13 14:54:55 [INFO]: Aplicación iniciada correctamente
 2025-01-28 14:47:30 [INFO]: Servidor escuchando en el puerto 3000
 2025-01-28 14:47:30 [INFO]: Conectado a MongoDB
 2025-01-28 14:58:03 [INFO]: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.1, Hora: 2025-01-28T13:58:03.436Z
+2025-01-28 14:59:51 [INFO]: Aplicación iniciada correctamente
+2025-01-28 14:59:51 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-28 14:59:51 [INFO]: Conectado a MongoDB
