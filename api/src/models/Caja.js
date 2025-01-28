@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from 'mongoose';
 
-const CajaSchema = new mongoose.Schema(
+const CajaSchema = new Schema(
     {
         fechaApertura: {
             type: Date,
@@ -32,15 +32,27 @@ const CajaSchema = new mongoose.Schema(
                 required: true,
                 default: 0,
             },
+            propina: {
+                type: Number,
+                required: true,
+                default: 0,
+            },
             observaciones: {
                 type: String, // Notas adicionales o detalles relevantes
             },
         },
-        //timestamps: true,
+        operaciones: [
+            {
+              tipo: { type: String, enum: ["retirar", "integrar","cierre"], required: true },
+              monto: { type: Number, required: true },
+              razon: { type: String, required: true },
+              fecha: { type: Date, default: Date.now },
+            },
+          ],
     },
     {
         timestamps: true,
     }
 );
 
-module.exports = mongoose.model("Caja", CajaSchema);
+export default model('Caja', CajaSchema);

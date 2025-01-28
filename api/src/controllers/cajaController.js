@@ -1,6 +1,7 @@
 import MesaCerrada from "../models/MesaCerrada.js";
 import Password from "../models/Password.js";
 import CajaDiaria from "../models/CajaDiaria.js";
+import Caja from "../models/Caja.js";
 import Pedido from "../models/Pedido.js";
 import Cart from "../models/Cart.js";
 import Eliminaciones from "../models/Eliminacion.js";
@@ -11,20 +12,112 @@ import nodemailer from "nodemailer";
 
 export const getCaja = async (req, res) => {
     try {
-        // Obtener todas las mesas cerradas desde el modelo MesaCerrada
-        const mesasCerradas = await MesaCerrada.find();
+        // Obtener la caja actual desde el modelo `Caja`
+        const caja = await Caja.findOne();
 
-        // Calcular el total sumando los métodos de pago de todas las mesas cerradas
-        const total = mesasCerradas.reduce((acc, mesa) => {
-            const totalMesa = Object.values(mesa.metodoPago).reduce((sum, value) => sum + value, 0);
-            return acc + totalMesa;
-        }, 0);
+        if (!caja) {
+            return res.status(404).json({ message: "No hay ninguna caja inicializada." });
+        }
 
-        // Devolver el total como respuesta
-        res.json({ total });
+        // Devolver los datos de la caja como respuesta
+        res.json({
+            total: caja.total,
+            detallesMetodoPago: caja.detallesMetodoPago,
+            operaciones: caja.operaciones, // Opcional: incluir historial de operaciones
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error al obtener el total de caja" });
+        console.error("Error al obtener el estado de la caja:", error);
+        res.status(500).json({ message: "Error al obtener el estado de la caja" });
+    }
+};
+
+export const integrarDinero = async (req, res) => {
+    const { monto, razon } = req.body;
+
+    if (!monto || !razon) {
+        return res.status(400).json({ error: "Monto y razón son obligatorios." });
+    }
+
+    try {
+        const caja = await Caja.findOne();
+
+        if (!caja) {
+            return res.status(404).json({ error: "Caja no encontrada." });
+        }
+
+        const montoNumerico = parseFloat(monto);
+        if (isNaN(montoNumerico) || montoNumerico <= 0) {
+            return res.status(400).json({ error: "El monto debe ser un número mayor a 0." });
+        }
+
+        // Actualizar el efectivo y el total en la caja
+        caja.detallesMetodoPago.efectivo += montoNumerico;
+        caja.total += montoNumerico;
+
+        // Registrar la operación
+        caja.operaciones.push({
+            tipo: "integrar",
+            monto: montoNumerico,
+            razon,
+        });
+
+        await caja.save();
+
+        res.status(200).json({
+            message: "Dinero integrado correctamente.",
+            total: caja.total,
+            metodoPago: caja.detallesMetodoPago,
+        });
+    } catch (error) {
+        console.error("Error al integrar dinero:", error);
+        res.status(500).json({ error: "Error al integrar dinero." });
+    }
+};
+
+export const retirarDinero = async (req, res) => {
+    const { monto, razon } = req.body;
+
+    if (!monto || !razon) {
+        return res.status(400).json({ error: "Monto y razón son obligatorios." });
+    }
+
+    try {
+        const caja = await Caja.findOne();
+
+        if (!caja) {
+            return res.status(404).json({ error: "Caja no encontrada." });
+        }
+
+        const montoNumerico = parseFloat(monto);
+        if (isNaN(montoNumerico) || montoNumerico <= 0) {
+            return res.status(400).json({ error: "El monto debe ser un número mayor a 0." });
+        }
+
+        if (caja.detallesMetodoPago.efectivo < montoNumerico) {
+            return res.status(400).json({ error: "No hay suficiente efectivo en la caja para retirar este monto." });
+        }
+
+        // Actualizar el efectivo y el total en la caja
+        caja.detallesMetodoPago.efectivo -= montoNumerico;
+        caja.total -= montoNumerico;
+
+        // Registrar la operación
+        caja.operaciones.push({
+            tipo: "retirar",
+            monto: montoNumerico,
+            razon,
+        });
+
+        await caja.save();
+
+        res.status(200).json({
+            message: "Dinero retirado correctamente.",
+            total: caja.total,
+            metodoPago: caja.detallesMetodoPago,
+        });
+    } catch (error) {
+        console.error("Error al retirar dinero:", error);
+        res.status(500).json({ error: "Error al retirar dinero." });
     }
 };
 

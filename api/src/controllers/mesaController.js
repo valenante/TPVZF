@@ -1,51 +1,52 @@
 import Mesa from '../models/Mesa.js';
 import MesaCerrada from '../models/MesaCerrada.js';
+import Caja from '../models/Caja.js';
 import { v4 as uuidv4 } from "uuid"; // Generador de UUID
 
 export const checkTokenLider = async (req, res) => {
-    //Conseguir el mesaId de los params
-    const { mesaId } = req.params;
-  
-    if (!mesaId) {
-      return res.status(400).json({ error: "El número de la mesa es obligatorio" });
-    }
-  
-    try {
-      const mesaDoc = await Mesa.findById(mesaId);  
-  
-      if (!mesaDoc) {
-        return res.status(404).json({ error: "Mesa no encontrada" });
-      }
-  
-      res.status(200).json({ tokenLider: mesaDoc.tokenLider || null });
-    } catch (error) {
-      console.error("Error al verificar el tokenLider:", error);
-      res.status(500).json({ error: "Error al procesar la solicitud" });
-    }
-  };
+  //Conseguir el mesaId de los params
+  const { mesaId } = req.params;
 
-  export const checkTokenLiderByNumber = async (req, res) => {
-    const { mesa } = req.query; // Obtener el número de mesa desde los query params
-  
-    if (!mesa) {
-      return res.status(400).json({ error: 'El número de la mesa es obligatorio' });
-    }
-  
-    try {
-      // Buscar la mesa por su número
-      const mesaDoc = await Mesa.findOne({ numero: mesa });
+  if (!mesaId) {
+    return res.status(400).json({ error: "El número de la mesa es obligatorio" });
+  }
 
-      if (!mesaDoc) {
-        return res.status(404).json({ error: 'Mesa no encontrada' });
-      }
-  
-      // Retornar el tokenLider si existe o null si no existe
-      res.status(200).json({ tokenLider: mesaDoc.tokenLider || null });
-    } catch (error) {
-      console.error('Error al verificar el tokenLider:', error);
-      res.status(500).json({ error: 'Error al procesar la solicitud' });
+  try {
+    const mesaDoc = await Mesa.findById(mesaId);
+
+    if (!mesaDoc) {
+      return res.status(404).json({ error: "Mesa no encontrada" });
     }
-  };
+
+    res.status(200).json({ tokenLider: mesaDoc.tokenLider || null });
+  } catch (error) {
+    console.error("Error al verificar el tokenLider:", error);
+    res.status(500).json({ error: "Error al procesar la solicitud" });
+  }
+};
+
+export const checkTokenLiderByNumber = async (req, res) => {
+  const { mesa } = req.query; // Obtener el número de mesa desde los query params
+
+  if (!mesa) {
+    return res.status(400).json({ error: 'El número de la mesa es obligatorio' });
+  }
+
+  try {
+    // Buscar la mesa por su número
+    const mesaDoc = await Mesa.findOne({ numero: mesa });
+
+    if (!mesaDoc) {
+      return res.status(404).json({ error: 'Mesa no encontrada' });
+    }
+
+    // Retornar el tokenLider si existe o null si no existe
+    res.status(200).json({ tokenLider: mesaDoc.tokenLider || null });
+  } catch (error) {
+    console.error('Error al verificar el tokenLider:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
+  }
+};
 
 export const createTokenLider = async (req, res) => {
   const { mesa } = req.body;
@@ -80,57 +81,59 @@ export const createTokenLider = async (req, res) => {
 
 // Obtener todas las mesas activas
 export const getMesas = async (req, res) => {
-    try {
-        const mesas = await Mesa.find().populate('pedidos');
-        res.status(200).json(mesas);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener las mesas activas' });
-    }
+  try {
+    const mesas = await Mesa.find().populate('pedidos');
+    res.status(200).json(mesas);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener las mesas activas' });
+  }
 };
 
 // Obtener una mesa activa por ID
 export const getMesaById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const mesa = await Mesa.findById(id).populate('pedidos');
-        if (!mesa) {
-            return res.status(404).json({ error: 'Mesa no encontrada' });
-        }
-        res.status(200).json(mesa);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener la mesa' });
+  const { id } = req.params;
+  try {
+    const mesa = await Mesa.findById(id).populate('pedidos');
+    if (!mesa) {
+      return res.status(404).json({ error: 'Mesa no encontrada' });
     }
+    res.status(200).json(mesa);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener la mesa' });
+  }
 };
 
 // Abrir una nueva mesa
 export const abrirMesa = async (req, res) => {
-    const { numero } = req.body;
-    try {
-        // Verificar si la mesa ya está abierta
-        const mesaExistente = await Mesa.findOne({ numero, estado: 'abierta' });
-        if (mesaExistente) {
-            return res.status(400).json({ error: 'La mesa ya está abierta' });
-        }
-
-        // Crear una nueva mesa activa
-        const nuevaMesa = new Mesa({ numero });
-        await nuevaMesa.save();
-
-        // Emitir evento de apertura de mesa
-        req.io.emit('mesaAbierta', nuevaMesa);
-
-        res.status(201).json(nuevaMesa);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al abrir la mesa' });
+  const { numero } = req.body;
+  try {
+    // Verificar si la mesa ya está abierta
+    const mesaExistente = await Mesa.findOne({ numero, estado: 'abierta' });
+    if (mesaExistente) {
+      return res.status(400).json({ error: 'La mesa ya está abierta' });
     }
+
+    // Crear una nueva mesa activa
+    const nuevaMesa = new Mesa({ numero });
+    await nuevaMesa.save();
+
+    // Emitir evento de apertura de mesa
+    req.io.emit('mesaAbierta', nuevaMesa);
+
+    res.status(201).json(nuevaMesa);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al abrir la mesa' });
+  }
 };
 
 export const cerrarMesa = async (req, res) => {
   const { id } = req.params; // ID de la mesa
   const { metodoPago } = req.body; // Efectivo, tarjeta y propina
+
+  console.log(metodoPago, 'nashe')
 
   try {
     const mesa = await Mesa.findById(id).populate('pedidos');
@@ -164,6 +167,41 @@ export const cerrarMesa = async (req, res) => {
 
     await mesaCerrada.save();
 
+    // Actualizar la caja
+    const caja = await Caja.findOne();
+
+    if (caja) {
+      // Sumar los totales de la mesa cerrada a la caja existente
+      caja.detallesMetodoPago.efectivo += efectivo;
+      caja.detallesMetodoPago.tarjeta += tarjeta;
+      caja.detallesMetodoPago.propina += propinaCalculada; // Sumar la propina al campo correspondiente
+      caja.total += totalMesa;
+
+      // Registrar la operación de cierre
+      caja.operaciones.push({
+        tipo: "cierre",
+        monto: totalMesa,
+        razon: `Cierre de la mesa número ${mesa.numero}`,
+      });
+
+      await caja.save();
+    } else {
+      // Crear una nueva caja si no existe
+      const nuevaCaja = new Caja({
+        total: totalMesa,
+        detallesMetodoPago: { efectivo, tarjeta, propina: propinaCalculada },
+        operaciones: [
+          {
+            tipo: "cierre",
+            monto: totalMesa,
+            razon: `Cierre de la mesa número ${mesa.numero}`,
+          },
+        ],
+      });
+
+      await nuevaCaja.save();
+    }
+
     // Restablecer valores de mesa abierta
     mesa.estado = 'cerrada';
     mesa.total = 0;
@@ -182,41 +220,42 @@ export const cerrarMesa = async (req, res) => {
   }
 };
 
+
 // Obtener historial de mesas cerradas
 export const getHistorialMesas = async (req, res) => {
-    const { numero, desde, hasta } = req.query;
+  const { numero, desde, hasta } = req.query;
 
-    try {
-        const filtros = {};
-        if (numero) filtros.numero = numero;
-        if (desde || hasta) {
-            filtros.cierre = {};
-            if (desde) filtros.cierre.$gte = new Date(desde);
-            if (hasta) filtros.cierre.$lte = new Date(hasta);
-        }
-
-        const historial = await MesaCerrada.find(filtros).populate('pedidos');
-        res.status(200).json(historial);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener el historial de mesas' });
+  try {
+    const filtros = {};
+    if (numero) filtros.numero = numero;
+    if (desde || hasta) {
+      filtros.cierre = {};
+      if (desde) filtros.cierre.$gte = new Date(desde);
+      if (hasta) filtros.cierre.$lte = new Date(hasta);
     }
+
+    const historial = await MesaCerrada.find(filtros).populate('pedidos');
+    res.status(200).json(historial);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener el historial de mesas' });
+  }
 };
 
 
 //Obtener el ID de una mesa por su número
 export const getMesaByNumero = async (req, res) => {
-    const { numero } = req.params;
-    try {
-        const mesa = await Mesa.findOne({ numero });
-        if (!mesa) {
-            return res.status(404).json({ error: 'Mesa no encontrada' });
-        }
-        res.status(200).json(mesa);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener la mesa' });
+  const { numero } = req.params;
+  try {
+    const mesa = await Mesa.findOne({ numero });
+    if (!mesa) {
+      return res.status(404).json({ error: 'Mesa no encontrada' });
     }
+    res.status(200).json(mesa);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener la mesa' });
+  }
 };
 
 export const obtenerMesasCerradas = async (req, res) => {
@@ -245,7 +284,7 @@ export const obtenerMesasCerradas = async (req, res) => {
 
 export const recuperarMesa = async (req, res) => {
   const { mesaId } = req.params; // ID de la mesa cerrada
-    try {
+  try {
     // Obtener la mesa cerrada
     const mesaCerrada = await MesaCerrada.findById(mesaId);
     if (!mesaCerrada) {
