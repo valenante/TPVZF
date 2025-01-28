@@ -272,31 +272,47 @@ export const updateProducto = async (req, res) => {
 export const updatePedido = async (req, res) => {
     const { id } = req.params;
     const { productos, total, comensales, alergias, pan, estado } = req.body;
-
+  
     try {
-        const pedido = await Pedido.findById(id);
-
-        if (!pedido) {
-            return res.status(404).json({ error: 'Pedido no encontrado' });
-        }
-
-        // Actualizar los campos permitidos
-        if (productos) pedido.productos = productos;
-        if (total) pedido.total = parseFloat(total.toFixed(2));
-        if (comensales) pedido.comensales = comensales;
-        if (alergias) pedido.alergias = alergias;
-        if (pan !== undefined) pedido.pan = pan;
-        if (estado) pedido.estado = estado;
-
-        // Guardar los cambios
-        await pedido.save();
-
-        res.status(200).json({ message: 'Pedido actualizado con éxito', pedido });
+      const pedido = await Pedido.findById(id).populate('mesa');
+  
+      if (!pedido) {
+        return res.status(404).json({ error: 'Pedido no encontrado' });
+      }
+  
+      const mesa = pedido.mesa;
+  
+      // Actualizar los campos permitidos
+      if (productos) pedido.productos = productos;
+      if (total) pedido.total = parseFloat(total.toFixed(2));
+      if (comensales) pedido.comensales = comensales;
+      if (alergias) pedido.alergias = alergias;
+      if (pan !== undefined) pedido.pan = pan;
+      if (estado) pedido.estado = estado;
+  
+      // Guardar los cambios
+      await pedido.save();
+  
+      // Emitir evento si el estado fue actualizado a "listo"
+      if (estado === 'listo') {
+        const pedidos = await Pedido.find({ mesa: mesa._id });
+  
+        // Verificar si todos los pedidos de la mesa están listos
+        const todosListos = pedidos.every((pedido) => pedido.estado === 'listo');
+  
+        // Emitir el evento con el estado de los pedidos
+        req.io.emit('pedidosActualizados', {
+          numeroMesa: mesa.numero,
+          todosListos,
+        });
+      }
+  
+      res.status(200).json({ message: 'Pedido actualizado con éxito', pedido });
     } catch (error) {
-        console.error('Error al actualizar el pedido:', error);
-        res.status(400).json({ error: 'Error al actualizar el pedido' });
+      console.error('Error al actualizar el pedido:', error);
+      res.status(400).json({ error: 'Error al actualizar el pedido' });
     }
-};
+  };  
 
 // Eliminar un pedido por ID
 export const deletePedido = async (req, res) => {
@@ -340,6 +356,12 @@ export const verificarPedidosMesa = async (req, res) => {
       }
   
       const pedidos = await Pedido.find({ mesa: mesa._id });
+  
+      // Verificar si hay pedidos
+      if (!pedidos.length) {
+        return res.status(200).json({ todosListos: false, mensaje: "No hay pedidos para esta mesa." });
+      }
+  
       const todosListos = pedidos.every((pedido) => pedido.estado === "listo");
   
       res.status(200).json({ todosListos });
@@ -348,4 +370,5 @@ export const verificarPedidosMesa = async (req, res) => {
       res.status(500).json({ error: "Error al verificar pedidos de la mesa." });
     }
   };
+  
   
