@@ -70,19 +70,20 @@ const DetalleMesa = () => {
 
   const cerrarMesa = async (metodoPago) => {
     try {
+      // Verifica si hay pedidos no finalizados
       const pedidosNoFinalizados = mesa.pedidos.filter((pedido) => pedido.estado !== "listo");
-
+  
       if (pedidosNoFinalizados.length > 0) {
         alert("No puedes cerrar la mesa. Todos los pedidos deben estar finalizados.");
         return;
       }
-
-      await api.put(`/mesas/${mesa._id}/cerrar`, {
-        metodoPago,
-      });
+  
+      // Enviar la solicitud al backend con el método de pago
+      await api.put(`/mesas/${mesa._id}/cerrar`, { metodoPago });
+  
       alert("Mesa cerrada con éxito");
-      setMesa(null);
-      navigate("/");
+      setMesa(null); // Limpia el estado de la mesa
+      navigate("/"); // Navega fuera de la vista actual
     } catch (error) {
       console.error("Error al cerrar la mesa:", error);
       alert(error.response?.data?.error || "Hubo un problema al cerrar la mesa.");

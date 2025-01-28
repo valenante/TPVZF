@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import PasswordModal from "../Password/PasswordModal";
 import CerrarCajaModal from "../Caja/CerrarCajaModal";
 import RecuperarMesaModal from "../MesasCerradas/ModalMesasCerradas";
+import { useAuth } from "../../context/AuthContext";
 import "./Subnavbar.css";
 
 const SubNavbar = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth(); // Obtiene la función logout del contexto
   const [mostrarModal, setMostrarModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [mostrarRecuperarModal, setMostrarRecuperarModal] = useState(false);
@@ -15,7 +17,9 @@ const SubNavbar = () => {
   const abrirRecuperarModal = () => setMostrarRecuperarModal(true);
   const cerrarRecuperarModal = () => setMostrarRecuperarModal(false);
 
-  const toggleMenu = () => setMenuAbierto(!menuAbierto); // Alternar el menú hamburguesa
+  const toggleMenu = () => {
+    setMenuAbierto((prevState) => !prevState);
+  };
 
   return (
     <div className="subnavbar--subnavbar">
@@ -29,9 +33,8 @@ const SubNavbar = () => {
       </div>
 
       <div
-        className={`subnavbar-menu--subnavbar ${
-          menuAbierto ? "open--subnavbar" : "closed--subnavbar"
-        }`}
+        className={`subnavbar-menu--subnavbar ${menuAbierto ? "open--subnavbar" : "closed--subnavbar"
+          }`}
       >
         <button onClick={abrirRecuperarModal} className="subnavbar-button--subnavbar">Recuperar Mesa</button>
         {mostrarRecuperarModal && (
@@ -78,6 +81,9 @@ const SubNavbar = () => {
           className="subnavbar-button--subnavbar btn-cerrar-caja--subnavbar"
         >
           Cerrar Caja
+        </button>
+        <button onClick={logout} className="subnavbar-button--subnavbar">
+          Cerrar Sesión
         </button>
       </div>
 

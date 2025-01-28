@@ -18,11 +18,27 @@
     color: rgb(84, 20, 108);
     outline: none;
     cursor: pointer;
-    margin-right: 10px;
   }
   
   .navbar-select:hover {
     background-color: rgba(84, 20, 108, 0.1);
+  }
+
+  .navbar-check{
+    width: auto;
+    border: none;
+    border-radius: 5px;
+    margin-right: 15px;
+    padding: 10px;
+    color: white;
+    background-color: rgb(84, 20, 108);
+    transition: 200ms all;
+  }
+
+  .navbar-check:hover{
+    background-color: rgba(84, 20, 108, 0.8);
+    cursor: pointer;
+    transform: scale(1.1);
   }
   
   /* Estilo para el ícono del carrito */

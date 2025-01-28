@@ -18,6 +18,8 @@ import MesasCerradas from "./components/MesasCerradas/MesasCerradas";
 import { SocketProvider } from "./utils/socket";
 import CuentaPopup from "./components/CuentaPopUp/CuentaPopUp";
 import Navbar from "./components/Navbar/Navbar";
+import EnvReader from "./utils/envReader";
+import { AuthProvider } from "./context/AuthContext";
 
 const AppContent = () => {
   const location = useLocation();
@@ -40,6 +42,7 @@ const AppContent = () => {
             </RutaProtegida>
           }
         />
+
         {/* Rutas protegidas */}
         <Route
           path="/mesas/:id"
@@ -128,16 +131,18 @@ const AppContent = () => {
 };
 
 const App = () => {
-  return (
+  return (          
+  <Router>
+    <AuthProvider>
     <SocketProvider>
       <CategoriasProvider>
         <ProductosProvider>
-          <Router>
             <AppContent />
-          </Router>
         </ProductosProvider>
       </CategoriasProvider>
     </SocketProvider>
+    </AuthProvider>         
+   </Router>
   );
 };
 

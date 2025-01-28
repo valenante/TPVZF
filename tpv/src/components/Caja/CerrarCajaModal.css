@@ -50,8 +50,9 @@
   
   /* Input de contraseña */
   .input--cerrar-caja {
-    width: 100%;
+    width: 80%;
     padding: 10px;
+    margin: 10px;
     border: 1px solid #6a0dad; /* Morado profundo */
     border-radius: 5px;
     font-size: 1rem;
@@ -76,6 +77,7 @@
   .boton-cancelar--cerrar-caja {
     padding: 10px;
     border: none;
+    margin: 10px;
     border-radius: 5px;
     font-size: 1rem;
     font-weight: bold;
@@ -94,12 +96,47 @@
   }
   
   .boton-cancelar--cerrar-caja {
-    background-color: #cccccc; /* Gris claro */
-    color: #333333;
+    background-color: #ff6700;
+    color: #fff;
   }
   
   .boton-cancelar--cerrar-caja:hover {
-    background-color: #999999; /* Gris más oscuro */
+    background-color: #e55b00;
+    /* Naranja oscuro */
+    transform: scale(1.05);
+  }
+
+  .boton-retirar--cerrar-caja {
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    background-color: #ff6700;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .boton-retirar--cerrar-caja:hover {
+    background-color: #e55b00;
+    cursor: pointer;
+    /* Naranja oscuro */
+    transform: scale(1.05);
+  }
+
+  .boton-integrar--cerrar-caja {
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    background-color: #6a0dad;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .boton-integrar--cerrar-caja:hover {
+    background-color: #ff6700;
+    cursor: pointer;
+    /* Naranja oscuro */
     transform: scale(1.05);
   }
 

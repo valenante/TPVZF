@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import DOMPurify from "dompurify"; // Para sanitizar entradas de texto
 import api from "../utils/api"; // Configuración de Axios
+import "../styles/Valoraciones.css"; // Archivo de estilos
 
 const Valoraciones = () => {
   const [productos, setProductos] = useState([]);
@@ -8,25 +10,30 @@ const Valoraciones = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  console.log("productos", productos);
-
   useEffect(() => {
     // Cargar productos desde el backend
     const cargarProductos = async () => {
       try {
         const mesaId = localStorage.getItem("mesaId"); // Obtener mesaId desde localStorage
         if (!mesaId) {
-          navigate("/"); // Si no hay token, redirigir fuera de la web
+          navigate("/"); // Si no hay mesaId, redirigir fuera de la web
           return;
         }
 
         const { data } = await api.get("/valoraciones/productos-valoraciones", {
-          params: { mesaId }, // Enviar mesaId como parámetro de consulta
+          params: { mesaId },
         });
 
-        setProductos(data);
+        // Eliminar productos duplicados basados en su ID
+        const productosUnicos = [
+          ...new Map(data.map((producto) => [producto.productoId._id, producto])).values(),
+        ];
+
+        setProductos(productosUnicos);
+
+        // Configurar valoraciones iniciales
         setValoraciones(
-          data.map((producto) => ({
+          productosUnicos.map((producto) => ({
             productoId: producto.productoId._id,
             estrellas: 0,
             comentario: "",
@@ -45,15 +52,16 @@ const Valoraciones = () => {
   const manejarEstrellas = (productoId, estrellas) => {
     setValoraciones((prev) =>
       prev.map((valoracion) =>
-        valoracion.productoId === productoId
-          ? { ...valoracion, estrellas }
-          : valoracion
+        valoracion.productoId === productoId ? { ...valoracion, estrellas } : valoracion
       )
     );
   };
 
+  // Manejar comentario
   const manejarComentario = (productoId, comentario) => {
-    if (comentario.length > 80) {
+    const comentarioSanitizado = DOMPurify.sanitize(comentario);
+
+    if (comentarioSanitizado.length > 80) {
       alert("El comentario no puede exceder los 80 caracteres.");
       return;
     }
@@ -61,33 +69,26 @@ const Valoraciones = () => {
     setValoraciones((prev) =>
       prev.map((valoracion) =>
         valoracion.productoId === productoId
-          ? { ...valoracion, comentario }
+          ? { ...valoracion, comentario: comentarioSanitizado }
           : valoracion
       )
     );
   };
 
-
+  // Enviar valoraciones
   const enviarValoraciones = async () => {
-    console.log(valoraciones);
     try {
-      const mesaId = localStorage.getItem("mesaId"); // Obtener mesaId desde localStorage
+      const mesaId = localStorage.getItem("mesaId");
       const valoracionesAEnviar = valoraciones.map((valoracion) => ({
-        producto: valoracion.productoId, // Cambia "productoId" a "producto"
-        puntuacion: valoracion.estrellas, // Cambia "estrellas" a "puntuacion"
-        comentario: valoracion.comentario, // No necesita cambios
+        producto: valoracion.productoId,
+        puntuacion: valoracion.estrellas,
+        comentario: valoracion.comentario,
       }));
 
-      console.log("Datos a enviar:", valoracionesAEnviar); // Depuración
-
-      const response = await api.post("/valoraciones", valoracionesAEnviar, {
-        params: { mesaId }, // Enviar mesaId como parámetro de consulta
-      });
+      await api.post("/valoraciones", valoracionesAEnviar, { params: { mesaId } });
 
       alert("¡Gracias por tu valoración!");
-      localStorage.removeItem("mesaId");
-      localStorage.removeItem("tokenLider");
-      localStorage.removeItem("tokenPreMenu");
+      localStorage.clear();
       navigate("/");
     } catch (error) {
       console.error("Error al enviar las valoraciones:", error);
@@ -96,50 +97,49 @@ const Valoraciones = () => {
   };
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className="error-mensaje-valoraciones">{error}</div>;
   }
 
   return (
-    <div>
-      <h1>Valora tu Experiencia</h1>
+    <div className="contenedor-valoraciones">
+      <h1 className="titulo-valoraciones">Valora tu Experiencia</h1>
       {productos.length === 0 ? (
-        <p>No hay productos para valorar.</p>
+        <p className="mensaje-sin-productos-valoraciones">No hay productos para valorar.</p>
       ) : (
-        <form>
+        <form className="formulario-valoraciones">
           {productos.map((producto) => (
-            <div key={producto._id}>
-              <h3>{producto.nombre}</h3>
-              <label>Estrellas:</label>
+            <div key={producto.productoId._id} className="producto-valoraciones">
+              <h3 className="producto-nombre-valoraciones">{producto.nombre}</h3>
+              <label className="etiqueta-valoraciones">Estrellas:</label>
               <select
-                value={
-                  valoraciones.find((v) => v.productoId === producto.productoId._id)?.estrellas || 0
-                }
+                value={valoraciones.find((v) => v.productoId === producto.productoId._id)?.estrellas || 0}
                 onChange={(e) =>
-                  manejarEstrellas(producto.productoId._id, parseInt(e.target.value, 10))
+                  manejarEstrellas(producto.productoId._id, parseFloat(e.target.value)) // Convertir siempre a número decimal
                 }
+                className="select-valoraciones"
               >
-                <option value={0}>Sin valorar</option>
-                {[1, 2, 3, 4, 5].map((estrella) => (
+                <option value={5}>5 estrellas</option>
+                {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((estrella) => (
                   <option key={estrella} value={estrella}>
                     {estrella} estrella{estrella > 1 ? "s" : ""}
                   </option>
                 ))}
               </select>
-              <br />
-              <label>Comentario:</label>
+              <label className="etiqueta-valoraciones">Comentario:</label>
               <textarea
                 value={
-                  valoraciones.find((v) => v.productoId === producto._id)?.comentario || ""
+                  valoraciones.find((v) => v.productoId === producto.productoId._id)?.comentario || ""
                 }
-                onChange={(e) => manejarComentario(producto._id, e.target.value)}
-                maxLength={80} // Máximo de 80 caracteres
+                onChange={(e) => manejarComentario(producto.productoId._id, e.target.value)}
+                maxLength={80}
                 placeholder="Escribe tu comentario (máximo 80 caracteres)"
                 rows="4"
                 cols="50"
+                className="textarea-valoraciones"
               />
             </div>
           ))}
-          <button type="button" onClick={enviarValoraciones}>
+          <button type="button" onClick={enviarValoraciones} className="boton-enviar-valoraciones">
             Enviar Valoraciones
           </button>
         </form>

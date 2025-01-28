@@ -113,7 +113,7 @@ const CarritoModal = ({ cerrarModal }) => {
         <ul className="modal-items-carritoModal">
           {carrito.items?.map((item) => (
             <li key={item._id} className="modal-item-carritoModal">
-              {item.nombre?.length > 0 && <h3 className="item-title-carritoModal">{item.nombre}</h3>}
+              {item.nombre?.length > 0 && <h3 className="item-name-carritoModal">{item.nombre}</h3>}
               <h3 className="item-title-carritoModal">{item.productId.nombre}</h3>
               {item.ingredientes?.length > 0 && (
                 <p className="item-details-carritoModal">Sin {item.ingredientes.join(", ")}</p>
@@ -127,7 +127,7 @@ const CarritoModal = ({ cerrarModal }) => {
                 </p>
               )}
               <p className="item-details-carritoModal">
-                Precio unitario:{" "}
+                Precio:{" "}
                 {(item.precioSeleccionado || item.productId.precios.precioBase).toFixed(2)} €
               </p>
               <p className="item-details-carritoModal">Cantidad: {item.cantidad}</p>

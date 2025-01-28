@@ -1,27 +1,36 @@
 import axios from 'axios';
+import renovarToken from './RenovarToken';
 
-// Guardar el token después del inicio de sesión
-export const saveToken = (token) => {
-  localStorage.setItem('token', token);
-};
+const apiUrl = process.env.REACT_APP_API_URL; // Leer la variable de entorno
 
-// Recuperar el token para incluirlo en las solicitudes
-const getToken = () => localStorage.getItem('token');
-
-// Configurar Axios con la base URL y el interceptor
 const api = axios.create({
-  baseURL: `http://172.20.10.7:3000/api`
+  baseURL: apiUrl, // Cambia a la URL base de tu API
+  withCredentials: true, // Habilitar cookies
 });
 
-api.interceptors.request.use(
-  (config) => {
-    const token = getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+// Interceptor para manejar errores de respuesta
+api.interceptors.response.use(
+  (response) => response, // Devuelve la respuesta si no hay errores
+  async (error) => {
+    if (error.response?.status === 401) {
+      try {
+        // Intenta renovar el token si se recibe un 401
+        const setAccessToken = (newToken) => {
+          // Establece el nuevo token en los headers de autorización
+          api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+        };
+        await renovarToken(setAccessToken);
+
+        // Reintenta la solicitud original con el nuevo token
+        error.config.headers['Authorization'] = api.defaults.headers.common['Authorization'];
+        return api.request(error.config);
+      } catch (refreshError) {
+        console.error('Error al renovar el token:', refreshError);
+        return Promise.reject(error); // Si no se puede renovar, lanza el error
+      }
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
+    return Promise.reject(error); // Lanza otros errores
+  }
 );
 
 export default api;

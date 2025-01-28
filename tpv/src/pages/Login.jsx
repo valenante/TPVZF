@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Login.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ name: "", password: "" });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { setAccessToken } = useAuth();
   const navigate = useNavigate();
 
   // Manejar cambios en los campos del formulario
@@ -15,21 +16,36 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Resetear errores previos
+    setError(null);
     setIsLoading(true);
-
+  
     try {
-      const response = await api.post("/auth/login", formData);
-      const { accessToken, user } = response.data;
+      const response = await fetch("http://172.20.10.7:3000/api/auth/login", {
+        method: "POST",
+        credentials: "include", // Para incluir cookies
+        headers: {
+          "Content-Type": "application/json", // Asegurar el tipo de contenido
+        },
+        body: JSON.stringify(formData), // Convertir los datos del formulario a JSON
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Ocurrió un error desconocido");
+      }
+  
+      const data = await response.json();
+      console.log("Ruta de la petición:", response.url); // Mostrar la URL de la petición
+      console.log("Respuesta del servidor:", data);
 
-      console.log(accessToken, user, 'nashe');
-
-      // Guardar el token en el localStorage
-      localStorage.setItem("token", accessToken);
-
+  
+      const { accessToken, user } = data;
+  
+      // Actualizar el contexto con el nuevo token
+      setAccessToken(accessToken);
+  
       // Redirigir según el rol del usuario
       switch (user.role) {
         case "admin":
@@ -47,13 +63,13 @@ const Login = () => {
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       const errorMsg =
-        error.response?.data?.error || "Ocurrió un problema al iniciar sesión.";
+        error.message || "Ocurrió un problema al iniciar sesión.";
       setError(errorMsg);
     } finally {
       setIsLoading(false);
     }
-  };
-
+  };  
+  
   return (
     <div className="login--login">
       <h2 className="titulo--login">Iniciar Sesión</h2>

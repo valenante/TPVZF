@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../utils/api";
 import "../../styles/Navbar.css";
 import { useParams } from "react-router-dom";
+import socket from "../../utils/socket";
 
 const Navbar = () => {
   const { categorias, categoriaSeleccionada, setCategoriaSeleccionada } =
@@ -21,19 +22,40 @@ const Navbar = () => {
     cargarCarrito();
   }, [cargarCarrito]);
 
-  // Verificar pedidos al montar
   useEffect(() => {
     const verificarPedidosListos = async () => {
       try {
         const response = await api.get(`/pedidos/pedidos/estado/${numeroMesa}`);
-        setPedidosListos(response.data.todosListos);
+  
+        // Verificar si hay datos en la respuesta y actualizar el estado
+        if (response.data && response.data.todosListos !== undefined) {
+          setPedidosListos(response.data.todosListos);
+        } else {
+          setPedidosListos(false); // Si no hay pedidos, no mostrar el botón
+        }
       } catch (error) {
         console.error("Error al verificar el estado de los pedidos:", error);
+        setPedidosListos(false); // Si hay error, no mostrar el botón
       }
     };
-
+  
     verificarPedidosListos();
   }, [numeroMesa]);
+
+  // Escuchar el evento `pedidosActualizados` para actualizaciones en tiempo real
+  useEffect(() => {
+    if (socket) {
+      socket.on("pedidosActualizados", (data) => {
+        if (data.numeroMesa === Number(numeroMesa)) {
+          setPedidosListos(data.todosListos);
+        }
+      });
+
+      return () => {
+        socket.off("pedidosActualizados"); // Limpiar el evento al desmontar
+      };
+    }
+  }, [socket, numeroMesa]);
 
   // Cambiar categoría
   const handleCategoriaChange = (event) => {
@@ -69,7 +91,7 @@ const Navbar = () => {
             </select>
 
             {pedidosListos && (
-              <button onClick={manejarPedirCuenta}>Pedir Cuenta</button>
+              <button className="navbar-check" onClick={manejarPedirCuenta}>Cuenta</button>
             )}
 
             <div className="carrito-icono">

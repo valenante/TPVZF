@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../../utils/api";
+import './PreMenu.css'
 
 const PreMenu = () => {
   const [formData, setFormData] = useState({
@@ -133,62 +134,64 @@ const PreMenu = () => {
   };  
 
   return (
-    <div className="pre-menu">
-      <h2>Configuración Inicial</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nombre:
+    <div className="preMenu-father">
+    <div className="preMenu--container">
+      <h2 className="titulo--preMenu">Configuración Inicial</h2>
+      <form onSubmit={handleSubmit} className="formulario--preMenu">
           <input
             type="text"
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
+            className="input--preMenu"
+            placeholder="Nombre"
           />
-        </label>
-        {errors.nombre && <p className="error">{errors.nombre}</p>}
-
+        {errors.nombre && <p className="error--preMenu">{errors.nombre}</p>}
+  
         {esLider && (
           <>
-            <label>
-              Alergias (opcional):
               <textarea
                 name="alergias"
                 value={formData.alergias}
                 onChange={handleChange}
+                className="input--preMenu"
+                placeholder="Alergias"
               />
-            </label>
-            {errors.alergias && <p className="error">{errors.alergias}</p>}
-
-            <label>
-              Número de Comensales:
+            {errors.alergias && <p className="error--preMenu">{errors.alergias}</p>}
+  
               <input
                 type="number"
                 name="comensales"
                 value={formData.comensales}
                 onChange={handleChange}
+                className="input--preMenu"
+                placeholder="Comensales"
               />
-            </label>
-            {errors.comensales && <p className="error">{errors.comensales}</p>}
+            {errors.comensales && (
+              <p className="error--preMenu">{errors.comensales}</p>
+            )}
           </>
         )}
-
-        <label>
-          Contraseña del Día:
+  
           <input
             type="password"
             name="contraseña"
             value={formData.contraseña}
             onChange={handleChange}
+            className="input--preMenu"
+            placeholder="Contraseña"
           />
-        </label>
-        {errors.contraseña && <p className="error">{errors.contraseña}</p>}
-
-        <button type="submit" disabled={isLoading}>
+        {errors.contraseña && (
+          <p className="error--preMenu">{errors.contraseña}</p>
+        )}
+  
+        <button type="submit" className="boton--preMenu" disabled={isLoading}>
           {isLoading ? "Procesando..." : "Continuar"}
         </button>
       </form>
     </div>
-  );
+    </div>
+  );  
 };
 
 export default PreMenu;

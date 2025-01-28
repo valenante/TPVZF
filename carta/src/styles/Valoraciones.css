@@ -1,0 +1,58 @@
+.contenedor-valoraciones {
+    padding: 20px;
+    background-color: #f5f5f5; /* Gris claro */
+    color: #333;
+  }
+  
+  .titulo-valoraciones {
+    text-align: center;
+    font-size: 2rem;
+    color: #6a0dad; /* Morado */
+    margin-bottom: 20px;
+  }
+  
+  .producto-valoraciones {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .producto-nombre-valoraciones {
+    font-size: 1.5rem;
+    color: #ff6700; /* Naranja */
+  }
+  
+  .etiqueta-valoraciones {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  
+  .select-valoraciones,
+  .textarea-valoraciones {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .boton-enviar-valoraciones {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #6a0dad;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .boton-enviar-valoraciones:hover {
+    background-color: #5a0095; /* Morado más oscuro */
+  }
+  

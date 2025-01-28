@@ -1,26 +1,29 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import renovarToken from '../../utils/RenovarToken';
 
-// Componente para proteger rutas
-const RutaProtegida = ({ children, rolesPermitidos = [] }) => {
-  const token = localStorage.getItem("token");
+const RutaProtegida = ({ children }) => {
+  const { accessToken, setAccessToken, loading } = useAuth();
 
-  console.log('Laburando RutaProtegida.jsx');
+  // Mover el useEffect fuera del condicional
+  useEffect(() => {
+    if (!accessToken) {
+      renovarToken(setAccessToken);
+    }
+  }, [accessToken, setAccessToken]);
 
-  // Si no hay token, redirigir al login
-  if (!token) {
+  // Manejar el estado de carga al principio del renderizado
+  if (loading) {
+    return <div>Cargando...</div>; // Mostrar indicador de carga mientras espera
+  }
+
+  // Verificar si el usuario está autenticado
+  if (!accessToken) {
     return <Navigate to="/login" />;
   }
 
-  // Decodificar el payload del token (usando atob para la parte intermedia del JWT)
-  const payload = JSON.parse(atob(token.split(".")[1]));
-
-  // Verificar si el usuario tiene un rol permitido
-  if (rolesPermitidos.length > 0 && !rolesPermitidos.includes(payload.role)) {
-    return <Navigate to="/login" />; // Redirigir si no tiene el rol adecuado
-  }
-
-  return children; // Renderizar el contenido protegido
+  return children;
 };
 
 export default RutaProtegida;

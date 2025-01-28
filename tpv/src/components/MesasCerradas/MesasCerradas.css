@@ -78,3 +78,10 @@
     background-color: #ff6700; /* Naranja vibrante */
   }
   
+  /* Contenedor de los botones */
+.botones-container-mesas-cerradas {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  gap: 15px; /* Espacio entre los botones */
+  margin-bottom: 20px;
+}

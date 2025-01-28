@@ -6,10 +6,12 @@
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "cra-template": "1.2.0",
+    "dompurify": "^3.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
+    "react-toastify": "^11.0.3",
     "socket.io-client": "^4.8.1",
     "uuid": "^11.0.3",
     "web-vitals": "^4.2.4"

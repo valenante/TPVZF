@@ -15,6 +15,7 @@ export const SocketProvider = ({ children }) => {
         reconnectionAttempts: 5, // Limita los intentos de reconexión
         reconnectionDelay: 1000, // Tiempo entre intentos
       });
+      
       setSocket(socketInstance);
 
       // Escuchar eventos

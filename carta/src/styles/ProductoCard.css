@@ -81,3 +81,70 @@
   border-radius: 8px;
   object-fit: cover;
 }
+
+.checkbox-detalle{
+  margin-right: 1vh;
+}
+
+/* Botones de cantidad (+ y -) */
+button.cantidad-btn {
+  background-color: #FF6700; /* Naranja vibrante */
+  color: #FFFFFF; /* Blanco puro */
+  border: none;
+  margin: 10px;
+  border-radius: 10%; /* Forma circular */
+  font-size: .9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.cantidad-btn:hover {
+  background-color: #E65A00; /* Naranja más oscuro */
+  transform: scale(1.1); /* Crece ligeramente */
+}
+
+button.cantidad-btn:active {
+  transform: scale(0.9); /* Pequeño efecto de presión */
+}
+
+/* Botón de cancelar */
+button.cancelar-btn {
+  background-color: #F5F5F5; /* Gris claro */
+  color: #333333; /* Texto oscuro */
+  border: 2px solid #FF6700; /* Borde naranja */
+  margin-right: 2vh;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+button.cancelar-btn:hover {
+  background-color: #FF6700; /* Naranja vibrante */
+  color: #FFFFFF; /* Texto blanco */
+  border-color: #E65A00; /* Borde más oscuro */
+}
+
+/* Botón de agregar al carrito */
+button.agregar-btn {
+  background-color: #6A0DAD; /* Morado profundo */
+  color: #FFFFFF; /* Blanco puro */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.agregar-btn:hover {
+  background-color: rgba(106, 13, 173, 0.9); /* Morado un poco más claro */
+  transform: scale(1.05); /* Aumenta ligeramente */
+}
+
+button.agregar-btn:active {
+  transform: scale(0.95); /* Efecto de presión */
+}

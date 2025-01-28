@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSearchParams, useParams } from "react-router-dom";
 import ReactDOM from "react-dom";
+import { toast } from "react-toastify"; // Importar toast
 import api from "../../utils/api";
 import "../../styles/ModalDetalle.css";
 
@@ -39,7 +40,7 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
     const carritoId = localStorage.getItem('carritoMongoId');
 
     const cartId = carritoId;
-  
+
     const pedido = {
       cartId,
       productId: producto._id,
@@ -51,19 +52,43 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
       mesa,
       nombre,
     };
-  
+
     try {
       const response = await api.post('/cart', pedido);
       const { _id: nuevoCartId } = response.data;
-  
+
       if (!carritoId) {
         localStorage.setItem('carritoMongoId', nuevoCartId);
       }
+
+       // Mostrar notificación de éxito
+       toast.success("Producto agregado al carrito con éxito!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
       cerrarModal();
     } catch (error) {
+
+      // Mostrar notificación de error
+      toast.error("Error al agregar al carrito. Intenta nuevamente.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      
       console.error('Error al agregar al carrito:', error);
     }
-  };  
+  };
 
   return ReactDOM.createPortal(
     <div className="modal-detalle">
@@ -78,6 +103,7 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
               <label>
                 <input
                   type="checkbox"
+                  className="checkbox-detalle"
                   checked={ingredientesSeleccionados.includes(ingrediente)}
                   onChange={(e) => manejarIngrediente(ingrediente, e.target.checked)}
                 />
@@ -112,14 +138,14 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
 
         <h4>Cantidad:</h4>
         <div>
-          <button onClick={() => manejarCantidad(-1)}>-</button>
+          <button className="cantidad-btn" onClick={() => manejarCantidad(-1)}>-</button>
           <span>{cantidad}</span>
-          <button onClick={() => manejarCantidad(1)}>+</button>
+          <button className="cantidad-btn" onClick={() => manejarCantidad(1)}>+</button>
         </div>
 
         <div>
-          <button onClick={cerrarModal}>Cancelar</button>
-          <button onClick={agregarAlCarrito}>Agregar al carrito</button>
+          <button className="cancelar-btn" onClick={cerrarModal}>Cancelar</button>
+          <button className="agregar-btn" onClick={agregarAlCarrito}>Agregar al carrito</button>
         </div>
       </div>
     </div>,
