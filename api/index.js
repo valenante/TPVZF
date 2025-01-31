@@ -5,7 +5,7 @@ setInterval(() => {
   limpiarTokensExpirados();
 }, 3600000); // 1 hora en milisegundos
 
-import express, { json, urlencoded } from "express";
+import express from "express";
 import { connect } from "mongoose";
 import { config } from "dotenv";
 import compression from "compression";
@@ -30,6 +30,7 @@ import eliminacionRoutes from "./src/routes/eliminacionRoutes.js"; // Importar r
 import cajaDiariaRoutes from "./src/routes/cajaDiariaRoutes.js"; // Importar rutas de caja diaria
 import valoracionesRoutes from "./src/routes/valoracionesRoutes.js"; // Importar rutas de 
 import cuentaRoutes from "./src/routes/cuentaRoutes.js"; // Importar rutas de cuenta
+import imagesRoutes from "./src/routes/imagesRoutes.js";
 
 // Configurar dotenv para variables de entorno
 config();
@@ -39,14 +40,12 @@ const app = express();
 const server = createServer(app); // Crear el servidor HTTP
 dotenv.config();
 
-
 const corsOptions = {
   origin: ["http://localhost:3002", "http://172.20.10.7:3002", "http://localhost:3001", "http://172.20.10.7:3001", "http://localhost:3000", "http://172.20.10.7:3000"], // Orígenes permitidos
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization",'X-Cart-ID'], // Encabezados permitidos
   credentials: true, // Permitir envío de cookies
 };
-
 
 app.use(cors(corsOptions)); // Habilitar CORS con opciones específicas
 const io = new Server(server, {
@@ -72,17 +71,20 @@ app.use(
   })
 );
 
+app.use('/images', express.static('public/images'));
+
+
 // Middleware de compresión HTTP
 app.use(compression());
-
-// Middleware para parsear JSON
-app.use(json());
 
 // Middleware para parsear cookies
 app.use(cookieParser());
 
-// Middleware para interpretar datos codificados en la URL
-app.use(urlencoded({ extended: true }));
+// Middleware para parsear JSON
+app.use(express.json()); // ✅ Permitir recibir JSON en el body
+
+// Middleware para parsear formularios
+app.use(express.urlencoded({ extended: true })); // Para formularios normales
 
 // Middleware para compartir `io` con las rutas
 app.use((req, res, next) => {
@@ -124,6 +126,7 @@ app.use("/api/eliminaciones", eliminacionRoutes); // Rutas de eliminaciones
 app.use("/api/cajaDiaria", cajaDiariaRoutes); // Rutas de caja diaria
 app.use("/api/valoraciones", valoracionesRoutes); // Rutas de valoraciones
 app.use("/api/cuenta", cuentaRoutes); // Rutas de cuenta
+app.use("/api/images", imagesRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

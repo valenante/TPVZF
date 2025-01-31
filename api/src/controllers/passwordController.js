@@ -69,14 +69,24 @@ export const updatePassword = async (req, res) => {
 };
 
 export const validatePassword = async (req, res) => {
+  console.log("📥 Request recibido en validatePassword:", req.body);
+
   const { password } = req.body;
+  if (!password) {
+    return res.status(400).json({ error: "La contraseña es requerida" });
+  }
+
   try {
     const config = await Password.findOne({ clave: "contraseñaDelDía" });
+
+    console.log("🔍 Config encontrada en MongoDB:", config);
+
     if (config && config.valor === password) {
       return res.status(200).json({ valid: true });
     }
     res.status(200).json({ valid: false });
   } catch (error) {
+    console.error("❌ Error al validar la contraseña:", error);
     res.status(500).json({ error: "Error al validar la contraseña" });
   }
 };

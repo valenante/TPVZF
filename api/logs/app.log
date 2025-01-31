@@ -1374,3 +1374,191 @@ u2025-01-13 14:54:55 [INFO]: Aplicación iniciada correctamente
 2025-01-28 16:03:16 [INFO]: Aplicación iniciada correctamente
 2025-01-28 16:03:16 [INFO]: Servidor escuchando en el puerto 3000
 2025-01-28 16:03:16 [INFO]: Conectado a MongoDB
+2025-01-28 16:04:45 [INFO]: Aplicación iniciada correctamente
+2025-01-28 16:04:45 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-28 16:04:45 [INFO]: Conectado a MongoDB
+2025-01-28 16:06:42 [INFO]: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-01-28T15:06:42.582Z
+2025-01-28 16:12:06 [INFO]: Aplicación iniciada correctamente
+2025-01-28 16:12:06 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-28 16:12:06 [INFO]: Conectado a MongoDB
+2025-01-29 15:02:29 [INFO]: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-01-29T14:02:29.835Z
+2025-01-30 23:16:35 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:16:35 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:16:35 [INFO]: Conectado a MongoDB
+2025-01-30 23:17:59 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:17:59 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:17:59 [INFO]: Conectado a MongoDB
+2025-01-30 23:23:33 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:23:33 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:23:33 [INFO]: Conectado a MongoDB
+2025-01-30 23:24:10 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:24:10 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:24:10 [INFO]: Conectado a MongoDB
+2025-01-30 23:27:47 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'file')
+2025-01-30 23:29:15 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'file')
+2025-01-30 23:29:56 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:29:56 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:29:56 [INFO]: Conectado a MongoDB
+2025-01-30 23:30:01 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'file')
+2025-01-30 23:31:24 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:31:24 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:31:24 [INFO]: Conectado a MongoDB
+2025-01-30 23:31:30 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'mimetype')
+2025-01-30 23:32:03 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:32:03 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:32:03 [INFO]: Conectado a MongoDB
+2025-01-30 23:32:24 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:32:24 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:32:24 [INFO]: Conectado a MongoDB
+2025-01-30 23:32:28 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'mimetype')
+2025-01-30 23:33:54 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:33:54 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:33:54 [INFO]: Conectado a MongoDB
+2025-01-30 23:34:19 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'file')
+2025-01-30 23:36:15 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:36:15 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:36:15 [INFO]: Conectado a MongoDB
+2025-01-30 23:36:20 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'file')
+2025-01-30 23:36:49 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'file')
+2025-01-30 23:37:25 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:37:25 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:37:25 [INFO]: Conectado a MongoDB
+2025-01-30 23:37:49 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'file')
+2025-01-30 23:38:51 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'file')
+2025-01-30 23:39:35 [ERROR]: [POST] /api/images/upload-image - Cannot read properties of undefined (reading 'file')
+2025-01-30 23:40:46 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:40:46 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:40:46 [INFO]: Conectado a MongoDB
+2025-01-30 23:42:11 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:42:11 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:42:11 [INFO]: Conectado a MongoDB
+2025-01-30 23:43:55 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:43:55 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:43:55 [INFO]: Conectado a MongoDB
+2025-01-30 23:44:29 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:44:29 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:44:29 [INFO]: Conectado a MongoDB
+2025-01-30 23:44:32 [ERROR]: [POST] /api/images/upload-image - __dirname is not defined
+2025-01-30 23:45:27 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:45:27 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:45:27 [INFO]: Conectado a MongoDB
+2025-01-30 23:52:33 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:52:33 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:52:33 [INFO]: Conectado a MongoDB
+2025-01-30 23:55:31 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:55:31 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:55:31 [INFO]: Conectado a MongoDB
+2025-01-30 23:59:42 [INFO]: Aplicación iniciada correctamente
+2025-01-30 23:59:42 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-30 23:59:42 [INFO]: Conectado a MongoDB
+2025-01-31 00:00:16 [INFO]: Aplicación iniciada correctamente
+2025-01-31 00:00:16 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 00:00:16 [INFO]: Conectado a MongoDB
+2025-01-31 00:01:14 [INFO]: Aplicación iniciada correctamente
+2025-01-31 00:01:14 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 00:01:14 [INFO]: Conectado a MongoDB
+2025-01-31 00:01:47 [INFO]: Aplicación iniciada correctamente
+2025-01-31 00:01:47 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 00:01:47 [INFO]: Conectado a MongoDB
+2025-01-31 14:15:51 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:15:51 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:15:51 [INFO]: Conectado a MongoDB
+2025-01-31 14:16:19 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:16:19 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:16:19 [INFO]: Conectado a MongoDB
+2025-01-31 14:19:23 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:19:23 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:19:23 [INFO]: Conectado a MongoDB
+2025-01-31 14:19:36 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:19:36 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:19:36 [INFO]: Conectado a MongoDB
+2025-01-31 14:21:45 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:21:45 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:21:45 [INFO]: Conectado a MongoDB
+2025-01-31 14:31:04 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:31:04 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:31:04 [INFO]: Conectado a MongoDB
+2025-01-31 14:36:15 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:36:15 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:36:15 [INFO]: Conectado a MongoDB
+2025-01-31 14:39:49 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:39:49 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:39:49 [INFO]: Conectado a MongoDB
+2025-01-31 14:40:03 [ERROR]: [POST] /api/images/upload-image - Unexpected end of form
+2025-01-31 14:41:37 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:41:37 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:41:37 [INFO]: Conectado a MongoDB
+2025-01-31 14:41:42 [ERROR]: [POST] /api/images/upload-image - Unexpected end of form
+2025-01-31 14:44:09 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:44:09 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:44:09 [INFO]: Conectado a MongoDB
+2025-01-31 14:44:13 [ERROR]: [POST] /api/images/upload-image - Unexpected end of form
+2025-01-31 14:44:54 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:44:54 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:44:54 [INFO]: Conectado a MongoDB
+2025-01-31 14:45:00 [ERROR]: [POST] /api/images/upload-image - Unexpected end of form
+2025-01-31 14:45:29 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:45:29 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:45:29 [INFO]: Conectado a MongoDB
+2025-01-31 14:45:34 [ERROR]: [POST] /api/images/upload-image - Unexpected end of form
+2025-01-31 14:46:42 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:46:42 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:46:42 [INFO]: Conectado a MongoDB
+2025-01-31 14:46:45 [ERROR]: [POST] /api/images/upload-image - Unexpected end of form
+2025-01-31 14:48:41 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:48:41 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:48:41 [INFO]: Conectado a MongoDB
+2025-01-31 14:48:49 [ERROR]: [POST] /api/images/upload-image - Unexpected end of form
+2025-01-31 14:49:10 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:49:10 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:49:10 [INFO]: Conectado a MongoDB
+2025-01-31 14:49:56 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:49:56 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:49:56 [INFO]: Conectado a MongoDB
+2025-01-31 14:50:00 [ERROR]: [POST] /api/images/upload-image - ENOENT: no such file or directory, open 'public/images/1738331400590-929513560.avif'
+2025-01-31 14:50:44 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:50:44 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:50:44 [INFO]: Conectado a MongoDB
+2025-01-31 14:50:48 [ERROR]: [POST] /api/images/upload-image - ENOENT: no such file or directory, open 'public/images/1738331448105-217481945.avif'
+2025-01-31 14:51:24 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:51:24 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:51:24 [INFO]: Conectado a MongoDB
+2025-01-31 14:54:10 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:54:10 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:54:10 [INFO]: Conectado a MongoDB
+2025-01-31 14:55:03 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:55:03 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:55:03 [INFO]: Conectado a MongoDB
+2025-01-31 14:57:11 [INFO]: Aplicación iniciada correctamente
+2025-01-31 14:57:11 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 14:57:11 [INFO]: Conectado a MongoDB
+2025-01-31 15:02:26 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:02:26 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:02:26 [INFO]: Conectado a MongoDB
+2025-01-31 15:03:58 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:03:58 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:03:58 [INFO]: Conectado a MongoDB
+2025-01-31 15:05:15 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:05:15 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:05:15 [INFO]: Conectado a MongoDB
+2025-01-31 15:08:19 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:08:20 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:08:20 [INFO]: Conectado a MongoDB
+2025-01-31 15:09:40 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:09:40 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:09:40 [INFO]: Conectado a MongoDB
+2025-01-31 15:10:45 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:10:45 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:10:45 [INFO]: Conectado a MongoDB
+2025-01-31 15:14:47 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:14:47 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:14:48 [INFO]: Conectado a MongoDB
+2025-01-31 15:17:02 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:17:02 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:17:02 [INFO]: Conectado a MongoDB
+2025-01-31 15:18:25 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:18:25 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:18:25 [INFO]: Conectado a MongoDB
+2025-01-31 15:19:54 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:19:54 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:19:54 [INFO]: Conectado a MongoDB
