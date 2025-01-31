@@ -1,12 +1,13 @@
 import jwt from 'jsonwebtoken';
 
 export const authMiddleware = (req, res, next) => {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
   const authHeader = req.header('Authorization');
   if (!authHeader) {
     return res.status(401).json({ error: 'No autorizado. Token no proporcionado.' });
   }
 
-  const token = authHeader.split(' ')[1]; // Extraer el token
   console.log("Token recibido:", token);
 
   if (!token) {
@@ -15,7 +16,7 @@ export const authMiddleware = (req, res, next) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Token verificado:", verified);
+    console.log(token, verified);
     req.user = verified; // Guardar los datos del usuario en la solicitud
     next();
   } catch (error) {

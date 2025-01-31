@@ -1,0 +1,205 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-01-28 16:20+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:107
+msgid "valora-experiencia"
+msgstr "Rate your experience"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:111
+msgid "no-hay-productos"
+msgstr "No products to rate"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:119
+#: src/components/Carta/ProductoCard.js:39
+msgid "estrellas"
+msgstr "stars"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:129
+msgid "5-estrellas"
+msgstr "5 stars"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:133
+msgid "estrella"
+msgstr "star"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:139
+msgid "comentario"
+msgstr "Comment"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:154
+msgid "enviar-valoraciones"
+msgstr "Submit Ratings"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:143
+msgid "configuracion-inicial"
+msgstr "Initial Configuration"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:169
+msgid "Nombre"
+msgstr "Name"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:173
+msgid "error-nombre"
+msgstr "Name is required"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:184
+msgid "Alergias"
+msgstr "Allergies"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:188
+msgid "error-alergias"
+msgstr "Allergies can only contain letters, spaces, and commas"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:198
+msgid "Comensales"
+msgstr "Diners"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:202
+msgid "error-comensales"
+msgstr "Number of diners must be between 1 and 20"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:214
+msgid "Contraseña"
+msgstr "Password"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:218
+msgid "error-contraseña"
+msgstr "Password is required"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:224
+msgid "procesando"
+msgstr "Processing..."
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:226
+msgid "continuar"
+msgstr "Continue"
+
+#. js-lingui-explicit-id
+#: src/components/Navbar/Navbar.js:88
+msgid "todas-categorias"
+msgstr "All Categories"
+
+#. js-lingui-explicit-id
+#: src/components/Navbar/Navbar.js:98
+msgid "platos"
+msgstr "Dishes"
+
+#. js-lingui-explicit-id
+#: src/components/Navbar/Navbar.js:98
+msgid "bebidas"
+msgstr "Drinks"
+
+#. js-lingui-explicit-id
+#: src/components/Navbar/Navbar.js:103
+msgid "cuenta"
+msgstr "Bill"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:35
+msgid "valoracion"
+msgstr "Rating"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:42
+msgid "sin-valoraciones"
+msgstr "No ratings"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:50
+msgid "tapa"
+msgstr "Small Portion"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:55
+msgid "racion"
+msgstr "Full Portion"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:63
+msgid "copa"
+msgstr "Glass"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:68
+msgid "botella"
+msgstr "Bottle"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:77
+msgid "agregar-carrito"
+msgstr "Add to cart"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:147
+#~ msgid "Escribe tu comentario (máximo 80 caracteres)"
+#~ msgstr "Write your comment (maximum 80 characters)"
+
+#. placeholder {0}: producto.descripcion
+#. placeholder {0}: opcion.tipo
+#: src/components/Carta/ProductoDetalle.js:98
+#: src/components/Carta/ProductoDetalle.js:122
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/Carta/ProductoDetalle.js:111
+msgid "{ingrediente}"
+msgstr "{ingredient}"
+
+#: src/components/Carta/ProductoDetalle.js:132
+msgid "{op}"
+msgstr "{op}"
+
+#: src/components/Carta/ProductoDetalle.js:149
+msgid "Agregar al carrito"
+msgstr "Add to cart"
+
+#: src/components/Carta/ProductoDetalle.js:148
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: src/components/Carta/ProductoDetalle.js:140
+msgid "Cantidad:"
+msgstr "Quantity:"
+
+#: src/components/Carta/ProductoDetalle.js:100
+msgid "Ingredientes:"
+msgstr "Ingredients:"
+
+#: src/components/Carta/ProductoDetalle.js:119
+msgid "Opciones:"
+msgstr "Options:"
+
+#. placeholder {0}: producto.nombre
+#: src/components/Carta/ProductoDetalle.js:97
+msgid "Personaliza tu {0}"
+msgstr "Customize your {0}"

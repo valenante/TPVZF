@@ -1,0 +1,11 @@
+{
+  "localeDir": "./src/locales",
+  "srcPathDirs": ["./src"],
+  "catalogs": [
+    {
+      "path": "<locale>/messages",
+      "include": ["**/*.{js,jsx,ts,tsx}"]
+    }
+  ],
+  "format": "po"
+}

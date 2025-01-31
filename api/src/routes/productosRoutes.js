@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { getProductos, getProductoById, getCategoriasByType, getProductosByCategory, updateProducto, createProducto, deleteProducto } from '../controllers/productosController.js';
+import { getProductos, getProductoById, getCategoriasByType, getProductosByCategory, updateProducto, createProducto, deleteProducto, deleteProductForEver } from '../controllers/productosController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { checkRole } from '../middlewares/checkRole.js';
 const router = Router();
@@ -49,6 +49,17 @@ router.put(
         check('stock', 'El stock debe ser un número entero positivo').optional().isInt({ min: 0 }),
     ],
     updateProducto
+);
+
+// Route to delete a product by ID (only authenticated users with admin role)
+router.delete(
+    '/:id',
+    authMiddleware,
+    checkRole(['admin']), // Only admins can delete products
+    [
+        check('id', 'ID must be a valid MongoDB ID').isMongoId()
+    ],
+    deleteProductForEver
 );
 
 // Eliminar un producto por ID (solo usuarios autenticados y con rol admin)

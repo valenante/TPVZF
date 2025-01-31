@@ -12,12 +12,11 @@ const generarAccessToken = (user) => {
   );
 };
 
-// Generar refresh token
 const generarRefreshToken = (user) => {
   return jwt.sign(
-    { id: user._id },
-    process.env.JWT_REFRESH_SECRET, // Nueva clave secreta para refresh tokens
-    { expiresIn: '7d' } // Token válido por 7 días
+    { id: user._id, name: user.name, role: user.role }, // ✅ Incluir `role`
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: '7d' }
   );
 };
 
@@ -38,7 +37,8 @@ export const renovarToken = async (req, res) => {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
     // Generar un nuevo access token
-    const user = { id: decoded.id };
+    const user = { id: decoded.id, role: decoded.role, name: decoded.name };
+
     const newAccessToken = generarAccessToken(user);
 
     res.status(200).json({ accessToken: newAccessToken });
@@ -189,8 +189,6 @@ export const login = async (req, res) => {
       sameSite: 'Strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días en milisegundos
     });
-
-    console.log('[DEPURACIÓN] Refresh token configurado en la cookie:', refreshToken);
 
     return res.status(200).json({
       message: 'Inicio de sesión exitoso',

@@ -96,6 +96,21 @@ export const createProducto = async (req, res) => {
     }
 };
 
+export const deleteProductForEver = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const producto = await Producto.findByIdAndDelete(id);
+        if (!producto) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        res.status(200).json({ message: 'Producto eliminado con éxito' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al eliminar el producto' });
+    }
+};
+
 export const deleteProducto = async (req, res) => {
   const { pedidoId, id: productoId } = req.params; // IDs del pedido y del producto
   const { motivo } = req.body; // Motivo de eliminación enviado en el cuerpo de la solicitud

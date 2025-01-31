@@ -1,0 +1,205 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-01-28 16:20+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: es\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:107
+msgid "valora-experiencia"
+msgstr "Valora tu experiencia"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:111
+msgid "no-hay-productos"
+msgstr "No hay productos para valorar"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:119
+#: src/components/Carta/ProductoCard.js:39
+msgid "estrellas"
+msgstr "estrellas"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:129
+msgid "5-estrellas"
+msgstr "5 estrellas"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:133
+msgid "estrella"
+msgstr "estrella"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:139
+msgid "comentario"
+msgstr "Comentario"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:154
+msgid "enviar-valoraciones"
+msgstr "Enviar valoraciones"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:143
+msgid "configuracion-inicial"
+msgstr "Configuración Inicial"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:169
+msgid "Nombre"
+msgstr "Nombre"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:173
+msgid "error-nombre"
+msgstr "El nombre es obligatorio"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:184
+msgid "Alergias"
+msgstr "Alergias"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:188
+msgid "error-alergias"
+msgstr "Las alergias solo pueden contener letras, espacios y comas"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:198
+msgid "Comensales"
+msgstr "Comensales"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:202
+msgid "error-comensales"
+msgstr "El número de comensales debe ser entre 1 y 20"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:214
+msgid "Contraseña"
+msgstr "Contraseña"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:218
+msgid "error-contraseña"
+msgstr "La contraseña es obligatoria"
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:224
+msgid "procesando"
+msgstr "Procesando..."
+
+#. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:226
+msgid "continuar"
+msgstr "Continuar"
+
+#. js-lingui-explicit-id
+#: src/components/Navbar/Navbar.js:88
+msgid "todas-categorias"
+msgstr "Todas las Categorías"
+
+#. js-lingui-explicit-id
+#: src/components/Navbar/Navbar.js:98
+msgid "platos"
+msgstr "Platos"
+
+#. js-lingui-explicit-id
+#: src/components/Navbar/Navbar.js:98
+msgid "bebidas"
+msgstr "Bebidas"
+
+#. js-lingui-explicit-id
+#: src/components/Navbar/Navbar.js:103
+msgid "cuenta"
+msgstr "Cuenta"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:35
+msgid "valoracion"
+msgstr "Valoración"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:42
+msgid "sin-valoraciones"
+msgstr "Sin valoraciones"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:50
+msgid "tapa"
+msgstr "Tapa"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:55
+msgid "racion"
+msgstr "Ración"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:63
+msgid "copa"
+msgstr "Copa"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:68
+msgid "botella"
+msgstr "Botella"
+
+#. js-lingui-explicit-id
+#: src/components/Carta/ProductoCard.js:77
+msgid "agregar-carrito"
+msgstr "Agregar al carrito"
+
+#. js-lingui-explicit-id
+#: src/pages/Valoraciones.js:147
+#~ msgid "Escribe tu comentario (máximo 80 caracteres)"
+#~ msgstr "Escribe tu comentario (máximo 80 caracteres)"
+
+#. placeholder {0}: producto.descripcion
+#. placeholder {0}: opcion.tipo
+#: src/components/Carta/ProductoDetalle.js:98
+#: src/components/Carta/ProductoDetalle.js:122
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/Carta/ProductoDetalle.js:111
+msgid "{ingrediente}"
+msgstr "{ingrediente}"
+
+#: src/components/Carta/ProductoDetalle.js:132
+msgid "{op}"
+msgstr "{op}"
+
+#: src/components/Carta/ProductoDetalle.js:149
+msgid "Agregar al carrito"
+msgstr "Agregar al carrito"
+
+#: src/components/Carta/ProductoDetalle.js:148
+msgid "Cancelar"
+msgstr "Cancelar"
+
+#: src/components/Carta/ProductoDetalle.js:140
+msgid "Cantidad:"
+msgstr "Cantidad:"
+
+#: src/components/Carta/ProductoDetalle.js:100
+msgid "Ingredientes:"
+msgstr "Ingredientes:"
+
+#: src/components/Carta/ProductoDetalle.js:119
+msgid "Opciones:"
+msgstr "Opciones:"
+
+#. placeholder {0}: producto.nombre
+#: src/components/Carta/ProductoDetalle.js:97
+msgid "Personaliza tu {0}"
+msgstr "Personaliza tu {0}"

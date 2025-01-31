@@ -1562,3 +1562,90 @@ u2025-01-13 14:54:55 [INFO]: Aplicación iniciada correctamente
 2025-01-31 15:19:54 [INFO]: Aplicación iniciada correctamente
 2025-01-31 15:19:54 [INFO]: Servidor escuchando en el puerto 3000
 2025-01-31 15:19:54 [INFO]: Conectado a MongoDB
+2025-01-31 15:27:15 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:27:15 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:27:15 [INFO]: Conectado a MongoDB
+2025-01-31 15:28:09 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:28:09 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:28:09 [INFO]: Conectado a MongoDB
+2025-01-31 15:53:00 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:53:00 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:53:00 [INFO]: Conectado a MongoDB
+2025-01-31 15:53:15 [INFO]: Aplicación iniciada correctamente
+2025-01-31 15:53:15 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 15:53:15 [INFO]: Conectado a MongoDB
+2025-01-31 15:59:20 [INFO]: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-01-31T14:59:20.323Z
+2025-01-31 16:00:27 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:00:27 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:00:27 [INFO]: Conectado a MongoDB
+2025-01-31 16:00:44 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:00:44 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:00:44 [INFO]: Conectado a MongoDB
+2025-01-31 16:02:06 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:02:06 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:02:06 [INFO]: Conectado a MongoDB
+2025-01-31 16:02:34 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:02:34 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:02:34 [INFO]: Conectado a MongoDB
+2025-01-31 16:03:13 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:03:13 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:03:13 [INFO]: Conectado a MongoDB
+2025-01-31 16:03:39 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:03:39 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:03:39 [INFO]: Conectado a MongoDB
+2025-01-31 16:04:43 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:04:43 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:04:43 [INFO]: Conectado a MongoDB
+2025-01-31 16:05:02 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:05:02 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:05:02 [INFO]: Conectado a MongoDB
+2025-01-31 16:05:26 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:05:26 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:05:27 [INFO]: Conectado a MongoDB
+2025-01-31 16:06:30 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:06:30 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:06:30 [INFO]: Conectado a MongoDB
+2025-01-31 16:06:37 [INFO]: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-01-31T15:06:37.472Z
+2025-01-31 16:09:03 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:09:03 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:09:03 [INFO]: Conectado a MongoDB
+2025-01-31 16:09:12 [INFO]: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-01-31T15:09:12.562Z
+2025-01-31 16:10:06 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:10:06 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:10:06 [INFO]: Conectado a MongoDB
+2025-01-31 16:12:23 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:12:23 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:12:23 [INFO]: Conectado a MongoDB
+2025-01-31 16:12:36 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:12:36 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:12:36 [INFO]: Conectado a MongoDB
+2025-01-31 16:13:49 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:13:49 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:13:49 [INFO]: Conectado a MongoDB
+2025-01-31 16:14:14 [INFO]: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-01-31T15:14:14.412Z
+2025-01-31 16:15:53 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:15:53 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:15:53 [INFO]: Conectado a MongoDB
+2025-01-31 16:19:13 [INFO]: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-01-31T15:19:13.611Z
+2025-01-31 16:21:04 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:21:04 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:21:04 [INFO]: Conectado a MongoDB
+2025-01-31 16:21:54 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:21:54 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:21:54 [INFO]: Conectado a MongoDB
+2025-01-31 16:22:01 [INFO]: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-01-31T15:22:01.169Z
+2025-01-31 16:22:57 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:22:57 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:22:57 [INFO]: Conectado a MongoDB
+2025-01-31 16:23:04 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:23:04 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:23:04 [INFO]: Conectado a MongoDB
+2025-01-31 16:24:48 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:24:48 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:24:48 [INFO]: Conectado a MongoDB
+2025-01-31 16:29:55 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:29:55 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:29:55 [INFO]: Conectado a MongoDB
+2025-01-31 16:32:30 [INFO]: Aplicación iniciada correctamente
+2025-01-31 16:32:30 [INFO]: Servidor escuchando en el puerto 3000
+2025-01-31 16:32:30 [INFO]: Conectado a MongoDB
