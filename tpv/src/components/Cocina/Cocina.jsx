@@ -95,7 +95,7 @@ const Cocina = () => {
             const todosProductosListos = pedido.productos
               .filter((producto) => ["plato", "tapaRacion"].includes(producto.tipo))
               .every((producto) => producto.estadoPreparacion === "listo");
-
+  
             return (
               <div key={pedido._id} className="pedido-card--cocina">
                 <div className="pedido-header--cocina">
@@ -109,42 +109,49 @@ const Cocina = () => {
                 <ul className="productos-list--cocina">
                   {pedido.productos
                     .filter((producto) => ["plato", "tapaRacion"].includes(producto.tipo))
-                    .map((producto) => (
-                      <li key={producto._id} className="producto-item--cocina">
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={producto.estadoPreparacion === "listo"}
-                            onChange={() =>
-                              marcarProductoComoListo(pedido._id, producto._id)
-                            }
-                          /> 
-                           {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
-                        </label>
-                        {producto.ingredientesEliminados.length > 0 && (
-                          <p>
-                            <strong>Sin:</strong> {producto.ingredientesEliminados.join(", ")}
-                          </p>
-                        )}
-                        {producto.especificaciones.length > 0 && (
-                          <p>
-                            <strong>Especificaciones:</strong> {producto.especificaciones.join(", ")}
-                          </p>
-                        )}
-                        {producto.opcionesPersonalizables?.length > 0 && (
-                          <div>
-                            <ul>
-                              {producto.opcionesPersonalizables.map((opcion, index) => (
-                                <li key={index}>
-                                  <strong>{opcion.tipo}: </strong>
-                                  {opcion.opcion.join(", ")}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </li>
-                    ))}
+                    .map((producto) => {
+                      // Condicional para determinar el color del nombre del producto
+                      const nombreProductoColor = producto.tipoPlato === "individual" ? "green" : "purple";
+  
+                      return (
+                        <li key={producto._id} className="producto-item--cocina">
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={producto.estadoPreparacion === "listo"}
+                              onChange={() =>
+                                marcarProductoComoListo(pedido._id, producto._id)
+                              }
+                            /> 
+                            <span style={{ color: nombreProductoColor }}>
+                              {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
+                            </span>
+                          </label>
+                          {producto.ingredientesEliminados.length > 0 && (
+                            <p>
+                              <strong>Sin:</strong> {producto.ingredientesEliminados.join(", ")}
+                            </p>
+                          )}
+                          {producto.especificaciones.length > 0 && (
+                            <p>
+                              <strong>Especificaciones:</strong> {producto.especificaciones.join(", ")}
+                            </p>
+                          )}
+                          {producto.opcionesPersonalizables?.length > 0 && (
+                            <div>
+                              <ul>
+                                {producto.opcionesPersonalizables.map((opcion, index) => (
+                                  <li key={index}>
+                                    <strong>{opcion.tipo}: </strong>
+                                    {opcion.opcion.join(", ")}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
                 </ul>
                 <button
                   onClick={() => marcarPedidoComoListo(pedido._id)}
@@ -159,7 +166,7 @@ const Cocina = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 export default Cocina;

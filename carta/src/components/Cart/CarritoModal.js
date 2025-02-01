@@ -7,9 +7,9 @@ import '../../styles/CarritoModal.css';
 const CarritoModal = ({ cerrarModal }) => {
   const { carrito, cargarCarrito, mesaId } = useContext(ProductosContext);
   const [searchParams] = useSearchParams();
-
   const comensales = searchParams.get("comensales"); // Obtener el nombre desde la URL
   const alergias = searchParams.get("alergias"); // Obtener el nombre desde la URL
+  console.log(carrito.items);
 
   const esLider = async () => {
     try {
@@ -57,10 +57,10 @@ const CarritoModal = ({ cerrarModal }) => {
       alert("Solo el líder puede enviar el pedido.");
       return;
     }
-  
+
     try {
       const carritoId = localStorage.getItem("carritoMongoId");
-  
+
       const pedido = {
         mesa: mesaId,
         cartId: carritoId,
@@ -73,15 +73,17 @@ const CarritoModal = ({ cerrarModal }) => {
           precioSeleccionado: item.precioSeleccionado,
           total: (item.precioSeleccionado || item.productId.precios.precioBase) * item.cantidad,
           precios: item.productId.precios,
-          
+          tipoPlato: item.tipoPlato,
           // Ingredientes eliminados
-          ingredientesEliminados: item.ingredientesEliminados || item.ingredientes, // Aquí deberías usar los ingredientes eliminados que se pasan al carrito
-  
+          ingredientesEliminados: item.ingredientesEliminados || item.ingredientes,
+
           // Opciones personalizables
-          opcionesPersonalizables: Object.entries(item.opciones).map(([tipo, opcion]) => ({
-            tipo,
-            opcion
-          })),
+          opcionesPersonalizables: (item.opciones && Object.keys(item.opciones).length > 0)
+            ? Object.entries(item.opciones).map(([tipo, opcion]) => ({
+              tipo,
+              opcion
+            }))
+            : [], // Si no tiene opciones o si son vacías, asignamos un array vacío
         })),
         total: carrito.items.reduce((total, item) => {
           const precio = item.precioSeleccionado || item.productId.precios.precioBase;
@@ -92,7 +94,7 @@ const CarritoModal = ({ cerrarModal }) => {
       };
 
       const response = await api.post("/pedidos", pedido);
-  
+
       localStorage.removeItem("carritoMongoId");
       cargarCarrito();
       cerrarModal();
@@ -100,7 +102,7 @@ const CarritoModal = ({ cerrarModal }) => {
       console.error("Error al enviar el pedido:", error);
     }
   };
-  
+
   const calcularTotal = () => {
     return carrito.items?.reduce((total, item) => {
       const precio = item.precioSeleccionado || item.productId.precios.precioBase; // Usar precio seleccionado o precio base
@@ -108,6 +110,51 @@ const CarritoModal = ({ cerrarModal }) => {
     }, 0).toFixed(2);
   };
 
+  const renderizarItems = () => {
+    const itemsAgrupados = [];
+
+    carrito.items?.forEach((item) => {
+      const opciones = JSON.stringify(item.opciones); // Convertimos las opciones a una cadena
+      const ingredientesEliminados = JSON.stringify(item.ingredientes); // Convertimos los ingredientes eliminados a una cadena
+
+      // Verifica si ya existe una entrada con la misma combinación de opciones e ingredientes eliminados
+      const key = `${item.productId._id}-${opciones}-${ingredientesEliminados}`;
+      const itemExistente = itemsAgrupados.find(i => i.key === key);
+
+      if (itemExistente) {
+        itemExistente.cantidad += item.cantidad; // Sumar cantidades si ya existe la combinación
+      } else {
+        itemsAgrupados.push({
+          key,
+          item,
+        });
+      }
+    });
+
+    return itemsAgrupados.map(({ key, item }) => (
+      <li key={key} className="modal-item-carritoModal">
+        {item.nombre?.length > 0 && <h3 className="item-name-carritoModal">{item.nombre}</h3>}
+        <h3 className="item-title-carritoModal">{item.productId.nombre}</h3>
+        {item.ingredientes?.length > 0 && (
+          <p className="item-details-carritoModal">Sin {item.ingredientes.join(", ")}</p>
+        )}
+        {item.opciones && Object.entries(item.opciones).length > 0 && (
+          <p className="item-details-carritoModal">
+            Opciones:{" "}
+            {Object.entries(item.opciones || {}).map(([k, v]) => `${k}: ${v}`).join(", ")}
+          </p>
+        )}
+        <p className="item-details-carritoModal">
+          Precio:{" "}
+          {(item.precioSeleccionado || item.productId.precios.precioBase).toFixed(2)} €
+        </p>
+        <p className="item-details-carritoModal">Cantidad: {item.cantidad}</p>
+        <button className="btn-delete-carritoModal" onClick={() => eliminarProducto(item._id)}>
+          Eliminar
+        </button>
+      </li>
+    ));
+  };
 
   return (
     <div className="modal-overlay-carritoModal">
@@ -116,31 +163,7 @@ const CarritoModal = ({ cerrarModal }) => {
           ✖
         </button>
         <ul className="modal-items-carritoModal">
-          {carrito.items?.map((item) => (
-            <li key={item._id} className="modal-item-carritoModal">
-              {item.nombre?.length > 0 && <h3 className="item-name-carritoModal">{item.nombre}</h3>}
-              <h3 className="item-title-carritoModal">{item.productId.nombre}</h3>
-              {item.ingredientes?.length > 0 && (
-                <p className="item-details-carritoModal">Sin {item.ingredientes.join(", ")}</p>
-              )}
-              {item.opciones && Object.keys(item.opciones).length > 0 && (
-                <p className="item-details-carritoModal">
-                  Opciones:{" "}
-                  {Object.entries(item.opciones)
-                    .map(([k, v]) => `${k}: ${v}`)
-                    .join(", ")}
-                </p>
-              )}
-              <p className="item-details-carritoModal">
-                Precio:{" "}
-                {(item.precioSeleccionado || item.productId.precios.precioBase).toFixed(2)} €
-              </p>
-              <p className="item-details-carritoModal">Cantidad: {item.cantidad}</p>
-              <button className="btn-delete-carritoModal" onClick={() => eliminarProducto(item._id)}>
-                Eliminar
-              </button>
-            </li>
-          ))}
+          {renderizarItems()}
         </ul>
         <h3 className="total-carritoModal">Total: {calcularTotal()} €</h3>
         <button onClick={enviarPedido} className="btn-submit-carritoModal">
@@ -148,7 +171,6 @@ const CarritoModal = ({ cerrarModal }) => {
         </button>
       </div>
     </div>
-
   );
 };
 

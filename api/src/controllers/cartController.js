@@ -42,7 +42,7 @@ export const getCart = async (req, res) => {
 };
 
 export const addToCart = async (req, res) => {
-  const { productId, cantidad, opciones, ingredientes, cartId, mesa, nombre, precioSeleccionado } = req.body;
+  const { productId, cantidad, opciones, ingredientes, cartId, mesa, nombre, precioSeleccionado, tipoPlato } = req.body;
 
   try {
     // Validar que `productId` esté presente
@@ -62,18 +62,27 @@ export const addToCart = async (req, res) => {
       cart = new Cart({ items: [], mesa });
     }
 
+    // Generar una clave única basada en el producto, opciones y ingredientes
+    const opcionesString = JSON.stringify(opciones);
+    const ingredientesString = JSON.stringify(ingredientes);
+    const productKey = `${productId}-${opcionesString}-${ingredientesString}`;
+
     // Buscar si el producto ya está en el carrito
-    const itemIndex = cart.items.findIndex((item) => item.productId.toString() === productId);
+    const itemIndex = cart.items.findIndex((item) => {
+      const itemOpcionesString = JSON.stringify(item.opciones);
+      const itemIngredientesString = JSON.stringify(item.ingredientes);
+      return item.productId.toString() === productId && itemOpcionesString === opcionesString && itemIngredientesString === ingredientesString;
+    });
 
     if (itemIndex > -1) {
-      // Actualizar la cantidad si el producto ya está en el carrito
+      // Si el producto con la misma combinación ya está en el carrito, actualizar la cantidad
       cart.items[itemIndex].cantidad += cantidad;
     } else {
-      // Agregar un nuevo producto al carrito
-      cart.items.push({ productId, cantidad, opciones, ingredientes, nombre, precioSeleccionado });
+      // Si no existe, agregar un nuevo producto al carrito
+      cart.items.push({ productId, cantidad, opciones, ingredientes, nombre, precioSeleccionado, tipoPlato });
     }
 
-    // Guardar el carrito en la base de datos
+    // Guardar el carrito actualizado en la base de datos
     await cart.save();
 
     // Emitir un evento de actualización del carrito
@@ -88,7 +97,6 @@ export const addToCart = async (req, res) => {
     res.status(500).json({ error: 'Error al agregar al carrito.' });
   }
 };
-
 
 // Actualizar la cantidad de un producto en el carrito
 export const updateCartItem = async (req, res) => {

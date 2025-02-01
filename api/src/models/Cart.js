@@ -8,6 +8,7 @@ const CartItemSchema = new Schema({
   ingredientes: { type: [String], default: [] }, // Ingredientes personalizados
   nombre: { type: String, required: true },
   precioSeleccionado: { type: Number, required: true }, // Precio seleccionado por el usuario
+  tipoPlato: { type: String, enum: ['compartir', 'individual'], default: 'compartir' }, // Tipo de plato
 });
 
 const CartSchema = new Schema({

@@ -35,7 +35,8 @@ const PedidoSchema = new Schema({
       opcionesPersonalizables: [opcionPersonalizableSchema], // Opciones personalizables para el cliente
       especificaciones: { type: [String], default: [] }, // Ejemplo: "Sin sal", "Extra picante"
       estadoPreparacion: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
-      tipoPedido: { type: String, enum: ['copa', 'botella', 'individual', 'compartir'], required: false }, // Tipo general de pedido
+      tipoPedido: { type: String, enum: ['copa', 'botella'], required: false }, // Tipo general de pedido
+      tipoPlato: { type: String, enum: ['individual', 'compartir'], required: false }, // Tipo de plato
       total: { type: Number, required: true },
     },
   ],

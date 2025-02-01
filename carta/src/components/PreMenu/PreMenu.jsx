@@ -188,7 +188,7 @@ const PreMenu = () => {
                 value={formData.alergias}
                 onChange={handleChange}
                 className="input--preMenu"
-                placeholder={i18n._("Alergias")} // Usamos i18n._() para los placeholder
+                placeholder={i18n._("Alergias en mesa")} // Usamos i18n._() para los placeholder
               />
               {errors.alergias && (
                 <p className="error--preMenu">

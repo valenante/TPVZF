@@ -62,6 +62,7 @@ const productoSchema = new Schema({
   estado: { type: String, enum: ['habilitado', 'deshabilitado'], default: 'habilitado' },
   estadoPreparacion: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
   tipoPedido: { type: String, enum: ['copa', 'botella', 'individual', 'compartir'], required: false }, // Tipo general de pedido
+  tipoPlato: { type: String, enum: ['compartir', 'individual'], default: 'compartir' }, // Tipo específico de plato
 
   // Relaciones
   ventas: [{ type: Schema.Types.ObjectId, ref: 'Venta' }], // Relación con las ventas

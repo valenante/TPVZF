@@ -11,6 +11,8 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
   const [ingredientesSeleccionados, setIngredientesSeleccionados] = useState([...producto.ingredientes]);
   const [ingredientesEliminados, setIngredientesEliminados] = useState([]);
   const [opcionesSeleccionadas, setOpcionesSeleccionadas] = useState({});
+  const [tipoPlato, setTipoPlato] = useState("compartir"); // Nuevo estado para "compartir" o "individual"
+  console.log(tipoPlato, 'nanananan')
   const [searchParams] = useSearchParams();
   const { numeroMesa } = useParams();
   const mesa = numeroMesa;
@@ -37,10 +39,17 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
     }
   };
 
+  const manejarTipoPlato = (e) => {
+    console.log("Tipo de plato seleccionado:", e.target.value); // Verifica el valor seleccionado
+    setTipoPlato(e.target.value); // Actualizar tipo de plato ("compartir" o "individual")
+  };
+
   const agregarAlCarrito = async () => {
     const carritoId = localStorage.getItem('carritoMongoId');
 
     const cartId = carritoId;
+
+    console.log('Hemos agregado el tipoPlato:', tipoPlato); // Verifica el tipo de plato seleccionado
 
     const pedido = {
       cartId,
@@ -52,6 +61,7 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
       total: seleccionPrecio * cantidad, // Calcular el total basado en el precio seleccionado
       mesa,
       nombre,
+      tipoPlato, // Agregar tipo de plato (compartir o individual)
     };
 
     try {
@@ -141,6 +151,14 @@ return ReactDOM.createPortal(
         <button className="cantidad-btn" onClick={() => manejarCantidad(-1)}>-</button>
         <span>{cantidad}</span>
         <button className="cantidad-btn" onClick={() => manejarCantidad(1)}>+</button>
+      </div>
+
+      {/* Nuevo select para elegir si el plato es para compartir o individual */}
+      <div className="tipo-plato-select-container-detalle">
+        <select value={tipoPlato} onChange={manejarTipoPlato} className="tipo-plato-select-detalle">
+          <option value="compartir"><Trans>Compartir</Trans></option>
+          <option value="individual"><Trans>Individual</Trans></option>
+        </select>
       </div>
 
       <div>
