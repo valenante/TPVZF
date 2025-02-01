@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@lingui/cli": "^5.1.2",
+    "@lingui/macro": "^5.1.2",
+    "@lingui/react": "^5.1.2",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "cra-template": "1.2.0",

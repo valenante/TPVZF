@@ -37,9 +37,6 @@ const Login = () => {
       }
   
       const data = await response.json();
-      console.log("Ruta de la petición:", response.url); // Mostrar la URL de la petición
-      console.log("Respuesta del servidor:", data);
-
   
       const { accessToken, user } = data;
   

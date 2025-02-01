@@ -8,8 +8,6 @@ const CarritoModal = ({ cerrarModal }) => {
   const { carrito, cargarCarrito, mesaId } = useContext(ProductosContext);
   const [searchParams] = useSearchParams();
 
-  console.log(carrito);
-
   const comensales = searchParams.get("comensales"); // Obtener el nombre desde la URL
   const alergias = searchParams.get("alergias"); // Obtener el nombre desde la URL
 
@@ -59,10 +57,10 @@ const CarritoModal = ({ cerrarModal }) => {
       alert("Solo el líder puede enviar el pedido.");
       return;
     }
-
+  
     try {
       const carritoId = localStorage.getItem("carritoMongoId");
-
+  
       const pedido = {
         mesa: mesaId,
         cartId: carritoId,
@@ -73,13 +71,20 @@ const CarritoModal = ({ cerrarModal }) => {
           categoria: item.productId.categoria,
           cantidad: item.cantidad,
           precioSeleccionado: item.precioSeleccionado,
-          total: (item.precioSeleccionado || item.productId.precios.precioBase) * item.cantidad, // Usar precio seleccionado o precio base
+          total: (item.precioSeleccionado || item.productId.precios.precioBase) * item.cantidad,
           precios: item.productId.precios,
-          ingredientesEliminados: item.ingredientesEliminados || [],
-          especificaciones: item.especificaciones || [],
+          
+          // Ingredientes eliminados
+          ingredientesEliminados: item.ingredientesEliminados || item.ingredientes, // Aquí deberías usar los ingredientes eliminados que se pasan al carrito
+  
+          // Opciones personalizables
+          opcionesPersonalizables: Object.entries(item.opciones).map(([tipo, opcion]) => ({
+            tipo,
+            opcion
+          })),
         })),
         total: carrito.items.reduce((total, item) => {
-          const precio = item.precioSeleccionado || item.productId.precios.precioBase; // Usar precio seleccionado o precio base
+          const precio = item.precioSeleccionado || item.productId.precios.precioBase;
           return total + precio * item.cantidad;
         }, 0),
         comensales,
@@ -87,7 +92,7 @@ const CarritoModal = ({ cerrarModal }) => {
       };
 
       const response = await api.post("/pedidos", pedido);
-
+  
       localStorage.removeItem("carritoMongoId");
       cargarCarrito();
       cerrarModal();
@@ -95,7 +100,7 @@ const CarritoModal = ({ cerrarModal }) => {
       console.error("Error al enviar el pedido:", error);
     }
   };
-
+  
   const calcularTotal = () => {
     return carrito.items?.reduce((total, item) => {
       const precio = item.precioSeleccionado || item.productId.precios.precioBase; // Usar precio seleccionado o precio base

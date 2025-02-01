@@ -27,34 +27,36 @@
   z-index: 1000;
 }
 
-/* Título */
-.titulo--crear {
-  font-size: 1.8rem;
-  color: #6a0dad;
-  /* Morado profundo */
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* Formulario */
 .form--crear {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
-/* Grupos de inputs en dos columnas */
+/* Título del modal */
+.titulo--crear {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #6a0dad; /* Morado profundo */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Grupo de inputs (dos columnas en desktop) */
 .form-group--crear {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  /* Dos columnas iguales */
-  gap: 20px;
-  /* Espaciado entre columnas */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.textarea--crear{
+  max-height: 20vh;
 }
 
 /* Etiquetas */
 .label--crear {
   font-size: 1rem;
+  font-weight: 500;
   color: #333;
   display: flex;
   flex-direction: column;
@@ -66,87 +68,126 @@
 .textarea--crear {
   padding: 10px;
   border: 1px solid #cccccc;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 1rem;
+  transition: border 0.3s ease;
 }
 
+.input--crear:focus,
+.textarea--crear:focus {
+  border-color: #6a0dad;
+  outline: none;
+}
+
+/* Textarea */
 .textarea--crear {
   resize: vertical;
   min-height: 80px;
 }
 
-/* Fieldset */
+/* ============================= */
+/* 🔹 FIELDSETS 🔹 */
+/* ============================= */
+
 .fieldset--crear {
-  border: 1px solid #6a0dad;
-  border-radius: 5px;
-  padding: 10px;
+  border: 2px solid #6a0dad;
+  border-radius: 8px;
+  padding: 15px;
 }
 
 .legend--crear {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: bold;
+  color: #6a0dad;
+  padding: 0 8px;
+}
+
+/* ============================= */
+/* 🔹 SUBIDA DE IMÁGENES 🔹 */
+/* ============================= */
+
+.drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 2px dashed #6a0dad;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.drop-zone p {
+  font-size: 1rem;
   color: #6a0dad;
 }
 
-/* Botones */
+.drop-zone.dragging {
+  background-color: rgba(106, 13, 173, 0.1);
+}
+
+/* Esconde el input de archivos */
+.hidden-file-input {
+  display: none;
+}
+
+/* Vista previa de imagen */
+.preview-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.preview-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================= */
+/* 🔹 BOTONES 🔹 */
+/* ============================= */
+
 .botones--crear {
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
 .boton--crear {
-  background-color: #6a0dad;
-  /* Morado profundo */
+  background-color: #6a0dad; /* Morado profundo */
   color: #ffffff;
   border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
+  border-radius: 6px;
+  padding: 12px 20px;
   font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .boton--crear:hover {
-  background-color: #ff6700;
-  /* Naranja vibrante */
+  background-color: #ff6700; /* Naranja vibrante */
   transform: scale(1.05);
 }
 
-/* Responsivo */
+/* ============================= */
+/* 🔹 RESPONSIVIDAD 🔹 */
+/* ============================= */
+
 @media (max-width: 768px) {
   .crear-producto-modal--crear {
-    padding: 15px;
+    width: 80%;
+    padding: 20px;
   }
 
   .form-group--crear {
-    grid-template-columns: 1fr;
-    /* Una sola columna en pantallas pequeñas */
+    grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
   }
 
   .botones--crear {
     flex-direction: column;
     gap: 10px;
-  }
-}
-
-/* Responsivo: Ajustar inputs en pantallas pequeñas */
-@media (max-width: 768px) {
-  .edit-product--editar {
-    width: 90%;
-    /* Ocupa el 90% del ancho de la pantalla */
-    max-width: none;
-    /* Ajustar altura automáticamente */
-    padding: 15px;
-  }
-
-  .fieldset--editar .label--editar {
-    flex: 1 1 100%;
-    /* Los inputs ocupan el 100% del ancho en pantallas pequeñas */
-  }
-
-  .input--editar,
-  .textarea--editar {
-    font-size: 0.9rem;
-    /* Ajustar tamaño de fuente en pantallas pequeñas */
   }
 }

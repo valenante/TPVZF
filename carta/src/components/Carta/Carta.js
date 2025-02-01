@@ -2,20 +2,19 @@ import React, { useContext, useEffect, useState } from "react";
 import { ProductosContext } from "../../context/ProductosContext";
 import ProductoCard from "./ProductoCard";
 import api from "../../utils/api";
+import Navbar from "../Navbar/Navbar";
 
 const Carta = () => {
   const { productos, categoriaSeleccionada, cargarProductos } = useContext(ProductosContext);
   const [valoraciones, setValoraciones] = useState({});
+  const [mostrarSoloBebidas, setMostrarSoloBebidas] = useState(false); // 👈 Estado para bebidas
 
   useEffect(() => {
     const cargarValoraciones = async () => {
       try {
-        const { data } = await api.get("/valoraciones/valoraciones/mas-valorados"); // Obtener valoraciones con estrellas
-        console.log(data);
-        // Crear un objeto para mapear valoraciones a productos por su ID
+        const { data } = await api.get("/valoraciones/valoraciones/mas-valorados");
         const valoracionesMapeadas = data.reduce((acc, { _id, estrellas }) => {
-          acc[_id] = estrellas; // Guardar el promedio de estrellas por ID
-          console.log("valoracionesMapeadas", acc);
+          acc[_id] = estrellas;
           return acc;
         }, {});
         setValoraciones(valoracionesMapeadas);
@@ -24,29 +23,37 @@ const Carta = () => {
       }
     };
 
-    cargarProductos(); // Cargar productos desde el contexto
-    cargarValoraciones(); // Cargar valoraciones desde el backend
+    cargarProductos();
+    cargarValoraciones();
   }, [cargarProductos]);
 
-  // Filtrar productos por categoría seleccionada y estado habilitado
   const productosFiltrados = productos.filter((producto) => {
     const esCategoriaValida = categoriaSeleccionada
       ? producto.categoria === categoriaSeleccionada
-      : true; // Si no hay categoría seleccionada, incluir todos
+      : true;
     const estaHabilitado = producto.estado === "habilitado";
+    const esBebida = producto.tipo === "bebida";
+
+    if (mostrarSoloBebidas) {
+      return esBebida && estaHabilitado;
+    }
+
     return esCategoriaValida && estaHabilitado;
   });
 
   return (
-    <div className="productos-grid">
-      {productosFiltrados.map((producto) => (
-        <ProductoCard
-          key={producto._id}
-          producto={producto}
-          estrellas={valoraciones[producto._id]} // Pasar directamente las estrellas promedio
-        />
-      ))}
-    </div>
+    <>
+      <Navbar setMostrarSoloBebidas={setMostrarSoloBebidas} mostrarSoloBebidas={mostrarSoloBebidas} />  {/* 👈 Pasamos la variable */}
+      <div className="productos-grid">
+        {productosFiltrados.map((producto) => (
+          <ProductoCard
+            key={producto._id}
+            producto={producto}
+            estrellas={valoraciones[producto._id]}
+          />
+        ))}
+      </div>
+    </>
   );
 };
 

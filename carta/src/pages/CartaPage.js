@@ -20,7 +20,6 @@ const CartaPage = () => {
   return (
     <div className="container">
       <TopBar />
-      <Navbar />
       {/* Carta completa */}
       <main>
         <Carta />

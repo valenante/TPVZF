@@ -12,7 +12,7 @@ const precioSchema = new Schema({
 // Subesquema para presentaciones y opciones personalizables
 const opcionPersonalizableSchema = new Schema({
   tipo: { type: String, required: true }, // Ejemplo: "queso", "acompañamiento"
-  opciones: { type: [String], default: [] }, // Ejemplo: ["cheddar", "mozzarella"]
+  opcion: { type: [String], default: [] }, // Ejemplo: ["cheddar", "mozzarella"]
 }, { _id: false });
 
 const PedidoSchema = new Schema({

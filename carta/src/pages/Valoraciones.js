@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Trans } from "@lingui/react";
 import DOMPurify from "dompurify"; // Para sanitizar entradas de texto
 import api from "../utils/api"; // Configuración de Axios
 import "../styles/Valoraciones.css"; // Archivo de estilos
@@ -102,37 +103,47 @@ const Valoraciones = () => {
 
   return (
     <div className="contenedor-valoraciones">
-      <h1 className="titulo-valoraciones">Valora tu Experiencia</h1>
+      <h1 className="titulo-valoraciones">
+        <Trans id="valora-experiencia">Valora tu Experiencia</Trans>
+      </h1>
       {productos.length === 0 ? (
-        <p className="mensaje-sin-productos-valoraciones">No hay productos para valorar.</p>
+        <p className="mensaje-sin-productos-valoraciones">
+          <Trans id="no-hay-productos">No hay productos para valorar.</Trans>
+        </p>
       ) : (
         <form className="formulario-valoraciones">
           {productos.map((producto) => (
             <div key={producto.productoId._id} className="producto-valoraciones">
               <h3 className="producto-nombre-valoraciones">{producto.nombre}</h3>
-              <label className="etiqueta-valoraciones">Estrellas:</label>
+              <label className="etiqueta-valoraciones">
+                <Trans id="estrellas">Estrellas:</Trans>
+              </label>
               <select
                 value={valoraciones.find((v) => v.productoId === producto.productoId._id)?.estrellas || 0}
                 onChange={(e) =>
-                  manejarEstrellas(producto.productoId._id, parseFloat(e.target.value)) // Convertir siempre a número decimal
+                  manejarEstrellas(producto.productoId._id, parseFloat(e.target.value))
                 }
                 className="select-valoraciones"
               >
-                <option value={5}>5 estrellas</option>
+                <option value={5}>
+                  <Trans id="5-estrellas">5 estrellas</Trans>
+                </option>
                 {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((estrella) => (
                   <option key={estrella} value={estrella}>
-                    {estrella} estrella{estrella > 1 ? "s" : ""}
+                    {estrella} <Trans id="estrella">estrella</Trans>
+                    {estrella > 1 ? "s" : ""}
                   </option>
                 ))}
               </select>
-              <label className="etiqueta-valoraciones">Comentario:</label>
+              <label className="etiqueta-valoraciones">
+                <Trans id="comentario">Comentario:</Trans>
+              </label>
               <textarea
                 value={
                   valoraciones.find((v) => v.productoId === producto.productoId._id)?.comentario || ""
                 }
                 onChange={(e) => manejarComentario(producto.productoId._id, e.target.value)}
                 maxLength={80}
-                placeholder="Escribe tu comentario (máximo 80 caracteres)"
                 rows="4"
                 cols="50"
                 className="textarea-valoraciones"
@@ -140,7 +151,7 @@ const Valoraciones = () => {
             </div>
           ))}
           <button type="button" onClick={enviarValoraciones} className="boton-enviar-valoraciones">
-            Enviar Valoraciones
+            <Trans id="enviar-valoraciones">Enviar Valoraciones</Trans>
           </button>
         </form>
       )}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSearchParams, useParams } from "react-router-dom";
 import ReactDOM from "react-dom";
+import { Trans } from "@lingui/react/macro";
 import { toast } from "react-toastify"; // Importar toast
 import api from "../../utils/api";
 import "../../styles/ModalDetalle.css";
@@ -90,67 +91,66 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
     }
   };
 
-  return ReactDOM.createPortal(
-    <div className="modal-detalle">
-      <div className="modal-contenido-detalle">
-        <h2>Personaliza tu {producto.nombre}</h2>
-        <p>{producto.descripcion}</p>
+return ReactDOM.createPortal(
+  <div className="modal-detalle">
+    <div className="modal-contenido-detalle">
+      <h2><Trans>Personaliza tu {producto.nombre}</Trans></h2>
 
-        <h4>Ingredientes:</h4>
-        <ul>
-          {producto.ingredientes.map((ingrediente) => (
-            <li key={ingrediente}>
-              <label>
-                <input
-                  type="checkbox"
-                  className="checkbox-detalle"
-                  checked={ingredientesSeleccionados.includes(ingrediente)}
-                  onChange={(e) => manejarIngrediente(ingrediente, e.target.checked)}
-                />
-                {ingrediente}
-              </label>
-            </li>
+      <h4><Trans>Ingredientes:</Trans></h4>
+      <ul>
+        {producto.ingredientes.map((ingrediente) => (
+          <li key={ingrediente}>
+            <label>
+              <input
+                type="checkbox"
+                className="checkbox-detalle"
+                checked={ingredientesSeleccionados.includes(ingrediente)}
+                onChange={(e) => manejarIngrediente(ingrediente, e.target.checked)}
+              />
+              {ingrediente}
+            </label>
+          </li>
+        ))}
+      </ul>
+
+      {producto.opcionesPersonalizables.length > 0 && (
+        <>
+          <h4><Trans>Opciones:</Trans></h4>
+          {producto.opcionesPersonalizables.map((opcion) => (
+            <div key={opcion.tipo}>
+              <h5><Trans>{opcion.tipo}</Trans></h5>
+              {opcion.opciones.map((op) => (
+                <label key={op}>
+                  <input
+                    type="radio"
+                    name={opcion.tipo}
+                    value={op}
+                    checked={opcionesSeleccionadas[opcion.tipo] === op}
+                    onChange={() => manejarOpciones(opcion.tipo, op)}
+                  />
+                  <Trans>{op}</Trans>
+                </label>
+              ))}
+            </div>
           ))}
-        </ul>
+        </>
+      )}
 
-        {producto.opcionesPersonalizables.length > 0 && (
-          <>
-            <h4>Opciones:</h4>
-            {producto.opcionesPersonalizables.map((opcion) => (
-              <div key={opcion.tipo}>
-                <h5>{opcion.tipo}</h5>
-                {opcion.opciones.map((op) => (
-                  <label key={op}>
-                    <input
-                      type="radio"
-                      name={opcion.tipo}
-                      value={op}
-                      checked={opcionesSeleccionadas[opcion.tipo] === op}
-                      onChange={() => manejarOpciones(opcion.tipo, op)}
-                    />
-                    {op}
-                  </label>
-                ))}
-              </div>
-            ))}
-          </>
-        )}
-
-        <h4>Cantidad:</h4>
-        <div>
-          <button className="cantidad-btn" onClick={() => manejarCantidad(-1)}>-</button>
-          <span>{cantidad}</span>
-          <button className="cantidad-btn" onClick={() => manejarCantidad(1)}>+</button>
-        </div>
-
-        <div>
-          <button className="cancelar-btn" onClick={cerrarModal}>Cancelar</button>
-          <button className="agregar-btn" onClick={agregarAlCarrito}>Agregar al carrito</button>
-        </div>
+      <h4><Trans>Cantidad:</Trans></h4>
+      <div>
+        <button className="cantidad-btn" onClick={() => manejarCantidad(-1)}>-</button>
+        <span>{cantidad}</span>
+        <button className="cantidad-btn" onClick={() => manejarCantidad(1)}>+</button>
       </div>
-    </div>,
-    document.body
-  );
+
+      <div>
+        <button className="cancelar-btn" onClick={cerrarModal}><Trans>Cancelar</Trans></button>
+        <button className="agregar-btn" onClick={agregarAlCarrito}><Trans>Agregar al carrito</Trans></button>
+      </div>
+    </div>
+  </div>,
+  document.body
+);
 };
 
 export default ProductoDetalle;

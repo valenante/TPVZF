@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { i18n } from "@lingui/core";  // Importa i18n
+import { LanguageContext } from "../../context/LanguageContext"; // Contexto para cambiar el idioma
 import api from "../../utils/api";
 import './PreMenu.css'
 
@@ -17,6 +19,7 @@ const PreMenu = () => {
   const navigate = useNavigate();
   const [esLider, setEsLider] = useState(false);
 
+  const { locale, cambiarIdioma } = useContext(LanguageContext); // Obtén el contexto de idioma
   const mesa = searchParams.get("mesa");
 
   useEffect(() => {
@@ -32,7 +35,7 @@ const PreMenu = () => {
         navigate("/");
       }
     };
-  
+
     verificarTokenLider();
   }, [mesa, navigate]);
 
@@ -83,7 +86,9 @@ const PreMenu = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    console.log("📤 Enviando contraseña:", formData.contraseña); // 🔍 Verificar qué se está enviando
+
     const newErrors = {};
     for (const key in formData) {
       if (esLider || key === "contraseña" || key === "nombre") {
@@ -91,15 +96,20 @@ const PreMenu = () => {
         if (error) newErrors[key] = error;
       }
     }
-  
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-  
+
     setIsLoading(true);
     try {
-      const response = await api.post("/password/validate-password", { password: formData.contraseña });
+      const response = await api.post("/password/validate-password", {
+        password: formData.contraseña, // 🛑 Verifica si `contraseña` está en español
+      });
+
+      console.log("🔍 Respuesta del backend:", response.data);
+
       if (!response.data.valid) {
         setErrors((prev) => ({
           ...prev,
@@ -108,90 +118,125 @@ const PreMenu = () => {
         setIsLoading(false);
         return;
       }
-  
+
       if (esLider) {
         // Crear el tokenLider en la base de datos
         const tokenLiderResponse = await api.post(`/mesas/token-lider/token-lider`, { mesa });
         localStorage.setItem("tokenLider", tokenLiderResponse.data.tokenLider);
       }
-  
+
       // Guardar token en localStorage para indicar que se completó el preMenu
       localStorage.setItem("tokenPreMenu", "validated");
-  
+
       // Redirigir con los parámetros en la URL
       const searchParams = new URLSearchParams({
         ...(esLider ? { alergias: formData.alergias, comensales: formData.comensales } : {}),
         nombre: formData.nombre,
       }).toString();
-  
+
       navigate(`/${mesa}?${searchParams}`);
     } catch (error) {
-      console.error("Error al procesar la solicitud:", error);
+      console.error("❌ Error al procesar la solicitud:", error);
       alert("Hubo un error al procesar tu solicitud. Intenta nuevamente.");
     } finally {
       setIsLoading(false);
     }
-  };  
+  };
 
   return (
     <div className="preMenu-father">
-    <div className="preMenu--container">
-      <h2 className="titulo--preMenu">Configuración Inicial</h2>
-      <form onSubmit={handleSubmit} className="formulario--preMenu">
+      <div className="preMenu--container">
+        <h2 className="titulo--preMenu">
+          {i18n._("Configuración Inicial")}
+        </h2>
+
+        {/* Botones para cambiar idioma */}
+        <div className="idiomas-preMenu">
+          <button 
+            className={`btn-idioma ${locale === "es" ? "activo" : ""}`} 
+            onClick={() => cambiarIdioma("es")}
+          >
+            Español
+          </button>
+          <button 
+            className={`btn-idioma ${locale === "en" ? "activo" : ""}`} 
+            onClick={() => cambiarIdioma("en")}
+          >
+            English
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="formulario--preMenu">
           <input
             type="text"
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
             className="input--preMenu"
-            placeholder="Nombre"
+            placeholder={i18n._("Nombre")} // Usamos i18n._() para los placeholder
           />
-        {errors.nombre && <p className="error--preMenu">{errors.nombre}</p>}
-  
-        {esLider && (
-          <>
+          {errors.nombre && (
+            <p className="error--preMenu">
+              {errors.nombre}
+            </p>
+          )}
+
+          {esLider && (
+            <>
               <textarea
                 name="alergias"
                 value={formData.alergias}
                 onChange={handleChange}
                 className="input--preMenu"
-                placeholder="Alergias"
+                placeholder={i18n._("Alergias")} // Usamos i18n._() para los placeholder
               />
-            {errors.alergias && <p className="error--preMenu">{errors.alergias}</p>}
-  
+              {errors.alergias && (
+                <p className="error--preMenu">
+                  {errors.alergias}
+                </p>
+              )}
+
               <input
                 type="number"
                 name="comensales"
                 value={formData.comensales}
                 onChange={handleChange}
                 className="input--preMenu"
-                placeholder="Comensales"
+                placeholder={i18n._("Comensales")} // Usamos i18n._() para los placeholder
               />
-            {errors.comensales && (
-              <p className="error--preMenu">{errors.comensales}</p>
-            )}
-          </>
-        )}
-  
+              {errors.comensales && (
+                <p className="error--preMenu">
+                  {errors.comensales}
+                </p>
+              )}
+            </>
+          )}
+
           <input
             type="password"
             name="contraseña"
             value={formData.contraseña}
             onChange={handleChange}
             className="input--preMenu"
-            placeholder="Contraseña"
+            placeholder={i18n._("Contraseña")} // Usamos i18n._() para los placeholder
           />
-        {errors.contraseña && (
-          <p className="error--preMenu">{errors.contraseña}</p>
-        )}
-  
-        <button type="submit" className="boton--preMenu" disabled={isLoading}>
-          {isLoading ? "Procesando..." : "Continuar"}
-        </button>
-      </form>
+          {errors.contraseña && (
+            <p className="error--preMenu">
+              {errors.contraseña}
+            </p>
+          )}
+
+          <button type="submit" className="boton--preMenu" disabled={isLoading}>
+            {isLoading ? (
+              i18n._("Procesando...")
+            ) : (
+              i18n._("Continuar")
+            )}
+          </button>
+        </form>
+      </div>
     </div>
-    </div>
-  );  
+  );
 };
 
 export default PreMenu;

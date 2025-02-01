@@ -18,14 +18,14 @@ import MesasCerradas from "./components/MesasCerradas/MesasCerradas";
 import { SocketProvider } from "./utils/socket";
 import CuentaPopup from "./components/CuentaPopUp/CuentaPopUp";
 import Navbar from "./components/Navbar/Navbar";
-import EnvReader from "./utils/envReader";
 import { AuthProvider } from "./context/AuthContext";
+import { ImagesProvider } from "./context/ImagesContext";
 
 const AppContent = () => {
   const location = useLocation();
 
   // Define the routes where the Navbar should not appear
-  const rutasSinNavbar = ["/barra", "/cocina", "/login", "/register" ];
+  const rutasSinNavbar = ["/barra", "/cocina", "/login", "/register"];
   const mostrarNavbar = !rutasSinNavbar.includes(location.pathname);
 
   return (
@@ -131,18 +131,20 @@ const AppContent = () => {
 };
 
 const App = () => {
-  return (          
-  <Router>
-    <AuthProvider>
-    <SocketProvider>
-      <CategoriasProvider>
-        <ProductosProvider>
-            <AppContent />
-        </ProductosProvider>
-      </CategoriasProvider>
-    </SocketProvider>
-    </AuthProvider>         
-   </Router>
+  return (
+    <Router>
+      <AuthProvider>
+        <ImagesProvider>
+          <SocketProvider>
+            <CategoriasProvider>
+              <ProductosProvider>
+                <AppContent />
+              </ProductosProvider>
+            </CategoriasProvider>
+          </SocketProvider>
+        </ImagesProvider>
+      </AuthProvider>
+    </Router>
   );
 };
 

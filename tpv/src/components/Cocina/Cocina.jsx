@@ -11,6 +11,8 @@ const Cocina = () => {
   const [pedidos, setPedidos] = useState([]);
   const [mostrarFinalizados, setMostrarFinalizados] = useState(false);
 
+  console.log('Pedidos:', pedidos);
+
   // Función para calcular tiempo transcurrido
   const calcularTiempoTranscurrido = (fecha) => {
     const ahora = new Date();
@@ -93,7 +95,7 @@ const Cocina = () => {
             const todosProductosListos = pedido.productos
               .filter((producto) => ["plato", "tapaRacion"].includes(producto.tipo))
               .every((producto) => producto.estadoPreparacion === "listo");
-  
+
             return (
               <div key={pedido._id} className="pedido-card--cocina">
                 <div className="pedido-header--cocina">
@@ -102,8 +104,8 @@ const Cocina = () => {
                   {pedido.alergias && <p className="alergias--cocina">Alergias: {pedido.alergias}</p>}
                 </div>
                 <p>
-                <strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}
-              </p>
+                  <strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}
+                </p>
                 <ul className="productos-list--cocina">
                   {pedido.productos
                     .filter((producto) => ["plato", "tapaRacion"].includes(producto.tipo))
@@ -116,8 +118,8 @@ const Cocina = () => {
                             onChange={() =>
                               marcarProductoComoListo(pedido._id, producto._id)
                             }
-                          />
-                          {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
+                          /> 
+                           {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
                         </label>
                         {producto.ingredientesEliminados.length > 0 && (
                           <p>
@@ -128,6 +130,18 @@ const Cocina = () => {
                           <p>
                             <strong>Especificaciones:</strong> {producto.especificaciones.join(", ")}
                           </p>
+                        )}
+                        {producto.opcionesPersonalizables?.length > 0 && (
+                          <div>
+                            <ul>
+                              {producto.opcionesPersonalizables.map((opcion, index) => (
+                                <li key={index}>
+                                  <strong>{opcion.tipo}: </strong>
+                                  {opcion.opcion.join(", ")}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         )}
                       </li>
                     ))}
@@ -146,6 +160,6 @@ const Cocina = () => {
       )}
     </div>
   );
-};  
+};
 
 export default Cocina;

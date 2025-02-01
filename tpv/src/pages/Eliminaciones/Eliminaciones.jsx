@@ -38,7 +38,6 @@ const MostrarEliminaciones = () => {
         <thead>
           <tr>
             <th>Producto</th>
-            <th>Comensales</th>
             <th>Mesa</th>
             <th>Eliminado por</th>
             <th>Fecha</th>
@@ -48,7 +47,6 @@ const MostrarEliminaciones = () => {
           {eliminaciones.map((eliminacion) => (
             <tr key={eliminacion._id} className="fila--eliminaciones">
               <td>{eliminacion.producto?.nombre || "N/A"}</td>
-              <td>{eliminacion.pedido?.comensales || "N/A"}</td>
               <td>{eliminacion.mesa?.numero || "N/A"}</td>
               <td>{eliminacion.user?.name || "N/A"}</td>
               <td>{format(new Date(eliminacion.fecha), "HH:mm")}</td>

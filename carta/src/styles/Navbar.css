@@ -24,6 +24,25 @@
     background-color: rgba(84, 20, 108, 0.1);
   }
 
+  .navbar-btn, .btn-idioma{
+    width: auto;
+    border: none;
+    border-radius: 5px;
+    margin-right: 15px;
+    padding: 10px;
+    color: rgb(84, 20, 108);
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid rgb(84, 20, 108);
+    transition: 200ms all;
+  }
+
+  .navbar-btn:hover, .btn-idioma:hover{
+    background-color: rgba(84, 20, 108, 0.1);
+    cursor: pointer;
+    transform: scale(1.1);
+  }
+
   .navbar-check{
     width: auto;
     border: none;

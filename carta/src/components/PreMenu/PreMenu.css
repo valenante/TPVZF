@@ -45,6 +45,7 @@ html, body {
   .formulario--preMenu {
     display: flex;
     flex-direction: column;
+    margin-top: 15px;
     gap: 15px;
     width: 100%;
   }

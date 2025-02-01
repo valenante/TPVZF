@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { ImageContext } from "../../context/ImagesContext"; // ✅ Importa el contexto
 import "./EditProducts.css";
 
 const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
+  // Obtener las funciones del contexto de imágenes
+  const { dragging, handleDragOver, handleDragLeave, handleDrop, handleFileChange } = useContext(ImageContext);
+  const [imageFile, setImageFile] = useState(null);
   const [formData, setFormData] = useState({ ...product });
   const [errors, setErrors] = useState({});
 
@@ -21,6 +25,9 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
         break;
       case "tipo":
         if (!value.trim()) error = "El tipo es obligatorio.";
+        break;
+      case "imagen":
+        if (!value.trim()) error = "La imagen es obligatoria.";
         break;
       case "precios.tapa":
       case "precios.racion":
@@ -109,7 +116,7 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           />
         </label>
         {errors.nombre && <p className="error--editar">{errors.nombre}</p>}
-  
+
         {/* Descripción */}
         <label className="label--editar">
           Descripción:
@@ -121,7 +128,18 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           />
         </label>
         {errors.descripcion && <p className="error--editar">{errors.descripcion}</p>}
-  
+
+        {/* Ingredientes */}
+        <label className="label--editar">
+          Ingredientes:
+          <textarea
+            name="ingredientes"
+            value={formData.ingredientes}
+            onChange={handleChange}
+            className="textarea--editar"
+          />
+        </label>
+
         {/* Categoría */}
         <label className="label--editar">
           Categoría:
@@ -134,7 +152,7 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           />
         </label>
         {errors.categoria && <p className="error--editar">{errors.categoria}</p>}
-  
+
         {/* Tipo */}
         <label className="label--editar">
           Tipo:
@@ -147,7 +165,7 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           />
         </label>
         {errors.tipo && <p className="error--editar">{errors.tipo}</p>}
-  
+
         {/* Precios */}
         <fieldset className="fieldset--editar">
           <legend className="legend--editar">Precios</legend>
@@ -164,7 +182,7 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           {errors["precios.precioBase"] && (
             <p className="error--editar">{errors["precios.precioBase"]}</p>
           )}
-  
+
           <label className="label--editar">
             Precio Tapa:
             <input
@@ -178,7 +196,7 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           {errors["precios.tapa"] && (
             <p className="error--editar">{errors["precios.tapa"]}</p>
           )}
-  
+
           <label className="label--editar">
             Precio Ración:
             <input
@@ -193,7 +211,40 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
             <p className="error--editar">{errors["precios.racion"]}</p>
           )}
         </fieldset>
-  
+
+        {/* 🔹 Subida de Imágenes */}
+        <label className="label--editar">
+          Imagen:
+
+          {/* Campo de texto para URL de la imagen */}
+          <input
+            type="text"
+            name="img"
+            value={formData.img}
+            onChange={handleChange}
+            className="input--editar"
+            placeholder="URL de la imagen"
+          />
+
+          {/* ✅ Área de subida de imágenes con Drag & Drop */}
+          <div
+            className={`drop-zone ${dragging ? "dragging" : ""}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, setFormData)} // Pasamos setFormData aquí
+            onClick={() => document.getElementById("file-upload").click()} // 🔹 Abre el input de archivos al hacer clic
+          >
+            <p>Arrastra una imagen aquí o haz clic para subir</p>
+            <input
+              type="file"
+              id="file-upload" // 🔹 ID único para activar con clic
+              onChange={(e) => handleFileChange(e, setFormData)} // Pasamos setFormData aquí
+              accept="image/*"
+              className="hidden-file-input"
+            />
+          </div>
+        </label>
+
         {/* Estado */}
         <label className="label--editar estado--editar">
           <input
@@ -205,7 +256,7 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           />
           Habilitado
         </label>
-  
+
         {/* Botones */}
         <div className="botones--editar">
           <button type="submit" disabled={hasErrors} className="boton--editar">
@@ -214,17 +265,10 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           <button type="button" onClick={onCancel} className="boton--editar">
             Cancelar
           </button>
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="delete-button--editar"
-          >
-            Eliminar
-          </button>
         </div>
       </form>
     </div>
   );
-};  
+};
 
 export default EditProduct;
