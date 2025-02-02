@@ -31,12 +31,20 @@ const PedidoSchema = new Schema({
       categoria: { type: String, required: true }, // Ej: "entrante", "plato principal", "refresco", "licor"
       precioSeleccionado: { type: Number, required: true }, // Precio seleccionado
       ingredientesEliminados: { type: [String], default: [] }, // Ingredientes que el cliente ha solicitado quitar
+      sabor: {
+        type: [{
+            ingrediente: String,
+            cantidad: Number
+        }],
+        default: []
+    },
       puntosDeCoccion: [{ type: String }], // Ej: "Poco hecho", "Bien hecho"
       opcionesPersonalizables: [opcionPersonalizableSchema], // Opciones personalizables para el cliente
       especificaciones: { type: [String], default: [] }, // Ejemplo: "Sin sal", "Extra picante"
       estadoPreparacion: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
       tipoPedido: { type: String, enum: ['copa', 'botella'], required: false }, // Tipo general de pedido
       tipoPlato: { type: String, enum: ['individual', 'compartir'], required: false }, // Tipo de plato
+      tipoCroqueta: { type: String, default: 'normal' }, // Tipo de croqueta
       total: { type: Number, required: true },
     },
   ],

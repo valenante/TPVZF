@@ -42,12 +42,16 @@ export const getCart = async (req, res) => {
 };
 
 export const addToCart = async (req, res) => {
-  const { productId, cantidad, opciones, ingredientes, cartId, mesa, nombre, precioSeleccionado, tipoPlato } = req.body;
+  const { productId, cantidad, opciones, ingredientes, cartId, mesa, nombre, precioSeleccionado, tipoPlato, sabor, tipoCroqueta } = req.body;
 
   try {
     // Validar que `productId` esté presente
     if (!productId) {
       return res.status(400).json({ error: 'Faltan datos obligatorios' });
+    }
+
+    if (tipoPlato === "surtido" && sabor.length !== 6) {
+      return res.status(400).json({ error: 'El surtido debe tener exactamente 6 sabores.' });
     }
 
     let cart;
@@ -77,9 +81,10 @@ export const addToCart = async (req, res) => {
     if (itemIndex > -1) {
       // Si el producto con la misma combinación ya está en el carrito, actualizar la cantidad
       cart.items[itemIndex].cantidad += cantidad;
+      cart.items[itemIndex].sabor = sabor; // Actualizar los sabores seleccionados
     } else {
       // Si no existe, agregar un nuevo producto al carrito
-      cart.items.push({ productId, cantidad, opciones, ingredientes, nombre, precioSeleccionado, tipoPlato });
+      cart.items.push({ productId, cantidad, opciones, ingredientes, nombre, precioSeleccionado, tipoPlato, sabor, tipoCroqueta });
     }
 
     // Guardar el carrito actualizado en la base de datos

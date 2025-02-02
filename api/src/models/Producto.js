@@ -56,7 +56,20 @@ const productoSchema = new Schema({
   ingredientesEliminados: { type: [String], default: [] }, // Ingredientes que el cliente ha solicitado quitar
   puntosDeCoccion: [{ type: String }], // Ej: "Poco hecho", "Bien hecho"
   opcionesPersonalizables: [opcionPersonalizableSchema], // Opciones personalizables para el cliente
-  especificaciones: { type: [String], default: [] }, // Ejemplo: "Sin sal", "Extra picante"
+  especificaciones: [
+    {
+      nombre: { type: String, required: true },
+      valor: { type: String, required: true }
+    }
+  ],
+  sabor: {
+    type: [{
+        ingrediente: String,
+        cantidad: Number
+    }],
+    default: [],
+    tipoCroqueta: { type: String, default: 'normal' }, // Tipo de croqueta
+},
 
   // Estado y tipo de preparación
   estado: { type: String, enum: ['habilitado', 'deshabilitado'], default: 'habilitado' },

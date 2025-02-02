@@ -6,9 +6,16 @@ const CartItemSchema = new Schema({
   cantidad: { type: Number, required: true, default: 1 },
   opciones: { type: Object, default: {} }, // Opciones personalizables
   ingredientes: { type: [String], default: [] }, // Ingredientes personalizados
-  nombre: { type: String, required: true },
+  sabor: {
+    type: [{
+        ingrediente: String,
+        cantidad: Number
+    }],
+    default: []
+},  nombre: { type: String, required: true },
   precioSeleccionado: { type: Number, required: true }, // Precio seleccionado por el usuario
   tipoPlato: { type: String, enum: ['compartir', 'individual'], default: 'compartir' }, // Tipo de plato
+  tipoCroqueta: { type: String,default: 'normal' },
 });
 
 const CartSchema = new Schema({

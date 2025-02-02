@@ -17,8 +17,7 @@ export const checkTokenLider = async (req, res) => {
     if (!mesaDoc) {
       return res.status(404).json({ error: "Mesa no encontrada" });
     }
-
-    res.status(200).json({ tokenLider: mesaDoc.tokenLider || null });
+    res.status(200).json({ tokenLider: mesaDoc.tokenLider });
   } catch (error) {
     console.error("Error al verificar el tokenLider:", error);
     res.status(500).json({ error: "Error al procesar la solicitud" });
@@ -133,8 +132,6 @@ export const cerrarMesa = async (req, res) => {
   const { id } = req.params; // ID de la mesa
   const { metodoPago } = req.body; // Efectivo, tarjeta y propina
 
-  console.log(metodoPago, 'nashe')
-
   try {
     const mesa = await Mesa.findById(id).populate('pedidos');
     if (!mesa) {
@@ -245,9 +242,10 @@ export const getHistorialMesas = async (req, res) => {
 
 //Obtener el ID de una mesa por su número
 export const getMesaByNumero = async (req, res) => {
-  const { numero } = req.params;
+  const { numeroMesa } = req.params;
+  console.log('nashe', numeroMesa); 
   try {
-    const mesa = await Mesa.findOne({ numero });
+    const mesa = await Mesa.findOne({ numeroMesa });
     if (!mesa) {
       return res.status(404).json({ error: 'Mesa no encontrada' });
     }
