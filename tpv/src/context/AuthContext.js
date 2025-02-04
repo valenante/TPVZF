@@ -1,17 +1,19 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import renovarToken from '../utils/RenovarToken';
-import api from '../utils/api'; // Instancia de Axios o Fetch
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { createContext, useContext, useState, useEffect } from "react";
+import renovarToken from "../utils/RenovarToken";
+import api from "../utils/api";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
-  const [sessionActive, setSessionActive] = useState(true); // Controla si la sesión está activa
-  const [loading, setLoading] = useState(true); // Estado de carga inicial
-  const location = useLocation(); // Para obtener la ruta actual
+  const [user, setUser] = useState(null);
+  const [sessionActive, setSessionActive] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
   const navigate = useNavigate();
+
+  console.log(user, 'usuario');
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -20,12 +22,12 @@ export const AuthProvider = ({ children }) => {
         if (token) {
           setAccessToken(token);
         } else {
-          setSessionActive(false); // Marca como sesión inactiva si no hay token
+          setSessionActive(false);
         }
       } catch (error) {
         console.error("Error al inicializar la autenticación:", error);
       } finally {
-        setLoading(false); // Carga completa
+        setLoading(false);
       }
     };
 
@@ -33,35 +35,49 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Evitar renovar token si la sesión está inactiva o en la página de login
+    const fetchUser = async () => {
+      try {
+        const response = await api.get("/auth/me/me", { withCredentials: true });
+        setUser(response.data.user);
+        console.log(response.data.user, 'usuario');
+      } catch (error) {
+        console.error("No autenticado:", error);
+        setUser(null);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+
+  useEffect(() => {
     if (!sessionActive || location.pathname === "/login") {
       return;
     }
 
     if (!accessToken) {
-      renovarToken(setAccessToken); // Intentar renovar token si no hay uno activo
+      renovarToken(setAccessToken);
     }
   }, [accessToken, sessionActive, location.pathname]);
 
-  // Función para cerrar sesión
   const logout = async () => {
     try {
-      // Llamar al backend para invalidar el refresh token
-      await api.post('/auth/logout', {}, { withCredentials: true });
-
-      // Limpiar el token del contexto y del almacenamiento local
+      await api.post("/auth/logout", {}, { withCredentials: true });
       setAccessToken(null);
-      setSessionActive(false); // Desactiva la sesión
-      
-      // Redirigir al usuario al login
-      navigate('/login');
+      setUser(null); // Limpia el usuario al cerrar sesión
+      setSessionActive(false);
+      navigate("/login");
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error("Error al cerrar sesión:", error);
     }
   };
 
+  if (loading) {
+    return <p>Cargando autenticación...</p>; // Evita que la aplicación falle antes de definir `setUser`
+  }
+
   return (
-    <AuthContext.Provider value={{ accessToken, setAccessToken, sessionActive, logout, loading }}>
+    <AuthContext.Provider value={{ accessToken, setAccessToken, sessionActive, logout, loading, user, setUser }}>
       {children}
     </AuthContext.Provider>
   );

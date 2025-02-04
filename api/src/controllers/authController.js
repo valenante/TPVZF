@@ -205,6 +205,24 @@ export const login = async (req, res) => {
   }
 };
 
+export const obtenerUsuario = async (req, res) => {
+  try {
+    console.log("📌 Verificando usuario en sesión:", req.session.user);
+
+    // ✅ Verifica si el usuario está en la sesión
+    if (!req.session.user) {
+      return res.status(401).json({ error: "No autorizado. Inicia sesión." });
+    }
+
+    // ✅ Devuelve los datos del usuario autenticado
+    return res.status(200).json({ user: req.session.user });
+  } catch (error) {
+    console.error("❌ Error al obtener usuario:", error);
+    return res.status(500).json({ error: "Error del servidor." });
+  }
+};
+
+
 export const protegerRuta = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del encabezado
 

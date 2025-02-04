@@ -95,7 +95,7 @@ const Cocina = () => {
             const todosProductosListos = pedido.productos
               .filter((producto) => ["plato", "tapaRacion"].includes(producto.tipo))
               .every((producto) => producto.estadoPreparacion === "listo");
-  
+
             return (
               <div key={pedido._id} className="pedido-card--cocina">
                 <div className="pedido-header--cocina">
@@ -112,7 +112,12 @@ const Cocina = () => {
                     .map((producto) => {
                       // Condicional para determinar el color del nombre del producto
                       const nombreProductoColor = producto.tipoPlato === "individual" ? "green" : "purple";
-  
+
+                      // Agregar la lógica para mostrar el tipo de croqueta si corresponde
+                      const mostrarTipoCroqueta = producto.producto.nombre.toLowerCase().includes("croqueta")
+                        ? `${producto.tipoCroqueta}`
+                        : null;
+
                       return (
                         <li key={producto._id} className="producto-item--cocina">
                           <label>
@@ -122,11 +127,23 @@ const Cocina = () => {
                               onChange={() =>
                                 marcarProductoComoListo(pedido._id, producto._id)
                               }
-                            /> 
+                            />
                             <span style={{ color: nombreProductoColor }}>
-                              {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
+                              {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}{mostrarTipoCroqueta && <p className="tipo-croqueta">{mostrarTipoCroqueta}</p>}
                             </span>
                           </label>
+                          {/* Mostrar el tipo de croqueta si corresponde */}
+                          {producto.sabor && producto.sabor.length > 0 && (
+                            <div>
+                              <ul>
+                                {producto.sabor.map((item, index) => (
+                                  <li key={index}>
+                                    {item.cantidad}x {item.ingrediente}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                           {producto.ingredientesEliminados.length > 0 && (
                             <p>
                               <strong>Sin:</strong> {producto.ingredientesEliminados.join(", ")}
@@ -166,7 +183,7 @@ const Cocina = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default Cocina;

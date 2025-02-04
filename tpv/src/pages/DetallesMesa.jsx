@@ -1,13 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, use } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client"; // Importar cliente de Socket.IO
+import axios from "axios";
 import api from "../utils/api";
 import MetodoPago from "../components/DetallesMesa/MetodoPago";
 import RightBar from "../components/RightBar/RightBar";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../context/AuthContext";
 import "../styles/DetallesMesa.css";
 
 const DetalleMesa = () => {
+  const { user, loading } = useAuth();
   const { id } = useParams(); // Obtener el `id` de la mesa desde la URL
   const [mesa, setMesa] = useState(null);
   const [productosDetalles, setProductosDetalles] = useState({});
@@ -15,15 +17,39 @@ const DetalleMesa = () => {
   const navigate = useNavigate();
   const socketRef = useRef(null); // Usar `useRef` para la instancia de `socket`
 
+  console.log(user, 'en mesaDetalle');
+
   useEffect(() => {
     const fetchMesa = async () => {
       try {
         const { data } = await api.get(`/mesas/${id}`);
         setMesa(data);
 
-        const productIds = data.pedidos
-          .flatMap((pedido) => pedido.productos.map((producto) => producto.productoId))
-          .filter((value, index, self) => self.indexOf(value) === index);
+        // Obtener IDs de pedidos de bebidas
+        const pedidosBebidasIds = data.pedidosBebidas || [];
+
+        // Si hay pedidos de bebidas, obtener detalles
+        let pedidosBebidasDetalles = [];
+        if (pedidosBebidasIds.length > 0) {
+          const { data: pedidosBebidasData } = await api.get(`/pedidosBebidas`, {
+            params: { ids: pedidosBebidasIds.join(",") },
+          });
+          pedidosBebidasDetalles = pedidosBebidasData;
+        }
+
+        // Asignar los pedidos de bebidas con detalles a la mesa
+        setMesa((prevMesa) => ({
+          ...prevMesa,
+          pedidosBebidas: pedidosBebidasDetalles,
+        }));
+
+        // Obtener productos únicos de pedidos y pedidosBebidas
+        const productIds = [
+          ...new Set([
+            ...data.pedidos.flatMap((pedido) => pedido.productos.map((p) => p.productoId)),
+            ...pedidosBebidasDetalles.flatMap((pedido) => pedido.productos.map((p) => p.productoId)),
+          ]),
+        ];
 
         if (productIds.length > 0) {
           const { data: productosData } = await api.get(`/productos`, {
@@ -72,15 +98,15 @@ const DetalleMesa = () => {
     try {
       // Verifica si hay pedidos no finalizados
       const pedidosNoFinalizados = mesa.pedidos.filter((pedido) => pedido.estado !== "listo");
-  
+
       if (pedidosNoFinalizados.length > 0) {
         alert("No puedes cerrar la mesa. Todos los pedidos deben estar finalizados.");
         return;
       }
-  
+
       // Enviar la solicitud al backend con el método de pago
       await api.put(`/mesas/${mesa._id}/cerrar`, { metodoPago });
-  
+
       alert("Mesa cerrada con éxito");
       setMesa(null); // Limpia el estado de la mesa
       navigate("/"); // Navega fuera de la vista actual
@@ -118,15 +144,13 @@ const DetalleMesa = () => {
     }
   };
 
+
   const eliminarProducto = async (pedidoId, productoId) => {
     try {
-      const token = localStorage.getItem("token");
-      const decodedToken = jwtDecode(token);
-      const usuarioId = decodedToken.id;
-
-      const response = await api.delete(`/productos/${pedidoId}/${productoId}`, {
-        data: { usuarioId },
+      const response = await api.post(`/productos/${pedidoId}/${productoId}`, {
+        withCredentials: true,
       });
+
 
       setMesa((prevMesa) => ({
         ...prevMesa,
@@ -156,7 +180,6 @@ const DetalleMesa = () => {
               <li key={pedido._id} className="pedido--mesadetalles">
                 <p className="pedido-alergias--mesadetalles">Alergias: {pedido.alergias || "Sin especificar"}</p>
                 <p className="pedido-estado--mesadetalles">{pedido.estado}</p>
-                <p className="productos-titulo--mesadetalles">Productos:</p>
                 <ul className="lista-productos--mesadetalles">
                   {pedido.productos?.length > 0 ? (
                     pedido.productos.map((producto) => {
@@ -188,6 +211,45 @@ const DetalleMesa = () => {
             <p className="sin-pedidos--mesadetalles">No hay pedidos disponibles.</p>
           )}
         </ul>
+
+        <p className="pedidos-titulo--mesadetalles">Pedidos de Bebidas:</p>
+        <ul className="lista-pedidos--mesadetalles">
+          {mesa?.pedidosBebidas?.length > 0 ? (
+            mesa.pedidosBebidas.map((pedido) => (
+              <li key={pedido._id} className="pedido--mesadetalles">
+                <p className="pedido-alergias--mesadetalles">Alergias: {pedido.alergias || "Sin especificar"}</p>
+                <p className="pedido-estado--mesadetalles">{pedido.estado}</p>
+                <ul className="lista-productos--mesadetalles">
+                  {pedido.productos?.length > 0 ? (
+                    pedido.productos.map((producto) => {
+                      return (
+                        <li key={producto.producto._id} className="producto--mesadetalles">
+                          {producto.producto
+                            ? `${producto.producto.nombre} - ${producto.cantidad} unidad(es)`
+                            : "Cargando bebida..."}
+                          <button
+                            onClick={() => eliminarProducto(pedido._id, producto.producto._id)}
+                            className="boton-eliminar--mesadetalles"
+                          >
+                            Eliminar
+                          </button>
+                        </li>
+                      );
+                    })
+                  ) : (
+                    <p className="sin-productos--mesadetalles">No hay bebidas en este pedido.</p>
+                  )}
+                </ul>
+                <p className="total-pedido--mesadetalles">
+                  Total Pedido: {pedido.total ? pedido.total.toFixed(2) : "0.00"} €
+                </p>
+              </li>
+            ))
+          ) : (
+            <p className="sin-pedidos--mesadetalles">No hay pedidos de bebidas disponibles.</p>
+          )}
+        </ul>
+
         <button onClick={() => setShowModal(true)} className="boton-cerrar--mesadetalles">
           Cerrar Mesa
         </button>
@@ -207,5 +269,5 @@ const DetalleMesa = () => {
     </div>
   );
 };
-  
+
 export default DetalleMesa;

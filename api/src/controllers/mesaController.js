@@ -243,7 +243,6 @@ export const getHistorialMesas = async (req, res) => {
 //Obtener el ID de una mesa por su número
 export const getMesaByNumero = async (req, res) => {
   const { numeroMesa } = req.params;
-  console.log('nashe', numeroMesa); 
   try {
     const mesa = await Mesa.findOne({ numeroMesa });
     if (!mesa) {
@@ -279,6 +278,15 @@ export const obtenerMesasCerradas = async (req, res) => {
   }
 };
 
+export const obtenerMesasAbiertas = async (req, res) => {
+  try {
+    const mesasAbiertas = await Mesa.find({ estado: 'abierta' }).populate('pedidos');
+    res.status(200).json(mesasAbiertas);
+  } catch (error) {
+    console.error('Error al obtener las mesas abiertas:', error);
+    res.status(500).json({ error: 'Error al obtener las mesas abiertas.' });
+  }
+};
 
 export const recuperarMesa = async (req, res) => {
   const { mesaId } = req.params; // ID de la mesa cerrada

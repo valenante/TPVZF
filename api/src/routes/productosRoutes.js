@@ -54,22 +54,12 @@ router.put(
 // Route to delete a product by ID (only authenticated users with admin role)
 router.delete(
     '/:id',
-    authMiddleware,
-    checkRole(['admin']), // Only admins can delete products
-    [
-        check('id', 'ID must be a valid MongoDB ID').isMongoId()
-    ],
     deleteProductForEver
 );
 
 // Eliminar un producto por ID (solo usuarios autenticados y con rol admin)
-router.delete(
+router.post(
     '/:pedidoId/:id',
-    authMiddleware,
-    checkRole(['admin']), // Solo los administradores pueden eliminar productos
-    [
-        check('id', 'El ID debe ser un ID de MongoDB válido').isMongoId()
-    ],
     deleteProducto
 );
 

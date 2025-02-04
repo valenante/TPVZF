@@ -20,6 +20,7 @@ import mesaRoutes from "./src/routes/mesaRoutes.js"; // Importar rutas de mesas
 import productoRoutes from "./src/routes/productosRoutes.js"; // Importar rutas de productos
 import authRoutes from "./src/routes/authRoutes.js"; // Importar rutas de autenticación
 import pedidosRoutes from "./src/routes/pedidosRoutes.js"; // Importar rutas de pedidos
+import pedidoBebidasRoutes from "./src/routes/pedidoBebidasRoutes.js"; // Importar rutas de pedidos de bebidas
 import ventasRoutes from "./src/routes/ventasRoutes.js"; // Importar rutas de ventas
 import cartRoutes from "./src/routes/cartRoutes.js"; // Importar rutas de carrito
 import passwordRoutes from "./src/routes/passwordRoutes.js";
@@ -118,6 +119,7 @@ app.use("/api/mesas", mesaRoutes); // Rutas de mesas
 app.use("/api/productos", productoRoutes); // Rutas de productos
 app.use("/api/auth", authRoutes); // Rutas de autenticación
 app.use("/api/pedidos", pedidosRoutes); // Rutas de pedidos
+app.use("/api/pedidosBebidas", pedidoBebidasRoutes); // Rutas de pedidos de bebidas
 app.use("/api/ventas", ventasRoutes); // Rutas de ventas
 app.use("/api/cart", cartRoutes); // Rutas de carrito
 app.use("/api/password", passwordRoutes); // Rutas de contraseña

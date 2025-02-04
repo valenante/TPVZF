@@ -47,7 +47,6 @@ export const ProductosProvider = ({ children }) => {
 
     // Escuchar el evento "nuevoPedido" para actualizar el carrito
     socket.on('nuevoPedido', () => {
-      console.log('Evento nuevoPedido recibido. Actualizando carrito...');
       cargarCarrito();
     });
 
@@ -76,10 +75,8 @@ export const ProductosProvider = ({ children }) => {
   
       if (data.length > 0) { // Verificar si el array tiene elementos
         const mesa = data[0]; // Acceder al primer elemento
-        console.log(mesa._id, 'nashe');
         setMesaId(mesa._id);
         localStorage.setItem('mesaId', mesa._id); // Guardar el ID de la mesa en localStorage
-        console.log(`Mesa ${numeroMesa} encontrada con ID: ${mesa._id}`);
       } else {
         console.warn(`No se encontró una mesa con el número ${numeroMesa}`);
       }

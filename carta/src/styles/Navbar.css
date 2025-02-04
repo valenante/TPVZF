@@ -108,3 +108,66 @@
     background-color: rgba(84, 20, 108, 0.8);
   }
   
+/* 📌 Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+  .navbar-contenedor {
+    display: flex;
+    flex-direction: column; /* 🔹 Apilar en 3 filas */
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+  }
+
+  /* Fila 1: Idiomas (centrado) */
+  .navbar-fila-idiomas {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .idiomas-navbar {
+    display: flex;
+  }
+
+  /* Fila 2: Select + Botón Bebidas/Platos + Carrito */
+  .navbar-fila-opciones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 15px;
+    gap: 10px;
+  }
+
+  /* Asegurar que los elementos se alineen bien en la fila 2 */
+  .navbar-select,
+  .navbar-btn,
+  .carrito-icono {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+  }
+
+  /* Fila 3: Botón Cuenta (centrado) */
+  .navbar-fila-cuenta {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .navbar-check {
+    width: auto;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(84, 20, 108);
+    transition: 200ms all;
+  }
+
+  .navbar-check:hover {
+    background-color: rgba(84, 20, 108, 0.8);
+    cursor: pointer;
+    transform: scale(1.1);
+  }
+}

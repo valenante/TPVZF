@@ -1,20 +1,26 @@
 /* Estilo para la tarjeta del producto */
 .producto-card-prodCard {
-  border-bottom: 5px solid rgb(84, 20, 108); /* Borde inferior más grueso */
+  border-bottom: 5px solid rgb(84, 20, 108);
+  /* Borde inferior más grueso */
   margin-bottom: 2em;
-  border-radius: 8px; /* Bordes redondeados */
+  border-radius: 8px;
+  /* Bordes redondeados */
   padding: 20px;
   background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Sombra suave */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   font-family: 'Roboto', sans-serif;
-  color: #333; /* Texto moderno */
+  color: #333;
+  /* Texto moderno */
 }
 
 /* Hover para la tarjeta */
 .producto-card-prodCard:hover {
-  transform: translateY(-5px); /* Pequeño desplazamiento al pasar el mouse */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+  transform: translateY(-5px);
+  /* Pequeño desplazamiento al pasar el mouse */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* Sombra más intensa */
 }
 
 /* Contenedor principal de contenido */
@@ -22,12 +28,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px; /* Espaciado entre columnas */
+  gap: 20px;
+  /* Espaciado entre columnas */
 }
 
 /* Columna izquierda: Nombre y descripción */
 .producto-info-prodCard {
-  flex: 6; /* Ocupa el 70% */
+  flex: 6;
+  /* Ocupa el 70% */
   text-align: left;
 }
 
@@ -66,12 +74,14 @@
 
 .agregar-carrito-btn-prodCard:hover {
   background-color: rgba(84, 20, 108, 0.8);
-  transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el mouse */
+  transform: scale(1.05);
+  /* Aumenta ligeramente el tamaño al pasar el mouse */
 }
 
 /* Columna derecha: Imagen */
 .producto-img-container-prodCard {
-  flex: 4; /* Ocupa el 30% */
+  flex: 4;
+  /* Ocupa el 30% */
   text-align: right;
 }
 
@@ -82,17 +92,20 @@
   object-fit: cover;
 }
 
-.checkbox-detalle{
+.checkbox-detalle {
   margin-right: 1vh;
 }
 
 /* Botones de cantidad (+ y -) */
 button.cantidad-btn {
-  background-color: #FF6700; /* Naranja vibrante */
-  color: #FFFFFF; /* Blanco puro */
+  background-color: #FF6700;
+  /* Naranja vibrante */
+  color: #FFFFFF;
+  /* Blanco puro */
   border: none;
   margin: 10px;
-  border-radius: 10%; /* Forma circular */
+  border-radius: 10%;
+  /* Forma circular */
   font-size: .9rem;
   font-weight: bold;
   cursor: pointer;
@@ -100,19 +113,25 @@ button.cantidad-btn {
 }
 
 button.cantidad-btn:hover {
-  background-color: #E65A00; /* Naranja más oscuro */
-  transform: scale(1.1); /* Crece ligeramente */
+  background-color: #E65A00;
+  /* Naranja más oscuro */
+  transform: scale(1.1);
+  /* Crece ligeramente */
 }
 
 button.cantidad-btn:active {
-  transform: scale(0.9); /* Pequeño efecto de presión */
+  transform: scale(0.9);
+  /* Pequeño efecto de presión */
 }
 
 /* Botón de cancelar */
 button.cancelar-btn {
-  background-color: #F5F5F5; /* Gris claro */
-  color: #333333; /* Texto oscuro */
-  border: 2px solid #FF6700; /* Borde naranja */
+  background-color: #F5F5F5;
+  /* Gris claro */
+  color: #333333;
+  /* Texto oscuro */
+  border: 2px solid #FF6700;
+  /* Borde naranja */
   margin-right: 2vh;
   padding: 10px 20px;
   border-radius: 8px;
@@ -122,15 +141,20 @@ button.cancelar-btn {
 }
 
 button.cancelar-btn:hover {
-  background-color: #FF6700; /* Naranja vibrante */
-  color: #FFFFFF; /* Texto blanco */
-  border-color: #E65A00; /* Borde más oscuro */
+  background-color: #FF6700;
+  /* Naranja vibrante */
+  color: #FFFFFF;
+  /* Texto blanco */
+  border-color: #E65A00;
+  /* Borde más oscuro */
 }
 
 /* Botón de agregar al carrito */
 button.agregar-btn {
-  background-color: #6A0DAD; /* Morado profundo */
-  color: #FFFFFF; /* Blanco puro */
+  background-color: #6A0DAD;
+  /* Morado profundo */
+  color: #FFFFFF;
+  /* Blanco puro */
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -141,10 +165,84 @@ button.agregar-btn {
 }
 
 button.agregar-btn:hover {
-  background-color: rgba(106, 13, 173, 0.9); /* Morado un poco más claro */
-  transform: scale(1.05); /* Aumenta ligeramente */
+  background-color: rgba(106, 13, 173, 0.9);
+  /* Morado un poco más claro */
+  transform: scale(1.05);
+  /* Aumenta ligeramente */
 }
 
 button.agregar-btn:active {
-  transform: scale(0.95); /* Efecto de presión */
+  transform: scale(0.95);
+  /* Efecto de presión */
+}
+
+/* Estructura general en pantallas pequeñas */
+@media (max-width: 768px) {
+  .producto-grid-pequeno {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    /* 3 filas */
+    gap: 10px;
+    border-radius: 8px;
+    background: white;
+    max-width: 350px;
+    margin: auto;
+  }
+
+  .producto-nombre {
+    font-size: 1.5rem;
+    color: rgb(84, 20, 108);
+    margin-bottom: 10px;
+  }
+
+  .producto-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Descripción y foto */
+    gap: 10px;
+  }
+
+  .producto-precio-boton {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Precio y botón */
+    gap: 10px;
+  }
+
+  .producto-img-container img {
+    width: 100%;
+    border-radius: 10px;
+    height: auto;
+  }
+
+  .agregar-carrito-btn {
+    background-color: #FF6700;
+    color: white;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .producto-precio-boton{
+    display: flex;
+    justify-content: space-between;
+    }
+
+    .producto-precio {
+      display: block;
+      font-weight: bold;
+      color: rgb(84, 20, 108);
+    }
+    
+    /* Tamaño grande para precioBase */
+    .precio-grande {
+      font-size: 1.4rem;
+    }
+    
+    /* Tamaño pequeño para select */
+    .precio-pequeno select {
+      font-size: 1rem;
+    }
+    
 }

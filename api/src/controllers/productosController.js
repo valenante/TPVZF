@@ -113,18 +113,15 @@ export const deleteProductForEver = async (req, res) => {
 
 export const deleteProducto = async (req, res) => {
   const { pedidoId, id: productoId } = req.params; // IDs del pedido y del producto
-  const { motivo } = req.body; // Motivo de eliminación enviado en el cuerpo de la solicitud
+  // Obtener el usuario desde withCredentials
+
+  const user = req.session.user.id; // 🔥 Obtener el usuario desde la sesión
 
   try {
-    // Obtener el token del encabezado de autorización
-    const token = req.headers.authorization?.split(" ")[1]; // "Bearer <token>"
-    if (!token) {
-      return res.status(401).json({ error: "Token no proporcionado." });
+    // Verificar que se envió el usuario
+    if (!user) {
+      return res.status(401).json({ error: "Usuario no autenticado." });
     }
-
-    // Decodificar el token para obtener el usuarioId
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const usuarioId = decoded.id; // Usuario que realiza la eliminación
 
     // Encontrar el pedido
     const pedido = await Pedido.findById(pedidoId);
@@ -154,7 +151,7 @@ export const deleteProducto = async (req, res) => {
     if (pedido.productos.length === 0) {
       await Pedido.findByIdAndDelete(pedidoId);
 
-      // Actualizar el total de la mesa para reflejar la eliminación del pedido
+      // Actualizar el total de la mesa
       const mesa = await Mesa.findById(pedido.mesa).populate("pedidos");
       if (!mesa) {
         return res.status(404).json({ error: "Mesa no encontrada." });
@@ -173,9 +170,8 @@ export const deleteProducto = async (req, res) => {
       const eliminacion = new Eliminacion({
         producto: productoEliminado.producto,
         pedido: pedidoId,
-        cantidad: productoEliminado.cantidad || 1, // Si no tienes cantidad, asume 1 por defecto
-        motivo: motivo || "Sin motivo especificado",
-        user: usuarioId,
+        cantidad: productoEliminado.cantidad || 1,
+        user: user, // ✅ Se usa el `id` del usuario enviado desde el frontend
         mesa: pedido.mesa,
       });
 
@@ -212,8 +208,7 @@ export const deleteProducto = async (req, res) => {
       producto: productoEliminado.producto,
       pedido: pedidoId,
       cantidad: productoEliminado.cantidad || 1,
-      motivo: motivo || "Sin motivo especificado",
-      user: usuarioId,
+      user: user, // ✅ Se usa el `id` del usuario enviado desde el frontend
       mesa: pedido.mesa,
     });
 

@@ -4,6 +4,7 @@ import "./ModalMesasCerradas.css";
 
 const RecuperarMesaModal = ({ onClose }) => {
   const [mesasCerradas, setMesasCerradas] = useState([]);
+  const [mesasAbiertas, setMesasAbiertas] = useState([]);
   const [recuperando, setRecuperando] = useState(false);
 
   useEffect(() => {
@@ -22,6 +23,18 @@ const RecuperarMesaModal = ({ onClose }) => {
       }
     };
 
+    const fetchMesasAbiertas = async () => {
+      try {
+        const response = await api.get("/mesas/mesas-abiertas/mesas-abiertas");
+        if (response.data.length > 0) {
+          setMesasAbiertas(response.data);
+        }
+      } catch (error) {
+        console.error("Error al obtener mesas abiertas:", error);
+      }
+    };
+
+    fetchMesasAbiertas();
     fetchMesasCerradas();
   }, []);
 

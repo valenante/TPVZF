@@ -6,13 +6,12 @@ import { toast } from "react-toastify"; // Importar toast
 import api from "../../utils/api";
 import "../../styles/ModalDetalle.css";
 
-const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
+const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio, tipoPrecio }) => {
   const [cantidad, setCantidad] = useState(1);
   const [ingredientesSeleccionados, setIngredientesSeleccionados] = useState([...producto.ingredientes]);
   const [ingredientesEliminados, setIngredientesEliminados] = useState([]);
   const [opcionesSeleccionadas, setOpcionesSeleccionadas] = useState({});
   const [tipoPlato, setTipoPlato] = useState("compartir"); // Nuevo estado para "compartir" o "individual"
-  console.log(tipoPlato, 'nanananan')
   const [searchParams] = useSearchParams();
   const { numeroMesa } = useParams();
   const mesa = numeroMesa;
@@ -49,8 +48,6 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
 
     const cartId = carritoId;
 
-    console.log('Hemos agregado el tipoPlato:', tipoPlato); // Verifica el tipo de plato seleccionado
-
     const pedido = {
       cartId,
       productId: producto._id,
@@ -61,7 +58,7 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
       total: seleccionPrecio * cantidad, // Calcular el total basado en el precio seleccionado
       mesa,
       nombre,
-      tipoPlato, // Agregar tipo de plato (compartir o individual)
+      tipoPlato: tipoPrecio, // Agregar tipo de plato (compartir o individual)
     };
 
     try {
@@ -154,6 +151,7 @@ return ReactDOM.createPortal(
       </div>
 
       {/* Nuevo select para elegir si el plato es para compartir o individual */}
+      <h4><Trans>Tipo de plato:</Trans></h4>
       <div className="tipo-plato-select-container-detalle">
         <select value={tipoPlato} onChange={manejarTipoPlato} className="tipo-plato-select-detalle">
           <option value="compartir"><Trans>Compartir</Trans></option>

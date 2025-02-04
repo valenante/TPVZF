@@ -5,6 +5,7 @@ import "../styles/Login.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ name: "", password: "" });
+  const { setUser } = useAuth();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { setAccessToken } = useAuth();
@@ -20,7 +21,7 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-  
+
     try {
       const response = await fetch("http://172.20.10.7:3000/api/auth/login", {
         method: "POST",
@@ -30,19 +31,21 @@ const Login = () => {
         },
         body: JSON.stringify(formData), // Convertir los datos del formulario a JSON
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Ocurrió un error desconocido");
       }
-  
+
       const data = await response.json();
-  
+
       const { accessToken, user } = data;
-  
+
       // Actualizar el contexto con el nuevo token
       setAccessToken(accessToken);
-  
+
+      setUser(user); // 🔥 Guardar el usuario en el contexto global
+
       // Redirigir según el rol del usuario
       switch (user.role) {
         case "admin":
@@ -65,8 +68,8 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
-  };  
-  
+  };
+
   return (
     <div className="login--login">
       <h2 className="titulo--login">Iniciar Sesión</h2>
@@ -95,7 +98,7 @@ const Login = () => {
         </button>
       </form>
     </div>
-  );  
+  );
 };
 
 export default Login;

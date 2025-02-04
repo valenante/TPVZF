@@ -40,17 +40,6 @@ const productoSchema = new Schema({
   precios: { type: precioSchema, required: true },
   stock: { type: Number, default: 0 },
 
-  // Específico para bebidas
-  conHielo: { type: Boolean, default: false },
-  conLimon: { type: Boolean, default: false },
-  acompanante: {
-    type: String,
-    enum: ['refresco', 'agua tónica', 'soda', 'naranja', 'limón'],
-    required: function () {
-      return this.tipo === 'bebida' && this.tipoPedido === 'copa';
-    },
-  },
-
   // Específico para platos
   ingredientes: { type: [String], default: [] }, // Ejemplo: ["pollo", "patatas"]
   ingredientesEliminados: { type: [String], default: [] }, // Ingredientes que el cliente ha solicitado quitar

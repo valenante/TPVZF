@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { check, validationResult } from 'express-validator';
 const router = Router();
-import { login, register, renovarToken, logout } from '../controllers/authController.js';
+import { login, register, renovarToken, logout, obtenerUsuario } from '../controllers/authController.js';
 import { logAndNotifyLogin } from '../middlewares/failedSesionMiddleware.js';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 import rateLimit from 'express-rate-limit';
 import csrf from "csurf";
 const csrfProtection = csrf({ cookie: true });
@@ -39,6 +40,8 @@ router.post(
   },
   login
 );
+
+router.get('/me/me', obtenerUsuario);
 
 // Ruta de registro de usuario
 router.post(

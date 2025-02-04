@@ -13,12 +13,22 @@ import socket from "../../utils/socket";
 const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
   const { productos, categoriaSeleccionada, setCategoriaSeleccionada } =
     useContext(ProductosContext);
+  const [pantallaPequena, setPantallaPequena] = useState(window.innerWidth <= 768);
   const [mostrarModal, setMostrarModal] = useState(false);
   const { cargarCarrito } = useContext(ProductosContext);
   const [pedidosListos, setPedidosListos] = useState(false);
   const navigate = useNavigate();
   const { numeroMesa } = useParams();
   const { locale, cambiarIdioma } = useContext(LanguageContext); // 👈 Obtenemos idioma y función para cambiarlo
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPantallaPequena(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     cargarCarrito();
@@ -77,58 +87,119 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
   return (
     <div className="container">
       <nav className="navbar">
-        <div className="row w-100 align-items-center">
-          <div className="col-12 d-flex justify-content-left align-items-center p-3">
-            <select
-              value={categoriaSeleccionada}
-              onChange={handleCategoriaChange}
-              className="navbar-select me-3"
-            >
-              <option value="">
-                <Trans id="todas-categorias">Todas las Categorías</Trans>
-              </option>
-              {categoriasFiltradas.map((categoria) => (
-                <option key={categoria} value={categoria}>
-                  {categoria}
+        {/* 📌 PANTALLAS GRANDES: Estructura normal */}
+        {!pantallaPequena ? (
+          <div className="row w-100 align-items-center">
+            <div className="col-12 d-flex justify-content-left align-items-center p-3">
+              <select
+                value={categoriaSeleccionada}
+                onChange={handleCategoriaChange}
+                className="navbar-select me-3"
+              >
+                <option value="">
+                  <Trans id="todas-categorias">Todas las Categorías</Trans>
                 </option>
-              ))}
-            </select>
+                {categoriasFiltradas.map((categoria) => (
+                  <option key={categoria} value={categoria}>
+                    {categoria}
+                  </option>
+                ))}
+              </select>
 
-            <button className="navbar-btn me-3" onClick={mostrarBebidas}>
-              {mostrarSoloBebidas ? <Trans id="platos">Platos</Trans> : <Trans id="bebidas">Bebidas</Trans>}
-            </button>
+              <button className="navbar-btn me-3" onClick={mostrarBebidas}>
+                {mostrarSoloBebidas ? <Trans id="platos">Platos</Trans> : <Trans id="bebidas">Bebidas</Trans>}
+              </button>
 
-            {pedidosListos && (
-              <button className="navbar-check" onClick={manejarPedirCuenta}>
-                <Trans id="cuenta">Cuenta</Trans>
-              </button>
-            )}
+              {pedidosListos && (
+                <button className="navbar-check" onClick={manejarPedirCuenta}>
+                  <Trans id="cuenta">Cuenta</Trans>
+                </button>
+              )}
 
-            {/* 🔵 Botones de idioma usando el contexto 🔵 */}
-            <div className="idiomas-navbar ms-auto">
-              <button 
-                className={`btn-idioma ${locale === "es" ? "activo" : ""}`} 
-                onClick={() => cambiarIdioma("es")}
-              >
-                Español
-              </button>
-              <button 
-                className={`btn-idioma ${locale === "en" ? "activo" : ""}`} 
-                onClick={() => cambiarIdioma("en")}
-              >
-                English
-              </button>
+              <div className="idiomas-navbar ms-auto">
+                <button
+                  className={`btn-idioma ${locale === "es" ? "activo" : ""}`}
+                  onClick={() => cambiarIdioma("es")}
+                >
+                  Español
+                </button>
+                <button
+                  className={`btn-idioma ${locale === "en" ? "activo" : ""}`}
+                  onClick={() => cambiarIdioma("en")}
+                >
+                  English
+                </button>
+              </div>
+
+              <div className="carrito-icono">
+                <CarritoIcono abrirModal={() => setMostrarModal(true)} />
+              </div>
             </div>
-
-            <div className="carrito-icono">
-              <CarritoIcono abrirModal={() => setMostrarModal(true)} />
-            </div>
-
-            {mostrarModal && (
-              <CarritoModal cerrarModal={() => setMostrarModal(false)} />
-            )}
           </div>
-        </div>
+        ) : (
+          /* 📌 PANTALLAS PEQUEÑAS: Dos filas */
+          <>
+            {/* Contenedor padre para asegurar que las filas se apilen correctamente */}
+            <div className="navbar-contenedor">
+              {/* Fila 1: Idiomas (centrado) */}
+              <div className="navbar-fila navbar-fila-idiomas">
+                <div className="idiomas-navbar">
+                  <button
+                    className={`btn-idioma ${locale === "es" ? "activo" : ""}`}
+                    onClick={() => cambiarIdioma("es")}
+                  >
+                    Español
+                  </button>
+                  <button
+                    className={`btn-idioma ${locale === "en" ? "activo" : ""}`}
+                    onClick={() => cambiarIdioma("en")}
+                  >
+                    English
+                  </button>
+                </div>
+              </div>
+
+              {/* Fila 2: Select + Botón Bebidas/Platos + Carrito */}
+              <div className="navbar-fila navbar-fila-opciones">
+                <select
+                  value={categoriaSeleccionada}
+                  onChange={handleCategoriaChange}
+                  className="navbar-select"
+                >
+                  <option value="">
+                    <Trans id="todas-categorias">Todas las Categorías</Trans>
+                  </option>
+                  {categoriasFiltradas.map((categoria) => (
+                    <option key={categoria} value={categoria}>
+                      {categoria}
+                    </option>
+                  ))}
+                </select>
+
+                <button className="navbar-btn" onClick={mostrarBebidas}>
+                  {mostrarSoloBebidas ? <Trans id="platos">Platos</Trans> : <Trans id="bebidas">Bebidas</Trans>}
+                </button>
+
+                <div className="carrito-icono">
+                  <CarritoIcono abrirModal={() => setMostrarModal(true)} />
+                </div>
+              </div>
+
+              {/* Fila 3: Botón de Cuenta (centrado) */}
+              {pedidosListos && (
+                <div className="navbar-fila navbar-fila-cuenta">
+                  <button className="navbar-check" onClick={manejarPedirCuenta}>
+                    <Trans id="cuenta">Cuenta</Trans>
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {mostrarModal && (
+          <CarritoModal cerrarModal={() => setMostrarModal(false)} />
+        )}
       </nav>
     </div>
   );

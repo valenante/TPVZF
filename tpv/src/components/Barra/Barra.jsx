@@ -22,7 +22,7 @@ const Barra = () => {
   // Función para cargar pedidos pendientes de bebidas
   const cargarPedidos = async () => {
     try {
-      const response = await api.get('/pedidos/pendientes/pendientes', {
+      const response = await api.get('/pedidosBebidas/pendientes/pendientes', {
         params: { tipo: 'bebida' },
       });
       console.log('Pedidos de bebidas pendientes:', response.data);
@@ -43,19 +43,43 @@ const Barra = () => {
     };
   }, []);
 
-  // Marcar un producto como listo y eliminarlo de la lista
+  // Marcar un producto como listo
   const marcarProductoComoListo = async (pedidoId, productoId) => {
     try {
-      await api.put(`/pedidos/${pedidoId}/producto/${productoId}`, { estadoPreparacion: 'listo' });
-      // Filtrar el producto marcado como listo y actualizar la lista de pedidos
+      await api.put(`/pedidosBebidas/${pedidoId}/producto/${productoId}`, {
+        estadoPreparacion: 'listo',
+      });
+
+      // Actualizar el estado eliminando productos listos
       setPedidos((prevPedidos) =>
-        prevPedidos.map((pedido) => ({
-          ...pedido,
-          productos: pedido.productos.filter((producto) => producto._id !== productoId),
-        })).filter((pedido) => pedido.productos.length > 0) // Eliminar pedidos sin productos
+        prevPedidos
+          .map((pedido) => {
+            if (pedido._id === pedidoId) {
+              const nuevosProductos = pedido.productos.map((producto) =>
+                producto._id === productoId
+                  ? { ...producto, estadoPreparacion: 'listo' }
+                  : producto
+              );
+
+              return { ...pedido, productos: nuevosProductos };
+            }
+            return pedido;
+          })
       );
     } catch (error) {
       console.error('Error al marcar producto como listo:', error);
+    }
+  };
+
+  // Marcar el pedido entero como listo
+  const marcarPedidoComoListo = async (pedidoId) => {
+    try {
+      await api.put(`/pedidosBebidas/${pedidoId}`, { estado: 'listo' });
+
+      // Filtrar el pedido eliminado de la UI
+      setPedidos((prevPedidos) => prevPedidos.filter((pedido) => pedido._id !== pedidoId));
+    } catch (error) {
+      console.error('Error al marcar pedido como listo:', error);
     }
   };
 
@@ -74,36 +98,37 @@ const Barra = () => {
       >
         Ver Pedidos Finalizados
       </button>
-      {mostrarFinalizados && (
-        <PedidosFinalizados onClose={() => setMostrarFinalizados(false)} />
-      )}
       {pedidos.length === 0 ? (
         <p className="mensaje-vacio--barra">No hay pedidos de bebidas pendientes</p>
       ) : (
         <div className="pedidos-container--barra">
-          {pedidos.map((pedido) => (
-            <div key={pedido._id} className="pedido-card--barra">
-              <div className="pedido-header--barra">
-                <h3>Mesa: {pedido.mesa.numero}</h3>
-                <p>Comensales: {pedido.comensales}</p>
-                {pedido.alergias && (
-                  <p className="alergias--barra">
-                    <strong>Alergias:</strong> {pedido.alergias}
-                  </p>
-                )}
-              </div>
-              <p>
-                <strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}
-              </p>
-              <ul className="productos-list--barra">
-                {pedido.productos
-                  .filter((producto) => producto.tipo === "bebida")
-                  .map((producto) => (
+          {pedidos.map((pedido) => {
+            // Verificar si todos los productos del pedido están listos
+            const todosListos = pedido.productos.every(
+              (producto) => producto.estadoPreparacion === 'listo'
+            );
+
+            return (
+              <div key={pedido._id} className="pedido-card--barra">
+                <div className="pedido-header--barra">
+                  <h3>Mesa: {pedido.mesa.numero}</h3>
+                  <p>Comensales: {pedido.comensales}</p>
+                  {pedido.alergias && (
+                    <p className="alergias--barra">
+                      <strong>Alergias:</strong> {pedido.alergias}
+                    </p>
+                  )}
+                </div>
+                <p>
+                  <strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}
+                </p>
+                <ul className="productos-list--barra">
+                  {pedido.productos.map((producto) => (
                     <li key={producto._id} className="producto-item--barra">
                       <label>
                         <input
                           type="checkbox"
-                          checked={producto.estadoPreparacion === "listo"}
+                          checked={producto.estadoPreparacion === 'listo'}
                           onChange={() =>
                             marcarProductoComoListo(pedido._id, producto._id)
                           }
@@ -119,13 +144,24 @@ const Barra = () => {
                       )}
                     </li>
                   ))}
-              </ul>
-            </div>
-          ))}
+                </ul>
+
+                {/* Botón para marcar el pedido como terminado (solo si todos los productos están listos) */}
+                {todosListos && (
+                  <button
+                    className="boton-terminar--barra"
+                    onClick={() => marcarPedidoComoListo(pedido._id)}
+                  >
+                    Marcar Pedido como Terminado
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
-  );  
+  );
 };
 
 export default Barra;

@@ -127,8 +127,7 @@
 .tipo-plato-select-container-detalle {
   display: flex;
   width: 100%;
-  justify-content: flex-end; /* Alinea el select a la derecha */
-  margin-top: 15px;
+  justify-content: flex-start; /* Alinea el select a la derecha */
 }
 
   /* Estilo para el select de tipo de plato */
@@ -136,6 +135,7 @@
   font-size: 1rem;
   padding: 8px 12px;
   border-radius: 4px;
+  margin-bottom: 1.5vh;
   border: 1px solid #ccc;
   color: #333;
   background-color: #fff;

@@ -1,15 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ProductosContext } from '../../context/ProductosContext';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams } from 'react-router-dom';
 import api from '../../utils/api';
 import '../../styles/CarritoModal.css';
 
 const CarritoModal = ({ cerrarModal }) => {
-  const { carrito, cargarCarrito, mesaId } = useContext(ProductosContext);
+  const { carrito, cargarCarrito, mesaId, obtenerMesaId } = useContext(ProductosContext);
   const [searchParams] = useSearchParams();
   const comensales = searchParams.get("comensales"); // Obtener el nombre desde la URL
   const alergias = searchParams.get("alergias"); // Obtener el nombre desde la URL
-  console.log(carrito.items);
+  const { numeroMesa } = useParams(); // Obtener el número de mesa directamente desde los params de la ruta
+
+  useEffect(() => {
+    // Aquí estamos llamando a la función para obtener el ID de la mesa (asumiendo que la mesa es la 1, o puedes pasar otro número de mesa)
+    obtenerMesaId(numeroMesa);
+  }, [obtenerMesaId]); // Dependemos de `obtenerMesaId` para que se ejecute solo cuando se monte el componente
 
   const esLider = async () => {
     try {
@@ -57,14 +62,16 @@ const CarritoModal = ({ cerrarModal }) => {
       alert("Solo el líder puede enviar el pedido.");
       return;
     }
-
+  
     try {
       const carritoId = localStorage.getItem("carritoMongoId");
-
-      const pedido = {
-        mesa: mesaId,
-        cartId: carritoId,
-        productos: carrito.items.map((item) => ({
+  
+      // Separar productos en platos y bebidas
+      const productosPlatos = [];
+      const productosBebidas = [];
+  
+      carrito.items.forEach((item) => {
+        const productoData = {
           producto: item.productId._id,
           nombre: item.productId.nombre,
           tipo: item.productId.tipo,
@@ -73,35 +80,62 @@ const CarritoModal = ({ cerrarModal }) => {
           precioSeleccionado: item.precioSeleccionado,
           total: (item.precioSeleccionado || item.productId.precios.precioBase) * item.cantidad,
           precios: item.productId.precios,
-          tipoPlato: item.tipoPlato,
-          // Ingredientes eliminados
-          ingredientesEliminados: item.ingredientesEliminados || item.ingredientes,
-
-          // Opciones personalizables
           opcionesPersonalizables: (item.opciones && Object.keys(item.opciones).length > 0)
             ? Object.entries(item.opciones).map(([tipo, opcion]) => ({
               tipo,
               opcion
             }))
             : [], // Si no tiene opciones o si son vacías, asignamos un array vacío
-        })),
-        total: carrito.items.reduce((total, item) => {
-          const precio = item.precioSeleccionado || item.productId.precios.precioBase;
-          return total + precio * item.cantidad;
-        }, 0),
-        comensales,
-        alergias,
-      };
+        };
+  
+        if (item.productId.tipo === "bebida") {
+          productoData.tipoPedido = item.tipoPedido;
+          productosBebidas.push(productoData);
+        } else {
+          productoData.tipoPlato = item.tipoPlato;
+          productosPlatos.push(productoData);
+        }
+      });
 
-      const response = await api.post("/pedidos", pedido);
+      console.log(productosPlatos, 'productosPlatos');
+      console.log(productosBebidas, 'productosBebidas');
+  
+      // Crear pedidos separados si hay productos de ambos tipos
+      if (productosPlatos.length > 0) {
+        const pedidoPlatos = {
+          mesa: mesaId,
+          cartId: carritoId,
+          productos: productosPlatos,
+          total: productosPlatos.reduce((total, item) => total + item.total, 0),
+          comensales,
+          alergias,
+        };
+        await api.post("/pedidos", pedidoPlatos);
+      }
+  
+      if (productosBebidas.length > 0) {
+        const pedidoBebidas = {
+          mesa: mesaId,
+          cartId: carritoId,
+          productos: productosBebidas,
+          total: productosBebidas.reduce((total, item) => total + item.total, 0),
+          comensales,
+          alergias,
+        };
+        await api.post("/pedidosBebidas", pedidoBebidas);
+      }
 
+      //Mostrar la ruta a la que consultamos
+      console.log('Ruta a la que consultamos: ', `/pedidosBebidas/estado/${numeroMesa}`);
+  
+      // Limpiar el carrito después de enviar los pedidos
       localStorage.removeItem("carritoMongoId");
       cargarCarrito();
       cerrarModal();
     } catch (error) {
       console.error("Error al enviar el pedido:", error);
     }
-  };
+  };  
 
   const calcularTotal = () => {
     return carrito.items?.reduce((total, item) => {

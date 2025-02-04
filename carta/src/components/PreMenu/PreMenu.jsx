@@ -27,7 +27,6 @@ const PreMenu = () => {
       try {
         const response = await api.get(`/mesas/token-lider/token-lider/check?mesa=${mesa}`);
         const tokenLider = response.data.tokenLider;
-
         setEsLider(!tokenLider); // Si no hay tokenLider, el usuario será el líder
       } catch (error) {
         console.error("Error al verificar el tokenLider:", error);
@@ -87,8 +86,6 @@ const PreMenu = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("📤 Enviando contraseña:", formData.contraseña); // 🔍 Verificar qué se está enviando
-
     const newErrors = {};
     for (const key in formData) {
       if (esLider || key === "contraseña" || key === "nombre") {
@@ -107,8 +104,6 @@ const PreMenu = () => {
       const response = await api.post("/password/validate-password", {
         password: formData.contraseña, // 🛑 Verifica si `contraseña` está en español
       });
-
-      console.log("🔍 Respuesta del backend:", response.data);
 
       if (!response.data.valid) {
         setErrors((prev) => ({

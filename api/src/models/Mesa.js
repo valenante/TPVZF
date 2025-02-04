@@ -4,6 +4,7 @@ const mesaSchema = new Schema({
   numero: { type: Number, required: true }, // Número de la mesa
   estado: { type: String, enum: ['abierta', 'cerrada'], default: 'abierta' }, // Estado actual
   pedidos: [{ type: Schema.Types.ObjectId, ref: 'Pedido' }], // Pedidos activos en la mesa
+  pedidosBebidas: [{ type: Schema.Types.ObjectId, ref: 'PedidoBebida' }], // Pedidos de bebidas activos en la mesa
   inicio: { type: Date, default: Date.now }, // Hora en que se abrió la mesa
   tokenLider: {
     type: String,
