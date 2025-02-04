@@ -3,7 +3,7 @@ import MesaCerrada from '../models/MesaCerrada.js';
 import Caja from '../models/Caja.js';
 import { v4 as uuidv4 } from "uuid"; // Generador de UUID
 
-export const checkTokenLider = async (req, res) => {
+export const verificarTokenLider = async (req, res) => {
   //Conseguir el mesaId de los params
   const { mesaId } = req.params;
 
@@ -24,7 +24,7 @@ export const checkTokenLider = async (req, res) => {
   }
 };
 
-export const checkTokenLiderByNumber = async (req, res) => {
+export const verificarTokenLiderPorNumero = async (req, res) => {
   const { mesa } = req.query; // Obtener el número de mesa desde los query params
 
   if (!mesa) {
@@ -47,7 +47,7 @@ export const checkTokenLiderByNumber = async (req, res) => {
   }
 };
 
-export const createTokenLider = async (req, res) => {
+export const crearTokenLider = async (req, res) => {
   const { mesa } = req.body;
 
   if (!mesa) {
@@ -79,7 +79,7 @@ export const createTokenLider = async (req, res) => {
 
 
 // Obtener todas las mesas activas
-export const getMesas = async (req, res) => {
+export const obtenerMesas = async (req, res) => {
   try {
     const mesas = await Mesa.find().populate('pedidos');
     res.status(200).json(mesas);
@@ -90,7 +90,7 @@ export const getMesas = async (req, res) => {
 };
 
 // Obtener una mesa activa por ID
-export const getMesaById = async (req, res) => {
+export const obtenerMesaPorId = async (req, res) => {
   const { id } = req.params;
   try {
     const mesa = await Mesa.findById(id).populate('pedidos');
@@ -241,7 +241,7 @@ export const getHistorialMesas = async (req, res) => {
 
 
 //Obtener el ID de una mesa por su número
-export const getMesaByNumero = async (req, res) => {
+export const obtenerMesaPorNumero = async (req, res) => {
   const { numeroMesa } = req.params;
   try {
     const mesa = await Mesa.findOne({ numeroMesa });

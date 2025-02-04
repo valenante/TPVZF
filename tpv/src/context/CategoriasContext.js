@@ -58,7 +58,6 @@ export const CategoriasProvider = ({ children }) => {
       setProducts((prev) =>
         prev.map((p) => (p._id === product._id ? product : p))
       );
-      console.log(product);
     } catch (error) {
       console.error("Error al actualizar producto:", error);
       throw error;

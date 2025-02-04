@@ -106,7 +106,6 @@ const CrearProducto = ({ onClose }) => {
     try {
       const response = await api.post("/productos", productData, { withCredentials: true });
       if (response.status === 201) {
-        console.log("Producto creado:", response.data);
         cargarProductos(); // Recarga la lista de productos
         onClose(); // Cierra el modal
       }

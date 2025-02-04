@@ -70,7 +70,6 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
 
     const newErrors = {};
     for (const key in formData) {
-      console.log(formData[key]);
       if (key === "precios") {
         for (const priceKey in formData.precios) {
           const error = validateField(`precios.${priceKey}`, formData.precios[priceKey]);
@@ -83,13 +82,9 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
     }
 
     if (Object.keys(newErrors).length > 0) {
-      console.log("Errores en el formulario:", newErrors); // 🔥 Depurar errores
       setErrors(newErrors);
       return;
     }
-    
-
-    console.log('submit superado');
     onSave(formData); // Llama a la función onSave con los datos válidos
   };
 

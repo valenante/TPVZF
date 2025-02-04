@@ -6,7 +6,7 @@ import Cart from '../models/Cart.js';
 import Producto from '../models/Producto.js';
 
 // Crear un nuevo pedido
-export const createPedido = async (req, res) => {
+export const crearPedido = async (req, res) => {
     try {
         const { mesa, productos, total, comensales, alergias,cartId, precioSeleccionado } = req.body;
 
@@ -174,7 +174,7 @@ export const agregarProductoAlPedido = async (req, res) => {
 
 
 // Obtener todos los pedidos
-export const getPedidos = async (req, res) => {
+export const obtenerPedidos = async (req, res) => {
     try {
         const pedidos = await PedidoBebida.find().populate('mesa').populate('productos.producto');
         res.status(200).json(pedidos);
@@ -185,7 +185,7 @@ export const getPedidos = async (req, res) => {
 };
 
 // Obtener un pedido por ID
-export const getPedidoById = async (req, res) => {
+export const obtenerPedidosId = async (req, res) => {
     const { id } = req.params;
     try {
         const pedido = await PedidoBebida.findById(id).populate('mesa').populate('productos.productoId');
@@ -200,7 +200,7 @@ export const getPedidoById = async (req, res) => {
 };
 
 // Obtener pedidos pendientes
-export const getPedidosPendientes = async (req, res) => {
+export const obtenerPedidosPendientes = async (req, res) => {
     try {
         const { tipo } = req.query; // Obtener el tipo de la consulta (plato o bebida)
 
@@ -221,7 +221,7 @@ export const getPedidosPendientes = async (req, res) => {
 };
 
 // Obtener pedidos finalizados
-export const getPedidosFinalizados = async (req, res) => {
+export const obtenerPedidosFinalizados = async (req, res) => {
     try {
         const { tipo } = req.query; // Obtener el tipo de la consulta (plato o bebida)
         const hace20Minutos = new Date(Date.now() - 20 * 60 * 1000); // Fecha límite
@@ -247,7 +247,7 @@ export const getPedidosFinalizados = async (req, res) => {
 };
 
 //Actualizar el estado de un producto en un pedido
-export const updateProducto = async (req, res) => {
+export const actualizarProducto = async (req, res) => {
     try {
         const { pedidoId, productoId } = req.params;
         const { estadoPreparacion } = req.body;
@@ -269,7 +269,7 @@ export const updateProducto = async (req, res) => {
 }
 
 // Actualizar un pedido por ID
-export const updatePedido = async (req, res) => {
+export const actualizarPedido = async (req, res) => {
     const { id } = req.params;
     const { productos, total, comensales, alergias, pan, estado } = req.body;
 
@@ -299,7 +299,7 @@ export const updatePedido = async (req, res) => {
 };
 
 // Eliminar un pedido por ID
-export const deletePedido = async (req, res) => {
+export const eliminarPedido = async (req, res) => {
     const { id } = req.params;
 
     try {

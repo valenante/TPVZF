@@ -1,36 +1,36 @@
 import { Router } from 'express';
 const router = Router();
-import { getPedidos, getPedidoById, getPedidosPendientes, getPedidosFinalizados, createPedido, updatePedido, updateProducto, deletePedido, agregarProductoAlPedido, verificarPedidosMesa } from '../controllers/pedidosController.js';
-import verifyLeader from '../middlewares/verifyLeader.js';
+import {agregarProductoAlPedido, verificarPedidosMesa, obtenerPedidos, obtenerPedidosId, obtenerPedidosPendientes, obtenerPedidosFinalizados, crearPedido, actualizarPedido, actualizarProducto, eliminarPedido } from '../controllers/pedidosController.js';
+import verificarLider from '../middlewares/verificarLider.js';
 
 // Obtener todos los pedidos
-router.get('/', getPedidos);
+router.get('/', obtenerPedidos);
 
 // Obtener un pedido por ID
-router.get('/:id', getPedidoById);
+router.get('/:id', obtenerPedidosId);
 
 //Obtener un pedido pendiente
-router.get('/pendientes/pendientes', getPedidosPendientes);
+router.get('/pendientes/pendientes', obtenerPedidosPendientes);
 
 //Obtener un pedido finalizado
-router.get('/finalizados/finalizados', getPedidosFinalizados);
+router.get('/finalizados/finalizados', obtenerPedidosFinalizados);
 
 //Obtener pedidos finalizados por mesa
 router.get('/pedidos/estado/:numeroMesa', verificarPedidosMesa);
 
 // Crear un nuevo pedido
-router.post('/', createPedido, verifyLeader);
+router.post('/', crearPedido, verificarLider);
 
 //Agregar un producto a un pedido
 router.post('/:mesaId/agregar-producto', agregarProductoAlPedido);
 
 // Actualizar un pedido por ID
-router.put('/:id', updatePedido);
+router.put('/:id', actualizarPedido);
 
 //Actualizar el estado de un producto en un pedido
-router.put('/:pedidoId/producto/:productoId', updateProducto);
+router.put('/:pedidoId/producto/:productoId', actualizarProducto);
 
 // Eliminar un producto por ID
-router.delete('/:pedidoId/:id', deletePedido);
+router.delete('/:pedidoId/:id', eliminarPedido);
 
 export default router;

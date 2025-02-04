@@ -11,6 +11,7 @@ import { I18nProvider } from "@lingui/react";
 import { i18n } from "@lingui/core";
 import { messages as enMessages } from "./locales/en/messages";
 import { messages as esMessages } from "./locales/es/messages";
+import { MesasProvider } from './context/MesasContext.js';
 
 // Configuración de idiomas
 const locales = {
@@ -40,16 +41,18 @@ function App() {
   return (
     <I18nProvider i18n={i18n}>
       <LanguageProvider>
-      <Router>
-        <ProductosProvider>
-          <Routes>
-            <Route path="/:numeroMesa" element={<CartaPage />} />
-            <Route path="/preMenu" element={<PreMenu />} />
-            <Route path="/valoraciones" element={<Valoraciones />} />
-          </Routes>
-        </ProductosProvider>
-        <ToastContainer />
-      </Router>
+        <Router>
+          <MesasProvider>
+            <ProductosProvider>
+              <Routes>
+                <Route path="/:numeroMesa" element={<CartaPage />} />
+                <Route path="/preMenu" element={<PreMenu />} />
+                <Route path="/valoraciones" element={<Valoraciones />} />
+              </Routes>
+            </ProductosProvider>
+            <ToastContainer />
+          </MesasProvider>
+        </Router>
       </LanguageProvider>
     </I18nProvider>
   );

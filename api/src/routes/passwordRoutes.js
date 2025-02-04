@@ -1,17 +1,17 @@
 import { Router } from 'express';
 const router = Router();
-import { getPassword, createOrUpdatePassword, updatePassword, validatePassword } from '../controllers/passwordController.js';
+import { obtenerPassword, crearActualizarPassword, actualizarPassword, validarPassword } from '../controllers/passwordController.js';
 
 //Obtener la password
-router.get('/', getPassword)
+router.get('/', obtenerPassword)
 
 //Crear contraseña
-router.post('/', createOrUpdatePassword)
+router.post('/', crearActualizarPassword)
 
 //Actualizar contraseña
-router.put('/', updatePassword)
+router.put('/', actualizarPassword)
 
 //Validar contraseña
-router.post('/validate-password', validatePassword)
+router.post('/validate-password', validarPassword)
 
 export default router;

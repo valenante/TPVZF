@@ -72,7 +72,6 @@ export const ImagesProvider = ({ children }) => {
       const data = await response.json();
 
       if (data.filename) {
-        console.log("✅ Imagen subida con éxito:", data.filename);
         return data.imageUrl;
       } else {
         console.error("❌ Error al subir la imagen");

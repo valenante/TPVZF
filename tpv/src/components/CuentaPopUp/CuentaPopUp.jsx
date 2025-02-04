@@ -6,6 +6,8 @@ import "./CuentaPopUp.css";
 const CuentaPopup = () => {
   const { cuentaSolicitada, setCuentaSolicitada } = useContext(SocketContext);
 
+  console.log(cuentaSolicitada);
+
   if (!cuentaSolicitada) return null; // Si no hay solicitud, no mostrar nada
 
   return (

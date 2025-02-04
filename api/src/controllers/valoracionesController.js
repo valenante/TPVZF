@@ -6,7 +6,7 @@ import Producto from "../models/Producto.js";
 
 export const valorarPedido = async (req, res) => {
   const { mesaId } = req.query; // Obtener el `mesaId` desde la consulta
-
+  
   if (!mesaId) {
     return res.status(400).json({ error: "El ID de la mesa es requerido." });
   }
@@ -22,7 +22,7 @@ export const valorarPedido = async (req, res) => {
     const productos = pedidos.flatMap((pedido) =>
       pedido.productos.map((p) => ({
         productoId: p.producto,
-        nombre: p.producto?.nombre || "Producto no encontrado",
+        nombre: p.producto && p.producto.nombre, // ✅ Validación segura
         cantidad: p.cantidad,
         total: p.total,
       }))
@@ -89,7 +89,8 @@ export const obtenerProductosValorados = async (req, res) => {
   try {
     // Obtener el promedio de puntuaciones por producto
     const valoraciones = await Valoracion.aggregate([
-      { $group: {
+      {
+        $group: {
           _id: "$producto", // Agrupar por producto
           promedioEstrellas: { $avg: "$puntuacion" }, // Calcular el promedio
           totalValoraciones: { $sum: 1 } // Contar la cantidad de valoraciones

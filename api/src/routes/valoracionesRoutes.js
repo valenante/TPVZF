@@ -4,7 +4,7 @@ import { valorarPedido, crearValoraciones, obtenerProductosValorados } from '../
 
 
 // Rutas para valoraciones
-router.get('/productos-valoraciones', valorarPedido);
+router.get('/productos-valoraciones/productos-valoraciones', valorarPedido);
 
 // Ruta para crear valoraciones
 router.post("/", crearValoraciones);

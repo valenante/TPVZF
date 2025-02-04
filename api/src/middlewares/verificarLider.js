@@ -1,6 +1,6 @@
 import Mesa from "../models/Mesa.js";
 
-const verifyLeader = async (req, res, next) => {
+const verificarLider = async (req, res, next) => {
     const { mesa } = req.query; // O req.body si el ID está en el cuerpo
     const tokenHeader = req.headers["x-token-lider"];
   
@@ -16,4 +16,4 @@ const verifyLeader = async (req, res, next) => {
     }
   };
 
-  export default verifyLeader;
+  export default verificarLider;

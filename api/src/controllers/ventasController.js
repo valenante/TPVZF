@@ -3,9 +3,9 @@ import Producto from '../models/Producto.js';
 import Pedido from '../models/Pedido.js';
 
 // Obtener todas las ventas
-export const getVentas = async (req, res) => {
+export const obtenerVentas = async (req, res) => {
     try {
-        const ventas = await Venta.find().populate('productoId pedidoId');
+        const ventas = await Venta.find().populate('producto');
         res.status(200).json(ventas);
     } catch (error) {
         console.error('Error al obtener las ventas:', error);
@@ -14,7 +14,7 @@ export const getVentas = async (req, res) => {
 };
 
 // Obtener una venta por ID
-export const getVentaById = async (req, res) => {
+export const obtenerVentasPorId = async (req, res) => {
     const { id } = req.params;
     try {
         const venta = await Venta.findById(id).populate('cantidad');
@@ -29,7 +29,7 @@ export const getVentaById = async (req, res) => {
 };
 
 // Crear una nueva venta
-export const createVenta = async (req, res) => {
+export const crearVenta = async (req, res) => {
     const { productoId, pedidoId, cantidad } = req.body;
 
     try {
@@ -68,7 +68,7 @@ export const createVenta = async (req, res) => {
 };
 
 // Actualizar una venta por ID
-export const updateVenta = async (req, res) => {
+export const actualizarVenta = async (req, res) => {
     const { id } = req.params;
     const { cantidad } = req.body;
 
@@ -101,7 +101,7 @@ export const updateVenta = async (req, res) => {
 };
 
 // Eliminar una venta por ID
-export const deleteVenta = async (req, res) => {
+export const eliminarVenta = async (req, res) => {
     const { id } = req.params;
 
     try {

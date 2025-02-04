@@ -1,26 +1,23 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { getProductos, getProductoById, getCategoriasByType, getProductosByCategory, updateProducto, createProducto, deleteProducto, deleteProductForEver } from '../controllers/productosController.js';
+import {  obtenerProductos, obtenerCategoriasPorTipo, obtenerProductosPorCategoria, editarProducto, crearProducto, eliminarProducto, eliminarProductoPedido, obtenerProductoPorId } from '../controllers/productosController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { checkRole } from '../middlewares/checkRole.js';
 const router = Router();
 
 // Obtener todos los productos (ruta pública)
-router.get('/', getProductos);
+router.get('/', obtenerProductos);
 
 // Obtener un producto por ID (ruta pública con validación)
 router.get('/:id', [
     check('id', 'El ID debe ser un ID de MongoDB válido').isMongoId()
-], getProductoById);
+], obtenerProductoPorId);
 
 //Obtener categorias de productos
-router.get('/categories/:type', getCategoriasByType);
+router.get('/categories/:type', obtenerCategoriasPorTipo);
 
 //Obtener productos por categoria
-router.get('/category/:category', getProductosByCategory);
-
-//Editar producto
-router.put('/:id', updateProducto);
+router.get('/category/:category', obtenerProductosPorCategoria);
 
 // Crear un nuevo producto (solo usuarios autenticados y con rol admin)
 router.post(
@@ -34,7 +31,7 @@ router.post(
         check('stock', 'El stock debe ser un número entero positivo').optional().isInt({ min: 0 }),
         check('tipo', 'El tipo debe ser "plato" o "bebida"').isIn(['plato', 'bebida']),
     ],
-    createProducto
+    crearProducto
 );
 
 // Actualizar un producto por ID (solo usuarios autenticados y con rol admin)
@@ -48,19 +45,19 @@ router.put(
         check('precios.precioBase', 'El precio base debe ser un número positivo').optional().isFloat({ min: 0 }),
         check('stock', 'El stock debe ser un número entero positivo').optional().isInt({ min: 0 }),
     ],
-    updateProducto
+    editarProducto
 );
 
 // Route to delete a product by ID (only authenticated users with admin role)
 router.delete(
     '/:id',
-    deleteProductForEver
+    eliminarProducto
 );
 
 // Eliminar un producto por ID (solo usuarios autenticados y con rol admin)
 router.post(
     '/:pedidoId/:id',
-    deleteProducto
+    eliminarProductoPedido
 );
 
 export default router;

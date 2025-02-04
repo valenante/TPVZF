@@ -1,7 +1,7 @@
 import Password from "../models/Password.js";
 
 // Obtener la contraseña
-export const getPassword = async (req, res) => {
+export const obtenerPassword = async (req, res) => {
   try {
     // Busca la contraseña por clave
     const config = await Password.findOne({ clave: "contraseñaDelDía" });
@@ -19,7 +19,7 @@ export const getPassword = async (req, res) => {
 
 
 // Crear o actualizar la contraseña
-export const createOrUpdatePassword = async (req, res) => {
+export const crearActualizarPassword = async (req, res) => {
   const { valor } = req.body;
 
   if (!valor) {
@@ -42,7 +42,7 @@ export const createOrUpdatePassword = async (req, res) => {
 };
 
 // Actualizar contraseña
-export const updatePassword = async (req, res) => {
+export const actualizarPassword = async (req, res) => {
   const { valor } = req.body;
 
   if (!valor) {
@@ -68,7 +68,7 @@ export const updatePassword = async (req, res) => {
   }
 };
 
-export const validatePassword = async (req, res) => {
+export const validarPassword = async (req, res) => {
 
   const { password } = req.body;
   if (!password) {

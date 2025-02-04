@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { check, validationResult } from 'express-validator';
 const router = Router();
-import { login, register, renovarToken, logout, obtenerUsuario } from '../controllers/authController.js';
+import { login, registro, renovarToken, logout, obtenerUsuario } from '../controllers/authController.js';
 import { logAndNotifyLogin } from '../middlewares/failedSesionMiddleware.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import rateLimit from 'express-rate-limit';
@@ -61,7 +61,7 @@ router.post(
     }
     next();
   },
-  register
+  registro
 );
 
 // Endpoint para renovar token

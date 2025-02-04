@@ -1,20 +1,20 @@
 import { Router } from 'express';
 const router = Router();
-import { getVentas, getVentaById, createVenta, updateVenta, deleteVenta } from '../controllers/ventasController.js';
+import { obtenerVentasPorId, obtenerVentas, crearVenta, actualizarVenta, eliminarVenta } from '../controllers/ventasController.js';
 
 // Obtener todas las ventas
-router.get('/', getVentas);
+router.get('/', obtenerVentas);
 
 // Obtener una venta por ID
-router.get('/:id', getVentaById);
+router.get('/:id', obtenerVentasPorId);
 
 // Crear una nueva venta
-router.post('/', createVenta);
+router.post('/', crearVenta);
 
 // Actualizar una venta por ID
-router.put('/:id', updateVenta);
+router.put('/:id', actualizarVenta);
 
 // Eliminar una venta por ID
-router.delete('/:id', deleteVenta);
+router.delete('/:id', eliminarVenta);
 
 export default router;

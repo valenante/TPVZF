@@ -7,8 +7,6 @@ const MostrarEliminaciones = () => {
   const [eliminaciones, setEliminaciones] = useState([]);
   const [error, setError] = useState(null);
 
-  console.log(eliminaciones);
-
   useEffect(() => {
     const fetchEliminaciones = async () => {
       try {

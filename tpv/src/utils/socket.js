@@ -20,13 +20,11 @@ export const SocketProvider = ({ children }) => {
 
       // Escuchar eventos
       socketInstance.on("cuentaSolicitada", (data) => {
-        console.log(`Evento recibido: Mesa ${data.numeroMesa} quiere la cuenta`);
         setCuentaSolicitada(data); // Actualizar el estado con la solicitud
       });
 
       // Desconectar al desmontar
       return () => {
-        console.log("Desconectando el socket");
         socketInstance.disconnect();
       };
     }

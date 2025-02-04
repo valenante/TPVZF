@@ -5,7 +5,7 @@ import Eliminacion from '../models/Eliminacion.js';
 import Mesa from '../models/Mesa.js';
 
 // Obtener todos los productos
-export const getProductos = async (req, res) => {
+export const obtenerProductos = async (req, res) => {
     try {
         const productos = await Producto.find();
         res.status(200).json(productos);
@@ -16,7 +16,7 @@ export const getProductos = async (req, res) => {
 };
 
 // Obtener un producto por ID
-export const getProductoById = async (req, res) => {
+export const obtenerProductoPorId = async (req, res) => {
     const { id } = req.params;
     try {
         const producto = await Producto.findById(id);
@@ -30,7 +30,7 @@ export const getProductoById = async (req, res) => {
     }
 };
 
-export const getCategoriasByType = async (req, res) => {
+export const obtenerCategoriasPorTipo = async (req, res) => {
     const { type } = req.params;
 
     try {
@@ -45,7 +45,7 @@ export const getCategoriasByType = async (req, res) => {
 };
 
 //Editar producto
-export const updateProducto = async (req, res) => {
+export const editarProducto = async (req, res) => {
     const { id } = req.params;
     try {
         const productoActualizado = await Producto.findByIdAndUpdate
@@ -66,7 +66,7 @@ export const updateProducto = async (req, res) => {
     }
 }
 
-export const getProductosByCategory = async (req, res) => {
+export const obtenerProductosPorCategoria = async (req, res) => {
     const { category } = req.params;
 
     try {
@@ -80,7 +80,7 @@ export const getProductosByCategory = async (req, res) => {
 }
 
 // Crear un nuevo producto
-export const createProducto = async (req, res) => {
+export const crearProducto = async (req, res) => {
     try {
         const nuevoProducto = new Producto(req.body);
         if (req.file) {
@@ -98,7 +98,7 @@ export const createProducto = async (req, res) => {
     }
 };
 
-export const deleteProductForEver = async (req, res) => {
+export const eliminarProducto = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -113,7 +113,7 @@ export const deleteProductForEver = async (req, res) => {
     }
 };
 
-export const deleteProducto = async (req, res) => {
+export const eliminarProductoPedido = async (req, res) => {
   const { pedidoId, id: productoId } = req.params; // IDs del pedido y del producto
   // Obtener el usuario desde withCredentials
 

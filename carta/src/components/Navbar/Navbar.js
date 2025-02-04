@@ -38,6 +38,7 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
     const verificarPedidosListos = async () => {
       try {
         const response = await api.get(`/pedidos/pedidos/estado/${numeroMesa}`);
+        console.log(response.data)
         setPedidosListos(response.data?.todosListos || false);
       } catch (error) {
         console.error("Error al verificar el estado de los pedidos:", error);

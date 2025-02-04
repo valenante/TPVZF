@@ -1,7 +1,7 @@
 import User from '../models/Usuario.js'; // Modelo de usuario
 import jwt from 'jsonwebtoken';
 import TokenRevocado from '../models/TokenRevocado.js';
-import logger from '../../utils/logger.js';
+import { info, warn, error } from "../../utils/logger.js";
 
 // Generar access token
 const generarAccessToken = (user) => {
@@ -94,7 +94,7 @@ export const logout = async (req, res) => {
   }
 };
 
-export const register = async (req, res) => {
+export const registro = async (req, res) => {
   const { name, password, role } = req.body;
 
   try {
@@ -227,7 +227,7 @@ export const protegerRuta = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del encabezado
 
   if (!token) {
-    logger.warn('Intento de acceso no autorizado: Token no proporcionado');
+    warn('Intento de acceso no autorizado: Token no proporcionado');
     return res.status(401).json({ error: 'Acceso no autorizado. Se requiere un token válido.' });
   }
 
@@ -238,14 +238,14 @@ export const protegerRuta = (req, res, next) => {
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      logger.warn('Intento de acceso con token expirado');
+      warn('Intento de acceso con token expirado');
       return res.status(401).json({ error: 'El token ha expirado. Por favor, inicia sesión nuevamente.' });
     }
     if (error.name === 'JsonWebTokenError') {
-      logger.warn('Intento de acceso con token inválido');
+      warn('Intento de acceso con token inválido');
       return res.status(401).json({ error: 'Token inválido. Por favor, verifica tu autenticación.' });
     }
-    logger.error(`Error desconocido al verificar el token: ${error.message}`);
+    error(`Error desconocido al verificar el token: ${error.message}`);
     return res.status(500).json({ error: 'Ocurrió un error al procesar la autenticación.' });
   }
 };

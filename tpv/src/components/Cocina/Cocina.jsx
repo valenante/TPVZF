@@ -11,8 +11,6 @@ const Cocina = () => {
   const [pedidos, setPedidos] = useState([]);
   const [mostrarFinalizados, setMostrarFinalizados] = useState(false);
 
-  console.log('Pedidos:', pedidos);
-
   // Función para calcular tiempo transcurrido
   const calcularTiempoTranscurrido = (fecha) => {
     const ahora = new Date();
@@ -28,7 +26,6 @@ const Cocina = () => {
       const response = await api.get('/pedidos/pendientes/pendientes', {
         params: { tipo: 'plato' }, // Aquí especificamos que queremos solo los platos
       });
-      console.log('Pedidos pendientes (platos):', response.data);
       setPedidos(response.data);
     } catch (error) {
       console.error('Error al cargar pedidos:', error);
@@ -62,7 +59,6 @@ const Cocina = () => {
   const marcarPedidoComoListo = async (pedidoId) => {
     try {
       await api.put(`/pedidos/${pedidoId}`, { estado: 'listo' });
-      console.log(pedidos)
       cargarPedidos(); // Recargar la lista de pedidos
     } catch (error) {
       console.error('Error al marcar pedido como listo:', error);

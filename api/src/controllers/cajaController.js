@@ -10,7 +10,7 @@ import PDFDocument from "pdfkit";
 import nodemailer from "nodemailer";
 
 
-export const getCaja = async (req, res) => {
+export const obtenerCaja = async (req, res) => {
     try {
         // Obtener la caja actual desde el modelo `Caja`
         const caja = await Caja.findOne();

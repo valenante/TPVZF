@@ -7,8 +7,6 @@ const ProductoDetalle = ({ producto, cerrarModal, onConfirm, seleccionPrecio }) 
   const [ingredientesSeleccionados, setIngredientesSeleccionados] = useState([...producto.ingredientes]);
   const [opcionesSeleccionadas, setOpcionesSeleccionadas] = useState({});
 
-  console.log(seleccionPrecio);
-
   const manejarCantidad = (incremento) => {
     setCantidad((prev) => Math.max(1, prev + incremento));
   };

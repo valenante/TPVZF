@@ -23,7 +23,6 @@ const Barra = () => {
       const response = await api.get('/pedidosBebidas/pendientes/pendientes', {
         params: { tipo: 'bebida' },
       });
-      console.log('Pedidos de bebidas pendientes:', response.data);
       setPedidos(response.data);
     } catch (error) {
       console.error('Error al cargar pedidos de bebidas:', error);

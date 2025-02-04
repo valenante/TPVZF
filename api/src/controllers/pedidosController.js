@@ -5,7 +5,7 @@ import Cart from '../models/Cart.js';
 import Producto from '../models/Producto.js';
 
 // Crear un nuevo pedido
-export const createPedido = async (req, res) => {
+export const crearPedido = async (req, res) => {
     try {
         const { mesa, productos, total, comensales, alergias, pan, cartId, precioSeleccionado } = req.body;
 
@@ -174,7 +174,7 @@ export const agregarProductoAlPedido = async (req, res) => {
 
 
 // Obtener todos los pedidos
-export const getPedidos = async (req, res) => {
+export const obtenerPedidos = async (req, res) => {
     try {
         const pedidos = await Pedido.find().populate('mesa').populate('productos.producto');
         res.status(200).json(pedidos);
@@ -185,7 +185,7 @@ export const getPedidos = async (req, res) => {
 };
 
 // Obtener un pedido por ID
-export const getPedidoById = async (req, res) => {
+export const obtenerPedidosId = async (req, res) => {
     const { id } = req.params;
     try {
         const pedido = await Pedido.findById(id).populate('mesa').populate('productos.productoId');
@@ -200,7 +200,7 @@ export const getPedidoById = async (req, res) => {
 };
 
 // Obtener pedidos pendientes
-export const getPedidosPendientes = async (req, res) => {
+export const obtenerPedidosPendientes = async (req, res) => {
     try {
         const { tipo } = req.query; // Obtener el tipo de la consulta (plato o bebida)
 
@@ -221,7 +221,7 @@ export const getPedidosPendientes = async (req, res) => {
 };
 
 // Obtener pedidos finalizados
-export const getPedidosFinalizados = async (req, res) => {
+export const obtenerPedidosFinalizados = async (req, res) => {
     try {
         const { tipo } = req.query; // Obtener el tipo de la consulta (plato o bebida)
         const hace20Minutos = new Date(Date.now() - 20 * 60 * 1000); // Fecha límite
@@ -247,7 +247,7 @@ export const getPedidosFinalizados = async (req, res) => {
 };
 
 //Actualizar el estado de un producto en un pedido
-export const updateProducto = async (req, res) => {
+export const actualizarProducto = async (req, res) => {
     try {
         const { pedidoId, productoId } = req.params;
         const { estadoPreparacion } = req.body;
@@ -269,7 +269,7 @@ export const updateProducto = async (req, res) => {
 }
 
 // Actualizar un pedido por ID
-export const updatePedido = async (req, res) => {
+export const actualizarPedido = async (req, res) => {
     const { id } = req.params;
     const { productos, total, comensales, alergias, pan, estado } = req.body;
 
@@ -299,7 +299,7 @@ export const updatePedido = async (req, res) => {
 };
 
 // Eliminar un pedido por ID
-export const deletePedido = async (req, res) => {
+export const eliminarPedido = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -327,25 +327,30 @@ export const deletePedido = async (req, res) => {
 // Endpoint para verificar si todos los pedidos de una mesa están listos
 export const verificarPedidosMesa = async (req, res) => {
     const { numeroMesa } = req.params;
-  
+
     if (!numeroMesa || isNaN(Number(numeroMesa))) {
-      console.error("Número de mesa no válido:", numeroMesa);
-      return res.status(400).json({ error: "Número de mesa no válido." });
+        console.error("Número de mesa no válido:", numeroMesa);
+        return res.status(400).json({ error: "Número de mesa no válido." });
     }
-  
+
     try {
-      const mesa = await Mesa.findOne({ numero: Number(numeroMesa) });
-      if (!mesa) {
-        return res.status(404).json({ error: "Mesa no encontrada." });
-      }
-  
-      const pedidos = await Pedido.find({ mesa: mesa._id });
-      const todosListos = pedidos.every((pedido) => pedido.estado === "listo");
-  
-      res.status(200).json({ todosListos });
+        const mesa = await Mesa.findOne({ numero: Number(numeroMesa) });
+        if (!mesa) {
+            return res.status(404).json({ error: "Mesa no encontrada." });
+        }
+
+        const pedidos = await Pedido.find({ mesa: mesa._id });
+        
+        if (pedidos.length === 0) {
+            // ✅ Si no hay pedidos, devolver false
+            return res.status(200).json({ todosListos: false });
+        }
+
+        const todosListos = pedidos.every((pedido) => pedido.estado === "listo");
+
+        res.status(200).json({ todosListos });
     } catch (error) {
-      console.error("Error al verificar pedidos de la mesa:", error);
-      res.status(500).json({ error: "Error al verificar pedidos de la mesa." });
+        console.error("Error al verificar pedidos de la mesa:", error);
+        res.status(500).json({ error: "Error al verificar pedidos de la mesa." });
     }
-  };
-  
+};

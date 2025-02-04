@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Trans } from "@lingui/react";
 import DOMPurify from "dompurify"; // Para sanitizar entradas de texto
 import api from "../utils/api"; // Configuración de Axios
+import { useMesas } from "../context/MesasContext"; // ✅ Importar el hook useMesas
 import "../styles/Valoraciones.css"; // Archivo de estilos
 
 const Valoraciones = () => {
   const [productos, setProductos] = useState([]);
+  const { mesaId } = useMesas(); // ✅ Acceder al ID de la mesa con useMesas
   const [valoraciones, setValoraciones] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  console.log(mesaId)
 
   useEffect(() => {
     // Cargar productos desde el backend
     const cargarProductos = async () => {
       try {
-        const mesaId = localStorage.getItem("mesaId"); // Obtener mesaId desde localStorage
-        if (!mesaId) {
-          navigate("/"); // Si no hay mesaId, redirigir fuera de la web
-          return;
-        }
 
-        const { data } = await api.get("/valoraciones/productos-valoraciones", {
+        const { data } = await api.get("/valoraciones/productos-valoraciones/productos-valoraciones", {
           params: { mesaId },
         });
 
@@ -79,14 +78,15 @@ const Valoraciones = () => {
   // Enviar valoraciones
   const enviarValoraciones = async () => {
     try {
-      const mesaId = localStorage.getItem("mesaId");
       const valoracionesAEnviar = valoraciones.map((valoracion) => ({
         producto: valoracion.productoId,
         puntuacion: valoracion.estrellas,
         comentario: valoracion.comentario,
       }));
 
-      await api.post("/valoraciones", valoracionesAEnviar, { params: { mesaId } });
+      console.log('hola', valoracionesAEnviar, mesaId)
+
+      await api.post(`/valoraciones?mesaId=${mesaId}`, valoracionesAEnviar);
 
       alert("¡Gracias por tu valoración!");
       localStorage.clear();

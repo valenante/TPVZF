@@ -32,7 +32,6 @@ const DetallePedido = () => {
       <p>Productos:</p>
       <ul>
         {pedido.productos.map((producto, index) => (
-            console.log(producto),
           <li key={index}>
             {producto.producto.nombre} - Cantidad: {producto.cantidad} - Total: {producto.total} €
           </li>

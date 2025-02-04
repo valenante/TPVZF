@@ -17,8 +17,6 @@ const DetalleMesa = () => {
   const navigate = useNavigate();
   const socketRef = useRef(null); // Usar `useRef` para la instancia de `socket`
 
-  console.log(user, 'en mesaDetalle');
-
   useEffect(() => {
     const fetchMesa = async () => {
       try {

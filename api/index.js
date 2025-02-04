@@ -1,79 +1,42 @@
-import limpiarTokensExpirados from "./utils/cleanupTokens.js";
-
-// Ejecutar limpieza de tokens cada 1 hora
-setInterval(() => {
-  limpiarTokensExpirados();
-}, 3600000); // 1 hora en milisegundos
-
 import express from "express";
-import { connect } from "mongoose";
 import { config } from "dotenv";
 import compression from "compression";
 import { info, error as _error } from "./utils/logger.js";
 import { createServer } from "http";
-import { Server } from "socket.io";
-import session from 'express-session';
-import dotenv from 'dotenv';
-import cors from "cors";
 import cookieParser from "cookie-parser";
-import mesaRoutes from "./src/routes/mesaRoutes.js"; // Importar rutas de mesas
-import productoRoutes from "./src/routes/productosRoutes.js"; // Importar rutas de productos
-import authRoutes from "./src/routes/authRoutes.js"; // Importar rutas de autenticación
-import pedidosRoutes from "./src/routes/pedidosRoutes.js"; // Importar rutas de pedidos
-import pedidoBebidasRoutes from "./src/routes/pedidoBebidasRoutes.js"; // Importar rutas de pedidos de bebidas
-import ventasRoutes from "./src/routes/ventasRoutes.js"; // Importar rutas de ventas
-import cartRoutes from "./src/routes/cartRoutes.js"; // Importar rutas de carrito
+import session from "express-session";
+import cors from "cors";
+import { corsOptions, sessionConfig, configureSocketIO, connectToDatabase, PORT } from "./config/config.js"; // ✅ Importamos la configuración
+import { pedidosRateLimiter, valoracionesRateLimiter } from "./src/middlewares/rateLimit.js";
+import mesaRoutes from "./src/routes/mesaRoutes.js";
+import productoRoutes from "./src/routes/productosRoutes.js";
+import authRoutes from "./src/routes/authRoutes.js";
+import pedidosRoutes from "./src/routes/pedidosRoutes.js";
+import pedidoBebidasRoutes from "./src/routes/pedidoBebidasRoutes.js";
+import ventasRoutes from "./src/routes/ventasRoutes.js";
+import cartRoutes from "./src/routes/cartRoutes.js";
 import passwordRoutes from "./src/routes/passwordRoutes.js";
 import errorHandler from "./src/middlewares/errorHandler.js";
 import notFoundHandler from "./src/middlewares/notFoundHandler.js";
-import cajaRoutes from "./src/routes/cajaRoutes.js"; // Importar rutas de caja
-import eliminacionRoutes from "./src/routes/eliminacionRoutes.js"; // Importar rutas de eliminaciones
-import cajaDiariaRoutes from "./src/routes/cajaDiariaRoutes.js"; // Importar rutas de caja diaria
-import valoracionesRoutes from "./src/routes/valoracionesRoutes.js"; // Importar rutas de 
-import cuentaRoutes from "./src/routes/cuentaRoutes.js"; // Importar rutas de cuenta
+import cajaRoutes from "./src/routes/cajaRoutes.js";
+import eliminacionRoutes from "./src/routes/eliminacionRoutes.js";
+import cajaDiariaRoutes from "./src/routes/cajaDiariaRoutes.js";
+import valoracionesRoutes from "./src/routes/valoracionesRoutes.js";
+import cuentaRoutes from "./src/routes/cuentaRoutes.js";
 import imagesRoutes from "./src/routes/imagesRoutes.js";
 
-// Configurar dotenv para variables de entorno
+// Configurar dotenv
 config();
 
-// Inicializar la aplicación Express
+// Inicializar Express y servidor HTTP
 const app = express();
-const server = createServer(app); // Crear el servidor HTTP
-dotenv.config();
+const server = createServer(app);
 
-const corsOptions = {
-  origin: ["http://localhost:3002", "http://172.20.10.7:3002", "http://localhost:3001", "http://172.20.10.7:3001", "http://localhost:3000", "http://172.20.10.7:3000"], // Orígenes permitidos
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization",'X-Cart-ID'], // Encabezados permitidos
-  credentials: true, // Permitir envío de cookies
-};
+// Configurar CORS
+app.use(cors(corsOptions));
 
-app.use(cors(corsOptions)); // Habilitar CORS con opciones específicas
-const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:3002", "http://172.20.10.7:3002", "http://localhost:3001", "http://172.20.10.7:3001", "http://localhost:3000", "http://172.20.10.7:3000"], // Orígenes permitidos
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization",'X-Cart-ID'],
-    credentials: true,
-  },
-});
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET, // Clave secreta para firmar la cookie
-    resave: false, // No guarda la sesión si no hay cambios
-    saveUninitialized: false, // No crea sesiones vacías
-    cookie: {
-      httpOnly: true, // Solo accesible desde el servidor
-      secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
-      sameSite: 'Strict', // Protege contra ataques CSRF
-      maxAge: 15 * 60 * 1000, // Duración en milisegundos
-    },
-  })
-);
-
-app.use('/images', express.static('public/images'));
-
+// Configurar sesión
+app.use(session(sessionConfig));
 
 // Middleware de compresión HTTP
 app.use(compression());
@@ -81,59 +44,46 @@ app.use(compression());
 // Middleware para parsear cookies
 app.use(cookieParser());
 
-// Middleware para parsear JSON
-app.use(express.json()); // ✅ Permitir recibir JSON en el body
+// Middleware para parsear JSON y formularios
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Middleware para parsear formularios
-app.use(express.urlencoded({ extended: true })); // Para formularios normales
+// Configurar Socket.IO
+const io = configureSocketIO(server);
 
-// Middleware para compartir `io` con las rutas
+// Compartir instancia de Socket.IO con las rutas
 app.use((req, res, next) => {
-  req.io = io; // Compartir la instancia de Socket.IO con los controladores
+  req.io = io;
   next();
 });
 
-// Variables de entorno y configuración de MongoDB
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/dataBaseZF";
-const PORT = process.env.PORT || 3000;
+// Conectar a MongoDB
+connectToDatabase();
 
-// Log inicial
-info("Aplicación iniciada correctamente");
+//Devolver imagenes
+app.use(express.static("public"));
 
-// Conexión a MongoDB
-connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    info("Conectado a MongoDB");
-    console.log("Conectado a MongoDB");
-  })
-  .catch((error) => {
-    _error(`Error al conectar a MongoDB: ${error.message}`);
-    console.error("Error al conectar a MongoDB:", error);
-  });
-
-// Rutas
-app.use("/api/mesas", mesaRoutes); // Rutas de mesas
-app.use("/api/productos", productoRoutes); // Rutas de productos
-app.use("/api/auth", authRoutes); // Rutas de autenticación
-app.use("/api/pedidos", pedidosRoutes); // Rutas de pedidos
-app.use("/api/pedidosBebidas", pedidoBebidasRoutes); // Rutas de pedidos de bebidas
-app.use("/api/ventas", ventasRoutes); // Rutas de ventas
-app.use("/api/cart", cartRoutes); // Rutas de carrito
-app.use("/api/password", passwordRoutes); // Rutas de contraseña
-app.use("/api/caja", cajaRoutes); // Rutas de caja
-app.use("/api/eliminaciones", eliminacionRoutes); // Rutas de eliminaciones
-app.use("/api/cajaDiaria", cajaDiariaRoutes); // Rutas de caja diaria
-app.use("/api/valoraciones", valoracionesRoutes); // Rutas de valoraciones
-app.use("/api/cuenta", cuentaRoutes); // Rutas de cuenta
+// Registrar rutas
+app.use("/api/mesas", mesaRoutes);
+app.use("/api/productos", productoRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/pedidos", pedidosRateLimiter, pedidosRoutes);
+app.use("/api/pedidosBebidas", pedidosRateLimiter, pedidoBebidasRoutes);
+app.use("/api/ventas", ventasRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/password", passwordRoutes);
+app.use("/api/caja", cajaRoutes);
+app.use("/api/eliminaciones", eliminacionRoutes);
+app.use("/api/cajaDiaria", cajaDiariaRoutes);
+app.use("/api/valoraciones", valoracionesRoutes);
+app.use("/api/cuenta", cuentaRoutes);
 app.use("/api/images", imagesRoutes);
 
+// Middlewares de error
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// Ruta de ejemplo
+// Ruta principal
 app.get("/", (req, res) => {
   info("Se recibió una solicitud en la ruta raíz");
   res.send("¡Bienvenido a la API de ZF!");
@@ -142,23 +92,15 @@ app.get("/", (req, res) => {
 // Manejo de errores no capturados
 process.on("uncaughtException", (error) => {
   _error(`Excepción no capturada: ${error.message}`);
-  process.exit(1); // Finalizar la aplicación
+  process.exit(1);
 });
 
 process.on("unhandledRejection", (reason) => {
   _error(`Promesa no manejada: ${reason}`);
-  process.exit(1); // Finalizar la aplicación
+  process.exit(1);
 });
 
-import debug from "debug";
-
-const debugLog = debug("socket.io");
-debugLog.enabled = true; // Activa logs de Socket.IO
-
-io.on("connection", (socket) => {
-  debugLog(`Cliente conectado: ${socket.id}`);
-});
-
+// Configurar eventos de Socket.IO
 io.on("connection", (socket) => {
   console.log(`Cliente conectado: ${socket.id}`);
 
@@ -172,4 +114,4 @@ server.listen(PORT, () => {
   info(`Servidor escuchando en el puerto ${PORT}`);
 });
 
-export {io};
+export { io };

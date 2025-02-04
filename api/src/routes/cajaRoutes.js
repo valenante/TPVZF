@@ -2,10 +2,10 @@ import { Router } from 'express';
 const router = Router();
 
 // Importar los controladores de caja
-import { getCaja, cerrarCaja, retirarDinero, integrarDinero } from '../controllers/cajaController.js';
+import { cerrarCaja, retirarDinero, integrarDinero, obtenerCaja } from '../controllers/cajaController.js';
 
 // Obtener el total de la caja
-router.get('/total', getCaja);
+router.get('/total', obtenerCaja);
 
 // Retirar dinero de la caja
 router.post('/retirar', retirarDinero);

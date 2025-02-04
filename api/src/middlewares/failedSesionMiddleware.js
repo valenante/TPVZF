@@ -1,4 +1,4 @@
-import logger from '../../utils/logger.js';
+import { info, warn, error } from "../../utils/logger.js";
 import nodemailer from 'nodemailer';
 
 // Configurar nodemailer
@@ -14,10 +14,10 @@ export const logAndNotifyLogin = async (req, res, next) => {
   const { name } = req.body;
   const ip = req.ip;
 
-  logger.info(`[LOGIN ATTEMPT] Usuario: ${name}, IP: ${ip}, Hora: ${new Date().toISOString()}`);
+  info(`[LOGIN ATTEMPT] Usuario: ${name}, IP: ${ip}, Hora: ${new Date().toISOString()}`);
 
   if (!req.session) {
-    logger.error('La sesión no está disponible.');
+    error('La sesión no está disponible.');
     return next();
   }
 
@@ -52,9 +52,9 @@ export const logAndNotifyLogin = async (req, res, next) => {
 
     try {
       await transporter.sendMail(mailOptions);
-      logger.info(`[NOTIFICACIÓN] Correo enviado por intentos sospechosos para el usuario: ${name}`);
+      info(`[NOTIFICACIÓN] Correo enviado por intentos sospechosos para el usuario: ${name}`);
     } catch (error) {
-      logger.error(`[ERROR] Fallo al enviar correo: ${error.message}`);
+      error(`[ERROR] Fallo al enviar correo: ${error.message}`);
     }
   }
 

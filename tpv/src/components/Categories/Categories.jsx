@@ -23,9 +23,7 @@ const Categories = ({ category }) => {
 
   const handleSave = async (updatedProduct) => {
     try {
-      console.log(updatedProduct, 'nananananananas');
       await updateProduct(updatedProduct); // Usa el método del contexto
-      console.log(updatedProduct, 'nananananananas');
       setEditingProduct(null); // Cierra el editor
     } catch (error) {
       console.error("Error al guardar producto:", error);

@@ -4,13 +4,11 @@ import './PedidosFinalizados.css';
 
 const PedidosFinalizados = ({ onClose }) => {
   const [pedidosFinalizados, setPedidosFinalizados] = useState([]);
-  console.log(pedidosFinalizados);
-
+  
   const cargarPedidosFinalizados = async () => {
     try {
       const response = await api.get('/pedidos/finalizados/finalizados');
-      console.log('Pedidos finalizados:', response.data);
-      setPedidosFinalizados(response.data);
+       setPedidosFinalizados(response.data);
     } catch (error) {
       console.error('Error al cargar pedidos finalizados:', error);
     }
