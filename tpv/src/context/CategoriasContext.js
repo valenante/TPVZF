@@ -39,7 +39,6 @@ export const CategoriasProvider = ({ children }) => {
       setProducts((prevProducts) => {
         // Verifica si ya existen productos para la categoría
         if (prevProducts.some((product) => product.categoria === category)) {
-          console.log(`Productos ya cargados para la categoría ${category}`);
           return prevProducts; // Evita recargar productos
         }
         return prevProducts;
@@ -59,6 +58,7 @@ export const CategoriasProvider = ({ children }) => {
       setProducts((prev) =>
         prev.map((p) => (p._id === product._id ? product : p))
       );
+      console.log(product);
     } catch (error) {
       console.error("Error al actualizar producto:", error);
       throw error;

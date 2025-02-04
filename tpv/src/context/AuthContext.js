@@ -13,8 +13,6 @@ export const AuthProvider = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  console.log(user, 'usuario');
-
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -39,7 +37,6 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await api.get("/auth/me/me", { withCredentials: true });
         setUser(response.data.user);
-        console.log(response.data.user, 'usuario');
       } catch (error) {
         console.error("No autenticado:", error);
         setUser(null);

@@ -76,6 +76,7 @@ const CarritoModal = ({ cerrarModal }) => {
           nombre: item.productId.nombre,
           tipo: item.productId.tipo,
           categoria: item.productId.categoria,
+          ingredientesEliminados: item.ingredientes,
           cantidad: item.cantidad,
           precioSeleccionado: item.precioSeleccionado,
           total: (item.precioSeleccionado || item.productId.precios.precioBase) * item.cantidad,
@@ -96,9 +97,6 @@ const CarritoModal = ({ cerrarModal }) => {
           productosPlatos.push(productoData);
         }
       });
-
-      console.log(productosPlatos, 'productosPlatos');
-      console.log(productosBebidas, 'productosBebidas');
   
       // Crear pedidos separados si hay productos de ambos tipos
       if (productosPlatos.length > 0) {
@@ -107,6 +105,7 @@ const CarritoModal = ({ cerrarModal }) => {
           cartId: carritoId,
           productos: productosPlatos,
           total: productosPlatos.reduce((total, item) => total + item.total, 0),
+          ingredientesEliminados: productosPlatos.ingredientes,
           comensales,
           alergias,
         };
@@ -124,9 +123,6 @@ const CarritoModal = ({ cerrarModal }) => {
         };
         await api.post("/pedidosBebidas", pedidoBebidas);
       }
-
-      //Mostrar la ruta a la que consultamos
-      console.log('Ruta a la que consultamos: ', `/pedidosBebidas/estado/${numeroMesa}`);
   
       // Limpiar el carrito después de enviar los pedidos
       localStorage.removeItem("carritoMongoId");

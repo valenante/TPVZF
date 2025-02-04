@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import io from 'socket.io-client';
-import PedidosFinalizados from './PedidosFinalizados';
 import './Barra.css';
 
 // Conectar al servidor de Socket.io
@@ -9,7 +8,6 @@ const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const Barra = () => {
   const [pedidos, setPedidos] = useState([]);
-  const [mostrarFinalizados, setMostrarFinalizados] = useState(false);
 
   // Función para calcular tiempo transcurrido
   const calcularTiempoTranscurrido = (fecha) => {
@@ -92,12 +90,6 @@ const Barra = () => {
   return (
     <div className="barra--barra">
       <h1 className="titulo--barra">Pedidos Pendientes</h1>
-      <button
-        onClick={() => setMostrarFinalizados(true)}
-        className="boton-finalizados--barra"
-      >
-        Ver Pedidos Finalizados
-      </button>
       {pedidos.length === 0 ? (
         <p className="mensaje-vacio--barra">No hay pedidos de bebidas pendientes</p>
       ) : (

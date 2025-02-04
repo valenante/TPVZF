@@ -23,7 +23,9 @@ const Categories = ({ category }) => {
 
   const handleSave = async (updatedProduct) => {
     try {
+      console.log(updatedProduct, 'nananananananas');
       await updateProduct(updatedProduct); // Usa el método del contexto
+      console.log(updatedProduct, 'nananananananas');
       setEditingProduct(null); // Cierra el editor
     } catch (error) {
       console.error("Error al guardar producto:", error);
@@ -59,7 +61,7 @@ const Categories = ({ category }) => {
         <p className="sin-productos--categories">No hay productos en esta categoría.</p>
       ) : (
         <div className="productos-grid--categories">
-          {products.slice(0, 8).map((product) => (
+          {products.map((product) => (
             <div key={product._id} className="producto-card--categories">
               <p>{product.nombre}</p>
               <div className="producto-botones--categories">

@@ -18,15 +18,15 @@ const ProductoCard = ({ producto, estrellas }) => {
     producto.precios.tapa !== null && producto.precios.tapa >= 0
       ? "tapa"
       : producto.precios.racion !== null && producto.precios.racion >= 0
-      ? "racion"
-      : "surtido"
+        ? "racion"
+        : "surtido"
   );
 
   const { i18n } = useLingui();
   const idiomaActual = i18n.locale;
   const nombreTraducido = producto.traducciones?.[idiomaActual]?.nombre || producto.nombre;
   const descripcionTraducida = producto.traducciones?.[idiomaActual]?.descripcion || producto.descripcion;
-  const esCroqueta = producto.nombre.toLowerCase().includes('croqueta') && !producto.nombre.toLowerCase().includes('mexicana');
+  const esCroqueta = producto.nombre.toLowerCase().includes("croqueta") && !producto.nombre.toLowerCase().includes("mexicanas");
 
   useEffect(() => {
     const handleResize = () => {
@@ -82,7 +82,7 @@ const ProductoCard = ({ producto, estrellas }) => {
                       <Trans id="racion">Ración</Trans> - {producto.precios.racion} €
                     </option>
                   )}
-                  {producto.precios.surtido !== null && (
+                  {typeof producto.precios.surtido === "number" && !isNaN(producto.precios.surtido) && (
                     <option value={producto.precios.surtido}>
                       <Trans id="surtido">Surtido</Trans> - {producto.precios.surtido} €
                     </option>
