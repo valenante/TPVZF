@@ -144,3 +144,12 @@
 [2025-02-14 22:52:29] INFO: Servidor escuchando en el puerto 3000
 [2025-02-14 22:56:44] INFO: Servidor escuchando en el puerto 3000
 [2025-02-14 22:56:48] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T21:56:48.184Z
+[2025-02-14 23:05:41] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 23:07:42] ERROR: [POST] /api/auth/register - invalid csrf token
+[2025-02-14 23:07:52] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 23:07:56] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T22:07:56.215Z
+[2025-02-14 23:08:11] ERROR: [POST] /api/auth/register - invalid csrf token
+[2025-02-14 23:09:29] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 23:13:13] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 23:13:17] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T22:13:17.690Z
+[2025-02-14 23:14:02] INFO: Servidor escuchando en el puerto 3000

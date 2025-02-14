@@ -54,7 +54,7 @@
   
   /* Errores */
   .error--register {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     color: #ff0000; /* Rojo */
     font-style: italic;
   }

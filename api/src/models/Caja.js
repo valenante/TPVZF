@@ -43,7 +43,7 @@ const CajaSchema = new Schema(
         },
         operaciones: [
             {
-              tipo: { type: String, enum: ["retirar", "integrar","cierre"], required: true },
+              tipo: { type: String, enum: ["retirar", "integrar","cierre","ajuste"], required: true },
               monto: { type: Number, required: true },
               razon: { type: String, required: true },
               fecha: { type: Date, default: Date.now },
