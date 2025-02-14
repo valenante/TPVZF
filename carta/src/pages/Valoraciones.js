@@ -84,13 +84,11 @@ const Valoraciones = () => {
         comentario: valoracion.comentario,
       }));
 
-      console.log('hola', valoracionesAEnviar, mesaId)
-
       await api.post(`/valoraciones?mesaId=${mesaId}`, valoracionesAEnviar);
 
       alert("¡Gracias por tu valoración!");
       localStorage.clear();
-      navigate("/");
+      window.location.href = "https://www.google.com/search?client=safari&sca_esv=e6182da575e8b716&rls=en&sxsrf=AHTn8zqqgHqdZwmypsIJqc9la2CMPknULw:1739570436727&si=APYL9bs7Hg2KMLB-4tSoTdxuOx8BdRvHbByC_AuVpNyh0x2KzX5KKmkHLDdoPn7kYismFYbhKPchvUpAro8JFhU7uCggslmn8wuQxGhNj-JBF61qAnaIxihmVEG7vfCsKZRB89gYAR-NY-OZxafcF_nrV8K130Xwf3VoTmwAwoC0TcuNXfCM-tAp1Kt8tr2E_RRGxHp4_0LX&q=ZABOR+FETEN+-+Restaurante,+Bar+y+Tapas+en+Torremolinos+Rese%C3%B1as&sa=X&ved=2ahUKEwjHjMXvlMSLAxUR9LsIHSuEK7IQ0bkNegQILBAE&biw=1470&bih=840&dpr=2";
     } catch (error) {
       console.error("Error al enviar las valoraciones:", error);
       alert("Hubo un problema al enviar las valoraciones. Intenta nuevamente.");

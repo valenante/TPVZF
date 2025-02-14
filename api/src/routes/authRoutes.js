@@ -61,7 +61,7 @@ router.post(
     }
     next();
   },
-
+  registro
 );
 
 // Endpoint para renovar token
