@@ -33,3 +33,15 @@
 [2025-02-04 22:58:40] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/pedidos/estado/2
 [2025-02-04 22:58:40] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/pedidos/estado/2
 [2025-02-04 22:58:50] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/pedidos/estado/2
+[2025-02-12 22:43:50] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67ad15d81689cabf953af258
+[2025-02-12 22:43:50] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67ad15d81689cabf953af258
+[2025-02-12 22:43:51] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67ad15d81689cabf953af258
+[2025-02-12 22:43:51] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67ad15d81689cabf953af258
+[2025-02-12 22:44:01] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67960254d88ef86751813022/agregar-producto
+[2025-02-14 15:23:22] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/pendientes/pendientes?tipo=plato
+[2025-02-14 15:23:23] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:23:24] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:23:29] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:23:29] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:23:29] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:59:43] ERROR: Promesa no manejada: TypeError: Cannot read properties of undefined (reading 'id')

@@ -6,12 +6,11 @@ import { ToastContainer } from "react-toastify";
 import CartaPage from './pages/CartaPage';
 import PreMenu from './components/PreMenu/PreMenu';
 import Valoraciones from './pages/Valoraciones.js';
-import Navbar from './components/Navbar/Navbar';  // 👈 Importar Navbar
 import { I18nProvider } from "@lingui/react";
 import { i18n } from "@lingui/core";
 import { messages as enMessages } from "./locales/en/messages";
 import { messages as esMessages } from "./locales/es/messages";
-import { MesasProvider } from './context/MesasContext.js';
+import { MesasProvider } from './context/MesasContext';
 
 // Configuración de idiomas
 const locales = {

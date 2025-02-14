@@ -7,7 +7,6 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
 import { corsOptions, sessionConfig, configureSocketIO, connectToDatabase, PORT } from "./config/config.js"; // ✅ Importamos la configuración
-import { pedidosRateLimiter, valoracionesRateLimiter } from "./src/middlewares/rateLimit.js";
 import mesaRoutes from "./src/routes/mesaRoutes.js";
 import productoRoutes from "./src/routes/productosRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
@@ -67,8 +66,8 @@ app.use(express.static("public"));
 app.use("/api/mesas", mesaRoutes);
 app.use("/api/productos", productoRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/pedidos", pedidosRateLimiter, pedidosRoutes);
-app.use("/api/pedidosBebidas", pedidosRateLimiter, pedidoBebidasRoutes);
+app.use("/api/pedidos", pedidosRoutes);
+app.use("/api/pedidosBebidas", pedidoBebidasRoutes);
 app.use("/api/ventas", ventasRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/password", passwordRoutes);

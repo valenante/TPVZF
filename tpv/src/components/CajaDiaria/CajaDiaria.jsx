@@ -60,7 +60,7 @@ const GraficoCajaDiaria = () => {
   };
 
   const data = {
-    labels: Array.isArray(datos) ? datos.map((caja) => new Date(caja.fecha).toLocaleDateString()) : [],
+    labels: Array.isArray(datos) ? datos.map((caja) => new Date(caja.createdAt).toLocaleDateString()) : [],
     datasets: [
       {
         label: "Total de Caja (€)", // Etiqueta con símbolo de euro

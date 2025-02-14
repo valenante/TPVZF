@@ -164,218 +164,226 @@ export const cerrarMesa = async (req, res) => {
 
     await mesaCerrada.save();
 
-    // Actualizar la caja
-    const caja = await Caja.findOne();
+    // Calcular el rango de fechas para el día actual
+    const hoy = new Date();
+    const inicioDelDia = new Date(hoy.setHours(0, 0, 0, 0));
+    const finDelDia = new Date(hoy.setHours(23, 59, 59, 999));
 
-    if (caja) {
-      // Sumar los totales de la mesa cerrada a la caja existente
-      caja.detallesMetodoPago.efectivo += efectivo;
-      caja.detallesMetodoPago.tarjeta += tarjeta;
-      caja.detallesMetodoPago.propina += propinaCalculada; // Sumar la propina al campo correspondiente
-      caja.total += totalMesa;
+    // Buscar la caja con fecha de hoy y estado abierta
+    const caja = await Caja.findOne({
+      fechaApertura: { $gte: inicioDelDia, $lte: finDelDia },
+      estado: "abierta"
+    });
 
-      // Registrar la operación de cierre
-      caja.operaciones.push({
-        tipo: "cierre",
-        monto: totalMesa,
-        razon: `Cierre de la mesa número ${mesa.numero}`,
-      });
+      if(caja) {
+        // Sumar los totales de la mesa cerrada a la caja existente
+        caja.detallesMetodoPago.efectivo += efectivo;
+        caja.detallesMetodoPago.tarjeta += tarjeta;
+        caja.detallesMetodoPago.propina += propinaCalculada; // Sumar la propina al campo correspondiente
+        caja.total += totalMesa;
 
-      await caja.save();
-    } else {
-      // Crear una nueva caja si no existe
-      const nuevaCaja = new Caja({
-        total: totalMesa,
-        detallesMetodoPago: { efectivo, tarjeta, propina: propinaCalculada },
-        operaciones: [
-          {
-            tipo: "cierre",
-            monto: totalMesa,
-            razon: `Cierre de la mesa número ${mesa.numero}`,
-          },
-        ],
-      });
+        // Registrar la operación de cierre
+        caja.operaciones.push({
+          tipo: "cierre",
+          monto: totalMesa,
+          razon: `Cierre de la mesa número ${mesa.numero}`,
+        });
 
-      await nuevaCaja.save();
-    }
+        await caja.save();
+      } else {
+        // Crear una nueva caja si no existe
+        const nuevaCaja = new Caja({
+          total: totalMesa,
+          detallesMetodoPago: { efectivo, tarjeta, propina: propinaCalculada },
+          operaciones: [
+            {
+              tipo: "cierre",
+              monto: totalMesa,
+              razon: `Cierre de la mesa número ${mesa.numero}`,
+            },
+          ],
+        });
+
+        await nuevaCaja.save();
+      }
 
     // Restablecer valores de mesa abierta
     mesa.estado = 'cerrada';
-    mesa.total = 0;
-    mesa.pedidos = [];
-    mesa.tokenLider = null;
-    await mesa.save();
+      mesa.total = 0;
+      mesa.pedidos = [];
+      mesa.tokenLider = null;
+      await mesa.save();
 
-    res.status(200).json({
-      message: 'Mesa cerrada con éxito',
-      mesaCerrada,
-      propina: propinaCalculada,
-    });
-  } catch (error) {
-    console.error('Error al cerrar la mesa:', error);
-    res.status(500).json({ error: 'Error al cerrar la mesa' });
-  }
-};
-
-
-// Obtener historial de mesas cerradas
-export const getHistorialMesas = async (req, res) => {
-  const { numero, desde, hasta } = req.query;
-
-  try {
-    const filtros = {};
-    if (numero) filtros.numero = numero;
-    if (desde || hasta) {
-      filtros.cierre = {};
-      if (desde) filtros.cierre.$gte = new Date(desde);
-      if (hasta) filtros.cierre.$lte = new Date(hasta);
+      res.status(200).json({
+        message: 'Mesa cerrada con éxito',
+        mesaCerrada,
+        propina: propinaCalculada,
+      });
+    } catch (error) {
+      console.error('Error al cerrar la mesa:', error);
+      res.status(500).json({ error: 'Error al cerrar la mesa' });
     }
-
-    const historial = await MesaCerrada.find(filtros).populate('pedidos');
-    res.status(200).json(historial);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener el historial de mesas' });
-  }
-};
+  };
 
 
-//Obtener el ID de una mesa por su número
-export const obtenerMesaPorNumero = async (req, res) => {
-  const { numeroMesa } = req.params;
-  try {
-    const mesa = await Mesa.findOne({ numeroMesa });
-    if (!mesa) {
-      return res.status(404).json({ error: 'Mesa no encontrada' });
+  // Obtener historial de mesas cerradas
+  export const getHistorialMesas = async (req, res) => {
+    const { numero, desde, hasta } = req.query;
+
+    try {
+      const filtros = {};
+      if (numero) filtros.numero = numero;
+      if (desde || hasta) {
+        filtros.cierre = {};
+        if (desde) filtros.cierre.$gte = new Date(desde);
+        if (hasta) filtros.cierre.$lte = new Date(hasta);
+      }
+
+      const historial = await MesaCerrada.find(filtros).populate('pedidos');
+      res.status(200).json(historial);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener el historial de mesas' });
     }
-    res.status(200).json(mesa);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener la mesa' });
-  }
-};
+  };
 
-export const obtenerMesasCerradas = async (req, res) => {
-  try {
-    const mesasCerradas = await MesaCerrada.find({})
-      .populate({
-        path: 'pedidos', // Relación con pedidos
-        populate: {
-          path: 'productos', // Relación con productos dentro de los pedidos
-          select: 'producto cantidad total', // Selecciona los campos relevantes
+
+  //Obtener el ID de una mesa por su número
+  export const obtenerMesaPorNumero = async (req, res) => {
+    const { numeroMesa } = req.params;
+    try {
+      const mesa = await Mesa.findOne({ numeroMesa });
+      if (!mesa) {
+        return res.status(404).json({ error: 'Mesa no encontrada' });
+      }
+      res.status(200).json(mesa);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener la mesa' });
+    }
+  };
+
+  export const obtenerMesasCerradas = async (req, res) => {
+    try {
+      const mesasCerradas = await MesaCerrada.find({})
+        .populate({
+          path: 'pedidos', // Relación con pedidos
           populate: {
-            path: 'producto', // Relación con el nombre del producto
-            select: 'nombre', // Solo obtén el nombre del producto
+            path: 'productos', // Relación con productos dentro de los pedidos
+            select: 'producto cantidad total', // Selecciona los campos relevantes
+            populate: {
+              path: 'producto', // Relación con el nombre del producto
+              select: 'nombre', // Solo obtén el nombre del producto
+            },
           },
-        },
-      })
-      .sort({ cierre: -1 }); // Ordenar por cierre descendente
+        })
+        .sort({ cierre: -1 }); // Ordenar por cierre descendente
 
-    res.status(200).json(mesasCerradas);
-  } catch (error) {
-    console.error('Error al obtener las mesas cerradas:', error);
-    res.status(500).json({ error: 'Error al obtener las mesas cerradas.' });
-  }
-};
-
-export const obtenerMesasAbiertas = async (req, res) => {
-  try {
-    const mesasAbiertas = await Mesa.find({ estado: 'abierta' }).populate('pedidos');
-    res.status(200).json(mesasAbiertas);
-  } catch (error) {
-    console.error('Error al obtener las mesas abiertas:', error);
-    res.status(500).json({ error: 'Error al obtener las mesas abiertas.' });
-  }
-};
-
-export const recuperarMesa = async (req, res) => {
-  const { mesaId } = req.params; // ID de la mesa cerrada
-  try {
-    // Obtener la mesa cerrada
-    const mesaCerrada = await MesaCerrada.findById(mesaId);
-    if (!mesaCerrada) {
-      return res.status(404).json({ error: 'Mesa cerrada no encontrada.' });
+      res.status(200).json(mesasCerradas);
+    } catch (error) {
+      console.error('Error al obtener las mesas cerradas:', error);
+      res.status(500).json({ error: 'Error al obtener las mesas cerradas.' });
     }
+  };
 
-    // Buscar la mesa activa correspondiente
-    const mesaActiva = await Mesa.findOne({ numero: mesaCerrada.numero });
-    if (!mesaActiva) {
-      return res.status(404).json({ error: 'Mesa activa no encontrada.' });
+  export const obtenerMesasAbiertas = async (req, res) => {
+    try {
+      const mesasAbiertas = await Mesa.find({ estado: 'abierta' }).populate('pedidos');
+      res.status(200).json(mesasAbiertas);
+    } catch (error) {
+      console.error('Error al obtener las mesas abiertas:', error);
+      res.status(500).json({ error: 'Error al obtener las mesas abiertas.' });
     }
+  };
 
-    // Transferir los datos de la mesa cerrada a la activa
-    mesaActiva.pedidos = mesaCerrada.pedidos;
-    mesaActiva.total = mesaCerrada.total;
-    mesaActiva.inicio = mesaCerrada.inicio;
-    mesaActiva.estado = 'abierta'; // Cambiar el estado a abierta
-    mesaActiva.updatedAt = new Date();
+  export const recuperarMesa = async (req, res) => {
+    const { mesaId } = req.params; // ID de la mesa cerrada
+    try {
+      // Obtener la mesa cerrada
+      const mesaCerrada = await MesaCerrada.findById(mesaId);
+      if (!mesaCerrada) {
+        return res.status(404).json({ error: 'Mesa cerrada no encontrada.' });
+      }
 
-    // Guardar la mesa activa
-    await mesaActiva.save();
+      // Buscar la mesa activa correspondiente
+      const mesaActiva = await Mesa.findOne({ numero: mesaCerrada.numero });
+      if (!mesaActiva) {
+        return res.status(404).json({ error: 'Mesa activa no encontrada.' });
+      }
 
-    // Eliminar o marcar la mesa cerrada como recuperada
-    await MesaCerrada.findByIdAndDelete(mesaId);
+      // Transferir los datos de la mesa cerrada a la activa
+      mesaActiva.pedidos = mesaCerrada.pedidos;
+      mesaActiva.total = mesaCerrada.total;
+      mesaActiva.inicio = mesaCerrada.inicio;
+      mesaActiva.estado = 'abierta'; // Cambiar el estado a abierta
+      mesaActiva.updatedAt = new Date();
 
-    res.status(200).json({ message: 'Mesa recuperada con éxito.' });
-  } catch (error) {
-    console.error('Error al recuperar la mesa:', error);
-    res.status(500).json({ error: 'Error al recuperar la mesa.' });
-  }
-};
+      // Guardar la mesa activa
+      await mesaActiva.save();
 
-export const crearMesa = async (req, res) => {
-  try {
-    const { numero } = req.body;
+      // Eliminar o marcar la mesa cerrada como recuperada
+      await MesaCerrada.findByIdAndDelete(mesaId);
 
-    // Verificar si el número de la mesa ya existe
-    const mesaExistente = await Mesa.findOne({ numero });
-    if (mesaExistente) {
-      return res.status(400).json({ error: `La mesa número ${numero} ya existe.` });
+      res.status(200).json({ message: 'Mesa recuperada con éxito.' });
+    } catch (error) {
+      console.error('Error al recuperar la mesa:', error);
+      res.status(500).json({ error: 'Error al recuperar la mesa.' });
     }
+  };
 
-    // Crear la nueva mesa
-    const nuevaMesa = new Mesa({
-      numero,
-      inicio: new Date(),
-      cierre: null,
-      estado: 'cerrada',
-      total: 0,
-      metodoPago: { efectivo: 0, tarjeta: 0 }, // Inicializa método de pago vacío
-      pedidos: [], // Inicializa con pedidos vacíos
-    });
+  export const crearMesa = async (req, res) => {
+    try {
+      const { numero } = req.body;
 
-    await nuevaMesa.save(); // Guarda la mesa en la base de datos
+      // Verificar si el número de la mesa ya existe
+      const mesaExistente = await Mesa.findOne({ numero });
+      if (mesaExistente) {
+        return res.status(400).json({ error: `La mesa número ${numero} ya existe.` });
+      }
 
-    res.status(201).json({ message: "Mesa creada exitosamente", mesa: nuevaMesa });
-  } catch (error) {
-    console.error("Error al crear la mesa:", error);
-    res.status(500).json({ error: "Hubo un problema al crear la mesa." });
-  }
-};
+      // Crear la nueva mesa
+      const nuevaMesa = new Mesa({
+        numero,
+        inicio: new Date(),
+        cierre: null,
+        estado: 'cerrada',
+        total: 0,
+        metodoPago: { efectivo: 0, tarjeta: 0 }, // Inicializa método de pago vacío
+        pedidos: [], // Inicializa con pedidos vacíos
+      });
 
-export const eliminarMesa = async (req, res) => {
-  try {
-    const { numero } = req.query; // Obtiene el número de la mesa del cuerpo de la solicitud
+      await nuevaMesa.save(); // Guarda la mesa en la base de datos
 
-    // Verificar que el número fue proporcionado
-    if (!numero) {
-      return res.status(400).json({ error: "El número de la mesa es obligatorio." });
+      res.status(201).json({ message: "Mesa creada exitosamente", mesa: nuevaMesa });
+    } catch (error) {
+      console.error("Error al crear la mesa:", error);
+      res.status(500).json({ error: "Hubo un problema al crear la mesa." });
     }
+  };
 
-    // Buscar y eliminar la mesa por su número
-    const mesaEliminada = await Mesa.findOneAndDelete({ numero });
+  export const eliminarMesa = async (req, res) => {
+    try {
+      const { numero } = req.query; // Obtiene el número de la mesa del cuerpo de la solicitud
 
-    // Si no se encontró la mesa, devolver un error
-    if (!mesaEliminada) {
-      return res.status(404).json({ error: `No se encontró una mesa con el número ${numero}.` });
+      // Verificar que el número fue proporcionado
+      if (!numero) {
+        return res.status(400).json({ error: "El número de la mesa es obligatorio." });
+      }
+
+      // Buscar y eliminar la mesa por su número
+      const mesaEliminada = await Mesa.findOneAndDelete({ numero });
+
+      // Si no se encontró la mesa, devolver un error
+      if (!mesaEliminada) {
+        return res.status(404).json({ error: `No se encontró una mesa con el número ${numero}.` });
+      }
+
+      res.status(200).json({
+        message: `Mesa número ${numero} eliminada exitosamente.`,
+        mesa: mesaEliminada,
+      });
+    } catch (error) {
+      console.error("Error al eliminar la mesa:", error);
+      res.status(500).json({ error: "Hubo un problema al eliminar la mesa." });
     }
-
-    res.status(200).json({
-      message: `Mesa número ${numero} eliminada exitosamente.`,
-      mesa: mesaEliminada,
-    });
-  } catch (error) {
-    console.error("Error al eliminar la mesa:", error);
-    res.status(500).json({ error: "Hubo un problema al eliminar la mesa." });
-  }
-};
+  };

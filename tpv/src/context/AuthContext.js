@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.user);
       } catch (error) {
         console.error("No autenticado:", error);
-        setUser(null);
+        navigate("/login");
       }
     };
 

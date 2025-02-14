@@ -72,3 +72,46 @@
 [2025-02-04 22:58:40] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/pedidos/estado/2
 [2025-02-04 22:58:50] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/pedidos/estado/2
 [2025-02-04 23:00:23] INFO: Servidor escuchando en el puerto 3000
+[2025-02-04 23:05:30] INFO: Servidor escuchando en el puerto 3000
+[2025-02-12 22:39:58] INFO: Servidor escuchando en el puerto 3000
+[2025-02-12 22:43:00] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-12T21:43:00.008Z
+[2025-02-12 22:43:50] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67ad15d81689cabf953af258
+[2025-02-12 22:43:50] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67ad15d81689cabf953af258
+[2025-02-12 22:43:51] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67ad15d81689cabf953af258
+[2025-02-12 22:43:51] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67ad15d81689cabf953af258
+[2025-02-12 22:44:01] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67960254d88ef86751813022/agregar-producto
+[2025-02-14 15:21:02] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:22:45] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T14:22:45.659Z
+[2025-02-14 15:23:22] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/pendientes/pendientes?tipo=plato
+[2025-02-14 15:23:23] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:23:24] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:23:29] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:23:29] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:23:29] WARN: 🚨 IP bloqueada por exceso de solicitudes: ::ffff:172.20.10.7 | Endpoint: /api/pedidos/67af51bf5245c33b958c3ce8
+[2025-02-14 15:25:00] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:29:02] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:29:10] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T14:29:10.995Z
+[2025-02-14 15:38:42] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:39:32] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:40:06] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:47:40] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:49:59] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:50:15] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:50:18] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T14:50:18.188Z
+[2025-02-14 15:53:19] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:53:32] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:53:40] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T14:53:40.200Z
+[2025-02-14 15:55:44] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:56:15] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:56:35] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:56:55] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:57:25] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:57:29] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T14:57:29.414Z
+[2025-02-14 15:59:33] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:59:43] ERROR: Promesa no manejada: TypeError: Cannot read properties of undefined (reading 'id')
+[2025-02-14 15:59:54] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 15:59:58] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T14:59:58.174Z
+[2025-02-14 16:03:11] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 16:03:33] INFO: Servidor escuchando en el puerto 3000
+[2025-02-14 16:03:35] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:172.20.10.7, Hora: 2025-02-14T15:03:35.486Z
+[2025-02-14 16:04:59] INFO: Servidor escuchando en el puerto 3000

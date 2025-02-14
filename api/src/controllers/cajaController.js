@@ -1,6 +1,5 @@
 import MesaCerrada from "../models/MesaCerrada.js";
 import Password from "../models/Password.js";
-import CajaDiaria from "../models/CajaDiaria.js";
 import Caja from "../models/Caja.js";
 import Pedido from "../models/Pedido.js";
 import Cart from "../models/Cart.js";
@@ -9,27 +8,31 @@ import Mesa from "../models/Mesa.js";
 import PDFDocument from "pdfkit";
 import nodemailer from "nodemailer";
 
-
 export const obtenerCaja = async (req, res) => {
     try {
-        // Obtener la caja actual desde el modelo `Caja`
-        const caja = await Caja.findOne();
+        // Obtener parámetros opcionales de fecha
+        const { fechaInicio, fechaFin } = req.query;
 
-        if (!caja) {
-            return res.status(404).json({ message: "No hay ninguna caja inicializada." });
+        // Calcular el rango de fechas
+        const inicio = fechaInicio ? new Date(fechaInicio) : new Date(new Date().setHours(0, 0, 0, 0));
+        const fin = fechaFin ? new Date(fechaFin) : new Date(new Date().setHours(23, 59, 59, 999));
+
+        const cajas = await Caja.find({
+            fechaApertura: { $gte: inicio, $lte: fin },
+        });
+
+        if (!cajas || cajas.length === 0) {
+            return res.status(404).json({ message: "No se encontraron cajas abiertas en el rango especificado." });
         }
 
-        // Devolver los datos de la caja como respuesta
-        res.json({
-            total: caja.total,
-            detallesMetodoPago: caja.detallesMetodoPago,
-            operaciones: caja.operaciones, // Opcional: incluir historial de operaciones
-        });
+        // Devolver los datos de las cajas encontradas
+        res.json(cajas);
     } catch (error) {
-        console.error("Error al obtener el estado de la caja:", error);
-        res.status(500).json({ message: "Error al obtener el estado de la caja" });
+        console.error("Error al obtener las cajas en el rango especificado:", error);
+        res.status(500).json({ message: "Error al obtener las cajas en el rango especificado." });
     }
 };
+
 
 export const integrarDinero = async (req, res) => {
     const { monto, razon } = req.body;
@@ -123,47 +126,61 @@ export const retirarDinero = async (req, res) => {
 
 export const cerrarCaja = async (req, res) => {
     try {
+        // Buscar la contraseña en la base de datos
         const passwordDoc = await Password.findOne();
-
         if (!passwordDoc || !passwordDoc.valor) {
             return res.status(404).json({ message: "Contraseña no encontrada" });
         }
 
-        const passwordValor = passwordDoc.valor;
+        // Validar la contraseña ingresada
         const { password } = req.body;
-
-        if (password !== passwordValor) {
+        if (password !== passwordDoc.valor) {
             return res.status(401).json({ message: "Contraseña incorrecta" });
         }
 
+        // Calcular el total de las mesas cerradas
         const mesasCerradas = await MesaCerrada.find();
         const total = mesasCerradas.reduce((acc, mesa) => {
             const totalMesa = Object.values(mesa.metodoPago).reduce((sum, value) => sum + value, 0);
             return acc + totalMesa;
         }, 0);
 
-        const cajaDiaria = new CajaDiaria({ total, fecha: new Date(), ingresos: total });
-        await cajaDiaria.save();
+        // Buscar la caja actual y cambiar su estado a cerrada
+        const cajaActual = await Caja.findOne();
+        if (cajaActual) {
+            cajaActual.estado = "cerrada";
+            await cajaActual.save();
+        }
 
-        // Restablecer datos
+        // Crear una nueva caja
+        const nuevaCaja = new Caja({
+            total: 0,
+            detallesMetodoPago: { efectivo: 0, tarjeta: 0, propina: 0 },
+            operaciones: [],
+            estado: "abierta"
+        });
+        await nuevaCaja.save();
+
+        // Restablecer datos después del cierre de caja
         await MesaCerrada.deleteMany({});
         await Pedido.deleteMany({});
         await Cart.deleteMany({});
         await Mesa.updateMany({}, { $set: { total: 0, pedidos: [] } });
         await Eliminaciones.deleteMany({});
 
-        // Generar PDF
+        // Generar el PDF con los datos del cierre
         const pdfBuffer = await generarPDF(mesasCerradas, total);
 
-        // Enviar Email
+        // Enviar el PDF por correo
         await enviarEmailConPDF(pdfBuffer);
 
-        res.json({ message: "Caja cerrada y datos restablecidos correctamente" });
+        res.json({ message: "Caja cerrada y nueva caja creada correctamente." });
     } catch (error) {
         console.error("Error al cerrar la caja:", error);
-        res.status(500).json({ message: "Error al cerrar la caja" });
+        res.status(500).json({ message: "Error al cerrar la caja."
+        });
     }
-};
+}
 
 const generarPDF = (mesasCerradas, total) => {
     return new Promise((resolve, reject) => {
