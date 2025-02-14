@@ -68,6 +68,9 @@ export const crearTokenLider = async (req, res) => {
     // Generar tokenLider y cambiar estado a "abierto"
     mesaDoc.tokenLider = uuidv4();
     mesaDoc.estado = "abierta";
+
+    req.io.emit('mesaAbierta', mesaDoc); // Emitir evento de apertura de mesa
+
     await mesaDoc.save();
 
     res.status(201).json({ tokenLider: mesaDoc.tokenLider, estado: mesaDoc.estado });
@@ -120,7 +123,7 @@ export const abrirMesa = async (req, res) => {
 
     // Emitir evento de apertura de mesa
     req.io.emit('mesaAbierta', nuevaMesa);
-
+    
     res.status(201).json(nuevaMesa);
   } catch (error) {
     console.error(error);

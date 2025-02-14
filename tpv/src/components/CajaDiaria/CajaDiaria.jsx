@@ -30,17 +30,29 @@ const GraficoCajaDiaria = () => {
   const [datos, setDatos] = useState([]);
   const [error, setError] = useState(null);
 
-  // Calcular fechas predeterminadas: primer día del mes actual y hoy
-  useEffect(() => {
-    const hoy = new Date();
-    const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-    const finMes = hoy; // Fecha actual
+ // Calcular fechas predeterminadas: primer día del mes pasado y mañana
+useEffect(() => {
+  const hoy = new Date();
 
-    setFechaInicio(inicioMes.toISOString().split("T")[0]);
-    setFechaFin(finMes.toISOString().split("T")[0]);
+  // Calcular el primer día del mes pasado
+  const primerDiaMesPasado = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
 
-    manejarRango(inicioMes.toISOString().split("T")[0], finMes.toISOString().split("T")[0]);
-  }, []);
+  // Calcular el día de mañana
+  const manana = new Date(hoy);
+  manana.setDate(hoy.getDate() + 1);
+
+  // Formatear las fechas a 'YYYY-MM-DD'
+  const fechaInicio = primerDiaMesPasado.toISOString().split("T")[0];
+  const fechaFin = manana.toISOString().split("T")[0];
+
+  // Establecer las fechas en el estado
+  setFechaInicio(fechaInicio);
+  setFechaFin(fechaFin);
+
+  // Llamar a la función para manejar el rango
+  manejarRango(fechaInicio, fechaFin);
+}, []);
+
 
   // Función para manejar la obtención de datos por rango
   const manejarRango = async (inicio, fin) => {
