@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../utils/api";
 import "./CerrarCajaModal.css";
 
 const CerrarCajaModal = ({ onClose }) => {
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [totalCaja, setTotalCaja] = useState(0);
@@ -19,15 +21,28 @@ const CerrarCajaModal = ({ onClose }) => {
   useEffect(() => {
     const fetchCaja = async () => {
       try {
+        // Solicitar todas las cajas
         const response = await api.get("/caja/total");
-        setTotalCaja(response.data.total);
-        setMetodoPago(response.data.detallesMetodoPago);
+
+        // Filtrar la caja con estado 'abierta'
+        const cajaAbierta = response.data.find(caja => caja.estado === "abierta");
+
+        if (cajaAbierta) {
+          setTotalCaja(cajaAbierta.total);
+          setMetodoPago(cajaAbierta.detallesMetodoPago);
+          console.log("✅ Caja abierta encontrada:", cajaAbierta);
+        } else {
+          console.warn("⚠️ No se encontró una caja abierta.");
+          setError("No hay una caja abierta disponible.");
+        }
+
         setIsLoading(false);
       } catch (error) {
-        console.error("Error al obtener el estado de la caja:", error);
+        console.error("❌ Error al obtener el estado de la caja:", error);
         setError("No se pudo cargar el estado de la caja.");
       }
     };
+
     fetchCaja();
   }, []);
 
@@ -88,6 +103,9 @@ const CerrarCajaModal = ({ onClose }) => {
       setIsLoading(true);
       await api.post("/caja/cerrar", { password });
       alert("Caja cerrada correctamente.");
+      // Vaciar el local storage
+      localStorage.clear();
+      navigate("/login");
       onClose();
     } catch (error) {
       console.error("Error al cerrar la caja:", error);

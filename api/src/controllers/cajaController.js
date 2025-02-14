@@ -145,12 +145,24 @@ export const cerrarCaja = async (req, res) => {
             return acc + totalMesa;
         }, 0);
 
-        // Buscar la caja actual y cambiar su estado a cerrada
-        const cajaActual = await Caja.findOne();
+        // Calcular el rango de fechas para el día actual
+        const hoy = new Date();
+        const inicioDelDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
+        const finDelDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
+
+        // Buscar la caja con la fecha de hoy y estado 'abierta'
+        const cajaActual = await Caja.findOne({
+            fechaApertura: { $gte: inicioDelDia, $lte: finDelDia },
+            estado: "abierta"
+        });
+
+        console.log(cajaActual, 'cajaActual');
         if (cajaActual) {
             cajaActual.estado = "cerrada";
             await cajaActual.save();
         }
+
+        await cajaActual.save();
 
         // Crear una nueva caja
         const nuevaCaja = new Caja({
@@ -161,12 +173,15 @@ export const cerrarCaja = async (req, res) => {
         });
         await nuevaCaja.save();
 
+        await Mesa.updateMany({}, { $set: { estado: "cerrada" } });
+
         // Restablecer datos después del cierre de caja
         await MesaCerrada.deleteMany({});
         await Pedido.deleteMany({});
         await Cart.deleteMany({});
         await Mesa.updateMany({}, { $set: { total: 0, pedidos: [] } });
         await Eliminaciones.deleteMany({});
+        await Mesa.updateMany({}, { $set: { total: 0, pedidos: [] } });
 
         // Generar el PDF con los datos del cierre
         const pdfBuffer = await generarPDF(mesasCerradas, total);
@@ -177,7 +192,8 @@ export const cerrarCaja = async (req, res) => {
         res.json({ message: "Caja cerrada y nueva caja creada correctamente." });
     } catch (error) {
         console.error("Error al cerrar la caja:", error);
-        res.status(500).json({ message: "Error al cerrar la caja."
+        res.status(500).json({
+            message: "Error al cerrar la caja."
         });
     }
 }
