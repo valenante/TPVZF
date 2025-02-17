@@ -41,6 +41,7 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio, tipoPrecio })
   const manejarTipoPlato = (e) => {
     console.log("Tipo de plato seleccionado:", e.target.value); // Verifica el valor seleccionado
     setTipoPlato(e.target.value); // Actualizar tipo de plato ("compartir" o "individual")
+    console.log("Tipo de plato actualizado:", tipoPlato); // Verifica el tipo de plato actualizado
   };
 
   const agregarAlCarrito = async () => {
@@ -58,7 +59,7 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio, tipoPrecio })
       total: seleccionPrecio * cantidad, // Calcular el total basado en el precio seleccionado
       mesa,
       nombre,
-      tipoPlato: tipoPrecio, // Agregar tipo de plato (compartir o individual)
+      tipoPlato: tipoPlato, // Agregar tipo de plato (compartir o individual)
     };
 
     try {

@@ -1,6 +1,4 @@
 // config/config.js
-import cors from "cors";
-import session from "express-session";
 import { Server } from "socket.io";
 import { config } from "dotenv";
 import { connect } from "mongoose";
@@ -16,7 +14,10 @@ export const corsOptions = {
     "http://localhost:3001",
     "http://172.20.10.7:3001",
     "http://localhost:3000",
-    "http://172.20.10.7:3000"
+    "http://172.20.10.7:3000",
+    "http://192.168.98.203:3000",
+    "http://192.168.98.203:3001",
+    "http://192.168.98.203:3002",
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Cart-ID"],
@@ -52,7 +53,6 @@ export const connectToDatabase = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("✅ Conectado a MongoDB");
   } catch (error) {
     console.error("❌ Error al conectar a MongoDB:", error);
     process.exit(1); // Salir de la aplicación en caso de error crítico

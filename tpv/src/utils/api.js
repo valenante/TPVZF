@@ -1,35 +1,70 @@
 import axios from 'axios';
 import renovarToken from './RenovarToken';
 
-const apiUrl = process.env.REACT_APP_API_URL; // Leer la variable de entorno
+const apiUrl = process.env.REACT_APP_API_URL;
+
+// Variable para evitar bucles infinitos
+let isRefreshing = false;
+let failedRequestsQueue = [];
 
 const api = axios.create({
-  baseURL: apiUrl, // Cambia a la URL base de tu API
-  withCredentials: true, // Habilitar cookies
+  baseURL: apiUrl,
+  withCredentials: true,
 });
 
 // Interceptor para manejar errores de respuesta
 api.interceptors.response.use(
-  (response) => response, // Devuelve la respuesta si no hay errores
+  (response) => response, 
   async (error) => {
-    if (error.response?.status === 401) {
+    const originalRequest = error.config;
+
+    // Si la solicitud es un 401 y no estamos ya intentando renovar el token
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedRequestsQueue.push({ resolve, reject });
+        })
+        .then((token) => {
+          originalRequest.headers['Authorization'] = `Bearer ${token}`;
+          return api.request(originalRequest);
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
       try {
-        // Intenta renovar el token si se recibe un 401
         const setAccessToken = (newToken) => {
-          // Establece el nuevo token en los headers de autorización
           api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
         };
-        await renovarToken(setAccessToken);
 
-        // Reintenta la solicitud original con el nuevo token
-        error.config.headers['Authorization'] = api.defaults.headers.common['Authorization'];
-        return api.request(error.config);
+        // Intentar renovar el token
+        const newToken = await renovarToken(setAccessToken);
+
+        // Aplicar el nuevo token a todas las solicitudes en cola
+        failedRequestsQueue.forEach((req) => req.resolve(newToken));
+        failedRequestsQueue = [];
+
+        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        return api.request(originalRequest);
       } catch (refreshError) {
-        console.error('Error al renovar el token:', refreshError);
-        return Promise.reject(error); // Si no se puede renovar, lanza el error
+        failedRequestsQueue.forEach((req) => req.reject(refreshError));
+        failedRequestsQueue = [];
+
+        console.error('🚨 Error al renovar el token:', refreshError);
+        
+        // Forzar cierre de sesión si la renovación falla
+        window.location.href = "/login";
+        return Promise.reject(error);
+      } finally {
+        isRefreshing = false;
       }
     }
-    return Promise.reject(error); // Lanza otros errores
+
+    return Promise.reject(error);
   }
 );
 

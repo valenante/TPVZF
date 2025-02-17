@@ -11,6 +11,8 @@ const Cocina = () => {
   const [pedidos, setPedidos] = useState([]);
   const [mostrarFinalizados, setMostrarFinalizados] = useState(false);
 
+  console.log(pedidos);
+
   // Función para calcular tiempo transcurrido
   const calcularTiempoTranscurrido = (fecha) => {
     const ahora = new Date();

@@ -29,17 +29,6 @@ export const logAndNotifyLogin = async (req, res, next) => {
   // Incrementar el contador de intentos fallidos
   req.session.failedAttempts += 1;
 
-  console.log(`Intentos fallidos actuales: ${req.session.failedAttempts}`);
-
-  req.session.save((err) => {
-    if (err) {
-      console.error('[DEPURACIÓN] Error al guardar la sesión:', err);
-    } else {
-      console.log('[DEPURACIÓN] Sesión guardada correctamente:', req.session);
-    }
-  });
-
-
   // Notificar si se superan los intentos máximos permitidos
   const maxFailedAttempts = 5;
   if (req.session.failedAttempts >= maxFailedAttempts) {

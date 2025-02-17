@@ -101,15 +101,24 @@ const CerrarCajaModal = ({ onClose }) => {
 
     try {
       setIsLoading(true);
-      await api.post("/caja/cerrar", { password });
-      alert("Caja cerrada correctamente.");
-      // Vaciar el local storage
-      localStorage.clear();
-      navigate("/login");
-      onClose();
+      const response = await api.post("/caja/cerrar", { password });
+
+      // Si la caja se cierra correctamente
+      if (response.status === 200) {
+        alert("Caja cerrada correctamente.");
+        localStorage.clear();
+        navigate("/login");
+        onClose();
+      }
     } catch (error) {
       console.error("Error al cerrar la caja:", error);
-      setError("Error al cerrar la caja. Verifica la contraseña.");
+      if (error.response?.status === 401) {
+        // Contraseña incorrecta
+        setError("Contraseña incorrecta. Por favor, inténtalo de nuevo.");
+      } else {
+        // Otro tipo de error
+        setError("Error al cerrar la caja. Inténtalo más tarde.");
+      }
     } finally {
       setIsLoading(false);
     }

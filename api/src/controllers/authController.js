@@ -206,9 +206,8 @@ export const login = async (req, res) => {
 };
 
 export const obtenerUsuario = async (req, res) => {
+  console.log('Sesión:', req.session);
   try {
-    console.log("📌 Verificando usuario en sesión:", req.session.user);
-
     // ✅ Verifica si el usuario está en la sesión
     if (!req.session.user) {
       return res.status(401).json({ error: "No autorizado. Inicia sesión." });
