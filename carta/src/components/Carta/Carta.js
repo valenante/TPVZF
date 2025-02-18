@@ -14,7 +14,8 @@ const Carta = () => {
       try {
         const { data } = await api.get("/valoraciones/valoraciones/mas-valorados");
         const valoracionesMapeadas = data.reduce((acc, { _id, estrellas }) => {
-          acc[_id] = estrellas;
+          // Redondear las estrellas a un decimal
+          acc[_id] = parseFloat(estrellas.toFixed(1));
           return acc;
         }, {});
         setValoraciones(valoracionesMapeadas);

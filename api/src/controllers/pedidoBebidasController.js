@@ -98,81 +98,6 @@ export const crearPedido = async (req, res) => {
     }
 };
 
-export const agregarProductoAlPedido = async (req, res) => {
-    const { mesaId } = req.params;
-    const { productos } = req.body;
-    const { precioSeleccionado } = req.body;
-
-    // Validar datos entrantes
-    if (!productos || !productos.producto || !productos.cantidad || !productos.total || !productos.precioSeleccionado) {
-        return res.status(400).json({
-            error: "Faltan datos obligatorios: `producto`, `cantidad`, `total` y `precios`.",
-        });
-    }
-
-    try {
-        // Encontrar la mesa y popular los pedidos
-        const mesa = await Mesa.findById(mesaId).populate("pedidos"); // Popular los pedidos relacionados
-
-        if (!mesa) {
-            return res.status(404).json({ error: "Mesa no encontrada" });
-        }
-
-        // Buscar un pedido pendiente dentro de los pedidos de la mesa
-        const pedidoExistente = mesa.pedidos.find((p) => p.estado === "pendiente");
-
-        if (pedidoExistente) {
-            // Agregar el producto al pedido existente
-            pedidoExistente.productos.push({
-                producto: productos.producto,
-                cantidad: productos.cantidad,
-                total: productos.total,
-                tipo: productos.tipo,
-                categoria: productos.categoria,
-                precioSeleccionado: productos.precioSeleccionado,
-            });
-            pedidoExistente.total += productos.total; // Actualizar el total del pedido
-            await pedidoExistente.save();
-        } else {
-            // Crear un nuevo pedido con el producto
-            const nuevoPedido = new PedidoBebida({
-                mesa: mesa._id,
-                productos: [
-                    {
-                        producto: productos.producto,
-                        cantidad: productos.cantidad,
-                        total: productos.total,
-                        precios: productos.precios,
-                        tipo: productos.tipo,
-                        categoria: productos.categoria,
-                        precioSeleccionado: productos.precioSeleccionado,
-                    },
-                ],
-                estado: "pendiente",
-                total: productos.total,
-            });
-
-            // Guardar el nuevo pedido
-            const pedidoGuardado = await nuevoPedido.save();
-
-            // Asociar el nuevo pedido a la mesa
-            mesa.pedidos.push(pedidoGuardado._id);
-        }
-
-        // Actualizar el total de la mesa
-        mesa.total += productos.total;
-
-        // Guardar la mesa actualizada
-        await mesa.save();
-
-        res.json(mesa);
-    } catch (error) {
-        console.error("Error al agregar producto:", error);
-        res.status(500).json({ error: "Error al agregar producto" });
-    }
-};
-
-
 // Obtener todos los pedidos
 export const obtenerPedidos = async (req, res) => {
     try {
@@ -348,4 +273,78 @@ export const verificarPedidosMesa = async (req, res) => {
       res.status(500).json({ error: "Error al verificar pedidos de la mesa." });
     }
   };
-  
+
+export const agregarProductoBebida = async (req, res) => {
+    const { mesaId } = req.params;
+    const { productos } = req.body;
+
+    console.log(productos, 'gola');
+
+    // Validar datos entrantes
+    if (!productos || !productos.producto || !productos.cantidad || !productos.total || !productos.precioSeleccionado) {
+        return res.status(400).json({
+            error: "Faltan datos obligatorios: `producto`, `cantidad`, `total` y `precioSeleccionado`.",
+        });
+    }
+
+    try {
+        // Buscar la mesa y popular los pedidos de bebidas
+        const mesa = await Mesa.findById(mesaId).populate("pedidosBebidas"); 
+
+        if (!mesa) {
+            return res.status(404).json({ error: "Mesa no encontrada" });
+        }
+
+        // Buscar un pedido de bebidas pendiente dentro de los pedidos de la mesa
+        const pedidoExistente = mesa.pedidosBebidas.find((p) => p.estado === "pendiente");
+
+        if (pedidoExistente) {
+            // Agregar el producto de bebida al pedido existente
+            pedidoExistente.productos.push({
+                producto: productos.producto,
+                cantidad: productos.cantidad,
+                total: productos.total,
+                tipo: productos.tipo,
+                categoria: productos.categoria,
+                precioSeleccionado: productos.precioSeleccionado,
+            });
+            pedidoExistente.total += productos.total; // Actualizar el total del pedido
+            await pedidoExistente.save();
+        } else {
+            // Crear un nuevo pedido de bebidas
+            const nuevoPedidoBebida = new PedidoBebida({
+                mesa: mesa._id,
+                productos: [
+                    {
+                        producto: productos.producto,
+                        cantidad: productos.cantidad,
+                        total: productos.total,
+                        tipo: productos.tipo,
+                        categoria: productos.categoria,
+                        precioSeleccionado: productos.precioSeleccionado,
+                    },
+                ],
+                estado: "pendiente",
+                total: productos.total,
+            });
+
+            // Guardar el nuevo pedido de bebidas
+            const pedidoGuardado = await nuevoPedidoBebida.save();
+
+            // Asociar el nuevo pedido de bebidas a la mesa
+            mesa.pedidosBebidas.push(pedidoGuardado._id);
+        }
+
+        // Actualizar el total de la mesa
+        mesa.total += productos.total;
+
+        // Guardar la mesa actualizada
+        await mesa.save();
+
+        res.json(mesa);
+    } catch (error) {
+        console.error("Error al agregar bebida:", error);
+        res.status(500).json({ error: "Error al agregar bebida" });
+    }
+};
+

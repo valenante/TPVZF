@@ -1,7 +1,7 @@
 const renovarToken = async (setAccessToken) => {
   try {
     // Realiza la solicitud al endpoint de renovación de token
-    const response = await fetch('http://192.168.98.203:3000/api/auth/refresh-token', {
+    const response = await fetch('http://172.20.10.7:3000/api/auth/refresh-token', {
       method: 'POST',
       credentials: 'include', // Asegura el envío de cookies
     });

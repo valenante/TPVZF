@@ -11,33 +11,41 @@ export const MesasProvider = ({ children }) => {
     useEffect(() => {
         const fetchMesas = async () => {
             try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/mesas`);
+                const url = `${process.env.REACT_APP_API_URL}/mesas`;
+                console.log("Fetching mesas from:", url);
+    
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Error en la respuesta del servidor: ${response.status} ${response.statusText}`);
+                }
+    
                 const data = await response.json();
+                console.log("Mesas obtenidas:", data);
                 setMesas(data);
-
+    
                 // Obtener número de mesa desde la URL
                 const pathParts = location.pathname.split("/").filter(Boolean);
-                const numeroMesa = pathParts[0]; // El primer segmento de la URL es el número de la mesa
-
+                const numeroMesa = pathParts[0];
+    
                 if (!isNaN(numeroMesa)) {
-                    // Buscar la mesa por número
                     const mesaEncontrada = data.find(mesa => mesa.numero === Number(numeroMesa));
                     if (mesaEncontrada) {
-                        setMesaId(mesaEncontrada._id); // Guardar el ID de la mesa en el estado global
+                        setMesaId(mesaEncontrada._id);
                     } else {
                         console.warn(`No se encontró una mesa con el número ${numeroMesa}`);
                     }
                 } else {
                     console.warn("El número de mesa en la URL no es válido:", numeroMesa);
                 }
+    
             } catch (error) {
-                console.error("Error al obtener mesas:", error);
+                console.error("Error al obtener mesas:", error.message);
             }
         };
-
+    
         fetchMesas();
-    }, []); // Se ejecuta cada vez que cambia la URL
-
+    }, []);
+    
     return (
         <MesasContext.Provider value={{ mesas, mesaId }}>
             {children}

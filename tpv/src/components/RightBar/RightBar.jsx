@@ -28,8 +28,8 @@ const RightBar = ({ mesaId, agregarProducto }) => {
       preciosSeleccionados[producto._id] !== undefined
         ? preciosSeleccionados[producto._id] // Usar el precio seleccionado si existe
         : producto.tipo === "tapaRacion"
-        ? producto.precios.tapa || producto.precios.racion // Precio inicial para tapa/ración
-        : producto.precios.precioBase; // Precio base para otros tipos
+          ? producto.precios.tapa || producto.precios.racion // Precio inicial para tapa/ración
+          : producto.precios.precioBase; // Precio base para otros tipos
 
     setProductoSeleccionado({ ...producto, precioSeleccionado });
     setShowModal(true);
@@ -63,7 +63,7 @@ const RightBar = ({ mesaId, agregarProducto }) => {
           Bebidas
         </button>
       </div>
-  
+
       <div className="categorias--rightbar">
         <ul className="lista-categorias--rightbar">
           {categories.map((categoria) => (
@@ -77,7 +77,7 @@ const RightBar = ({ mesaId, agregarProducto }) => {
           ))}
         </ul>
       </div>
-  
+
       <div className="productos--rightbar">
         <h4 className="titulo-productos--rightbar">Productos</h4>
         <ul className="lista-productos--rightbar">
@@ -85,11 +85,39 @@ const RightBar = ({ mesaId, agregarProducto }) => {
             <li key={producto._id} className="producto--rightbar">
               <div className="producto-info--rightbar">
                 {producto.nombre} -{" "}
-                {producto.tipo === "tapaRacion" ? (
+                {/* Condición especial para bebidas */}
+                {producto.tipo === "bebida" ? (
+                  // Lógica para bebidas
                   <select
                     className="select-precio--rightbar"
                     value={
-                      preciosSeleccionados[producto._id] || producto.precios.tapa || producto.precios.racion
+                      preciosSeleccionados[producto._id] || producto.precios.botella || producto.precios.copa
+                    }
+                    onChange={(e) => manejarCambioPrecio(producto._id, e.target.value)}
+                  >
+                    {producto.precios.botella !== null && (
+                      <option value={producto.precios.botella}>
+                        Pinta - {producto.precios.botella.toFixed(2)} €
+                      </option>
+                    )}
+                    {producto.precios.copa !== null && (
+                      <option value={producto.precios.copa}>
+                        Copa - {producto.precios.copa.toFixed(2)} €
+                      </option>
+                    )}
+                   {producto.precios.precioBase !== null && ( 
+                      <option value={producto.precios.precioBase}>
+                        {producto.precios.precioBase.toFixed(2)} €
+                      </option>
+                    )  
+                  } 
+                  </select>
+                ) : (
+                  // Lógica para cualquier otro tipo de producto
+                  <select
+                    className="select-precio--rightbar"
+                    value={
+                      preciosSeleccionados[producto._id] || producto.precios.tapa || producto.precios.racion || producto.precios.precioBase
                     }
                     onChange={(e) => manejarCambioPrecio(producto._id, e.target.value)}
                   >
@@ -103,9 +131,12 @@ const RightBar = ({ mesaId, agregarProducto }) => {
                         Ración - {producto.precios.racion.toFixed(2)} €
                       </option>
                     )}
+                    {producto.precios.precioBase !== null && (
+                      <option value={producto.precios.precioBase}>
+                        Precio base - {producto.precios.precioBase.toFixed(2)} €
+                      </option>
+                    )}
                   </select>
-                ) : (
-                  `${producto.precios.precioBase.toFixed(2)} €`
                 )}
               </div>
               <button onClick={() => abrirModal(producto)} className="boton-agregar--rightbar">
@@ -115,7 +146,7 @@ const RightBar = ({ mesaId, agregarProducto }) => {
           ))}
         </ul>
       </div>
-  
+
       {showModal && productoSeleccionado && (
         <ProductoDetalle
           producto={productoSeleccionado}
@@ -129,6 +160,6 @@ const RightBar = ({ mesaId, agregarProducto }) => {
       )}
     </div>
   );
-};  
+};
 
 export default RightBar;

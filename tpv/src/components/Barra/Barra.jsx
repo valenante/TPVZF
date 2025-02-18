@@ -133,9 +133,22 @@ const Barra = () => {
                           {producto.especificaciones.join(", ")}
                         </p>
                       )}
+                      {producto.opcionesPersonalizables?.length > 0 && (
+                            <div>
+                              <ul>
+                                {producto.opcionesPersonalizables.map((opcion, index) => (
+                                  <li key={index}>
+                                    <strong>{opcion.tipo}: </strong>
+                                    {opcion.opcion.join(", ")}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                     </li>
                   ))}
                 </ul>
+
 
                 {/* Botón para marcar el pedido como terminado (solo si todos los productos están listos) */}
                 {todosListos && (

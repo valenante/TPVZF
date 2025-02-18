@@ -1,13 +1,23 @@
-FROM node:16
+# Dockerfile para backend (Node.js)
+FROM node:20-alpine
 
-WORKDIR /usr/src/app
+# Establecer el directorio de trabajo
+WORKDIR /app
 
+# Copiar archivos necesarios
 COPY package*.json ./
 
-RUN npm install
+# Instalar dependencias
+RUN npm install --production
 
+# Copiar el resto de la aplicación
 COPY . .
 
-EXPOSE 5001
+# Establecer variables de entorno
+ENV NODE_ENV=production
 
-CMD ["npm", "start"]
+# Exponer el puerto en el que corre tu aplicación
+EXPOSE 3000
+
+# Iniciar la aplicación
+CMD ["node", "index.js"]

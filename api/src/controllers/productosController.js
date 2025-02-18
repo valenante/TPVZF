@@ -1,5 +1,6 @@
 import Producto from '../models/Producto.js';
 import Pedido from '../models/Pedido.js';
+import PedidoBebidas from '../models/PedidoBebidas.js';
 import jwt from 'jsonwebtoken';
 import Eliminacion from '../models/Eliminacion.js';
 import Mesa from '../models/Mesa.js';
@@ -114,10 +115,8 @@ export const eliminarProducto = async (req, res) => {
 };
 
 export const eliminarProductoPedido = async (req, res) => {
-  const { pedidoId, id: productoId } = req.params; // IDs del pedido y del producto
-  // Obtener el usuario desde withCredentials
-
-  const user = req.session.user.id; // 🔥 Obtener el usuario desde la sesión
+  const { pedidoId, id: productoId } = req.params;
+  const user = req.session?.user?.id;
 
   try {
     // Verificar que se envió el usuario
@@ -125,8 +124,16 @@ export const eliminarProductoPedido = async (req, res) => {
       return res.status(401).json({ error: "Usuario no autenticado." });
     }
 
-    // Encontrar el pedido
-    const pedido = await Pedido.findById(pedidoId);
+    // Buscar el pedido en pedidos de productos
+    let pedido = await Pedido.findById(pedidoId);
+    let pedidoTipo = 'producto';
+
+    // Si no se encuentra en pedidos normales, buscar en pedidos de bebidas
+    if (!pedido) {
+      pedido = await PedidoBebidas.findById(pedidoId);
+      pedidoTipo = 'bebida';
+    }
+
     if (!pedido) {
       return res.status(404).json({ error: "Pedido no encontrado." });
     }
@@ -145,26 +152,35 @@ export const eliminarProductoPedido = async (req, res) => {
       (producto) => producto.producto.toString() !== productoId
     );
 
-    pedido.total = pedido.productos.reduce((total, producto) => {
-      return total + (producto.total || 0); // Asegurar que cada producto tenga un total válido
-    }, 0);
+    pedido.total = pedido.productos.reduce((total, producto) => total + (producto.total || 0), 0);
 
     // Si el pedido no tiene productos después de la eliminación, eliminar el pedido
     if (pedido.productos.length === 0) {
-      await Pedido.findByIdAndDelete(pedidoId);
+      // Eliminar el pedido según su tipo
+      if (pedidoTipo === 'producto') {
+        await Pedido.findByIdAndDelete(pedidoId);
+      } else {
+        await PedidoBebidas.findByIdAndDelete(pedidoId);
+      }
 
       // Actualizar el total de la mesa
-      const mesa = await Mesa.findById(pedido.mesa).populate("pedidos");
+      const mesa = await Mesa.findById(pedido.mesa).populate("pedidos pedidosBebidas");
       if (!mesa) {
         return res.status(404).json({ error: "Mesa no encontrada." });
       }
 
-      mesa.pedidos = mesa.pedidos.filter((p) => p._id.toString() !== pedidoId);
+      // Eliminar el pedido correspondiente
+      if (pedidoTipo === 'producto') {
+        mesa.pedidos = mesa.pedidos.filter((p) => p._id.toString() !== pedidoId);
+      } else {
+        mesa.pedidosBebidas = mesa.pedidosBebidas.filter((p) => p._id.toString() !== pedidoId);
+      }
 
       // Recalcular el total de la mesa
-      mesa.total = mesa.pedidos.reduce((totalMesa, pedido) => {
-        return totalMesa + (pedido.total || 0);
-      }, 0);
+      mesa.total = [...mesa.pedidos, ...mesa.pedidosBebidas].reduce(
+        (totalMesa, pedido) => totalMesa + (pedido.total || 0),
+        0
+      );
 
       await mesa.save();
 
@@ -173,14 +189,15 @@ export const eliminarProductoPedido = async (req, res) => {
         producto: productoEliminado.producto,
         pedido: pedidoId,
         cantidad: productoEliminado.cantidad || 1,
-        user: user, // ✅ Se usa el `id` del usuario enviado desde el frontend
+        user: user,
         mesa: pedido.mesa,
+        tipo: pedidoTipo,
       });
 
       await eliminacion.save();
 
       return res.json({
-        message: "Producto eliminado y pedido eliminado con éxito.",
+        message: `${pedidoTipo === 'bebida' ? "Bebida" : "Producto"} eliminado y pedido eliminado con éxito.`,
         mesa: {
           id: mesa._id,
           total: mesa.total,
@@ -193,15 +210,16 @@ export const eliminarProductoPedido = async (req, res) => {
     await pedido.save();
 
     // Actualizar el total de la mesa
-    const mesa = await Mesa.findById(pedido.mesa).populate("pedidos");
+    const mesa = await Mesa.findById(pedido.mesa).populate("pedidos pedidosBebidas");
     if (!mesa) {
       return res.status(404).json({ error: "Mesa no encontrada." });
     }
 
-    // Recalcular el total de la mesa sumando los totales de todos sus pedidos
-    mesa.total = mesa.pedidos.reduce((totalMesa, pedido) => {
-      return totalMesa + (pedido.total || 0);
-    }, 0);
+    // Recalcular el total sumando los pedidos de productos y bebidas
+    mesa.total = [...mesa.pedidos, ...mesa.pedidosBebidas].reduce(
+      (totalMesa, pedido) => totalMesa + (pedido.total || 0),
+      0
+    );
 
     await mesa.save();
 
@@ -210,14 +228,15 @@ export const eliminarProductoPedido = async (req, res) => {
       producto: productoEliminado.producto,
       pedido: pedidoId,
       cantidad: productoEliminado.cantidad || 1,
-      user: user, // ✅ Se usa el `id` del usuario enviado desde el frontend
+      user: user,
       mesa: pedido.mesa,
+      tipo: pedidoTipo,
     });
 
     await eliminacion.save();
 
     res.json({
-      message: "Producto eliminado y registrado con éxito.",
+      message: `${pedidoTipo === 'bebida' ? "Bebida" : "Producto"} eliminado y registrado con éxito.`,
       mesa: {
         id: mesa._id,
         total: mesa.total,
@@ -229,7 +248,8 @@ export const eliminarProductoPedido = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error al eliminar producto:", error);
-    res.status(500).json({ error: "Error al eliminar producto." });
+    console.error("Error al eliminar producto/bebida:", error);
+    res.status(500).json({ error: "Error al eliminar producto/bebida."
+    });
   }
-};
+}

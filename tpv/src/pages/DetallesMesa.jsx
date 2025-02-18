@@ -116,7 +116,15 @@ const DetalleMesa = () => {
 
   const agregarProducto = async (productoPersonalizado) => {
     try {
-      const { data } = await api.post(`pedidos/${mesa._id}/agregar-producto`, {
+      // Determinar si el producto es una bebida o un plato
+      const esBebida = productoPersonalizado.tipo === "bebida";
+  
+      // Definir la ruta dependiendo del tipo
+      const ruta = esBebida 
+        ? `pedidosBebidas/${mesa._id}/agregar-producto` 
+        : `pedidos/${mesa._id}/agregar-producto`;
+  
+      const { data } = await api.post(ruta, {
         productos: {
           producto: productoPersonalizado._id,
           cantidad: productoPersonalizado.cantidad,
@@ -124,24 +132,29 @@ const DetalleMesa = () => {
           precioSeleccionado: productoPersonalizado.precioSeleccionado,
           tipo: productoPersonalizado.tipo,
           categoria: productoPersonalizado.categoria,
+          opcionesPersonalizables: (productoPersonalizado.opciones && Object.keys(productoPersonalizado.opciones).length > 0)
+            ? Object.entries(productoPersonalizado.opciones).map(([tipo, opcion]) => ({
+              tipo,
+              opcion
+            }))
+            : [],
         },
       });
-
+  
       setMesa((prevMesa) => ({
         ...prevMesa,
         pedidos: data.pedidos,
       }));
-
-      alert("Producto agregado al pedido con éxito.");
-
-      //Refrescar la pagina
+  
+      alert(`Producto ${esBebida ? "bebida" : "plato"} agregado al pedido con éxito.`);
+  
+      // Refrescar la página
       window.location.reload();
     } catch (error) {
       console.error("Error al agregar el producto al pedido:", error);
       alert("Hubo un problema al agregar el producto al pedido.");
     }
   };
-
 
   const eliminarProducto = async (pedidoId, productoId) => {
     try {
@@ -156,6 +169,7 @@ const DetalleMesa = () => {
       }));
 
       alert("Producto eliminado con éxito.");
+      window.location.reload();
     } catch (error) {
       console.error("Error al eliminar el producto:", error);
       alert("Hubo un problema al eliminar el producto.");

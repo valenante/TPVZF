@@ -28,15 +28,7 @@ function App() {
     i18n.load({ [locale]: locales[locale] });
     i18n.activate(locale);
   }, [locale]);
-
-  // Cambiar idioma y guardarlo en localStorage
-  const cambiarIdioma = (nuevoIdioma) => {
-    i18n.load({ [nuevoIdioma]: locales[nuevoIdioma] });
-    i18n.activate(nuevoIdioma);
-    setLocale(nuevoIdioma);
-    localStorage.setItem("locale", nuevoIdioma); // Guardar selección en localStorage
-  };
-
+  
   return (
     <I18nProvider i18n={i18n}>
       <LanguageProvider>

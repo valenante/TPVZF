@@ -38,4 +38,4 @@ const PedidoBebidasSchema = new Schema({
   total: { type: Number, required: true },
 });
 
-export default model('PedidoBebidas', PedidoBebidasSchema);
+export default model('PedidoBebida', PedidoBebidasSchema);

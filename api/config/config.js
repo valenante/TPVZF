@@ -45,7 +45,7 @@ export const configureSocketIO = (server) => {
 };
 
 // Configuración de MongoDB
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/dataBaseZF";
+const MONGO_URI = process.env.MONGO_URI;
 
 export const connectToDatabase = async () => {
   try {

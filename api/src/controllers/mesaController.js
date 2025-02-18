@@ -83,9 +83,11 @@ export const crearTokenLider = async (req, res) => {
 
 // Obtener todas las mesas activas
 export const obtenerMesas = async (req, res) => {
+  console.log('Obteniendo mesas activas...');
   try {
     const mesas = await Mesa.find().populate('pedidos');
     res.status(200).json(mesas);
+    console.log('Mesas activas obtenidas con éxito.', mesas);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener las mesas activas' });

@@ -102,7 +102,7 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio, tipoPrecio })
 return ReactDOM.createPortal(
   <div className="modal-detalle">
     <div className="modal-contenido-detalle">
-      <h2><Trans>Personaliza tu {producto.nombre}</Trans></h2>
+      <h2><Trans>{producto.nombre}</Trans></h2>
 
       <h4><Trans>Ingredientes:</Trans></h4>
       <ul>

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import { agregarProductoAlPedido, verificarPedidosMesa, obtenerPedidos, obtenerPedidosId, obtenerPedidosPendientes, obtenerPedidosFinalizados, actualizarPedido, actualizarProducto, eliminarPedido, crearPedido } from '../controllers/pedidoBebidasController.js';
+import { verificarPedidosMesa, obtenerPedidos, obtenerPedidosId, obtenerPedidosPendientes, obtenerPedidosFinalizados, actualizarPedido, actualizarProducto, eliminarPedido, crearPedido, agregarProductoBebida } from '../controllers/pedidoBebidasController.js';
 import verificarLider from '../middlewares/verificarLider.js';
 
 // Obtener todos los pedidos
@@ -22,7 +22,7 @@ router.get('/pedidosBebidas/estado/:numeroMesa', verificarPedidosMesa);
 router.post('/', crearPedido, verificarLider);
 
 //Agregar un producto a un pedido
-router.post('/:mesaId/agregar-producto', agregarProductoAlPedido);
+router.post('/:mesaId/agregar-producto', agregarProductoBebida);
 
 // Actualizar un pedido por ID
 router.put('/:id', actualizarPedido);

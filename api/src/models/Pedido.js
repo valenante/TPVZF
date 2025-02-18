@@ -27,7 +27,7 @@ const PedidoSchema = new Schema({
       producto: { type: Schema.Types.ObjectId, ref: 'Producto', required: true },
       cantidad: { type: Number, required: true },
       eliminado: { type: Boolean, default: false }, // Indica si se eliminó
-      tipo: { type: String, enum: ['plato', 'tapaRacion', 'bebida'], required: true }, // Diferencia entre plato y bebida
+      tipo: { type: String, enum: ['plato', 'tapaRacion', 'bebida', 'extra'], required: true }, // Diferencia entre plato y bebida
       categoria: { type: String, required: true }, // Ej: "entrante", "plato principal", "refresco", "licor"
       precioSeleccionado: { type: Number, required: true }, // Precio seleccionado
       ingredientesEliminados: { type: [String], default: [] }, // Ingredientes que el cliente ha solicitado quitar

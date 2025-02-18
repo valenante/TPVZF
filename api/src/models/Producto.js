@@ -19,7 +19,7 @@ const opcionPersonalizableSchema = new Schema({
 const productoSchema = new Schema({
   // Información general
   nombre: { type: String, required: true },
-  tipo: { type: String, enum: ['plato', 'tapaRacion', 'bebida'], required: true }, // Diferencia entre plato y bebida
+  tipo: { type: String, enum: ['plato', 'tapaRacion', 'bebida', 'extra'], required: true }, // Diferencia entre plato y bebida
   categoria: { type: String, required: true }, // Ej: "entrante", "plato principal", "refresco", "licor"
   descripcion: { type: String, default: '' },
   img: { type: String, required: true },
