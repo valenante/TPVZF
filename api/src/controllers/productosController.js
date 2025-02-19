@@ -58,8 +58,6 @@ export const editarProducto = async (req, res) => {
         if (!productoActualizado) {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
-
-        console.log(productoActualizado);
         res.status(200).json(productoActualizado);
     } catch (error) {
         console.error(error);

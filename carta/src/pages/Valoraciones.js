@@ -80,7 +80,7 @@ const Valoraciones = () => {
     try {
       const valoracionesAEnviar = valoraciones.map((valoracion) => ({
         producto: valoracion.productoId,
-        puntuacion: valoracion.estrellas,
+        puntuacion: valoracion.estrellas || 5,
         comentario: valoracion.comentario,
       }));
 
@@ -117,7 +117,7 @@ const Valoraciones = () => {
                 <Trans id="estrellas">Estrellas:</Trans>
               </label>
               <select
-                value={valoraciones.find((v) => v.productoId === producto.productoId._id)?.estrellas || 0}
+                value={valoraciones.find((v) => v.productoId === producto.productoId._id)?.estrellas || 5}
                 onChange={(e) =>
                   manejarEstrellas(producto.productoId._id, parseFloat(e.target.value))
                 }

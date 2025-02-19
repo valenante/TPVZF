@@ -12,7 +12,6 @@ export const MesasProvider = ({ children }) => {
         const fetchMesas = async () => {
             try {
                 const url = `${process.env.REACT_APP_API_URL}/mesas`;
-                console.log("Fetching mesas from:", url);
     
                 const response = await fetch(url);
                 if (!response.ok) {
@@ -20,7 +19,6 @@ export const MesasProvider = ({ children }) => {
                 }
     
                 const data = await response.json();
-                console.log("Mesas obtenidas:", data);
                 setMesas(data);
     
                 // Obtener número de mesa desde la URL

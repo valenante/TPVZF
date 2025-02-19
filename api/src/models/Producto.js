@@ -47,8 +47,8 @@ const productoSchema = new Schema({
   opcionesPersonalizables: [opcionPersonalizableSchema], // Opciones personalizables para el cliente
   especificaciones: [
     {
-      nombre: { type: String, required: true },
-      valor: { type: String, required: true }
+      nombre: { type: String},
+      valor: { type: String}
     }
   ],
   sabor: {

@@ -42,8 +42,12 @@ export const integrarDinero = async (req, res) => {
     }
 
     try {
-        const caja = await Caja.findOne();
-
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Establece la hora a 00:00:00 para evitar problemas con la comparación
+        
+        const caja = await Caja.findOne({
+            estado: "abierta" // Filtra solo las cajas con estado "abierto"
+        });
         if (!caja) {
             return res.status(404).json({ error: "Caja no encontrada." });
         }
@@ -80,13 +84,20 @@ export const integrarDinero = async (req, res) => {
 export const retirarDinero = async (req, res) => {
     const { monto, razon } = req.body;
 
+    console.log(monto, razon);
+
     if (!monto || !razon) {
         return res.status(400).json({ error: "Monto y razón son obligatorios." });
     }
 
     try {
-        const caja = await Caja.findOne();
-
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Establece la hora a 00:00:00 para evitar problemas con la comparación
+        
+        const caja = await Caja.findOne({
+            estado: "abierta" // Filtra solo las cajas con estado "abierto"
+        });
+        
         if (!caja) {
             return res.status(404).json({ error: "Caja no encontrada." });
         }
@@ -156,7 +167,6 @@ export const cerrarCaja = async (req, res) => {
             estado: "abierta"
         });
 
-        console.log(cajaActual, 'cajaActual');
         if (cajaActual) {
             cajaActual.estado = "cerrada";
             await cajaActual.save();

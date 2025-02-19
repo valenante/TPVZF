@@ -278,8 +278,6 @@ export const agregarProductoBebida = async (req, res) => {
     const { mesaId } = req.params;
     const { productos } = req.body;
 
-    console.log(productos, 'gola');
-
     // Validar datos entrantes
     if (!productos || !productos.producto || !productos.cantidad || !productos.total || !productos.precioSeleccionado) {
         return res.status(400).json({
