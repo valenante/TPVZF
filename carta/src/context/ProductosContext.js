@@ -1,10 +1,13 @@
 import React, { createContext, useState, useCallback, useEffect } from 'react';
 import api from '../utils/api';
+import { useSearchParams } from 'react-router-dom';
 import socket from '../utils/socket';
 
 export const ProductosContext = createContext();
 
 export const ProductosProvider = ({ children }) => {
+  const [searchParams] = useSearchParams();
+  const numeroMesa = searchParams.get("mesa");
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
@@ -12,26 +15,23 @@ export const ProductosProvider = ({ children }) => {
   const [mesaId, setMesaId] = useState(null);
 
   const cargarCarrito = useCallback(async () => {
-    try {
-      const cartId = localStorage.getItem('carritoMongoId');
-      if (!cartId) {
-        console.error('No se encontró el identificador del carrito.');
-        return;
-      }
+    if (!numeroMesa) {
+      console.warn("No hay número de mesa en la URL.");
+      return;
+    }
 
-      const { data } = await api.get(`/cart`, {
-        headers: { 'X-Cart-ID': cartId },
-      });
-      setCarrito(data); // Si se encuentra el carrito, se guarda en el estado
+    try {
+      const { data } = await api.get(`/cart?numeroMesa=${numeroMesa}`); // ✅ Enviar número de mesa
+      setCarrito(data); 
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        console.warn('No se encontró un carrito. Inicializando vacío...');
+        console.warn(`No se encontró un carrito para la mesa ${numeroMesa}. Inicializando vacío...`);
         setCarrito({ items: [] });
       } else {
         console.error('Error al cargar el carrito:', error);
       }
     }
-  }, []);
+  }, [numeroMesa]);
 
   useEffect(() => {
     // Escuchar el evento "carritoActualizado" para actualizar el carrito
@@ -66,23 +66,28 @@ export const ProductosProvider = ({ children }) => {
 
   const obtenerMesaId = useCallback(async (numeroMesa) => {
     try {
-      const { data } = await api.get(`/mesas?numero=${numeroMesa}`);
-  
-      // Filtramos la mesa que coincide con el numeroMesa
-      const mesa = data.find((mesa) => mesa.numero === parseInt(numeroMesa));
-  
-      if (mesa) {
-        // Si encontramos la mesa, guardamos el ID en el estado y localStorage
-        setMesaId(mesa._id);
-      } else {
-        console.warn(`No se encontró una mesa con el número ${numeroMesa}`);
-      }
+        // Si numeroMesa no es un número válido, mostramos un warning y detenemos la ejecución
+        if (!numeroMesa || isNaN(numeroMesa)) {
+            console.warn(`⚠️ El valor de numeroMesa es inválido: ${numeroMesa}`);
+            return;
+        }
+
+        // Petición a la API
+        const { data } = await api.get(`/mesas`);
+
+        // Filtramos la mesa que coincide con el numeroMesa
+        const mesa = data.find(mesa => Number(mesa.numero) === Number(numeroMesa));
+
+        if (mesa) {
+            setMesaId(mesa._id);
+        } else {
+            console.warn(`⚠️ No se encontró una mesa con el número ${numeroMesa}`);
+        }
     } catch (error) {
-      console.error(`Error al obtener el ID de la mesa ${numeroMesa}:`, error);
+        console.error(`❌ Error al obtener el ID de la mesa ${numeroMesa}:`, error);
     }
-  }, []);
-  
-  
+}, []);
+
   return (
     <ProductosContext.Provider
       value={{
@@ -95,6 +100,7 @@ export const ProductosProvider = ({ children }) => {
         cargarCarrito,
         mesaId,
         obtenerMesaId,
+        numeroMesa,
       }}
     >
       {children}

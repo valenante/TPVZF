@@ -36,7 +36,7 @@ function App() {
           <MesasProvider>
             <ProductosProvider>
               <Routes>
-                <Route path="/:numeroMesa" element={<CartaPage />} />
+                <Route path="/carta" element={<CartaPage />} />
                 <Route path="/preMenu" element={<PreMenu />} />
                 <Route path="/valoraciones" element={<Valoraciones />} />
               </Routes>

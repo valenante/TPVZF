@@ -7,6 +7,11 @@ import Eliminaciones from "../models/Eliminacion.js";
 import Mesa from "../models/Mesa.js";
 import PDFDocument from "pdfkit";
 import nodemailer from "nodemailer";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const obtenerCaja = async (req, res) => {
     try {
@@ -44,7 +49,7 @@ export const integrarDinero = async (req, res) => {
     try {
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Establece la hora a 00:00:00 para evitar problemas con la comparación
-        
+
         const caja = await Caja.findOne({
             estado: "abierta" // Filtra solo las cajas con estado "abierto"
         });
@@ -93,11 +98,11 @@ export const retirarDinero = async (req, res) => {
     try {
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Establece la hora a 00:00:00 para evitar problemas con la comparación
-        
+
         const caja = await Caja.findOne({
             estado: "abierta" // Filtra solo las cajas con estado "abierto"
         });
-        
+
         if (!caja) {
             return res.status(404).json({ error: "Caja no encontrada." });
         }
@@ -149,19 +154,50 @@ export const cerrarCaja = async (req, res) => {
             return res.status(401).json({ message: "Contraseña incorrecta" });
         }
 
-        // Calcular el total de las mesas cerradas
-        const mesasCerradas = await MesaCerrada.find();
+        const mesasCerradas = await MesaCerrada.find()
+            .populate({
+                path: "pedidos",
+                populate: {
+                    path: "productos.producto", // Popular los productos dentro de pedidos
+                    select: "nombre precio"
+                }
+            })
+            .populate({
+                path: "pedidoBebidas",
+                populate: {
+                    path: "productos.producto", // Popular los productos dentro de pedidoBebidas
+                    select: "nombre precio"
+                }
+            });
+
+        console.log("Mesas cerradas con pedidos:", JSON.stringify(mesasCerradas, null, 2));
+
+
+        if (!mesasCerradas || mesasCerradas.length === 0) {
+            return res.status(400).json({ message: "No hay mesas cerradas para generar el informe." });
+        }
+
+        // 📌 **CALCULAR LOS TOTALES ANTES DE BORRAR LOS DATOS**
         const total = mesasCerradas.reduce((acc, mesa) => {
-            const totalMesa = Object.values(mesa.metodoPago).reduce((sum, value) => sum + value, 0);
-            return acc + totalMesa;
+            return acc + Object.values(mesa.metodoPago).reduce((sum, value) => sum + value, 0);
         }, 0);
 
-        // Calcular el rango de fechas para el día actual
+        // Calcular el total por método de pago
+        const totalesMetodoPago = mesasCerradas.reduce((totales, mesa) => {
+            totales.efectivo += mesa.metodoPago.efectivo || 0;
+            totales.tarjeta += mesa.metodoPago.tarjeta || 0;
+            totales.propina += mesa.metodoPago.propina || 0;
+            return totales;
+        }, { efectivo: 0, tarjeta: 0, propina: 0 });
+
+        // 📌 **GENERAR EL PDF ANTES DE BORRAR**
+        const pdfBuffer = await generarPDF(mesasCerradas, total, totalesMetodoPago);
+
+        // 📌 **GUARDAR EL ESTADO DE LA CAJA**
         const hoy = new Date();
         const inicioDelDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
         const finDelDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
 
-        // Buscar la caja con la fecha de hoy y estado 'abierta'
         const cajaActual = await Caja.findOne({
             fechaApertura: { $gte: inicioDelDia, $lte: finDelDia },
             estado: "abierta"
@@ -169,67 +205,136 @@ export const cerrarCaja = async (req, res) => {
 
         if (cajaActual) {
             cajaActual.estado = "cerrada";
+            cajaActual.total = total;
+            cajaActual.detallesMetodoPago = totalesMetodoPago;
             await cajaActual.save();
         }
 
-        await cajaActual.save();
+        // 📌 **ENVIAR EL EMAIL ANTES DE ELIMINAR LOS DATOS**
+        try {
+            await enviarEmailConPDF(pdfBuffer);
+        } catch (emailError) {
+            console.error("Error enviando el email con el informe:", emailError);
+        }
 
-        // Crear una nueva caja
+        // 📌 **AHORA SÍ, ELIMINAMOS LOS DATOS**
+        await Mesa.updateMany({}, { $set: { estado: "cerrada", total: 0, pedidos: [] } });
+        await MesaCerrada.deleteMany({});
+        await Pedido.deleteMany({});
+        await Cart.deleteMany({});
+        await Eliminaciones.deleteMany({});
+
+        // Crear una nueva caja para el próximo turno
         const nuevaCaja = new Caja({
             total: 0,
             detallesMetodoPago: { efectivo: 0, tarjeta: 0, propina: 0 },
             operaciones: [],
-            estado: "abierta"
+            estado: "abierta",
+            fechaApertura: new Date()
         });
         await nuevaCaja.save();
 
-        await Mesa.updateMany({}, { $set: { estado: "cerrada" } });
-
-        // Restablecer datos después del cierre de caja
-        await MesaCerrada.deleteMany({});
-        await Pedido.deleteMany({});
-        await Cart.deleteMany({});
-        await Mesa.updateMany({}, { $set: { total: 0, pedidos: [] } });
-        await Eliminaciones.deleteMany({});
-        await Mesa.updateMany({}, { $set: { total: 0, pedidos: [] } });
-
-        // Generar el PDF con los datos del cierre
-        const pdfBuffer = await generarPDF(mesasCerradas, total);
-
-        // Enviar el PDF por correo
-        await enviarEmailConPDF(pdfBuffer);
-
         res.json({ message: "Caja cerrada y nueva caja creada correctamente." });
+
     } catch (error) {
         console.error("Error al cerrar la caja:", error);
-        res.status(500).json({
-            message: "Error al cerrar la caja."
-        });
+        res.status(500).json({ message: "Error al cerrar la caja." });
     }
-}
+};
 
-const generarPDF = (mesasCerradas, total) => {
+const generarPDF = (mesasCerradas, total, totalesMetodoPago) => {
     return new Promise((resolve, reject) => {
-        const doc = new PDFDocument();
+        const doc = new PDFDocument({ margin: 50 });
         const buffers = [];
 
         doc.on("data", buffers.push.bind(buffers));
         doc.on("end", () => resolve(Buffer.concat(buffers)));
         doc.on("error", reject);
 
-        // Contenido del PDF
-        doc.fontSize(20).text("Informe Diario", { align: "center" });
-        doc.fontSize(14).text(`Fecha: ${new Date().toLocaleDateString()}`, { align: "right" });
 
-        doc.moveDown();
-        mesasCerradas.forEach((mesa, index) => {
-            doc.text(`Mesa ${mesa.numero}:`);
-            doc.text(`  Total: ${mesa.total} €`);
-            doc.text(`  Método de Pago: Efectivo - ${mesa.metodoPago.efectivo} €, Tarjeta - ${mesa.metodoPago.tarjeta} €`);
-            doc.moveDown();
+        // 📌 Ruta de la imagen (asegúrate de que la ruta es correcta)
+        const logoPath = path.join(__dirname, "../../public/images/logoZf.jpg");
+
+        try {
+            // 📌 **LOGO COMO ENCABEZADO (parte superior)**
+            doc.image(logoPath, 50, 30, { width: 100 }); // Posición (x, y) y tamaño
+        } catch (error) {
+            console.error("⚠️ Error cargando la imagen del logo:", error);
+        }
+
+        // Encabezado
+        doc
+            .fontSize(22)
+            .font("Helvetica-Bold")
+            .text("Informe Diario de Ventas", { align: "center" })
+            .moveDown(0.5);
+
+        doc
+            .fontSize(14)
+            .font("Helvetica")
+            .text(`Fecha de cierre: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, { align: "right" })
+            .moveDown(0.5);
+
+        // Línea separadora
+        doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke().moveDown(1);
+
+        // Sección de mesas cerradas
+        doc.fontSize(16).font("Helvetica-Bold").text("Detalles de las mesas:", { underline: true }).moveDown(0.5);
+
+        mesasCerradas.forEach((mesa) => {
+            doc.fontSize(14).font("Helvetica-Bold").text(`Mesa ${mesa.numero}`, { continued: true })
+                .font("Helvetica").text(` (Total: ${mesa.total?.toFixed(2)} €)`);
+            doc.moveDown(0.3);
+
+            // 📌 **Iterar sobre los pedidos y mostrar productos**
+            if (Array.isArray(mesa.pedidos) && mesa.pedidos.length > 0) {
+                doc.fontSize(12).font("Helvetica-Bold").text("Pedidos:");
+                mesa.pedidos.forEach((pedido) => {
+                    pedido.productos.forEach((producto) => {
+                        doc.fontSize(12).font("Helvetica")
+                            .text(`  - ${producto.producto?.nombre || "Producto desconocido"} x${producto.cantidad || 0} - ${producto.precioSeleccionado?.toFixed(2) || 0}€`, { indent: 20 });
+                    });
+                });
+                doc.moveDown(0.3);
+            } else {
+                doc.fontSize(12).text("No hay pedidos registrados.").moveDown(0.3);
+            }
+
+            // 📌 **Iterar sobre las bebidas**
+            if (Array.isArray(mesa.pedidoBebidas) && mesa.pedidoBebidas.length > 0) {
+                doc.fontSize(12).font("Helvetica-Bold").text("Bebidas:");
+                mesa.pedidoBebidas.forEach((pedido) => {
+                    pedido.productos.forEach((producto) => {
+                        doc.fontSize(12).font("Helvetica")
+                            .text(`  - ${producto.producto?.nombre || "Bebida desconocida"} x${producto.cantidad || 0} - ${producto.precioSeleccionado?.toFixed(2) || 0}€`, { indent: 20 });
+                    });
+                });
+                doc.moveDown(0.3);
+            } else {
+                doc.fontSize(12).text("No hay bebidas registradas.").moveDown(0.3);
+            }
+
+            // Métodos de pago
+            doc.fontSize(12).font("Helvetica-Bold").text("Método de Pago:");
+            doc.font("Helvetica").text(`  - Efectivo: ${mesa.metodoPago.efectivo?.toFixed(2) || 0} €`, { indent: 20 });
+            doc.text(`  - Tarjeta: ${mesa.metodoPago.tarjeta?.toFixed(2) || 0} €`, { indent: 20 });
+            if (mesa.metodoPago.propina) {
+                doc.text(`  - Propina: ${mesa.metodoPago.propina?.toFixed(2) || 0} €`, { indent: 20 });
+            }
+
+            doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke().moveDown(1);
         });
 
-        doc.text(`Total del Día: ${total.toFixed(2)} €`, { align: "right" });
+        // Resumen de pagos
+        doc.moveDown(1);
+        doc.fontSize(16).font("Helvetica-Bold").text("Resumen de Métodos de Pago", { underline: true }).moveDown(0.5);
+        doc.fontSize(14).text(`Efectivo: ${totalesMetodoPago.efectivo.toFixed(2)} €`);
+        doc.text(`Tarjeta: ${totalesMetodoPago.tarjeta.toFixed(2)} €`);
+        doc.text(`Propina: ${totalesMetodoPago.propina.toFixed(2)} €`).moveDown(1);
+
+        // Total del día
+        doc.fontSize(16).font("Helvetica-Bold").text(`TOTAL DEL DÍA: ${total.toFixed(2)} €`, { align: "right" });
+
         doc.end();
     });
 };

@@ -129,7 +129,7 @@ const PreMenu = () => {
         nombre: formData.nombre,
       }).toString();
 
-      navigate(`/${mesa}?${searchParams}`);
+      navigate(`/carta?mesa=${mesa}&${searchParams.toString()}`);
     } catch (error) {
       console.error("❌ Error al procesar la solicitud:", error);
       alert("Hubo un error al procesar tu solicitud. Intenta nuevamente.");

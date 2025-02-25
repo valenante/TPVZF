@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { ProductosContext } from '../../context/ProductosContext';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import api from '../../utils/api';
 import '../../styles/CarritoModal.css';
 
@@ -9,8 +9,7 @@ const CarritoModal = ({ cerrarModal }) => {
   const [searchParams] = useSearchParams();
   const comensales = searchParams.get("comensales"); // Obtener el nombre desde la URL
   const alergias = searchParams.get("alergias"); // Obtener el nombre desde la URL
-  const { numeroMesa } = useParams(); // Obtener el número de mesa directamente desde los params de la ruta
-
+  const numeroMesa = searchParams.get("mesa");
   useEffect(() => {
     // Aquí estamos llamando a la función para obtener el ID de la mesa (asumiendo que la mesa es la 1, o puedes pasar otro número de mesa)
     obtenerMesaId(numeroMesa);
@@ -123,9 +122,10 @@ const CarritoModal = ({ cerrarModal }) => {
         };
         await api.post("/pedidosBebidas", pedidoBebidas);
       }
+
+      //Eliminar el carrito
+      await api.delete(`/cart/${numeroMesa}`);
   
-      // Limpiar el carrito después de enviar los pedidos
-      localStorage.removeItem("carritoMongoId");
       cargarCarrito();
       cerrarModal();
     } catch (error) {

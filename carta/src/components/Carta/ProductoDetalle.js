@@ -3,18 +3,18 @@ import { useSearchParams, useParams } from "react-router-dom";
 import ReactDOM from "react-dom";
 import { Trans } from "@lingui/react/macro";
 import { toast } from "react-toastify"; // Importar toast
+import { useMesas } from "../../context/MesasContext"; // 👈 Importar el hook
 import api from "../../utils/api";
 import "../../styles/ModalDetalle.css";
 
-const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio, tipoPrecio }) => {
+const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
+  const { numeroMesa } = useMesas(); // 👈 Obtener el número de mesa desde el contexto
   const [cantidad, setCantidad] = useState(1);
   const [ingredientesSeleccionados, setIngredientesSeleccionados] = useState([...producto.ingredientes]);
   const [ingredientesEliminados, setIngredientesEliminados] = useState([]);
   const [opcionesSeleccionadas, setOpcionesSeleccionadas] = useState({});
   const [tipoPlato, setTipoPlato] = useState("compartir"); // Nuevo estado para "compartir" o "individual"
   const [searchParams] = useSearchParams();
-  const { numeroMesa } = useParams();
-  const mesa = numeroMesa;
   const nombre = searchParams.get("nombre");
 
   const manejarCantidad = (incremento) => {
@@ -39,37 +39,31 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio, tipoPrecio })
   };
 
   const manejarTipoPlato = (e) => {
-    console.log("Tipo de plato seleccionado:", e.target.value); // Verifica el valor seleccionado
     setTipoPlato(e.target.value); // Actualizar tipo de plato ("compartir" o "individual")
-    console.log("Tipo de plato actualizado:", tipoPlato); // Verifica el tipo de plato actualizado
   };
 
   const agregarAlCarrito = async () => {
-    const carritoId = localStorage.getItem('carritoMongoId');
 
-    const cartId = carritoId;
+    console.log(producto);
 
     const pedido = {
-      cartId,
       productId: producto._id,
       cantidad,
       ingredientes: ingredientesEliminados, // Solo ingredientes eliminados
       opciones: opcionesSeleccionadas,
       precioSeleccionado: seleccionPrecio, // Asegúrate de incluir este campo
       total: seleccionPrecio * cantidad, // Calcular el total basado en el precio seleccionado
-      mesa,
+      mesa: numeroMesa,
       nombre,
       tipoPlato: tipoPlato, // Agregar tipo de plato (compartir o individual)
     };
 
     try {
-      const response = await api.post('/cart', pedido);
-      const { _id: nuevoCartId } = response.data;
-
-      if (!carritoId) {
-        localStorage.setItem('carritoMongoId', nuevoCartId);
-      }
-
+      const response = await api.post('/cart', {
+        mesa: numeroMesa, // 🔹 Enviar `mesa` en la raíz
+        items: [pedido],  // 🔹 Enviar el producto dentro de `items`
+      });
+  
        // Mostrar notificación de éxito
        toast.success("Producto agregado al carrito con éxito!", {
         position: "top-right",

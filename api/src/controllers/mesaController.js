@@ -94,6 +94,7 @@ export const obtenerMesas = async (req, res) => {
 
 // Obtener una mesa activa por ID
 export const obtenerMesaPorId = async (req, res) => {
+  console.log('nanananannana');
   const { id } = req.params;
   try {
     const mesa = await Mesa.findById(id).populate('pedidos');
@@ -159,6 +160,7 @@ export const cerrarMesa = async (req, res) => {
     const mesaCerrada = new MesaCerrada({
       numero: mesa.numero,
       pedidos: mesa.pedidos.map((pedido) => pedido._id),
+      pedidoBebidas: mesa.pedidosBebidas.map((pedido) => pedido._id),
       total: mesa.total,
       inicio: mesa.inicio,
       cierre: new Date(),
@@ -214,6 +216,7 @@ export const cerrarMesa = async (req, res) => {
     mesa.estado = 'cerrada';
       mesa.total = 0;
       mesa.pedidos = [];
+      mesa.pedidosBebidas = [];
       mesa.tokenLider = null;
       await mesa.save();
 

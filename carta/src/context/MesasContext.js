@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const MesasContext = createContext();
 
 export const MesasProvider = ({ children }) => {
+    const [searchParams] = useSearchParams();
+    const numeroMesa = searchParams.get("mesa"); // 🔹 Extraer el número de mesa desde los Query Params
     const [mesas, setMesas] = useState([]);
     const [mesaId, setMesaId] = useState(null);
-    const location = useLocation();
 
     useEffect(() => {
         const fetchMesas = async () => {
@@ -21,31 +22,27 @@ export const MesasProvider = ({ children }) => {
                 const data = await response.json();
                 setMesas(data);
     
-                // Obtener número de mesa desde la URL
-                const pathParts = location.pathname.split("/").filter(Boolean);
-                const numeroMesa = pathParts[0];
-    
-                if (!isNaN(numeroMesa)) {
+                if (numeroMesa && !isNaN(numeroMesa)) { // ✅ Asegurarse de que numeroMesa es válido
                     const mesaEncontrada = data.find(mesa => mesa.numero === Number(numeroMesa));
                     if (mesaEncontrada) {
                         setMesaId(mesaEncontrada._id);
                     } else {
-                        console.warn(`No se encontró una mesa con el número ${numeroMesa}`);
+                        console.warn(`⚠️ No se encontró una mesa con el número ${numeroMesa}`);
                     }
                 } else {
-                    console.warn("El número de mesa en la URL no es válido:", numeroMesa);
+                    console.warn("⚠️ El número de mesa en la URL no es válido:", numeroMesa);
                 }
     
             } catch (error) {
-                console.error("Error al obtener mesas:", error.message);
+                console.error("❌ Error al obtener mesas:", error.message);
             }
         };
     
         fetchMesas();
-    }, []);
-    
+    }, [numeroMesa]); // 🔹 Agregar `numeroMesa` como dependencia
+
     return (
-        <MesasContext.Provider value={{ mesas, mesaId }}>
+        <MesasContext.Provider value={{ mesas, mesaId, numeroMesa }}>
             {children}
         </MesasContext.Provider>
     );

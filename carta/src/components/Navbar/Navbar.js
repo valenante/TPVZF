@@ -7,10 +7,12 @@ import { ProductosContext } from "../../context/ProductosContext";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api";
 import "../../styles/Navbar.css";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from 'react-router-dom';
 import socket from "../../utils/socket";
 
 const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
+  const [searchParams] = useSearchParams();
+  const numeroMesa = searchParams.get("mesa");
   const { productos, categoriaSeleccionada, setCategoriaSeleccionada } =
     useContext(ProductosContext);
   const [pantallaPequena, setPantallaPequena] = useState(window.innerWidth <= 768);
@@ -18,7 +20,6 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
   const { cargarCarrito } = useContext(ProductosContext);
   const [pedidosListos, setPedidosListos] = useState(false);
   const navigate = useNavigate();
-  const { numeroMesa } = useParams();
   const { locale, cambiarIdioma } = useContext(LanguageContext); // 👈 Obtenemos idioma y función para cambiarlo
 
 
