@@ -23,6 +23,8 @@ import cajaDiariaRoutes from "./src/routes/cajaDiariaRoutes.js";
 import valoracionesRoutes from "./src/routes/valoracionesRoutes.js";
 import cuentaRoutes from "./src/routes/cuentaRoutes.js";
 import imagesRoutes from "./src/routes/imagesRoutes.js";
+import configuracionesReservasRoutes from "./src/routes/configuracionesReservasRoutes.js"; // ✅ Importamos las rutas de configuraciones de reservas
+import reservasRoutes from "./src/routes/reservasRoutes.js"; // ✅ Importamos las rutas de reservas
 
 // Configurar dotenv
 config();
@@ -77,6 +79,8 @@ app.use("/api/cajaDiaria", cajaDiariaRoutes);
 app.use("/api/valoraciones", valoracionesRoutes);
 app.use("/api/cuenta", cuentaRoutes);
 app.use("/api/images", imagesRoutes);
+app.use("/api/reservasConfiguracion", configuracionesReservasRoutes); // ✅ Registrar las rutas de configuraciones de reservas
+app.use("/api/reservas", reservasRoutes); // ✅ Registrar las rutas de reservas
 
 // Middlewares de error
 app.use(notFoundHandler);

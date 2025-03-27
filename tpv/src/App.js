@@ -20,6 +20,7 @@ import CuentaPopup from "./components/CuentaPopUp/CuentaPopUp";
 import Navbar from "./components/Navbar/Navbar";
 import { AuthProvider } from "./context/AuthContext";
 import { ImagesProvider } from "./context/ImagesContext";
+import ReservasPage from "./pages/Reservas";
 
 const AppContent = () => {
   const location = useLocation();
@@ -125,6 +126,7 @@ const AppContent = () => {
             </RutaProtegida>
           }
         />
+        <Route path="/reservas" element={<ReservasPage />} />
       </Routes>
     </>
   );

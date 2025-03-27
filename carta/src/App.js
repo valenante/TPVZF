@@ -12,6 +12,7 @@ import { messages as enMessages } from "./locales/en/messages";
 import { messages as esMessages } from "./locales/es/messages";
 import { MesasProvider } from './context/MesasContext';
 import Home from './pages/HomePage.js';
+import Reservas from './pages/Reservas.js';
 
 // Configuración de idiomas
 const locales = {
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/carta" element={<CartaPage />} />
                 <Route path="/preMenu" element={<PreMenu />} />
                 <Route path="/valoraciones" element={<Valoraciones />} />
+                <Route path="/reservas" element={<Reservas />} />
               </Routes>
             </ProductosProvider>
             <ToastContainer />

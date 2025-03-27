@@ -1,4 +1,3 @@
-import Usuario from '../models/Usuario.js'; // Asegúrate de que el nombre y la ruta sean correctos
 import Eliminacion from '../models/Eliminacion.js';
 
 export const obtenerEliminaciones = async (req, res) => {
