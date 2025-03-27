@@ -1,0 +1,78 @@
+.slide-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .carousel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  /* Texto superpuesto sobre la imagen */
+  .slide-overlay {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    max-width: 90%;
+  }
+
+  .slide-overlay h2 {
+    font-size: 4rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .reserva-btn {
+    padding: 0.7rem 1.5rem;
+    font-size: 1.2rem;
+    background-color: #FF6700;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+
+  @media screen and (max-width: 768px) {
+    .slide-overlay {
+      padding: .7rem;
+      max-width: 100%;
+    }
+  
+    .slide-overlay h2 {
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+  
+    .reserva-btn {
+      font-size: 1.5rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .slide-overlay {
+      top: 10%;
+    }
+  
+    .slide-overlay h2 {
+      font-size: 1.5rem;
+    }
+  
+    .reserva-btn {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+  
