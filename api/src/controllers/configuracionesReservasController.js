@@ -1,19 +1,28 @@
 import ConfiguracionReserva from "../models/ConfiguracionReserva.js";
 
+// Si no hay configuración en la base de datos para esa fecha, usar predeterminada
+const franjasPredeterminadas = [
+  { horaInicio: "13:00", horaFin: "15:00", maxReservas: 10 },
+  { horaInicio: "20:00", horaFin: "21:30", maxReservas: 10 },
+];
+
 export const obtenerConfiguracionPorFecha = async (req, res) => {
   const { fecha } = req.query;
 
   try {
-    const configuracion = await ConfiguracionReserva.findOne({ fecha });
+    let config = await ConfiguracionReserva.findOne({ fecha });
 
-    if (!configuracion) return res.json(null);
+    if (!config) {
+      return res.json({ franjas: franjasPredeterminadas });
+    }
 
-    res.json(configuracion);
+    res.json({ franjas: config.franjas });
   } catch (error) {
     console.error("Error al obtener configuración:", error);
-    res.status(500).json({ mensaje: "Error al obtener la configuración" });
+    res.status(500).json({ mensaje: "Error al obtener configuración de reservas." });
   }
 };
+
 
 export const guardarConfiguracion = async (req, res) => {
   const { fecha, franjas } = req.body;

@@ -23,7 +23,7 @@ const HomeCarousel = () => {
   ];
 
   const handleReservaClick = () => {
-    navigate("/reserva");
+    navigate("/reservas");
   };
 
   return (

@@ -1,0 +1,53 @@
+.reservas-page-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+  
+  .reservas-contenido {
+    max-width: 120vh;
+    width: 100%;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .reservas-contenido h1 {
+    font-size: 2rem;
+    text-align: center;
+    color: #6A0DAD;
+    margin-bottom: 1.5rem;
+  }
+  
+  .nueva-reserva-btn {
+    display: block;
+    margin: 0 auto 2rem auto;
+    padding: 0.7rem 1.4rem;
+    background-color: #6A0DAD;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .nueva-reserva-btn:hover {
+    background-color: #5c0bb8;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .reservas-contenido {
+      padding: 1rem;
+    }
+  
+    .nueva-reserva-btn {
+      width: 100%;
+      font-size: 1rem;
+    }
+  }
+  

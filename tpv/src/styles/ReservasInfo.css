@@ -1,0 +1,126 @@
+.reservas-info {
+  max-height: 500px; /* Puedes ajustar la altura */
+  overflow-y: auto;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  margin-top: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.reservas-info h2 {
+  font-size: 1.8rem;
+  color: #6A0DAD;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.reservas-info table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.reservas-info th,
+.reservas-info td {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.reservas-info th {
+  background-color: #f0f0f0;
+  color: #444;
+}
+
+.reservas-info td {
+  color: #333;
+}
+
+.reservas-info button {
+  margin: 0.2rem;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.reservas-info button:hover {
+  opacity: 0.9;
+}
+
+.reservas-info button:nth-child(1) {
+  background-color: #28a745;
+  /* aceptar */
+  color: white;
+}
+
+.reservas-info button:nth-child(2) {
+  background-color: #e74c3c;
+  /* cancelar o rechazar */
+  color: white;
+}
+
+.calendar-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.calendar-popup {
+  position: absolute;
+  z-index: 999;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-calendar {
+  font-size: 0.85rem;
+  width: 260px;
+}
+
+/* Día con reservas (verde claro) */
+.reserva-dia {
+  background-color: #98ff98 !important;
+  border-radius: 50% !important;
+}
+
+/* 🔴 Eliminar colores raros de ReactCalendar */
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #999 !important;
+}
+
+.react-calendar__tile--now {
+  background: #e3e3ff !important;
+}
+
+.react-calendar__tile--active {
+  background-color: #6a0dad !important;
+  color: white !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+  .reservas-info table,
+  .reservas-info thead,
+  .reservas-info tbody,
+  .reservas-info th,
+  .reservas-info td,
+  .reservas-info tr {
+    display: block;
+  }
+
+  .reservas-info th {
+    display: none;
+  }
+}

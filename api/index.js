@@ -25,6 +25,7 @@ import cuentaRoutes from "./src/routes/cuentaRoutes.js";
 import imagesRoutes from "./src/routes/imagesRoutes.js";
 import configuracionesReservasRoutes from "./src/routes/configuracionesReservasRoutes.js"; // ✅ Importamos las rutas de configuraciones de reservas
 import reservasRoutes from "./src/routes/reservasRoutes.js"; // ✅ Importamos las rutas de reservas
+import disponibilidadRoutes from "./src/routes/disponibilidadRoutes.js"; // ✅ Importamos las rutas de disponibilidad
 
 // Configurar dotenv
 config();
@@ -81,6 +82,7 @@ app.use("/api/cuenta", cuentaRoutes);
 app.use("/api/images", imagesRoutes);
 app.use("/api/reservasConfiguracion", configuracionesReservasRoutes); // ✅ Registrar las rutas de configuraciones de reservas
 app.use("/api/reservas", reservasRoutes); // ✅ Registrar las rutas de reservas
+app.use("/api/disponibilidad", disponibilidadRoutes); // ✅ Registrar las rutas de disponibilidad
 
 // Middlewares de error
 app.use(notFoundHandler);

@@ -1,5 +1,5 @@
 import express from "express";
-import { crearReserva, obtenerReservas, cancelarReserva, confirmarReserva } from "../controllers/reservasController.js";
+import { crearReserva, obtenerReservas, cancelarReserva, confirmarReserva, obtenerFechasConReservas,obtenerReservasPorFecha  } from "../controllers/reservasController.js";
 
 const router = express.Router();
 
@@ -10,6 +10,8 @@ router.post("/", crearReserva);
 router.get("/", obtenerReservas);
 router.put("/:id/cancelar", cancelarReserva);
 router.put("/:id/confirmar", confirmarReserva);
+router.get("/fecha", obtenerReservasPorFecha); // soporta ?fecha y ?estado
+router.get("/fechasReserva", obtenerFechasConReservas);
 
 
 export default router;

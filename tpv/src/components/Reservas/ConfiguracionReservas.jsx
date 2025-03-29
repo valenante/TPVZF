@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../../utils/api";
+import "../../styles/ConfiguracionReservas.css";
 
 const ConfiguracionReservas = () => {
   const [franjas, setFranjas] = useState([
@@ -7,18 +8,43 @@ const ConfiguracionReservas = () => {
     { horaInicio: "19:30", horaFin: "24:00", maxReservas: 15 },
   ]);
 
-  const fechaActual = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const [diasHabilitados, setDiasHabilitados] = useState({
+    domingo: true,
+    lunes: true,
+    martes: true,
+    miércoles: true,
+    jueves: true,
+    viernes: true,
+    sábado: true,
+  });
+
+  const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  const fechaActual = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
-    api
-      .get(`/reservasConfiguracion?fecha=${fechaActual}`)
-      .then(res => {
-        if (res.data?.franjas) {
-          setFranjas(res.data.franjas);
+    const fetchDatos = async () => {
+      try {
+        const resFranjas = await api.get(`/reservasConfiguracion?fecha=${fechaActual}`);
+        if (resFranjas.data?.franjas) setFranjas(resFranjas.data.franjas);
+
+        const resDisp = await api.get("/disponibilidad");
+        if (resDisp.data) {
+          setDiasHabilitados(resDisp.data);
         }
-      })
-      .catch(() => {});
+      } catch (error) {
+        console.error("Error al obtener configuración:", error);
+      }
+    };
+
+    fetchDatos();
   }, [fechaActual]);
+
+  const toggleDia = (dia) => {
+    setDiasHabilitados((prev) => ({
+      ...prev,
+      [dia]: !prev[dia],
+    }));
+  };
 
   const handleChange = (index, field, value) => {
     const actualizadas = [...franjas];
@@ -41,48 +67,90 @@ const ConfiguracionReservas = () => {
         fecha: fechaActual,
         franjas,
       });
-      alert("Configuración guardada correctamente.");
+
+      await api.put("/disponibilidad", diasHabilitados);
+
+      alert("Configuración y disponibilidad guardadas correctamente.");
     } catch (err) {
-      console.error(err);
-      alert("Error al guardar la configuración.");
+      console.error("Error al guardar:", err);
+      alert("Hubo un error al guardar la configuración.");
     }
   };
 
+  const generarHoras24 = () => {
+    const horas = [];
+    for (let h = 0; h < 24; h++) {
+      for (let m = 0; m < 60; m += 30) {
+        horas.push(`${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`);
+      }
+    }
+    return horas;
+  };
+
+  const horasDisponibles = generarHoras24();
+
   return (
     <div className="configuracion-reservas">
-      <h2>Configuración de Reservas para el {fechaActual}</h2>
+      <h2>Configuración de Reservas</h2>
 
       {franjas.map((franja, index) => (
         <div key={index} className="franja-config">
           <label>
             Inicio:
-            <input
-              type="time"
+            <select
               value={franja.horaInicio}
               onChange={(e) => handleChange(index, "horaInicio", e.target.value)}
-            />
+            >
+              <option value="">— Seleccionar —</option>
+              {horasDisponibles.map((h) => (
+                <option key={h} value={h}>{h}</option>
+              ))}
+            </select>
           </label>
+
           <label>
             Fin:
-            <input
-              type="time"
+            <select
               value={franja.horaFin}
               onChange={(e) => handleChange(index, "horaFin", e.target.value)}
-            />
+            >
+              <option value="">— Seleccionar —</option>
+              {horasDisponibles.map((h) => (
+                <option key={h} value={h}>{h}</option>
+              ))}
+            </select>
           </label>
+
           <label>
             Máx reservas:
             <input
               type="number"
+              min="1"
               value={franja.maxReservas}
               onChange={(e) => handleChange(index, "maxReservas", e.target.value)}
             />
           </label>
+
           <button onClick={() => eliminarFranja(index)}>❌</button>
         </div>
       ))}
 
       <button onClick={agregarFranja}>➕ Añadir franja</button>
+
+      <h3>Días habilitados</h3>
+      <div className="dias-habilitados">
+        {diasSemana.map((dia) => (
+          <label key={dia}>
+            <input
+              type="checkbox"
+              checked={!!diasHabilitados[dia]}
+              onChange={() => toggleDia(dia)}
+            />
+            {dia.charAt(0).toUpperCase() + dia.slice(1)}
+          </label>
+        ))}
+      </div>
+
       <button onClick={guardarConfiguracion}>💾 Guardar configuración</button>
     </div>
   );

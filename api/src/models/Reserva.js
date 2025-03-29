@@ -35,6 +35,11 @@ const reservaSchema = new mongoose.Schema({
     type: Number,
     default: null,
   },
+  mensaje: {
+    type: String,
+    trim: true,
+    default: "",
+  },
   creadaEn: {
     type: Date,
     default: Date.now,
