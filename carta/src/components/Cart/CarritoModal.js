@@ -78,6 +78,7 @@ const CarritoModal = ({ cerrarModal }) => {
           ingredientesEliminados: item.ingredientes,
           cantidad: item.cantidad,
           precioSeleccionado: item.precioSeleccionado,
+          tipoPrecio: item.tipoPrecio,
           total: (item.precioSeleccionado || item.productId.precios.precioBase) * item.cantidad,
           precios: item.productId.precios,
           opcionesPersonalizables: (item.opciones && Object.keys(item.opciones).length > 0)
@@ -106,6 +107,7 @@ const CarritoModal = ({ cerrarModal }) => {
           total: productosPlatos.reduce((total, item) => total + item.total, 0),
           ingredientesEliminados: productosPlatos.ingredientes,
           comensales,
+          tipoPrecio: productosPlatos.tipoPrecio,
           alergias,
         };
         await api.post("/pedidos", pedidoPlatos);

@@ -7,7 +7,9 @@ import Producto from '../models/Producto.js';
 // Crear un nuevo pedido
 export const crearPedido = async (req, res) => {
     try {
-        const { mesa, productos, total, comensales, alergias, pan, cartId, precioSeleccionado } = req.body;
+        const { mesa, productos, total, comensales, alergias, pan, cartId, precioSeleccionado, tipoPrecio } = req.body;
+
+        console.log(req.body);
 
         // Buscar la mesa usando el ObjectId
         const mesaExistente = await Mesa.findById(mesa);
@@ -24,6 +26,7 @@ export const crearPedido = async (req, res) => {
             comensales,
             alergias,
             pan,
+            tipoPrecio,
             mesa: mesaExistente._id, // Asignar el ObjectId de la mesa
             precioSeleccionado,
         });

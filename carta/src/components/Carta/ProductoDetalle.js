@@ -7,7 +7,7 @@ import { useMesas } from "../../context/MesasContext"; // 👈 Importar el hook
 import api from "../../utils/api";
 import "../../styles/ModalDetalle.css";
 
-const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
+const ProductoDetalle = ({ producto, cerrarModal}) => {
   const { numeroMesa } = useMesas(); // 👈 Obtener el número de mesa desde el contexto
   const [cantidad, setCantidad] = useState(1);
   const [ingredientesSeleccionados, setIngredientesSeleccionados] = useState([...producto.ingredientes]);
@@ -16,6 +16,23 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
   const [tipoPlato, setTipoPlato] = useState("compartir"); // Nuevo estado para "compartir" o "individual"
   const [searchParams] = useSearchParams();
   const nombre = searchParams.get("nombre");
+  // Determinar valor inicial según disponibilidad de precios
+const [tipoPrecio, setTipoPrecio] = useState(
+  producto.precios.tapa !== null && producto.precios.tapa >= 0
+    ? "tapa"
+    : producto.precios.racion !== null && producto.precios.racion >= 0
+    ? "racion"
+    : "surtido"
+);
+
+const [seleccionPrecio, setSeleccionPrecio] = useState(
+  tipoPrecio === "tapa"
+    ? producto.precios.tapa
+    : tipoPrecio === "racion"
+    ? producto.precios.racion
+    : producto.precios.surtido
+);
+
 
   const manejarCantidad = (incremento) => {
     setCantidad((prev) => Math.max(1, prev + incremento));
@@ -45,6 +62,7 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
   const agregarAlCarrito = async () => {
 
     console.log(producto);
+    console.log(tipoPrecio);
 
     const pedido = {
       productId: producto._id,
@@ -53,6 +71,7 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
       opciones: opcionesSeleccionadas,
       precioSeleccionado: seleccionPrecio, // Asegúrate de incluir este campo
       total: seleccionPrecio * cantidad, // Calcular el total basado en el precio seleccionado
+      tipoPrecio: tipoPrecio, // Asegúrate de incluir este campo
       mesa: numeroMesa,
       nombre,
       tipoPlato: tipoPlato, // Agregar tipo de plato (compartir o individual)
@@ -147,6 +166,43 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
           <button className="cantidad-btn" onClick={() => manejarCantidad(1)}>+</button>
         </div>
 
+        {(producto.precios.tapa !== null || producto.precios.racion !== null || producto.precios.surtido !== null) && (
+          <>
+            <h4><Trans>Selecciona el tipo de plato:</Trans></h4>
+            <select
+              value={tipoPrecio}
+              onChange={(e) => {
+                setTipoPrecio(e.target.value);
+                // Asignar automáticamente el precio correspondiente al tipo
+                if (e.target.value === "tapa") {
+                  setSeleccionPrecio(producto.precios.tapa);
+                } else if (e.target.value === "racion") {
+                  setSeleccionPrecio(producto.precios.racion);
+                } else if (e.target.value === "surtido") {
+                  setSeleccionPrecio(producto.precios.surtido);
+                }
+              }}
+              className="tipo-precio-select-detalle"
+            >
+              {producto.precios.tapa !== null && (
+                <option value="tapa">
+                  <Trans>Tapa</Trans> - {producto.precios.tapa} €
+                </option>
+              )}
+              {producto.precios.racion !== null && (
+                <option value="racion">
+                  <Trans>Ración</Trans> - {producto.precios.racion} €
+                </option>
+              )}
+              {typeof producto.precios.surtido === "number" && !isNaN(producto.precios.surtido) && (
+                <option value="surtido">
+                  <Trans>Surtido</Trans> - {producto.precios.surtido} €
+                </option>
+              )}
+            </select>
+          </>
+        )}
+
         {/* Nuevo select para elegir si el plato es para compartir o individual */}
         <h4><Trans>Tipo de plato:</Trans></h4>
         <div className="tipo-plato-select-container-detalle">
@@ -155,6 +211,8 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
             <option value="individual"><Trans>Individual</Trans></option>
           </select>
         </div>
+
+
 
         <div>
           <button className="cancelar-btn" onClick={cerrarModal}>

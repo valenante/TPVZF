@@ -15,6 +15,12 @@ const CartItemSchema = new Schema({
     default: []
 },  nombre: { type: String, required: true },
   precioSeleccionado: { type: Number, required: true }, // Precio seleccionado por el usuario
+  tipoPrecio: { 
+    type: String, 
+    enum: ['tapa', 'racion', 'surtido'], 
+    required: true 
+  },
+  
   tipoPlato: { type: String, enum: ['compartir', 'individual'], default: 'compartir' }, // Tipo de plato
   tipoCroqueta: { type: String,default: 'normal' },
 });

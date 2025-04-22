@@ -72,29 +72,6 @@ const ProductoCard = ({ producto, estrellas }) => {
           </div>
 
           <div className="producto-precio-boton">
-            <span className="producto-precio">
-              {producto.precios.tapa !== null || producto.precios.racion !== null || producto.precios.surtido !== null ? (
-                <select value={seleccionPrecio} onChange={manejarCambioPrecio}>
-                  {producto.precios.tapa !== null && (
-                    <option value={producto.precios.tapa}>
-                      <Trans id="tapa">Tapa</Trans> - {producto.precios.tapa} €
-                    </option>
-                  )}
-                  {producto.precios.racion !== null && (
-                    <option value={producto.precios.racion}>
-                      <Trans id="racion">Ración</Trans> - {producto.precios.racion} €
-                    </option>
-                  )}
-                  {typeof producto.precios.surtido === "number" && !isNaN(producto.precios.surtido) && (
-                    <option value={producto.precios.surtido}>
-                      <Trans id="surtido">Surtido</Trans> - {producto.precios.surtido} €
-                    </option>
-                  )}
-                </select>
-              ) : (
-                `${producto.precios.precioBase} €`
-              )}
-            </span>
             {numeroMesa && (
               <button onClick={abrirModal} className="agregar-carrito-btn-prodCard">
                 <Trans id="agregar-carrito">Agregar al carrito</Trans>
@@ -119,29 +96,6 @@ const ProductoCard = ({ producto, estrellas }) => {
                 <Trans id="sin-valoraciones">Sin valoraciones</Trans>
               )}
             </p>
-            <span>
-              {producto.precios.tapa !== null || producto.precios.racion !== null || producto.precios.surtido !== null ? (
-                <select value={seleccionPrecio} onChange={manejarCambioPrecio}>
-                  {producto.precios.tapa !== null && (
-                    <option value={producto.precios.tapa}>
-                      <Trans id="tapa">Tapa</Trans> - {producto.precios.tapa} €
-                    </option>
-                  )}
-                  {producto.precios.racion !== null && (
-                    <option value={producto.precios.racion}>
-                      <Trans id="racion">Ración</Trans> - {producto.precios.racion} €
-                    </option>
-                  )}
-                  {producto.precios.surtido !== null && (
-                    <option value={producto.precios.surtido}>
-                      <Trans id="surtido">Surtido</Trans> - {producto.precios.surtido} €
-                    </option>
-                  )}
-                </select>
-              ) : (
-                `${producto.precios.precioBase} €`
-              )}
-            </span>
             {numeroMesa && (
               <button onClick={abrirModal} className="agregar-carrito-btn-prodCard">
                 <Trans id="agregar-carrito">Agregar al carrito</Trans>
@@ -164,7 +118,7 @@ const ProductoCard = ({ producto, estrellas }) => {
           seleccionPrecio={seleccionPrecio}
           tipoPrecio={tipoPrecio} // Pasamos el tipo de plato
         />) : (
-        mostrarModal && <ProductoDetalle producto={producto} cerrarModal={cerrarModal} seleccionPrecio={seleccionPrecio} />
+        mostrarModal && <ProductoDetalle producto={producto} cerrarModal={cerrarModal}/>
       )}
     </div>
   );

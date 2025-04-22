@@ -31,6 +31,7 @@ const PedidoSchema = new Schema({
       categoria: { type: String, required: true }, // Ej: "entrante", "plato principal", "refresco", "licor"
       precioSeleccionado: { type: Number, required: true }, // Precio seleccionado
       ingredientesEliminados: { type: [String], default: [] }, // Ingredientes que el cliente ha solicitado quitar
+      tipoPrecio: { type: String, enum: ['tapa', 'racion', 'surtido'], required: true }, // Tipo de precio seleccionado
       sabor: {
         type: [{
             ingrediente: String,
