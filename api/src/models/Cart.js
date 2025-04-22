@@ -17,7 +17,7 @@ const CartItemSchema = new Schema({
   precioSeleccionado: { type: Number, required: true }, // Precio seleccionado por el usuario
   tipoPrecio: { 
     type: String, 
-    enum: ['tapa', 'racion', 'surtido'], 
+    enum: ['tapa', 'racion', 'surtido', 'precioBase'], 
     required: true 
   },
   

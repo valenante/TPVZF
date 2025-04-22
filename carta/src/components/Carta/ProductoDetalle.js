@@ -17,22 +17,31 @@ const ProductoDetalle = ({ producto, cerrarModal}) => {
   const [searchParams] = useSearchParams();
   const nombre = searchParams.get("nombre");
   // Determinar valor inicial según disponibilidad de precios
-const [tipoPrecio, setTipoPrecio] = useState(
-  producto.precios.tapa !== null && producto.precios.tapa >= 0
-    ? "tapa"
-    : producto.precios.racion !== null && producto.precios.racion >= 0
-    ? "racion"
-    : "surtido"
-);
+  const [tipoPrecio, setTipoPrecio] = useState(
+    producto.precios.tapa !== null && producto.precios.tapa >= 0
+      ? "tapa"
+      : producto.precios.racion !== null && producto.precios.racion >= 0
+      ? "racion"
+      : producto.precios.surtido !== null && producto.precios.surtido >= 0
+      ? "surtido"
+      : producto.precios.precioBase !== null && producto.precios.precioBase >= 0
+      ? "precioBase"
+      : null
+  );
 
-const [seleccionPrecio, setSeleccionPrecio] = useState(
-  tipoPrecio === "tapa"
-    ? producto.precios.tapa
-    : tipoPrecio === "racion"
-    ? producto.precios.racion
-    : producto.precios.surtido
-);
+  const [seleccionPrecio, setSeleccionPrecio] = useState(
+    producto.precios.tapa !== null && producto.precios.tapa >= 0
+      ? producto.precios.tapa
+      : producto.precios.racion !== null && producto.precios.racion >= 0
+      ? producto.precios.racion
+      : producto.precios.surtido !== null && producto.precios.surtido >= 0
+      ? producto.precios.surtido
+      : producto.precios.precioBase !== null && producto.precios.precioBase >= 0
+      ? producto.precios.precioBase
+      : null
+  );
 
+  console.log(tipoPrecio); // Verificar el valor de tipoPrecio
 
   const manejarCantidad = (incremento) => {
     setCantidad((prev) => Math.max(1, prev + incremento));
@@ -60,9 +69,6 @@ const [seleccionPrecio, setSeleccionPrecio] = useState(
   };
 
   const agregarAlCarrito = async () => {
-
-    console.log(producto);
-    console.log(tipoPrecio);
 
     const pedido = {
       productId: producto._id,
@@ -180,6 +186,8 @@ const [seleccionPrecio, setSeleccionPrecio] = useState(
                   setSeleccionPrecio(producto.precios.racion);
                 } else if (e.target.value === "surtido") {
                   setSeleccionPrecio(producto.precios.surtido);
+                } else if (e.target.value === "precioBase") {
+                  setSeleccionPrecio(producto.precios.precioBase);
                 }
               }}
               className="tipo-precio-select-detalle"
@@ -197,6 +205,11 @@ const [seleccionPrecio, setSeleccionPrecio] = useState(
               {typeof producto.precios.surtido === "number" && !isNaN(producto.precios.surtido) && (
                 <option value="surtido">
                   <Trans>Surtido</Trans> - {producto.precios.surtido} €
+                </option>
+              )}
+              {producto.precios.precioBase !== null && (
+                <option value="precioBase">
+                  {producto.precios.precioBase} €
                 </option>
               )}
             </select>

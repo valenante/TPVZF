@@ -127,7 +127,8 @@ const Cocina = () => {
                               }
                             />
                             <span style={{ color: nombreProductoColor }}>
-                              {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"} {producto.tipoPrecio}{mostrarTipoCroqueta && <p className="tipo-croqueta">{mostrarTipoCroqueta}</p>}
+                              {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"} {producto.tipoPrecio !== "precioBase" && `(${producto.tipoPrecio})`}
+                              {mostrarTipoCroqueta && <p className="tipo-croqueta">{mostrarTipoCroqueta}</p>}
                             </span>
                           </label>
                           {/* Mostrar el tipo de croqueta si corresponde */}
