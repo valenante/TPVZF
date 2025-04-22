@@ -17,6 +17,7 @@ const CrearProducto = ({ onClose }) => {
     img: "",
     estado: "habilitado",
     precios: { precioBase: 0, tapa: null, racion: null, precioCopa: null, precioBotella: null },
+    ingredientes: [],
     traducciones: {
       en: { nombre: "", descripcion: "" },
       fr: { nombre: "", descripcion: "" },
@@ -69,21 +70,6 @@ const CrearProducto = ({ onClose }) => {
     }));
   };
 
-  // Funciones para agregar y eliminar puntos de cocción (solo para platos)
-  const addPuntoDeCoccion = () => {
-    setFormData((prev) => ({
-      ...prev,
-      puntosDeCoccion: [...prev.puntosDeCoccion, ""],
-    }));
-  };
-
-  const removePuntoDeCoccion = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      puntosDeCoccion: prev.puntosDeCoccion.filter((_, i) => i !== index),
-    }));
-  };
-
   // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,28 +113,30 @@ const CrearProducto = ({ onClose }) => {
             <textarea name="descripcion" value={formData.descripcion} onChange={handleChange} className="textarea--crear" required />
           </label>
           <fieldset className="fieldset--crear">
-            <legend className="legend--crear">Traducciones</legend>
-            <div className="form-group--crear">
-              <label className="label--crear">
-                Nombre en Inglés:
-                <input type="text" name="traducciones.en.nombre" value={formData.traducciones.en.nombre} onChange={handleChange} className="input--crear" />
-              </label>
-              <label className="label--crear">
-                Descripción en Inglés:
-                <textarea name="traducciones.en.descripcion" value={formData.traducciones.en.descripcion} onChange={handleChange} className="textarea--crear" />
-              </label>
-            </div>
-            <div className="form-group--crear">
-              <label className="label--crear">
-                Nombre en Francés:
-                <input type="text" name="traducciones.fr.nombre" value={formData.traducciones.fr.nombre} onChange={handleChange} className="input--crear" />
-              </label>
-              <label className="label--crear">
-                Descripción en Francés:
-                <textarea name="traducciones.fr.descripcion" value={formData.traducciones.fr.descripcion} onChange={handleChange} className="textarea--crear" />
-              </label>
-            </div>
+            <legend className="legend--crear">Ingredientes</legend>
+            {formData.ingredientes.map((ingrediente, index) => (
+              <div key={index} className="form-group--crear">
+                <input
+                  type="text"
+                  value={ingrediente}
+                  onChange={(e) => {
+                    const nuevosIngredientes = [...formData.ingredientes];
+                    nuevosIngredientes[index] = e.target.value;
+                    setFormData((prev) => ({ ...prev, ingredientes: nuevosIngredientes }));
+                  }}
+                  className="input--crear"
+                />
+                <button type="button" onClick={() => {
+                  const nuevosIngredientes = formData.ingredientes.filter((_, i) => i !== index);
+                  setFormData((prev) => ({ ...prev, ingredientes: nuevosIngredientes }));
+                }}>❌</button>
+              </div>
+            ))}
+            <button type="button" onClick={() => {
+              setFormData((prev) => ({ ...prev, ingredientes: [...prev.ingredientes, ""] }));
+            }}>➕ Agregar Ingrediente</button>
           </fieldset>
+
         </div>
 
         <div className="form-group--crear">
@@ -188,22 +176,50 @@ const CrearProducto = ({ onClose }) => {
                   Precio Ración:
                   <input type="number" name="precios.racion" value={formData.precios.racion || ""} onChange={handleChange} className="input--crear" />
                 </label>
-                <legend className="legend--crear">Opciones Personalizables</legend>
-                {formData.opcionesPersonalizables.map((opcion, index) => (
-                  <div key={index} className="form-group--crear">
-                    <input
-                      type="text"
-                      value={opcion}
-                      onChange={(e) => {
-                        const newOpciones = [...formData.opcionesPersonalizables];
-                        newOpciones[index] = e.target.value;
-                        setFormData((prev) => ({ ...prev, opcionesPersonalizables: newOpciones }));
-                      }}
-                      className="input--crear"
-                    />
-                    <button type="button" onClick={() => removeOpcionPersonalizable(index)}>❌</button>
-                  </div>
-                ))}
+                <fieldset className="fieldset--crear">
+                  <legend className="legend--crear">Opciones Personalizables</legend>
+                  {formData.opcionesPersonalizables.map((opcion, index) => (
+                    <div key={index} className="form-group--crear">
+                      <label className="label--crear">
+                        Tipo:
+                        <input
+                          type="text"
+                          value={opcion.tipo}
+                          onChange={(e) => {
+                            const nuevasOpciones = [...formData.opcionesPersonalizables];
+                            nuevasOpciones[index].tipo = e.target.value;
+                            setFormData((prev) => ({ ...prev, opcionesPersonalizables: nuevasOpciones }));
+                          }}
+                          className="input--crear"
+                        />
+                      </label>
+                      <label className="label--crear">
+                        Opciones (separadas por coma):
+                        <input
+                          type="text"
+                          value={opcion.opciones.join(", ")}
+                          onChange={(e) => {
+                            const nuevasOpciones = [...formData.opcionesPersonalizables];
+                            nuevasOpciones[index].opciones = e.target.value.split(",").map(op => op.trim());
+                            setFormData((prev) => ({ ...prev, opcionesPersonalizables: nuevasOpciones }));
+                          }}
+                          className="input--crear"
+                        />
+                      </label>
+                      <button type="button" onClick={() => {
+                        const nuevasOpciones = formData.opcionesPersonalizables.filter((_, i) => i !== index);
+                        setFormData((prev) => ({ ...prev, opcionesPersonalizables: nuevasOpciones }));
+                      }}>❌</button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      opcionesPersonalizables: [...prev.opcionesPersonalizables, { tipo: "", opciones: [] }]
+                    }));
+                  }}>➕ Agregar Personalización</button>
+                </fieldset>
+
                 <button type="button" onClick={addOpcionPersonalizable}>➕ Agregar Opción</button>
               </div>
             </fieldset>
