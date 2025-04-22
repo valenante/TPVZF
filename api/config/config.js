@@ -22,7 +22,10 @@ export const corsOptions = {
     "http://192.168.98.203:3001",
     "http://192.168.98.203:3002",
     "http://192.168.1.142:3001",
-    "http://192.168.1.142:3002"
+    "http://192.168.1.142:3002",
+    "http://192.168.18.26:3001",
+    "http://192.168.18.26:3000",
+    "http://192.168.18.26:3002"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Cart-ID"],
