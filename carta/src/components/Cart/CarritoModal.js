@@ -170,7 +170,7 @@ const CarritoModal = ({ cerrarModal }) => {
         )}
         {item.opciones && Object.entries(item.opciones).length > 0 && (
           <p className="item-details-carritoModal">
-            Opciones:{" "}
+            {" "}
             {Object.entries(item.opciones || {}).map(([k, v]) => `${k}: ${v}`).join(", ")}
           </p>
         )}

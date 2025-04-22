@@ -22,7 +22,7 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Sección de 3 columnas convertida a grid 2x2 */}
+
         <section className="features">
           <div className="features-title">
             <h2>¿Por qué elegirnos?</h2>
@@ -55,49 +55,36 @@ const Home = () => {
             </div>
           </div>
         </section>
+        {/*
+          <section className="platos">
+            <div className="features-title">
+              <h2>Platos que te sorprenderán</h2>
+            </div>
 
-        <section className="platos">
-          <div className="features-title">
-            <h2>Platos que te sorprenderán</h2>
-          </div>
-
-          <div className="platos-grid">
-            <div className="plato">
-              <div className="plato-image-wrapper">
-                <img src={plato1} alt="Ensalada de atún rojo" />
-                <div className="plato-text">
-                  <h3>Ensalada de atún</h3>
+            <div className="platos-grid">
+              <div className="plato">
+                <div className="plato-image-wrapper">
+            <img src={plato1} alt="Ensalada de atún rojo" />
+                </div>
+              </div>
+              <div className="plato">
+                <div className="plato-image-wrapper">
+            <img src={plato2} alt="Solomillo de ternera" />
+                </div>
+              </div>
+              <div className="plato">
+                <div className="plato-image-wrapper">
+            <img src={plato3} alt="Steak tartar" />
+                </div>
+              </div>
+              <div className="plato">
+                <div className="plato-image-wrapper">
+            <img src={plato4} alt="Negroni" />
                 </div>
               </div>
             </div>
-            <div className="plato">
-              <div className="plato-image-wrapper">
-                <img src={plato2} alt="Solomillo de ternera" />
-                <div className="plato-text">
-                  <h3>Solomillo de ternera</h3>
-                </div>
-              </div>
-            </div>
-            <div className="plato">
-              <div className="plato-image-wrapper">
-                <img src={plato3} alt="Steak tartar" />
-                <div className="plato-text">
-                  <h3>Steak tartar</h3>
-                </div>
-              </div>
-            </div>
-            <div className="plato">
-              <div className="plato-image-wrapper">
-                <img src={plato4} alt="Negroni" />
-                <div className="plato-text">
-                  <h3>Negroni</h3>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Footer */}
+          </section>
+        */}
         <footer className="footer">
           <p>📞 Teléfono: 952 000 000</p>
           <p>📍 Dirección: Calle del Sabor, Torremolinos</p>

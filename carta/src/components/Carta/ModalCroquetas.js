@@ -16,8 +16,6 @@ const ModalCroquetas = ({ producto, cerrarModal, seleccionPrecio, tipoPrecio }) 
     const [tipoPlato, setTipoPlato] = useState("compartir"); // Nuevo estado para "compartir" o "individual"
     const [error, setError] = useState(null);
 
-    console.log('Producto:', producto);
-
     // Función para manejar la selección de sabores
     const manejarSabor = (ingrediente, incremento) => {
         if (seleccionPrecio === producto.precios.surtido) {

@@ -26,6 +26,10 @@ const HomeCarousel = () => {
     navigate("/reservas");
   };
 
+  const handleCartaClick = () => {
+    navigate("/carta");
+  };
+
   return (
     <Swiper
       modules={[Autoplay]}
@@ -40,7 +44,10 @@ const HomeCarousel = () => {
             <img src={slide.src} alt={`Slide ${index + 1}`} className="carousel-img" />
             <div className="slide-overlay">
               <h2>{slide.text}</h2>
-              <button className="reserva-btn" onClick={handleReservaClick}>¡RESERVA MESA!</button>
+              <div className="carousel-buttons">
+                <button className="reserva-btn" onClick={handleReservaClick}>¡RESERVA MESA!</button>
+                <button className="carta-btn" onClick={handleCartaClick}>VER CARTA</button>
+              </div>
             </div>
           </div>
         </SwiperSlide>

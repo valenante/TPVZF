@@ -26,8 +26,8 @@ const Cocina = () => {
     try {
       // Agregamos el tipo como query parameter
       const response = await api.get('/pedidos/pendientes/pendientes', {
-        params: { tipo: 'plato' }, // Aquí especificamos que queremos solo los platos
-      });
+        params: { tipo: ['plato', 'tapaRacion'] },
+      });      
       setPedidos(response.data);
     } catch (error) {
       console.error('Error al cargar pedidos:', error);
@@ -98,8 +98,8 @@ const Cocina = () => {
               <div key={pedido._id} className="pedido-card--cocina">
                 <div className="pedido-header--cocina">
                   <h3>Mesa {pedido.mesa.numero}</h3>
-                  <p>Comensales: {pedido.comensales}</p>
-                  {pedido.alergias && <p className="alergias--cocina">Alergias: {pedido.alergias}</p>}
+                  <p>{pedido.comensales}</p>
+                  {pedido.alergias && <p className="alergias--cocina">A:{pedido.alergias}</p>}
                 </div>
                 <p>
                   <strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}

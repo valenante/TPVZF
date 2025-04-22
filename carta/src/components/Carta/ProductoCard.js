@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useMesas } from "../../context/MesasContext";
 import { Trans } from "@lingui/react";
 import { useLingui } from "@lingui/react";
 import ProductoDetalle from "./ProductoDetalle";
@@ -7,6 +8,8 @@ import "../../styles/ProductoCard.css";
 
 const ProductoCard = ({ producto, estrellas }) => {
   const [mostrarModal, setMostrarModal] = useState(false);
+  const { numeroMesa } = useMesas();
+  const BASE_URL = process.env.REACT_APP_API_URL;
   const [pantallaPequena, setPantallaPequena] = useState(window.innerWidth <= 768);
   const [seleccionPrecio, setSeleccionPrecio] = useState(
     producto.precios.tapa !== null && producto.precios.tapa >= 0
@@ -63,7 +66,7 @@ const ProductoCard = ({ producto, estrellas }) => {
             <p className="producto-descripcion">{descripcionTraducida}</p>
             {producto.img && (
               <div className="producto-img-container">
-                <img alt={producto.nombre} src={producto.img} />
+                <img alt={producto.nombre} src={`${BASE_URL}${producto.img}`} />
               </div>
             )}
           </div>
@@ -92,9 +95,11 @@ const ProductoCard = ({ producto, estrellas }) => {
                 `${producto.precios.precioBase} €`
               )}
             </span>
-            <button onClick={abrirModal} className="agregar-carrito-btn-prodCard">
-              <Trans id="agregar-carrito">Agregar al carrito</Trans>
-            </button>
+            {numeroMesa && (
+              <button onClick={abrirModal} className="agregar-carrito-btn-prodCard">
+                <Trans id="agregar-carrito">Agregar al carrito</Trans>
+              </button>
+            )}
           </div>
         </div>
       ) : (
@@ -137,18 +142,20 @@ const ProductoCard = ({ producto, estrellas }) => {
                 `${producto.precios.precioBase} €`
               )}
             </span>
-            <button onClick={abrirModal} className="agregar-carrito-btn-prodCard">
-              <Trans id="agregar-carrito">Agregar al carrito</Trans>
-            </button>
+            {numeroMesa && (
+              <button onClick={abrirModal} className="agregar-carrito-btn-prodCard">
+                <Trans id="agregar-carrito">Agregar al carrito</Trans>
+              </button>
+            )}
+
           </div>
           {producto.img && (
             <div className="producto-img-container-prodCard">
-              <img alt={producto.nombre} src={producto.img} />
+              <img alt={producto.nombre} src={`${BASE_URL}${producto.img}`} />
             </div>
           )}
         </div>
       )}
-
       {/* Renderiza el modal de croquetas o detalles normales */}
       {mostrarModal && esCroqueta ? (
         <ModalCroquetas

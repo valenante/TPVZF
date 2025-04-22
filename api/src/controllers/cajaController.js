@@ -96,6 +96,8 @@ export const retirarDinero = async (req, res) => {
     }
 
     try {
+
+        console.log("Retirando dinero...");
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Establece la hora a 00:00:00 para evitar problemas con la comparación
 
@@ -107,18 +109,29 @@ export const retirarDinero = async (req, res) => {
             return res.status(404).json({ error: "Caja no encontrada." });
         }
 
+        console.log("Caja encontrada:", caja);
+            
         const montoNumerico = parseFloat(monto);
         if (isNaN(montoNumerico) || montoNumerico <= 0) {
             return res.status(400).json({ error: "El monto debe ser un número mayor a 0." });
         }
 
+        console.log("Monto a retirar:", montoNumerico);
+
+        console.log(
+            caja.detallesMetodoPago.efectivo,
+            caja.detallesMetodoPago.tarjeta,
+            caja.detallesMetodoPago.propina
+        )
+
         if (caja.detallesMetodoPago.efectivo < montoNumerico) {
             return res.status(400).json({ error: "No hay suficiente efectivo en la caja para retirar este monto." });
         }
-
-        // Actualizar el efectivo y el total en la caja
+                // Actualizar el efectivo y el total en la caja
         caja.detallesMetodoPago.efectivo -= montoNumerico;
         caja.total -= montoNumerico;
+
+        console.log("Efectivo después de la operación:", caja.detallesMetodoPago.efectivo);
 
         // Registrar la operación
         caja.operaciones.push({

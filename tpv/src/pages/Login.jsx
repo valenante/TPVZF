@@ -23,7 +23,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://172.20.10.7:3000/api/auth/login", {
+      const response = await fetch("http://192.168.1.142:3000/api/auth/login", {
         method: "POST",
         credentials: "include", // Para incluir cookies
         headers: {

@@ -63,9 +63,9 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
         mesa: numeroMesa, // 🔹 Enviar `mesa` en la raíz
         items: [pedido],  // 🔹 Enviar el producto dentro de `items`
       });
-  
-       // Mostrar notificación de éxito
-       toast.success("Producto agregado al carrito con éxito!", {
+
+      // Mostrar notificación de éxito
+      toast.success("Producto agregado al carrito con éxito!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -88,80 +88,89 @@ const ProductoDetalle = ({ producto, cerrarModal, seleccionPrecio }) => {
         draggable: true,
         progress: undefined,
       });
-      
+
       console.error('Error al agregar al carrito:', error);
     }
   };
 
-return ReactDOM.createPortal(
-  <div className="modal-detalle">
-    <div className="modal-contenido-detalle">
-      <h2><Trans>{producto.nombre}</Trans></h2>
+  console.log("Número de mesa:", numeroMesa); // Verificar el número de mesa
 
-      <h4><Trans>Ingredientes:</Trans></h4>
-      <ul>
-        {producto.ingredientes.map((ingrediente) => (
-          <li key={ingrediente}>
-            <label>
-              <input
-                type="checkbox"
-                className="checkbox-detalle"
-                checked={ingredientesSeleccionados.includes(ingrediente)}
-                onChange={(e) => manejarIngrediente(ingrediente, e.target.checked)}
-              />
-              {ingrediente}
-            </label>
-          </li>
-        ))}
-      </ul>
+  return ReactDOM.createPortal(
+    <div className="modal-detalle">
+      <div className="modal-contenido-detalle">
+        <h2><Trans>{producto.nombre}</Trans></h2>
 
-      {producto.opcionesPersonalizables.length > 0 && (
-        <>
-          <h4><Trans>Opciones:</Trans></h4>
-          {producto.opcionesPersonalizables.map((opcion) => (
-            <div key={opcion.tipo}>
-              <h5><Trans>{opcion.tipo}</Trans></h5>
-              {opcion.opciones.map((op) => (
-                <label key={op}>
-                  <input
-                    type="radio"
-                    name={opcion.tipo}
-                    value={op}
-                    checked={opcionesSeleccionadas[opcion.tipo] === op}
-                    onChange={() => manejarOpciones(opcion.tipo, op)}
-                  />
-                  <Trans>{op}</Trans>
-                </label>
-              ))}
-            </div>
+        <h4><Trans>Ingredientes:</Trans></h4>
+        <ul>
+          {producto.ingredientes.map((ingrediente) => (
+            <li key={ingrediente}>
+              <label>
+                <input
+                  type="checkbox"
+                  className="checkbox-detalle"
+                  checked={ingredientesSeleccionados.includes(ingrediente)}
+                  onChange={(e) => manejarIngrediente(ingrediente, e.target.checked)}
+                />
+                {ingrediente}
+              </label>
+            </li>
           ))}
-        </>
-      )}
+        </ul>
 
-      <h4><Trans>Cantidad:</Trans></h4>
-      <div>
-        <button className="cantidad-btn" onClick={() => manejarCantidad(-1)}>-</button>
-        <span>{cantidad}</span>
-        <button className="cantidad-btn" onClick={() => manejarCantidad(1)}>+</button>
-      </div>
+        {producto.opcionesPersonalizables.length > 0 && (
+          <>
+            <h4><Trans>Opciones:</Trans></h4>
+            {producto.opcionesPersonalizables.map((opcion) => (
+              <div key={opcion.tipo}>
+                <h5><Trans>{opcion.tipo}</Trans></h5>
+                {opcion.opciones.map((op) => (
+                  <label key={op}>
+                    <input
+                      type="radio"
+                      name={opcion.tipo}
+                      value={op}
+                      checked={opcionesSeleccionadas[opcion.tipo] === op}
+                      onChange={() => manejarOpciones(opcion.tipo, op)}
+                    />
+                    <Trans>{op}</Trans>
+                  </label>
+                ))}
+              </div>
+            ))}
+          </>
+        )}
 
-      {/* Nuevo select para elegir si el plato es para compartir o individual */}
-      <h4><Trans>Tipo de plato:</Trans></h4>
-      <div className="tipo-plato-select-container-detalle">
-        <select value={tipoPlato} onChange={manejarTipoPlato} className="tipo-plato-select-detalle">
-          <option value="compartir"><Trans>Compartir</Trans></option>
-          <option value="individual"><Trans>Individual</Trans></option>
-        </select>
-      </div>
+        <h4><Trans>Cantidad:</Trans></h4>
+        <div>
+          <button className="cantidad-btn" onClick={() => manejarCantidad(-1)}>-</button>
+          <span>{cantidad}</span>
+          <button className="cantidad-btn" onClick={() => manejarCantidad(1)}>+</button>
+        </div>
 
-      <div>
-        <button className="cancelar-btn" onClick={cerrarModal}><Trans>Cancelar</Trans></button>
-        <button className="agregar-btn" onClick={agregarAlCarrito}><Trans>Agregar al carrito</Trans></button>
+        {/* Nuevo select para elegir si el plato es para compartir o individual */}
+        <h4><Trans>Tipo de plato:</Trans></h4>
+        <div className="tipo-plato-select-container-detalle">
+          <select value={tipoPlato} onChange={manejarTipoPlato} className="tipo-plato-select-detalle">
+            <option value="compartir"><Trans>Compartir</Trans></option>
+            <option value="individual"><Trans>Individual</Trans></option>
+          </select>
+        </div>
+
+        <div>
+          <button className="cancelar-btn" onClick={cerrarModal}>
+            <Trans>Cancelar</Trans>
+          </button>
+
+          {numeroMesa && (
+            <button className="agregar-btn" onClick={agregarAlCarrito}>
+              <Trans>Agregar al carrito</Trans>
+            </button>
+          )}
+        </div>
       </div>
-    </div>
-  </div>,
-  document.body
-);
+    </div>,
+    document.body
+  );
 };
 
 export default ProductoDetalle;
