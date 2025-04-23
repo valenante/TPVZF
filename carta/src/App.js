@@ -13,6 +13,7 @@ import { messages as esMessages } from "./locales/es/messages";
 import { MesasProvider } from './context/MesasContext';
 import Home from './pages/HomePage.js';
 import Reservas from './pages/Reservas.js';
+import { ComensalProvider } from './context/ComensalesContext.js';
 
 // Configuración de idiomas
 const locales = {
@@ -30,26 +31,27 @@ function App() {
     i18n.load({ [locale]: locales[locale] });
     i18n.activate(locale);
   }, [locale]);
-  
+
   return (
     <I18nProvider i18n={i18n}>
       <LanguageProvider>
         <Router>
           <MesasProvider>
             <ProductosProvider>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/carta" element={<CartaPage />} />
-                <Route path="/preMenu" element={<PreMenu />} />
-                <Route path="/valoraciones" element={<Valoraciones />} />
-                <Route path="/reservas" element={<Reservas />} />
-              </Routes>
+              <ComensalProvider>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/carta" element={<CartaPage />} />
+                  <Route path="/preMenu" element={<PreMenu />} />
+                  <Route path="/valoraciones" element={<Valoraciones />} />
+                  <Route path="/reservas" element={<Reservas />} />
+                </Routes>
+              </ComensalProvider>
             </ProductosProvider>
-            <ToastContainer />
           </MesasProvider>
         </Router>
       </LanguageProvider>
-    </I18nProvider>
+    </I18nProvider >
   );
 }
 

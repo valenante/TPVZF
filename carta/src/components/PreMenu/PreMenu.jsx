@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { i18n } from "@lingui/core";  // Importa i18n
+import { useComensal } from "../../context/ComensalesContext"; // Contexto para manejar comensales
 import { LanguageContext } from "../../context/LanguageContext"; // Contexto para cambiar el idioma
 import api from "../../utils/api";
 import './PreMenu.css'
@@ -12,7 +13,7 @@ const PreMenu = () => {
     contraseña: "",
     nombre: "",
   });
-
+  const { setComensal } = useComensal();
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
@@ -88,9 +89,16 @@ const PreMenu = () => {
 
     const newErrors = {};
     for (const key in formData) {
-      if (esLider || key === "contraseña" || key === "nombre") {
+      if (
+        key === "nombre" ||
+        key === "contraseña" ||
+        (esLider && (key === "alergias" || key === "comensales")) ||
+        (!esLider && key === "alergias")
+      ) {
         const error = validateField(key, formData[key]);
-        if (error) newErrors[key] = error;
+        if (error) {
+          newErrors[key] = error;
+        }
       }
     }
 
@@ -120,16 +128,28 @@ const PreMenu = () => {
         localStorage.setItem("tokenLider", tokenLiderResponse.data.tokenLider);
       }
 
+      await api.post("/mesas/comensal", {
+        mesa,
+        nombre: formData.nombre,
+        alergias: formData.alergias,
+        esLider,
+        comensales: esLider ? parseInt(formData.comensales, 10) : null,
+      });
+
+      setComensal({
+        nombre: formData.nombre,
+        alergias: formData.alergias,
+        esLider,
+        comensales: esLider ? parseInt(formData.comensales, 10) : null,
+      });
+
       // Guardar token en localStorage para indicar que se completó el preMenu
       localStorage.setItem("tokenPreMenu", "validated");
+      localStorage.setItem("nombreComensal", formData.nombre);
+      localStorage.setItem("alergiasComensal", formData.alergias);
 
-      // Redirigir con los parámetros en la URL
-      const searchParams = new URLSearchParams({
-        ...(esLider ? { alergias: formData.alergias, comensales: formData.comensales } : {}),
-        nombre: formData.nombre,
-      }).toString();
 
-      navigate(`/carta?mesa=${mesa}&${searchParams.toString()}`);
+      navigate(`/carta?mesa=${mesa}`);
     } catch (error) {
       console.error("❌ Error al procesar la solicitud:", error);
       alert("Hubo un error al procesar tu solicitud. Intenta nuevamente.");
@@ -147,14 +167,14 @@ const PreMenu = () => {
 
         {/* Botones para cambiar idioma */}
         <div className="idiomas-preMenu">
-          <button 
-            className={`btn-idioma ${locale === "es" ? "activo" : ""}`} 
+          <button
+            className={`btn-idioma ${locale === "es" ? "activo" : ""}`}
             onClick={() => cambiarIdioma("es")}
           >
             Español
           </button>
-          <button 
-            className={`btn-idioma ${locale === "en" ? "activo" : ""}`} 
+          <button
+            className={`btn-idioma ${locale === "en" ? "activo" : ""}`}
             onClick={() => cambiarIdioma("en")}
           >
             English
@@ -176,35 +196,27 @@ const PreMenu = () => {
             </p>
           )}
 
-          {esLider && (
-            <>
-              <textarea
-                name="alergias"
-                value={formData.alergias}
-                onChange={handleChange}
-                className="input--preMenu"
-                placeholder={i18n._("Alergias en mesa")} // Usamos i18n._() para los placeholder
-              />
-              {errors.alergias && (
-                <p className="error--preMenu">
-                  {errors.alergias}
-                </p>
-              )}
+          <textarea
+            name="alergias"
+            value={formData.alergias}
+            onChange={handleChange}
+            className="input--preMenu"
+            placeholder={i18n._("Alergias (si tienes)")}
+            rows={2}
+          />
+          {errors.alergias && (
+            <p className="error--preMenu">{errors.alergias}</p>
+          )}
 
-              <input
-                type="number"
-                name="comensales"
-                value={formData.comensales}
-                onChange={handleChange}
-                className="input--preMenu"
-                placeholder={i18n._("Comensales")} // Usamos i18n._() para los placeholder
-              />
-              {errors.comensales && (
-                <p className="error--preMenu">
-                  {errors.comensales}
-                </p>
-              )}
-            </>
+          {esLider && (
+            <input
+              type="number"
+              name="comensales"
+              value={formData.comensales}
+              onChange={handleChange}
+              className="input--preMenu"
+              placeholder={i18n._("Número de comensales")}
+            />
           )}
 
           <input

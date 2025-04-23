@@ -18,7 +18,6 @@ const opcionPersonalizableSchema = new Schema({
 const PedidoSchema = new Schema({
   mesa: { type: Schema.Types.ObjectId, ref: 'Mesa', required: true },
   usuario: { type: Schema.Types.ObjectId, ref: 'User' }, // Opcional
-  alergias: { type: String, default: '' }, // Alergias o intolerancias
   comensales: { type: Number },
   estado: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
   fecha: { type: Date, default: Date.now },
@@ -34,13 +33,15 @@ const PedidoSchema = new Schema({
       tipoPrecio: { type: String, enum: ['tapa', 'racion', 'surtido', 'precioBase'], required: true }, // Tipo de precio seleccionado
       sabor: {
         type: [{
-            ingrediente: String,
-            cantidad: Number
+          ingrediente: String,
+          cantidad: Number
         }],
         default: []
-    },
+      },
       puntosDeCoccion: [{ type: String }], // Ej: "Poco hecho", "Bien hecho"
       opcionesPersonalizables: [opcionPersonalizableSchema], // Opciones personalizables para el cliente
+      nombreComensal: String,
+      alergiasComensal: String,
       especificaciones: { type: [String], default: [] }, // Ejemplo: "Sin sal", "Extra picante"
       estadoPreparacion: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
       tipoPlato: { type: String, enum: ['individual', 'compartir'], required: false }, // Tipo de plato
@@ -48,7 +49,7 @@ const PedidoSchema = new Schema({
       total: { type: Number, required: true },
     },
   ],
-total: { type: Number, required: true },
+  total: { type: Number, required: true },
 
 });
 

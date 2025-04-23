@@ -1,67 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
-import io from 'socket.io-client'
+import io from 'socket.io-client';
 import PedidosFinalizados from './PedidosFinalizados';
 import './Cocina.css';
 
-// Conectar al servidor de Socket.io
 const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const Cocina = () => {
   const [pedidos, setPedidos] = useState([]);
   const [mostrarFinalizados, setMostrarFinalizados] = useState(false);
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
-  console.log(pedidos);
-
-  // Función para calcular tiempo transcurrido
   const calcularTiempoTranscurrido = (fecha) => {
     const ahora = new Date();
     const fechaPedido = new Date(fecha);
-    const diferencia = Math.floor((ahora - fechaPedido) / 60000); // Diferencia en minutos
+    const diferencia = Math.floor((ahora - fechaPedido) / 60000);
     return `${diferencia}m`;
   };
 
-  // Función para cargar pedidos pendientes
   const cargarPedidos = async () => {
     try {
-      // Agregamos el tipo como query parameter
       const response = await api.get('/pedidos/pendientes/pendientes', {
         params: { tipo: ['plato', 'tapaRacion'] },
-      });      
+      });
       setPedidos(response.data);
     } catch (error) {
       console.error('Error al cargar pedidos:', error);
     }
   };
 
-  // Escuchar evento nuevoPedido y recargar pedidos de platos
   useEffect(() => {
     socket.on('nuevoPedido', () => {
-      cargarPedidos(); // Recargar solo los pedidos de platos
+      cargarPedidos();
     });
-
-    // Cleanup del evento para evitar duplicados
-    return () => {
-      socket.off('nuevoPedido');
-    };
+  
+    return () => socket.off('nuevoPedido');
   }, []);
-
-  // Marcar un producto como listo
+  
   const marcarProductoComoListo = async (pedidoId, productoId) => {
     try {
       await api.put(`/pedidos/${pedidoId}/producto/${productoId}`, { estadoPreparacion: 'listo' });
-      cargarPedidos(); // Recargar la lista de pedidos de platos
+      cargarPedidos();
     } catch (error) {
       console.error('Error al marcar producto como listo:', error);
     }
   };
 
-
-  // Marcar el pedido entero como listo
   const marcarPedidoComoListo = async (pedidoId) => {
     try {
       await api.put(`/pedidos/${pedidoId}`, { estado: 'listo' });
-      cargarPedidos(); // Recargar la lista de pedidos
+      cargarPedidos();
     } catch (error) {
       console.error('Error al marcar pedido como listo:', error);
     }
@@ -69,50 +57,45 @@ const Cocina = () => {
 
   useEffect(() => {
     cargarPedidos();
-    const interval = setInterval(cargarPedidos, 30000); // Actualizar cada 30 segundos
-    return () => clearInterval(interval); // Limpiar intervalo al desmontar
+    const interval = setInterval(cargarPedidos, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  const toggleDetalle = (producto) => {
+    setProductoSeleccionado(productoSeleccionado === producto ? null : producto);
+  };
 
   return (
     <div className="cocina--cocina">
       <h1 className="titulo--cocina">Pedidos Pendientes</h1>
-      <button
-        onClick={() => setMostrarFinalizados(true)}
-        className="boton-finalizados--cocina"
-      >
+      <button onClick={() => setMostrarFinalizados(true)} className="boton-finalizados--cocina">
         Ver Pedidos Finalizados
       </button>
-      {mostrarFinalizados && (
-        <PedidosFinalizados onClose={() => setMostrarFinalizados(false)} />
-      )}
+      {mostrarFinalizados && <PedidosFinalizados onClose={() => setMostrarFinalizados(false)} />}
+
       {pedidos.length === 0 ? (
         <p className="mensaje-vacio--cocina">No hay pedidos pendientes</p>
       ) : (
         <div className="pedidos-container--cocina">
           {pedidos.map((pedido) => {
             const todosProductosListos = pedido.productos
-              .filter((producto) => ["plato", "tapaRacion"].includes(producto.tipo))
-              .every((producto) => producto.estadoPreparacion === "listo");
+              .filter((producto) => ['plato', 'tapaRacion'].includes(producto.tipo))
+              .every((producto) => producto.estadoPreparacion === 'listo');
 
             return (
               <div key={pedido._id} className="pedido-card--cocina">
                 <div className="pedido-header--cocina">
                   <h3>Mesa {pedido.mesa.numero}</h3>
-                  <p>{pedido.comensales}</p>
-                  {pedido.alergias && <p className="alergias--cocina">A:{pedido.alergias}</p>}
+                  <p>{pedido.comensales} comensales</p>
                 </div>
-                <p>
-                  <strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}
-                </p>
+                <p><strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}</p>
+
                 <ul className="productos-list--cocina">
                   {pedido.productos
-                    .filter((producto) => ["plato", "tapaRacion"].includes(producto.tipo))
+                    .filter((producto) => ['plato', 'tapaRacion'].includes(producto.tipo))
                     .map((producto) => {
-                      // Condicional para determinar el color del nombre del producto
-                      const nombreProductoColor = producto.tipoPlato === "individual" ? "green" : "purple";
-
-                      // Agregar la lógica para mostrar el tipo de croqueta si corresponde
-                      const mostrarTipoCroqueta = producto.producto.nombre.toLowerCase().includes("croqueta")
+                      const nombreColor = producto.tipoPlato === 'individual' ? 'green' : 'purple';
+                      const mostrarCroqueta = producto.producto.nombre.toLowerCase().includes('croqueta')
                         ? `${producto.tipoCroqueta}`
                         : null;
 
@@ -121,54 +104,60 @@ const Cocina = () => {
                           <label>
                             <input
                               type="checkbox"
-                              checked={producto.estadoPreparacion === "listo"}
-                              onChange={() =>
-                                marcarProductoComoListo(pedido._id, producto._id)
-                              }
+                              checked={producto.estadoPreparacion === 'listo'}
+                              onChange={() => marcarProductoComoListo(pedido._id, producto._id)}
                             />
-                            <span style={{ color: nombreProductoColor }}>
-                              {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"} {producto.tipoPrecio !== "precioBase" && `(${producto.tipoPrecio})`}
-                              {mostrarTipoCroqueta && <p className="tipo-croqueta">{mostrarTipoCroqueta}</p>}
+                            <span style={{ color: nombreColor }}>
+                              {producto.cantidad}x {producto.producto?.nombre || 'Producto no disponible'} {producto.tipoPrecio !== 'precioBase' && `(${producto.tipoPrecio})`}
                             </span>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleDetalle(producto);
+                              }}
+                              className="info-btn"
+                            >
+                              ℹ️
+                            </button>
                           </label>
-                          {/* Mostrar el tipo de croqueta si corresponde */}
-                          {producto.sabor && producto.sabor.length > 0 && (
-                            <div>
-                              <ul>
-                                {producto.sabor.map((item, index) => (
-                                  <li key={index}>
-                                    {item.cantidad}x {item.ingrediente}
-                                  </li>
-                                ))}
-                              </ul>
+
+                          {producto.alergiasComensal && (
+                            <p className="alergias-individual--cocina"><strong>A:</strong> {producto.alergiasComensal}</p>
+                          )}
+
+                          {productoSeleccionado === producto && (
+                            <div className="tooltip-detalle">
+                              <p><strong>C:</strong> {producto.nombreComensal || 'No disponible'}</p>
+                              {producto.alergiasComensal && <p><strong>A:</strong> {producto.alergiasComensal}</p>}
                             </div>
+                          )}
+
+                          {mostrarCroqueta && <p className="tipo-croqueta">{mostrarCroqueta}</p>}
+                          {producto.sabor?.length > 0 && (
+                            <ul>
+                              {producto.sabor.map((s, i) => (
+                                <li key={i}>{s.cantidad}x {s.ingrediente}</li>
+                              ))}
+                            </ul>
                           )}
                           {producto.ingredientesEliminados.length > 0 && (
-                            <p>
-                              <strong>Sin:</strong> {producto.ingredientesEliminados.join(", ")}
-                            </p>
+                            <p><strong>Sin:</strong> {producto.ingredientesEliminados.join(', ')}</p>
                           )}
                           {producto.especificaciones.length > 0 && (
-                            <p>
-                              <strong>Especificaciones:</strong> {producto.especificaciones.join(", ")}
-                            </p>
+                            <p><strong>Especificaciones:</strong> {producto.especificaciones.join(', ')}</p>
                           )}
                           {producto.opcionesPersonalizables?.length > 0 && (
-                            <div>
-                              <ul>
-                                {producto.opcionesPersonalizables.map((opcion, index) => (
-                                  <li key={index}>
-                                    <strong>{opcion.tipo}: </strong>
-                                    {opcion.opcion.join(", ")}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
+                            <ul>
+                              {producto.opcionesPersonalizables.map((op, i) => (
+                                <li key={i}><strong>{op.tipo}: </strong>{op.opcion.join(', ')}</li>
+                              ))}
+                            </ul>
                           )}
                         </li>
                       );
                     })}
                 </ul>
+
                 <button
                   onClick={() => marcarPedidoComoListo(pedido._id)}
                   disabled={!todosProductosListos}

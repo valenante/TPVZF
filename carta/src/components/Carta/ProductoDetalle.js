@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useSearchParams, useParams } from "react-router-dom";
 import ReactDOM from "react-dom";
 import { Trans } from "@lingui/react/macro";
 import { toast } from "react-toastify"; // Importar toast
 import { useMesas } from "../../context/MesasContext"; // 👈 Importar el hook
+import { useComensal } from "../../context/ComensalesContext"; // 👈 Importar el hook
 import api from "../../utils/api";
 import "../../styles/ModalDetalle.css";
 
@@ -14,8 +14,12 @@ const ProductoDetalle = ({ producto, cerrarModal}) => {
   const [ingredientesEliminados, setIngredientesEliminados] = useState([]);
   const [opcionesSeleccionadas, setOpcionesSeleccionadas] = useState({});
   const [tipoPlato, setTipoPlato] = useState("compartir"); // Nuevo estado para "compartir" o "individual"
-  const [searchParams] = useSearchParams();
-  const nombre = searchParams.get("nombre");
+  const { comensal } = useComensal();
+  const nombre = comensal.nombre || ""; // Obtener el nombre del comensal desde el contexto
+  const alergias = comensal.alergias || ""; // Obtener las alergias del comensal desde el contexto
+
+  console.log(nombre, alergias); // Verificar el nombre y alergias
+
   // Determinar valor inicial según disponibilidad de precios
   const [tipoPrecio, setTipoPrecio] = useState(
     producto.precios.tapa !== null && producto.precios.tapa >= 0
@@ -80,6 +84,7 @@ const ProductoDetalle = ({ producto, cerrarModal}) => {
       tipoPrecio: tipoPrecio, // Asegúrate de incluir este campo
       mesa: numeroMesa,
       nombre,
+      alergias,
       tipoPlato: tipoPlato, // Agregar tipo de plato (compartir o individual)
     };
 

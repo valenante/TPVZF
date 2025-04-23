@@ -1,6 +1,7 @@
 import Mesa from '../models/Mesa.js';
 import MesaCerrada from '../models/MesaCerrada.js';
 import Caja from '../models/Caja.js';
+import Comensal from '../models/Comensal.js';
 import { v4 as uuidv4 } from "uuid"; // Generador de UUID
 
 export const verificarTokenLider = async (req, res) => {
@@ -425,3 +426,28 @@ export const cerrarMesa = async (req, res) => {
       res.status(500).json({ error: "Hubo un problema al eliminar la mesa." });
     }
   };
+
+  // POST /mesas/comensal
+  export const registrarComensal = async (req, res) => {
+  try {
+    const { mesa, nombre, alergias, esLider, comensales } = req.body;
+
+    if (!mesa || !nombre) {
+      return res.status(400).json({ message: "Mesa y nombre son obligatorios." });
+    }
+
+    const nuevoComensal = new Comensal({
+      mesa,
+      nombre,
+      alergias,
+      esLider,
+      comensales: esLider ? comensales : null,
+    });
+
+    await nuevoComensal.save();
+    res.status(201).json({ message: "Comensal registrado correctamente." });
+  } catch (error) {
+    console.error("Error al guardar comensal:", error);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
+};
