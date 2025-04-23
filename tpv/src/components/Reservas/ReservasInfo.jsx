@@ -66,8 +66,13 @@ const ReservasInfo = () => {
     }
   };
 
-  const esDiaConReserva = (fecha) =>
-    fechasConReservas.includes(fecha.toISOString().slice(0, 10));
+  const esDiaConReserva = (fecha) => {
+    const yyyy = fecha.getFullYear();
+    const mm = String(fecha.getMonth() + 1).padStart(2, "0");
+    const dd = String(fecha.getDate()).padStart(2, "0");
+    const fechaLocal = `${yyyy}-${mm}-${dd}`;
+    return fechasConReservas.includes(fechaLocal);
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -94,9 +99,13 @@ const ReservasInfo = () => {
             <ReactCalendar
               className="custom-calendar"
               value={new Date(fechaSeleccionada)}
-              onChange={(date) =>
-                setFechaSeleccionada(date.toISOString().slice(0, 10))
-              }
+              onChange={(date) => {
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, "0");
+                const dd = String(date.getDate()).padStart(2, "0");
+                setFechaSeleccionada(`${yyyy}-${mm}-${dd}`);
+              }}
+
               tileClassName={({ date, view }) => {
                 if (view === "month" && esDiaConReserva(date)) {
                   return "reserva-dia";
