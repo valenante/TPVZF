@@ -12,6 +12,46 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const enviarConfirmacionEmail = async (reserva) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: reserva.email,
+    subject: "¡Tu reserva ha sido confirmada!",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="cid:logo" alt="Zabor Féten" style="max-width: 150px;" />
+        </div>
+        <h2 style="color: #6A0DAD;">¡Reserva confirmada!</h2>
+        <p>Hola <strong>${reserva.nombre || "cliente"}</strong>,</p>
+        <p>Tu reserva para el <strong>${new Date(reserva.hora).toLocaleString("es-ES", {
+          hour: "2-digit",
+          minute: "2-digit",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour12: false
+        })}</strong> ha sido <strong>confirmada</strong> exitosamente.</p>
+        <p style="margin-top: 20px;">Te esperamos en <strong>Zabor Féten</strong> 🥂</p>
+        <p style="font-size: 0.9em; color: #555; margin-top: 40px;">
+          Si necesitas modificar o cancelar tu reserva, contáctanos directamente.
+        </p>
+        <p style="margin-top: 10px;"><em>El equipo de <strong>Zabor Féten</strong></em></p>
+      </div>
+    `,
+    attachments: [
+      {
+        filename: "logoZf.jpg",
+        path: "public/images/logoZf.jpg", // Asegúrate de que este path sea accesible
+        cid: "logo",
+      },
+    ],
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+
 export const crearReserva = async (req, res) => {
   const { nombre, email, telefono, personas, hora, mensaje } = req.body;
 
@@ -103,6 +143,8 @@ export const crearReserva = async (req, res) => {
         estado: "auto-confirmada",
         mesaAsignada: mesaLibre.numero,
       });
+
+      await enviarConfirmacionEmail(nuevaReserva); 
 
       return res.status(200).json({ mensaje: "Reserva confirmada automáticamente. ¡Te esperamos!" });
     }

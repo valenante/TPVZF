@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../utils/api";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/ConfiguracionReservas.css";
 
 const ConfiguracionReservas = () => {
@@ -7,6 +9,7 @@ const ConfiguracionReservas = () => {
     { horaInicio: "13:00", horaFin: "17:00", maxReservas: 10 },
     { horaInicio: "19:30", horaFin: "24:00", maxReservas: 15 },
   ]);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
 
   const [diasHabilitados, setDiasHabilitados] = useState({
     domingo: true,
@@ -23,9 +26,12 @@ const ConfiguracionReservas = () => {
 
   useEffect(() => {
     const fetchDatos = async () => {
+      const fecha = fechaSeleccionada.toISOString().slice(0, 10);
+
       try {
-        const resFranjas = await api.get(`/reservasConfiguracion?fecha=${fechaActual}`);
+        const resFranjas = await api.get(`/reservasConfiguracion?fecha=${fecha}`);
         if (resFranjas.data?.franjas) setFranjas(resFranjas.data.franjas);
+        else setFranjas([]); // si no hay, deja vacío para personalizar
 
         const resDisp = await api.get("/disponibilidad");
         if (resDisp.data) {
@@ -37,7 +43,7 @@ const ConfiguracionReservas = () => {
     };
 
     fetchDatos();
-  }, [fechaActual]);
+  }, [fechaSeleccionada]);
 
   const toggleDia = (dia) => {
     setDiasHabilitados((prev) => ({
@@ -64,7 +70,7 @@ const ConfiguracionReservas = () => {
   const guardarConfiguracion = async () => {
     try {
       await api.post("/reservasConfiguracion", {
-        fecha: fechaActual,
+        fecha: fechaSeleccionada.toISOString().slice(0, 10),
         franjas,
       });
 
@@ -92,6 +98,15 @@ const ConfiguracionReservas = () => {
   return (
     <div className="configuracion-reservas">
       <h2>Configuración de Reservas</h2>
+
+      <h3>Selecciona el día a configurar</h3>
+
+      <DatePicker
+        selected={fechaSeleccionada}
+        onChange={setFechaSeleccionada}
+        dateFormat="yyyy-MM-dd"
+        minDate={new Date()} // 👈 Esto bloquea días pasados
+      />
 
       {franjas.map((franja, index) => (
         <div key={index} className="franja-config">

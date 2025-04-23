@@ -256,7 +256,7 @@ const Reserva = () => {
             <li>🔹 Tu reserva se mantendrá durante <strong>15 minutos</strong> después de la hora establecida. Pasado este tiempo, la mesa podrá ser reasignada a otros clientes.</li>
             <li>🔹 Las reservas tienen una duración máxima de <strong>hora y cuarenta y cinco minutos</strong>. Si necesitas más tiempo o hacer algún ajuste, avísanos con antelación.</li>
             <p className="privacidad-link">
-            Los datos ingresados serán tratados conforme a nuestra <span className="link" onClick={() => setMostrarPrivacidad(true)}>política de privacidad</span>.
+              Los datos ingresados serán tratados conforme a nuestra <span className="link" onClick={() => setMostrarPrivacidad(true)}>política de privacidad</span>.
             </p>
           </ul>
         </div>
