@@ -104,11 +104,6 @@ const Barra = () => {
                 <div className="pedido-header--barra">
                   <h3>Mesa: {pedido.mesa.numero}</h3>
                   <p>Comensales: {pedido.comensales}</p>
-                  {pedido.alergias && (
-                    <p className="alergias--barra">
-                      <strong>Alergias:</strong> {pedido.alergias}
-                    </p>
-                  )}
                 </div>
                 <p>
                   <strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}
@@ -124,32 +119,26 @@ const Barra = () => {
                             marcarProductoComoListo(pedido._id, producto._id)
                           }
                         />
-                        {producto.cantidad}x{" "}
-                        {producto.producto?.nombre || "Producto no disponible"}
+                        {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
+
+                        {/* Mostrar acompañante solo si existe */}
+                        {producto.acompanante && producto.acompanante.trim() !== "" && (
+                          <span className="acompanante-badge">
+                            {" "}+ {producto.acompanante}
+                          </span>
+                        )}
                       </label>
+
                       {producto.especificaciones.length > 0 && (
                         <p>
                           <strong>Especificaciones:</strong>{" "}
                           {producto.especificaciones.join(", ")}
                         </p>
                       )}
-                      {producto.opcionesPersonalizables?.length > 0 && (
-                            <div>
-                              <ul>
-                                {producto.opcionesPersonalizables.map((opcion, index) => (
-                                  <li key={index}>
-                                    <strong>{opcion.tipo}: </strong>
-                                    {opcion.opcion.join(", ")}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
                     </li>
                   ))}
                 </ul>
-
-
+                
                 {/* Botón para marcar el pedido como terminado (solo si todos los productos están listos) */}
                 {todosListos && (
                   <button

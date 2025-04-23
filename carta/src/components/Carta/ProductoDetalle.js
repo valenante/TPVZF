@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Trans } from "@lingui/react/macro";
 import { toast } from "react-toastify"; // Importar toast
@@ -7,7 +7,7 @@ import { useComensal } from "../../context/ComensalesContext"; // 👈 Importar 
 import api from "../../utils/api";
 import "../../styles/ModalDetalle.css";
 
-const ProductoDetalle = ({ producto, cerrarModal}) => {
+const ProductoDetalle = ({ producto, cerrarModal }) => {
   const { numeroMesa } = useMesas(); // 👈 Obtener el número de mesa desde el contexto
   const [cantidad, setCantidad] = useState(1);
   const [ingredientesSeleccionados, setIngredientesSeleccionados] = useState([...producto.ingredientes]);
@@ -17,32 +17,62 @@ const ProductoDetalle = ({ producto, cerrarModal}) => {
   const { comensal } = useComensal();
   const nombre = comensal.nombre || ""; // Obtener el nombre del comensal desde el contexto
   const alergias = comensal.alergias || ""; // Obtener las alergias del comensal desde el contexto
+  const [acompanante, setAcompanante] = useState("");
+  const [acompanantesDisponibles, setAcompanantesDisponibles] = useState([]);
 
-  console.log(nombre, alergias); // Verificar el nombre y alergias
+
+  const categoriasConAcompanante = [
+    "vodka", "ron", "whisky", "ginebra", "gin",
+    "licor", "licores", "brandy"
+  ];
+
+  useEffect(() => {
+    const cargarAcompanantes = async () => {
+      try {
+        const res = await api.get("/productos");
+        const categoriasValidas = ["refrescos", "aguas", "gaseosas", "zumos", "jugos"];
+
+        const filtrados = res.data.filter(
+          (producto) =>
+            producto.tipo === "bebida" &&
+            categoriasValidas.includes(producto.categoria.toLowerCase())
+        );
+
+        // Extraer solo nombres únicos
+        const nombres = [...new Set(filtrados.map((p) => p.nombre))];
+
+        setAcompanantesDisponibles(nombres);
+      } catch (error) {
+        console.error("Error al cargar acompañantes:", error);
+      }
+    };
+
+    cargarAcompanantes();
+  }, []);
 
   // Determinar valor inicial según disponibilidad de precios
   const [tipoPrecio, setTipoPrecio] = useState(
     producto.precios.tapa !== null && producto.precios.tapa >= 0
       ? "tapa"
       : producto.precios.racion !== null && producto.precios.racion >= 0
-      ? "racion"
-      : producto.precios.surtido !== null && producto.precios.surtido >= 0
-      ? "surtido"
-      : producto.precios.precioBase !== null && producto.precios.precioBase >= 0
-      ? "precioBase"
-      : null
+        ? "racion"
+        : producto.precios.surtido !== null && producto.precios.surtido >= 0
+          ? "surtido"
+          : producto.precios.precioBase !== null && producto.precios.precioBase >= 0
+            ? "precioBase"
+            : null
   );
 
   const [seleccionPrecio, setSeleccionPrecio] = useState(
     producto.precios.tapa !== null && producto.precios.tapa >= 0
       ? producto.precios.tapa
       : producto.precios.racion !== null && producto.precios.racion >= 0
-      ? producto.precios.racion
-      : producto.precios.surtido !== null && producto.precios.surtido >= 0
-      ? producto.precios.surtido
-      : producto.precios.precioBase !== null && producto.precios.precioBase >= 0
-      ? producto.precios.precioBase
-      : null
+        ? producto.precios.racion
+        : producto.precios.surtido !== null && producto.precios.surtido >= 0
+          ? producto.precios.surtido
+          : producto.precios.precioBase !== null && producto.precios.precioBase >= 0
+            ? producto.precios.precioBase
+            : null
   );
 
   console.log(tipoPrecio); // Verificar el valor de tipoPrecio
@@ -85,6 +115,7 @@ const ProductoDetalle = ({ producto, cerrarModal}) => {
       mesa: numeroMesa,
       nombre,
       alergias,
+      acompanante,
       tipoPlato: tipoPlato, // Agregar tipo de plato (compartir o individual)
     };
 
@@ -221,16 +252,39 @@ const ProductoDetalle = ({ producto, cerrarModal}) => {
           </>
         )}
 
-        {/* Nuevo select para elegir si el plato es para compartir o individual */}
-        <h4><Trans>Tipo de plato:</Trans></h4>
-        <div className="tipo-plato-select-container-detalle">
-          <select value={tipoPlato} onChange={manejarTipoPlato} className="tipo-plato-select-detalle">
-            <option value="compartir"><Trans>Compartir</Trans></option>
-            <option value="individual"><Trans>Individual</Trans></option>
-          </select>
-        </div>
+        {producto.tipo !== "bebida" && (
+          <>
+            <h4><Trans>Tipo de plato:</Trans></h4>
+            <div className="tipo-plato-select-container-detalle">
+              <select value={tipoPlato} onChange={manejarTipoPlato} className="tipo-plato-select-detalle">
+                <option value="compartir"><Trans>Compartir</Trans></option>
+                <option value="individual"><Trans>Individual</Trans></option>
+              </select>
+            </div>
+          </>
+        )}
 
-
+        {producto.tipo === "bebida" &&
+          categoriasConAcompanante.includes(producto.categoria.toLowerCase()) && (
+            <>
+              <h4><Trans>Acompañante:</Trans></h4>
+              <div className="acompanante-select-container-detalle">
+                <select
+                  value={acompanante}
+                  onChange={(e) => setAcompanante(e.target.value)}
+                  className="acompanante-select-detalle"
+                >
+                  <option value=""><Trans>Selecciona un acompañante</Trans></option>
+                  {acompanantesDisponibles.map((nombre) => (
+                    <option key={nombre} value={nombre}>
+                      <Trans>{nombre}</Trans>
+                    </option>
+                  ))}
+                  <option value="Sin acompañante"><Trans>Sin acompañante</Trans></option>
+                </select>
+              </div>
+            </>
+          )}
 
         <div>
           <button className="cancelar-btn" onClick={cerrarModal}>

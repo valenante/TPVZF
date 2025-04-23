@@ -73,6 +73,8 @@ const CarritoModal = ({ cerrarModal }) => {
       const productosPlatos = [];
       const productosBebidas = [];
 
+      console.log(carrito.items);
+
       carrito.items.forEach((item) => {
         const productoData = {
           producto: item.productId._id,
@@ -87,12 +89,7 @@ const CarritoModal = ({ cerrarModal }) => {
           precios: item.productId.precios,
           nombreComensal: item.nombre,
           alergiasComensal: item.alergias,
-          opcionesPersonalizables: (item.opciones && Object.keys(item.opciones).length > 0)
-            ? Object.entries(item.opciones).map(([tipo, opcion]) => ({
-              tipo,
-              opcion
-            }))
-            : [], // Si no tiene opciones o si son vacías, asignamos un array vacío
+          acompanante: item.acompanante,
         };
 
         if (item.productId.tipo === "bebida") {

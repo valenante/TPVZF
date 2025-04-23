@@ -9,22 +9,23 @@ const CartItemSchema = new Schema({
   ingredientes: { type: [String], default: [] }, // Ingredientes personalizados
   sabor: {
     type: [{
-        ingrediente: String,
-        cantidad: Number
+      ingrediente: String,
+      cantidad: Number
     }],
     default: []
-},  nombre: { type: String, required: true },
+  }, nombre: { type: String, required: true },
   precioSeleccionado: { type: Number, required: true }, // Precio seleccionado por el usuario
-  tipoPrecio: { 
-    type: String, 
-    enum: ['tapa', 'racion', 'surtido', 'precioBase'], 
-    required: true 
+  tipoPrecio: {
+    type: String,
+    enum: ['tapa', 'racion', 'surtido', 'precioBase'],
+    required: true
   },
-  
+
   tipoPlato: { type: String, enum: ['compartir', 'individual'], default: 'compartir' }, // Tipo de plato
-  tipoCroqueta: { type: String,default: 'normal' },
+  tipoCroqueta: { type: String, default: 'normal' },
   nombre: { type: String, required: false },    // Nombre del comensal
   alergias: { type: String, required: false },  // Alergias del comensal
+  acompanante: { type: String, required: false }, // 👈 AÑADIDO AQUÍ
 });
 
 const CartSchema = new Schema({
@@ -33,4 +34,3 @@ const CartSchema = new Schema({
 }, { timestamps: true });
 
 export default model('Cart', CartSchema);
- 

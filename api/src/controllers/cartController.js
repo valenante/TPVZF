@@ -49,6 +49,7 @@ export const agregarAlCarrito = async (req, res) => {
       precioSeleccionado,
       tipoPlato,
       tipoPrecio,
+      acompanante,
       sabor,
       tipoCroqueta,
     } = items[0];
@@ -108,6 +109,7 @@ export const agregarAlCarrito = async (req, res) => {
         tipoPlato,
         tipoPrecio,
         tipoCroqueta,
+        acompanante,
         sabor,
         mesa,
       });

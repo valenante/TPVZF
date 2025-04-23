@@ -477,3 +477,9 @@
 [2025-04-23 12:19:15] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.142, Hora: 2025-04-23T10:19:15.778Z
 [2025-04-23 13:31:57] INFO: [LOGIN ATTEMPT] Usuario: benja@gmail.com, IP: ::ffff:192.168.1.142, Hora: 2025-04-23T11:31:57.687Z
 [2025-04-23 13:32:02] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.142, Hora: 2025-04-23T11:32:02.838Z
+[2025-04-23 13:33:43] INFO: Servidor escuchando en el puerto 3000
+[2025-04-23 13:34:42] INFO: Servidor escuchando en el puerto 3000
+[2025-04-23 13:35:11] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.142, Hora: 2025-04-23T11:35:11.658Z
+[2025-04-23 13:41:13] INFO: Servidor escuchando en el puerto 3000
+[2025-04-23 14:05:49] INFO: Servidor escuchando en el puerto 3000
+[2025-04-23 14:07:04] INFO: Servidor escuchando en el puerto 3000

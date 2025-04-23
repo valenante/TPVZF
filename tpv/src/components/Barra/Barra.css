@@ -143,3 +143,14 @@
     background-color: #cccccc;
     cursor: not-allowed;
 }
+
+.acompanante-badge {
+    margin-left: 6px;
+    padding: 2px 6px;
+    background-color: #FF6700; /* O el color que estés usando para destacar */
+    color: #fff;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+  

@@ -41,21 +41,7 @@ const ProductoCard = ({ producto, estrellas }) => {
 
   const abrirModal = () => setMostrarModal(true);
   const cerrarModal = () => setMostrarModal(false);
-
-  // Función para manejar el cambio de selección de precio
-  const manejarCambioPrecio = (e) => {
-    const precioSeleccionado = Number(e.target.value);
-    setSeleccionPrecio(precioSeleccionado);
-    // Actualizamos tipo de precio con la opción seleccionada
-    if (precioSeleccionado === producto.precios.tapa) {
-      setTipoPrecio("tapa");
-    } else if (precioSeleccionado === producto.precios.racion) {
-      setTipoPrecio("racion");
-    } else if (precioSeleccionado === producto.precios.surtido) {
-      setTipoPrecio("surtido");
-    }
-  };
-
+  
   return (
     <div className="producto-card-prodCard">
       {pantallaPequena ? (
