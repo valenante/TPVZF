@@ -37,6 +37,7 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
 
   useEffect(() => {
     const verificarPedidosListos = async () => {
+      if (!numeroMesa) return; // Si no hay número de mesa, no hacemos la petición
       try {
         const response = await api.get(`/pedidos/pedidos/estado/${numeroMesa}`);
         setPedidosListos(response.data?.todosListos || false);
@@ -84,8 +85,6 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
     .filter((producto) => (mostrarSoloBebidas ? producto.tipo === "bebida" : producto.tipo === "plato"))
     .map((producto) => producto.categoria)
     .filter((categoria, index, self) => self.indexOf(categoria) === index);
-
-  console.log(numeroMesa);
 
   return (
     <div className="container">

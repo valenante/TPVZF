@@ -9,7 +9,7 @@ import "../../styles/ProductoCard.css";
 const ProductoCard = ({ producto, estrellas }) => {
   const [mostrarModal, setMostrarModal] = useState(false);
   const { numeroMesa } = useMesas();
-  const BASE_URL = process.env.REACT_APP_API_URL;
+  const BASE_URL = process.env.REACT_APP_SOCKET_URL;
   const [pantallaPequena, setPantallaPequena] = useState(window.innerWidth <= 768);
   const [seleccionPrecio, setSeleccionPrecio] = useState(
     producto.precios.tapa !== null && producto.precios.tapa >= 0

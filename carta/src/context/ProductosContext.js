@@ -15,11 +15,6 @@ export const ProductosProvider = ({ children }) => {
   const [mesaId, setMesaId] = useState(null);
 
   const cargarCarrito = useCallback(async () => {
-    if (!numeroMesa) {
-      console.warn("No hay número de mesa en la URL.");
-      return;
-    }
-
     try {
       const { data } = await api.get(`/cart?numeroMesa=${numeroMesa}`); // ✅ Enviar número de mesa
       setCarrito(data); 
