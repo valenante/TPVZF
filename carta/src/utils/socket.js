@@ -1,7 +1,7 @@
 // utils/socket.js
 import { io } from 'socket.io-client';
 
-// Cambia la URL según la de tu backend
-const socket = io(`http://192.168.1.142:3000`);
+// ✅ Usamos variable de entorno para la URL del servidor de Socket.io
+const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 export default socket;

@@ -21,32 +21,28 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-
+  
     try {
-      const response = await fetch("http://192.168.1.142:3000/api/auth/login", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
         method: "POST",
         credentials: "include", // Para incluir cookies
         headers: {
-          "Content-Type": "application/json", // Asegurar el tipo de contenido
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData), // Convertir los datos del formulario a JSON
+        body: JSON.stringify(formData),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Ocurrió un error desconocido");
       }
-
+  
       const data = await response.json();
-
       const { accessToken, user } = data;
-
-      // Actualizar el contexto con el nuevo token
+  
       setAccessToken(accessToken);
-
-      setUser(user); // 🔥 Guardar el usuario en el contexto global
-
-      // Redirigir según el rol del usuario
+      setUser(user);
+  
       switch (user.role) {
         case "admin":
           navigate("/");
@@ -62,13 +58,11 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      const errorMsg =
-        error.message || "Ocurrió un problema al iniciar sesión.";
-      setError(errorMsg);
+      setError(error.message || "Ocurrió un problema al iniciar sesión.");
     } finally {
       setIsLoading(false);
     }
-  };
+  };  
 
   return (
     <div className="login--login">

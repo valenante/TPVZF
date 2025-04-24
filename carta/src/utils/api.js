@@ -8,9 +8,9 @@ export const saveToken = (token) => {
 // Recuperar el token para incluirlo en las solicitudes
 const getToken = () => localStorage.getItem('token');
 
-// Configurar Axios con la base URL y el interceptor
+// Configurar Axios con la base URL usando variable de entorno
 const api = axios.create({
-  baseURL: `http://192.168.1.142:3000/api`, // Ajusta según tu backend
+  baseURL: process.env.REACT_APP_API_URL, // ✅ Usamos variable de entorno
 });
 
 api.interceptors.request.use(
