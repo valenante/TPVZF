@@ -158,11 +158,13 @@ const DetalleMesa = () => {
   };
 
   const eliminarProducto = async (pedidoId, productoId) => {
+    const confirmacion = window.confirm("¿Estás seguro de que quieres eliminar este producto del pedido?");
+    if (!confirmacion) return;
+
     try {
       const response = await api.post(`/productos/${pedidoId}/${productoId}`, {
         withCredentials: true,
       });
-
 
       setMesa((prevMesa) => ({
         ...prevMesa,
@@ -177,8 +179,9 @@ const DetalleMesa = () => {
     }
   };
 
+  // ⛔ AÑADE ESTO AQUÍ ANTES DEL RETURN
   if (!mesa) {
-    return <p>Cargando detalles de la mesa...</p>;
+    return <p className="cargando--mesadetalles">Cargando detalles de la mesa...</p>;
   }
 
   return (

@@ -31,6 +31,9 @@ const Categories = ({ category }) => {
   };
 
   const handleDeleteProduct = async (id) => {
+    const confirmacion = window.confirm("¿Estás seguro de que quieres eliminar este producto?");
+    if (!confirmacion) return;
+  
     try {
       await deleteProduct(id); // Usa el método del contexto
       await fetchProducts(category); // Refresca los productos después de eliminar
@@ -38,7 +41,7 @@ const Categories = ({ category }) => {
     } catch (error) {
       console.error("Error al eliminar producto:", error);
     }
-  };
+  };  
 
   const handleCancel = () => {
     setEditingProduct(null); // Cancela la edición
@@ -46,56 +49,56 @@ const Categories = ({ category }) => {
 
   return (
     <div className="categories--categories">
-  {editingProduct ? (
-    <EditProduct
-      product={editingProduct}
-      onSave={handleSave}
-      onCancel={handleCancel}
-      onDelete={handleDeleteProduct}
-    />
-  ) : (
-    <>
-      {products.length === 0 ? (
-        <p className="sin-productos--categories">No hay productos en esta categoría.</p>
+      {editingProduct ? (
+        <EditProduct
+          product={editingProduct}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          onDelete={handleDeleteProduct}
+        />
       ) : (
-        <div className="productos-grid--categories">
-          {products.map((product) => (
-            <div key={product._id} className="producto-card--categories">
-              <p>{product.nombre}</p>
-              <div className="producto-botones--categories">
-                <button onClick={() => handleEdit(product)} className="boton-editar--categories">
-                  Editar
-                </button>
-                <button
-                  onClick={() => handleDeleteProduct(product._id)}
-                  className="boton-eliminar--categories"
-                >
-                  Eliminar
-                </button>
-              </div>
+        <>
+          {products.length === 0 ? (
+            <p className="sin-productos--categories">No hay productos en esta categoría.</p>
+          ) : (
+            <div className="productos-grid--categories">
+              {products.map((product) => (
+                <div key={product._id} className="producto-card--categories">
+                  <p>{product.nombre}</p>
+                  <div className="producto-botones--categories">
+                    <button onClick={() => handleEdit(product)} className="boton-editar--categories">
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProduct(product._id)}
+                      className="boton-eliminar--categories"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
-    </>
-  )}
 
-  <button
-    onClick={() => setMostrarFormulario(true)}
-    className="boton-crear--categories"
-  >
-    Crear Producto
-  </button>
+      <button
+        onClick={() => setMostrarFormulario(true)}
+        className="boton-crear--categories"
+      >
+        Crear Producto
+      </button>
 
-  {mostrarFormulario && (
-    <>
-      <div className="crear-producto-overlay--crear" onClick={() => setMostrarFormulario(false)}></div>
-      <CrearProducto onClose={() => setMostrarFormulario(false)} />
-    </>
-  )}
-</div>
+      {mostrarFormulario && (
+        <>
+          <div className="crear-producto-overlay--crear" onClick={() => setMostrarFormulario(false)}></div>
+          <CrearProducto onClose={() => setMostrarFormulario(false)} />
+        </>
+      )}
+    </div>
 
   );
-};  
+};
 
 export default Categories;

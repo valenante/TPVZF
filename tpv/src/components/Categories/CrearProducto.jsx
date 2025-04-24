@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useEffect } from 'react';
 import { ProductosContext } from '../../context/ProductosContext';
 import { ImageContext } from '../../context/ImagesContext'; // ✅ Importa el contexto de imágenes
 import api from '../../utils/api';
@@ -8,6 +9,8 @@ const CrearProducto = ({ onClose }) => {
   const { cargarProductos } = useContext(ProductosContext);
   const { dragging, handleDragOver, handleDragLeave, handleDrop, handleFileChange } = useContext(ImageContext);
   const [imageFile, setImageFile] = useState(null);
+  const [categorias, setCategorias] = useState([]);
+  const [usarOtraCategoria, setUsarOtraCategoria] = useState(false);
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -25,6 +28,26 @@ const CrearProducto = ({ onClose }) => {
     puntosDeCoccion: [], // Solo para platos
     opcionesPersonalizables: [], // Solo para platos
   });
+
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await api.get("/productos");
+        const productos = response.data;
+  
+        // Extraer y limpiar las categorías únicas
+        const categoriasUnicas = [...new Set(productos
+          .map((p) => p.categoria?.trim()?.toLowerCase())
+          .filter((cat) => !!cat))];
+  
+        setCategorias(categoriasUnicas);
+      } catch (error) {
+        console.error("Error al cargar categorías:", error);
+      }
+    };
+    fetchCategorias();
+  }, []);
+  
 
   // Manejo de los cambios en los campos de formulario
   const handleChange = (e) => {
@@ -63,13 +86,6 @@ const CrearProducto = ({ onClose }) => {
     }));
   };
 
-  const removeOpcionPersonalizable = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      opcionesPersonalizables: prev.opcionesPersonalizables.filter((_, i) => i !== index),
-    }));
-  };
-
   // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,9 +97,7 @@ const CrearProducto = ({ onClose }) => {
       delete productData.conHielo;
       delete productData.conLimon;
       delete productData.tamaño;
-      delete productData.precioBase;
     } else if (productData.tipo === "bebida") {
-      delete productData.precios;
       delete productData.ingredientes;
       delete productData.puntosDeCoccion;
       delete productData.opcionesPersonalizables;
@@ -142,7 +156,39 @@ const CrearProducto = ({ onClose }) => {
         <div className="form-group--crear">
           <label className="label--crear">
             Categoría:
-            <input type="text" name="categoria" value={formData.categoria} onChange={handleChange} className="input--crear" required />
+            {!usarOtraCategoria ? (
+              <select
+                name="categoria"
+                value={formData.categoria}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "__otra__") {
+                    setUsarOtraCategoria(true);
+                    setFormData(prev => ({ ...prev, categoria: "" }));
+                  } else {
+                    setFormData(prev => ({ ...prev, categoria: value }));
+                  }
+                }}
+                className="input--crear"
+                required
+              >
+                <option value="">Seleccionar categoría</option>
+                {categorias.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+                <option value="__otra__">Otra...</option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                name="categoria"
+                placeholder="Escribe nueva categoría"
+                value={formData.categoria}
+                onChange={handleChange}
+                className="input--crear"
+                required
+              />
+            )}
           </label>
           <label className="label--crear">
             Tipo:
@@ -229,9 +275,9 @@ const CrearProducto = ({ onClose }) => {
             <fieldset className="fieldset--crear">
               <legend className="legend--crear">Opciones de Bebida</legend>
               <label className="label--crear">
-                Precio Base:
-                <input type="number" name="precioBase" value={formData.precios.precioBase} onChange={handleChange} className="input--crear" required />
-              </label>
+                  Precio Base:
+                  <input type="number" name="precios.precioBase" value={formData.precios.precioBase} onChange={handleChange} className="input--crear" required />
+                </label>
               {/* Label para precios.precioCopa */}
               <label className="label--crear">
                 Precio Copa:

@@ -204,48 +204,53 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
           <button className="cantidad-btn" onClick={() => manejarCantidad(1)}>+</button>
         </div>
 
-        {(producto.precios.tapa !== null || producto.precios.racion !== null || producto.precios.surtido !== null) && (
-          <>
-            <h4><Trans>Selecciona el tipo de plato:</Trans></h4>
-            <select
-              value={tipoPrecio}
-              onChange={(e) => {
-                setTipoPrecio(e.target.value);
-                // Asignar automáticamente el precio correspondiente al tipo
-                if (e.target.value === "tapa") {
-                  setSeleccionPrecio(producto.precios.tapa);
-                } else if (e.target.value === "racion") {
-                  setSeleccionPrecio(producto.precios.racion);
-                } else if (e.target.value === "surtido") {
-                  setSeleccionPrecio(producto.precios.surtido);
-                } else if (e.target.value === "precioBase") {
-                  setSeleccionPrecio(producto.precios.precioBase);
-                }
-              }}
-              className="tipo-precio-select-detalle"
-            >
-              {producto.precios.tapa !== null && (
-                <option value="tapa">
-                  <Trans>Tapa</Trans> - {producto.precios.tapa} €
-                </option>
-              )}
-              {producto.precios.racion !== null && (
-                <option value="racion">
-                  <Trans>Ración</Trans> - {producto.precios.racion} €
-                </option>
-              )}
-              {typeof producto.precios.surtido === "number" && !isNaN(producto.precios.surtido) && (
-                <option value="surtido">
-                  <Trans>Surtido</Trans> - {producto.precios.surtido} €
-                </option>
-              )}
-              {producto.precios.precioBase !== null && (
-                <option value="precioBase">
-                  {producto.precios.precioBase} €
-                </option>
-              )}
-            </select>
-          </>
+        {producto.tipo !== "bebida" ? (
+          (producto.precios.tapa !== null || producto.precios.racion !== null || producto.precios.surtido !== null) && (
+            <>
+              <h4><Trans>Selecciona el tipo de plato:</Trans></h4>
+              <select
+                value={tipoPrecio}
+                onChange={(e) => {
+                  setTipoPrecio(e.target.value);
+                  if (e.target.value === "tapa") {
+                    setSeleccionPrecio(producto.precios.tapa);
+                  } else if (e.target.value === "racion") {
+                    setSeleccionPrecio(producto.precios.racion);
+                  } else if (e.target.value === "surtido") {
+                    setSeleccionPrecio(producto.precios.surtido);
+                  } else if (e.target.value === "precioBase") {
+                    setSeleccionPrecio(producto.precios.precioBase);
+                  }
+                }}
+                className="tipo-precio-select-detalle"
+              >
+                {producto.precios.tapa !== null && (
+                  <option value="tapa">
+                    <Trans>Tapa</Trans> - {producto.precios.tapa} €
+                  </option>
+                )}
+                {producto.precios.racion !== null && (
+                  <option value="racion">
+                    <Trans>Ración</Trans> - {producto.precios.racion} €
+                  </option>
+                )}
+                {typeof producto.precios.surtido === "number" && !isNaN(producto.precios.surtido) && (
+                  <option value="surtido">
+                    <Trans>Surtido</Trans> - {producto.precios.surtido} €
+                  </option>
+                )}
+                {producto.precios.precioBase !== null && (
+                  <option value="precioBase">
+                    {producto.precios.precioBase} €
+                  </option>
+                )}
+              </select>
+            </>
+          )
+        ) : (
+          <p>
+            <Trans>Precio:</Trans> {producto.precios.precioBase} €
+          </p>
         )}
 
         {producto.tipo !== "bebida" && (

@@ -9,6 +9,8 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
   const [formData, setFormData] = useState({ ...product });
   const [errors, setErrors] = useState({});
 
+  console.log("FormData:", formData);
+
   const validateField = (name, value) => {
     let error = "";
     switch (name) {
@@ -238,6 +240,18 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
               className="hidden-file-input"
             />
           </div>
+        </label>
+
+        {/* Editar Stock */}
+        <label className="label--editar">
+          Stock:
+          <input
+            type="number"
+            name="stock"
+            value={formData.stock || ""}
+            onChange={handleChange}
+            className="input--editar"
+          />
         </label>
 
         {/* Estado */}
