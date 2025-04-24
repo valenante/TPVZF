@@ -131,6 +131,49 @@
     background: var(--color-principal); /* Morado */
     transform: scale(1.05);
   }
+
+  .modal-botones--productoDetalle {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  /* Botón Cancelar (color secundario) */
+  .boton-cancelar--productoDetalle {
+    background-color: #FF6700;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .boton-cancelar--productoDetalle:hover {
+    background-color: #e35d00;
+    transform: scale(1.05);
+  }
+  
+  /* Botón Agregar (color principal) */
+  .boton-agregar--productoDetalle {
+    background-color: #6A0DAD;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .boton-agregar--productoDetalle:hover {
+    background-color: #5c0998;
+    transform: scale(1.05);
+  }  
   
   /* Animación del modal */
   @keyframes slideDown {

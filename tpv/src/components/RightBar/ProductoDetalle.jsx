@@ -10,13 +10,25 @@ const ProductoDetalle = ({ producto, cerrarModal, onConfirm, seleccionPrecioInic
   const [acompanante, setAcompanante] = useState("");
   const [acompanantesDisponibles, setAcompanantesDisponibles] = useState([]);
   const [tipoPrecio, setTipoPrecio] = useState("precioBase");
-  const [precioSeleccionado, setPrecioSeleccionado] = useState(seleccionPrecioInicial || producto.precios.precioBase);
+  const [precioSeleccionado, setPrecioSeleccionado] = useState(() => {
+    const inicial = typeof seleccionPrecioInicial === "number"
+      ? seleccionPrecioInicial
+      : producto.precios.precioBase;
+    return typeof inicial === "number" && !isNaN(inicial) ? inicial : 0;
+  });
   const [tipoPlato, setTipoPlato] = useState("compartir");
-
   const categoriasConAcompanante = [
     "vodka", "ron", "whisky", "ginebra", "gin",
     "licor", "licores", "brandy"
   ];
+
+  useEffect(() => {
+    // Actualiza el precio seleccionado cada vez que cambia el tipoPrecio
+    const precio = producto.precios[tipoPrecio];
+    if (typeof precio === "number" && !isNaN(precio)) {
+      setPrecioSeleccionado(precio);
+    }
+  }, [tipoPrecio, producto.precios]);
 
   useEffect(() => {
     const cargarAcompanantes = async () => {
@@ -58,27 +70,34 @@ const ProductoDetalle = ({ producto, cerrarModal, onConfirm, seleccionPrecioInic
     onConfirm(productoPersonalizado);
   };
 
+  console.log(precioSeleccionado);
+
   return ReactDOM.createPortal(
     <div className="modal-detalle--productoDetalle">
       <div className="modal-contenido--productoDetalle">
         <h2 className="titulo-modal--productoDetalle">Personaliza tu {producto.nombre}</h2>
         <p className="descripcion--productoDetalle">{producto.descripcion}</p>
 
-        <h4>Ingredientes:</h4>
-        <ul className="lista-ingredientes--productoDetalle">
-          {producto.ingredientes.map((ing) => (
-            <li key={ing} className="ingrediente--productoDetalle">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={ingredientesSeleccionados.includes(ing)}
-                  onChange={(e) => manejarIngrediente(ing, e.target.checked)}
-                />
-                {ing}
-              </label>
-            </li>
-          ))}
-        </ul>
+
+        {producto.ingredientes.length > 0 && (
+          <>
+            <h4>Ingredientes:</h4>
+            <ul className="lista-ingredientes--productoDetalle">
+              {producto.ingredientes.map((ing) => (
+                <li key={ing} className="ingrediente--productoDetalle">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={ingredientesSeleccionados.includes(ing)}
+                      onChange={(e) => manejarIngrediente(ing, e.target.checked)}
+                    />
+                    {ing}
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         {producto.opcionesPersonalizables.length > 0 && (
           <>
@@ -110,24 +129,23 @@ const ProductoDetalle = ({ producto, cerrarModal, onConfirm, seleccionPrecioInic
           <button onClick={() => manejarCantidad(1)}>+</button>
         </div>
 
-        {(producto.precios.tapa !== null || producto.precios.racion !== null || producto.precios.surtido !== null) && (
+        {Object.entries(producto.precios).some(([_, val]) => typeof val === "number") && (
           <>
             <h4>Tipo de precio:</h4>
             <select
               value={tipoPrecio}
-              onChange={(e) => {
-                const tipo = e.target.value;
-                setTipoPrecio(tipo);
-                if (tipo === "tapa") setPrecioSeleccionado(producto.precios.tapa);
-                if (tipo === "racion") setPrecioSeleccionado(producto.precios.racion);
-                if (tipo === "surtido") setPrecioSeleccionado(producto.precios.surtido);
-                if (tipo === "precioBase") setPrecioSeleccionado(producto.precios.precioBase);
-              }}
+              onChange={(e) => setTipoPrecio(e.target.value)}
             >
-              {producto.precios.tapa !== null && <option value="tapa">Tapa - {producto.precios.tapa} €</option>}
-              {producto.precios.racion !== null && <option value="racion">Ración - {producto.precios.racion} €</option>}
-              {producto.precios.surtido !== null && <option value="surtido">Surtido - {producto.precios.surtido} €</option>}
-              {producto.precios.precioBase !== null && <option value="precioBase">{producto.precios.precioBase} €</option>}
+              {Object.entries(producto.precios).map(([key, val]) => {
+                if (typeof val === "number") {
+                  return (
+                    <option key={key} value={key}>
+                      {key.charAt(0).toUpperCase() + key.slice(1)} - {val} €
+                    </option>
+                  );
+                }
+                return null;
+              })}
             </select>
           </>
         )}
@@ -155,8 +173,8 @@ const ProductoDetalle = ({ producto, cerrarModal, onConfirm, seleccionPrecioInic
         )}
 
         <div className="modal-botones--productoDetalle">
-          <button onClick={cerrarModal}>Cancelar</button>
-          <button onClick={confirmarProducto}>Agregar</button>
+          <button className="boton-cancelar--productoDetalle" onClick={cerrarModal}>Cancelar</button>
+          <button className="boton-agregar--productoDetalle" onClick={confirmarProducto}>Agregar</button>
         </div>
       </div>
     </div>,

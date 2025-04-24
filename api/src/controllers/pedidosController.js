@@ -105,7 +105,7 @@ export const agregarProductoAlPedido = async (req, res) => {
     const { mesaId } = req.params;
     const { productos } = req.body;
 
-    (req.body);
+    console.log(req.body);
 
     // Validar datos entrantes
     if (!productos || !productos.producto || !productos.cantidad || !productos.total || !productos.precioSeleccionado) {
