@@ -76,9 +76,9 @@
   /* Estilos para pantallas pequeñas */
   @media (max-width: 768px) {
     .login--login {
-      width: 90%;
+      width: auto;
       height: auto;
-      padding: 15px;
+      padding: 20px;
     }
   
     .titulo--login {
@@ -86,17 +86,12 @@
       margin-bottom: 15px;
     }
   
-    .formulario--login {
-      gap: 10px;
-    }
-  
     .input--login {
-      padding: 8px;
       font-size: 0.9rem;
     }
   
     .boton--login {
-      padding: 8px;
+      width: 100%;
       font-size: 0.9rem;
     }
   

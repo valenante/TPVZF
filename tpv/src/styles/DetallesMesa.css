@@ -130,4 +130,15 @@
   .rightbar--mesadetalles {
     width: auto; /* Ocupan el ancho completo */
   }
+    /* Botones */
+    .boton-eliminar--mesadetalles,
+    .boton-cerrar--mesadetalles {
+      background-color: #FF6700; /* Naranja vibrante */
+      color: #FFFFFF;
+      border: none;
+      font-size: .9rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
 }

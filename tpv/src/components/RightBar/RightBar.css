@@ -8,10 +8,12 @@
 
 /* Contenedor principal del RightBar */
 .right-bar--rightbar {
-  background-color: #F5F5F5; /* Gris claro */
+  background-color: #F5F5F5;
+  /* Gris claro */
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Sombra */
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -25,8 +27,10 @@
 }
 
 .boton-tipo--rightbar {
-  background-color: #FFFFFF; /* Blanco */
-  border: 2px solid #6A0DAD; /* Morado */
+  background-color: #FFFFFF;
+  /* Blanco */
+  border: 2px solid #6A0DAD;
+  /* Morado */
   color: #6A0DAD;
   padding: 10px 15px;
   border-radius: 5px;
@@ -37,12 +41,15 @@
 }
 
 .boton-tipo--rightbar.activo--rightbar {
-  background-color: #6A0DAD; /* Morado activo */
-  color: #FFFFFF; /* Texto blanco */
+  background-color: #6A0DAD;
+  /* Morado activo */
+  color: #FFFFFF;
+  /* Texto blanco */
 }
 
 .boton-tipo--rightbar:hover {
-  background-color: #FF6700; /* Naranja vibrante */
+  background-color: #FF6700;
+  /* Naranja vibrante */
   color: #FFFFFF;
 }
 
@@ -73,13 +80,17 @@
 }
 
 .categoria--rightbar.seleccionada--rightbar {
-  background-color: #FF6700; /* Naranja vibrante */
-  color: #FFFFFF; /* Blanco */
+  background-color: #FF6700;
+  /* Naranja vibrante */
+  color: #FFFFFF;
+  /* Blanco */
 }
 
 .categoria--rightbar:hover {
-  background-color: #6A0DAD; /* Morado */
-  color: #FFFFFF; /* Blanco */
+  background-color: #6A0DAD;
+  /* Morado */
+  color: #FFFFFF;
+  /* Blanco */
 }
 
 /* Productos */
@@ -124,8 +135,10 @@
 
 /* Botón agregar */
 .boton-agregar--rightbar {
-  background-color: #FF6700; /* Naranja */
-  color: #FFFFFF; /* Blanco */
+  background-color: #FF6700;
+  /* Naranja */
+  color: #FFFFFF;
+  /* Blanco */
   border: none;
   border-radius: 5px;
   padding: 10px;
@@ -136,8 +149,22 @@
 }
 
 .boton-agregar--rightbar:hover {
-  background-color: #6A0DAD; /* Morado */
+  background-color: #6A0DAD;
+  /* Morado */
   transform: scale(1.05);
+}
+
+/* Desktop visible, mobile oculto */
+.acciones-desktop--rightbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Mobile oculto por defecto */
+.acciones-mobile--rightbar {
+  display: none;
 }
 
 /* Media Query para pantallas pequeñas */
@@ -149,11 +176,55 @@
     --font-weight-bold: 800;
   }
 
+  /* Contenedor principal del RightBar */
+  .right-bar--rightbar {
+    background-color: #ffffff;
+    /* Gris claro */
+    border-radius: 10px;
+    padding: 0px;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+
   .boton-tipo--rightbar {
     padding: 12px 18px;
   }
 
   .boton-agregar--rightbar {
     padding: 12px 18px;
+  }
+
+  .boton-agregar--rightbar {
+    background-color: #FF6700;
+    /* Naranja vibrante */
+    color: #FFFFFF;
+    border: none;
+    font-size: .7rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .acciones-desktop--rightbar {
+    display: none;
+  }
+
+  .acciones-mobile--rightbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .producto--rightbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .select-precio--rightbar,
+  .boton-agregar--rightbar {
+    width: 100%;
+    font-size: 0.95rem;
   }
 }

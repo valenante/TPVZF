@@ -60,7 +60,7 @@
 }
 
 .reservas-info button:nth-child(2) {
-  background-color: #e74c3c;
+  background-color: #6A0DAD;
   /* cancelar o rechazar */
   color: white;
 }
@@ -122,5 +122,13 @@
 
   .reservas-info th {
     display: none;
+  }
+
+  .reservas-info h2 {
+    font-size: 1.8rem;
+    margin-top: 2rem;
+    color: #6A0DAD;
+    margin-bottom: 0rem;
+    text-align: center;
   }
 }

@@ -32,26 +32,28 @@ const MostrarEliminaciones = () => {
   return (
     <div className="eliminaciones--eliminaciones">
       <h1 className="titulo--eliminaciones">Registros de Eliminaciones</h1>
-      <table className="tabla--eliminaciones">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Mesa</th>
-            <th>Eliminado por</th>
-            <th>Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          {eliminaciones.map((eliminacion) => (
-            <tr key={eliminacion._id} className="fila--eliminaciones">
-              <td>{eliminacion.producto?.nombre || "N/A"}</td>
-              <td>{eliminacion.mesa?.numero || "N/A"}</td>
-              <td>{eliminacion.user?.name || "N/A"}</td>
-              <td>{format(new Date(eliminacion.fecha), "HH:mm")}</td>
+      <div className="contenedor-tabla--eliminaciones">
+        <table className="tabla--eliminaciones">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Mesa</th>
+              <th>Eliminado por</th>
+              <th>Fecha</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {eliminaciones.map((eliminacion) => (
+              <tr key={eliminacion._id} className="fila--eliminaciones">
+                <td>{eliminacion.producto?.nombre || "N/A"}</td>
+                <td>{eliminacion.mesa?.numero || "N/A"}</td>
+                <td>{eliminacion.user?.name || "N/A"}</td>
+                <td>{format(new Date(eliminacion.fecha), "HH:mm")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

@@ -49,6 +49,26 @@
   .navbar-link--navbar:hover {
     color: #FF6700; /* Naranja vibrante */
   }
+
+  .only-mobile {
+    display: none;
+  }
+  
+  .only-desktop {
+    display: block;
+  }
+  
+  .navbar-select--navbar {
+    font-size: 1.2rem;
+    padding: 0;
+    border-radius: 5px;
+    border: none;
+    background-color: #6A0DAD; /* Morado */
+    color: #FFFFFF;            /* Blanco */
+    font-weight: bold;
+    cursor: pointer;
+    appearance: none; /* Quita estilos nativos del navegador */
+  }  
   
   /* Responsive: Navbar for small screens */
 @media (max-width: 768px) {
@@ -56,6 +76,10 @@
     .navbar--navbar {
       flex-direction: column; /* Coloca logo y lista en filas separadas */
       align-items: center; /* Centra el contenido */
+    }
+
+    .navbar-logo--navbar {
+      display: none;
     }
   
     /* Lista del navbar en fila */
@@ -75,5 +99,13 @@
   
     .navbar-link--navbar {
       font-size: 1.1rem; /* Aún más pequeño en pantallas pequeñas */
+    }
+
+    .only-mobile {
+      display: block;
+    }
+  
+    .only-desktop {
+      display: none;
     }
   }

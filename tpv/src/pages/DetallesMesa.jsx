@@ -130,15 +130,19 @@ const DetalleMesa = () => {
           cantidad: productoPersonalizado.cantidad,
           total: productoPersonalizado.precioSeleccionado * productoPersonalizado.cantidad,
           precioSeleccionado: productoPersonalizado.precioSeleccionado,
+          tipoPrecio: productoPersonalizado.tipoPrecio, // ✅ obligatorio
+          tipoPlato: productoPersonalizado.tipoPlato || null, // opcional, depende del producto
+          acompanante: productoPersonalizado.acompanante || null, // opcional
           tipo: productoPersonalizado.tipo,
           categoria: productoPersonalizado.categoria,
+          ingredientes: productoPersonalizado.ingredientes || [],
           opcionesPersonalizables: (productoPersonalizado.opciones && Object.keys(productoPersonalizado.opciones).length > 0)
             ? Object.entries(productoPersonalizado.opciones).map(([tipo, opcion]) => ({
-              tipo,
-              opcion
-            }))
+                tipo,
+                opcion
+              }))
             : [],
-        },
+        },        
       });
   
       setMesa((prevMesa) => ({
@@ -224,7 +228,7 @@ const DetalleMesa = () => {
           )}
         </ul>
 
-        <p className="pedidos-titulo--mesadetalles">Pedidos de Bebidas:</p>
+        <p className="pedidos-titulo--mesadetalles">Bebidas:</p>
         <ul className="lista-pedidos--mesadetalles">
           {mesa?.pedidosBebidas?.length > 0 ? (
             mesa.pedidosBebidas.map((pedido) => (

@@ -83,65 +83,97 @@ const RightBar = ({ mesaId, agregarProducto }) => {
         <ul className="lista-productos--rightbar">
           {products.map((producto) => (
             <li key={producto._id} className="producto--rightbar">
-              <div className="producto-info--rightbar">
-                {producto.nombre} -{" "}
-                {/* Condición especial para bebidas */}
-                {producto.tipo === "bebida" ? (
-                  // Lógica para bebidas
+              {/* Info del producto + precio para desktop */}
+              <div className="acciones-desktop--rightbar">
+                <div className="producto-info--rightbar">
+                  {producto.nombre} -{" "}
                   <select
                     className="select-precio--rightbar"
                     value={
-                      preciosSeleccionados[producto._id] || producto.precios.botella || producto.precios.copa
+                      preciosSeleccionados[producto._id] ||
+                      producto.precios.tapa ||
+                      producto.precios.racion ||
+                      producto.precios.precioBase ||
+                      producto.precios.botella ||
+                      producto.precios.copa
                     }
                     onChange={(e) => manejarCambioPrecio(producto._id, e.target.value)}
                   >
-                    {producto.precios.botella !== null && (
-                      <option value={producto.precios.botella}>
-                        Pinta - {producto.precios.botella.toFixed(2)} €
-                      </option>
+                    {/* Opciones para platos */}
+                    {producto.tipo !== "bebida" && producto.precios.tapa !== null && (
+                      <option value={producto.precios.tapa}>Tapa - {producto.precios.tapa.toFixed(2)} €</option>
                     )}
-                    {producto.precios.copa !== null && (
-                      <option value={producto.precios.copa}>
-                        Copa - {producto.precios.copa.toFixed(2)} €
-                      </option>
+                    {producto.tipo !== "bebida" && producto.precios.racion !== null && (
+                      <option value={producto.precios.racion}>Ración - {producto.precios.racion.toFixed(2)} €</option>
                     )}
-                   {producto.precios.precioBase !== null && ( 
-                      <option value={producto.precios.precioBase}>
-                        {producto.precios.precioBase.toFixed(2)} €
-                      </option>
-                    )  
-                  } 
-                  </select>
-                ) : (
-                  // Lógica para cualquier otro tipo de producto
-                  <select
-                    className="select-precio--rightbar"
-                    value={
-                      preciosSeleccionados[producto._id] || producto.precios.tapa || producto.precios.racion || producto.precios.precioBase
-                    }
-                    onChange={(e) => manejarCambioPrecio(producto._id, e.target.value)}
-                  >
-                    {producto.precios.tapa !== null && (
-                      <option value={producto.precios.tapa}>
-                        Tapa - {producto.precios.tapa.toFixed(2)} €
-                      </option>
-                    )}
-                    {producto.precios.racion !== null && (
-                      <option value={producto.precios.racion}>
-                        Ración - {producto.precios.racion.toFixed(2)} €
-                      </option>
-                    )}
-                    {producto.precios.precioBase !== null && (
+                    {producto.tipo !== "bebida" && producto.precios.precioBase !== null && (
                       <option value={producto.precios.precioBase}>
                         Precio base - {producto.precios.precioBase.toFixed(2)} €
                       </option>
                     )}
+
+                    {/* Opciones para bebidas */}
+                    {producto.tipo === "bebida" && producto.precios.botella !== null && (
+                      <option value={producto.precios.botella}>Pinta - {producto.precios.botella.toFixed(2)} €</option>
+                    )}
+                    {producto.tipo === "bebida" && producto.precios.copa !== null && (
+                      <option value={producto.precios.copa}>Copa - {producto.precios.copa.toFixed(2)} €</option>
+                    )}
+                    {producto.precios.precioBase !== null && (
+                      <option value={producto.precios.precioBase}>
+                        {producto.precios.precioBase.toFixed(2)} €
+                      </option>
+                    )}
                   </select>
-                )}
+                </div>
+                <button onClick={() => abrirModal(producto)} className="boton-agregar--rightbar">
+                  Agregar
+                </button>
               </div>
-              <button onClick={() => abrirModal(producto)} className="boton-agregar--rightbar">
-                Agregar
-              </button>
+
+              {/* Versión móvil */}
+              <div className="acciones-mobile--rightbar">
+                <div className="producto-info--rightbar">{producto.nombre}</div>
+                <select
+                  className="select-precio--rightbar"
+                  value={
+                    preciosSeleccionados[producto._id] ||
+                    producto.precios.tapa ||
+                    producto.precios.racion ||
+                    producto.precios.precioBase ||
+                    producto.precios.botella ||
+                    producto.precios.copa
+                  }
+                  onChange={(e) => manejarCambioPrecio(producto._id, e.target.value)}
+                >
+                  {producto.tipo !== "bebida" && producto.precios.tapa !== null && (
+                    <option value={producto.precios.tapa}>Tapa - {producto.precios.tapa.toFixed(2)} €</option>
+                  )}
+                  {producto.tipo !== "bebida" && producto.precios.racion !== null && (
+                    <option value={producto.precios.racion}>Ración - {producto.precios.racion.toFixed(2)} €</option>
+                  )}
+                  {producto.tipo !== "bebida" && producto.precios.precioBase !== null && (
+                    <option value={producto.precios.precioBase}>
+                      Precio base - {producto.precios.precioBase.toFixed(2)} €
+                    </option>
+                  )}
+
+                  {producto.tipo === "bebida" && producto.precios.botella !== null && (
+                    <option value={producto.precios.botella}>Pinta - {producto.precios.botella.toFixed(2)} €</option>
+                  )}
+                  {producto.tipo === "bebida" && producto.precios.copa !== null && (
+                    <option value={producto.precios.copa}>Copa - {producto.precios.copa.toFixed(2)} €</option>
+                  )}
+                  {producto.precios.precioBase !== null && (
+                    <option value={producto.precios.precioBase}>
+                      {producto.precios.precioBase.toFixed(2)} €
+                    </option>
+                  )}
+                </select>
+                <button onClick={() => abrirModal(producto)} className="boton-agregar--rightbar">
+                  Agregar
+                </button>
+              </div>
             </li>
           ))}
         </ul>
