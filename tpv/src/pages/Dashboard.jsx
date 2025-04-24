@@ -1,19 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import "../styles/Dashboard.css";
 import SubNavbar from "../components/Subnavbar/Subnavbar";
-import io from "socket.io-client";
-
-// Conectar al servidor de Socket.io
-const socket = io(process.env.REACT_APP_SOCKET_URL);
+import { SocketContext } from "../utils/socket";
 
 const Dashboard = () => {
   const [mesas, setMesas] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Detecta si la pantalla es pequeña
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
-  const socketRef = useRef(null); // Referencia al socket
+  const { socket } = useContext(SocketContext); // Obtener el socket del contexto
 
   const fetchMesas = async () => {
     try {
@@ -33,17 +30,20 @@ const Dashboard = () => {
     window.addEventListener("resize", handleResize);
   }, []);
 
-  // Escuchar evento nuevoPedido y recargar pedidos de platos
   useEffect(() => {
-    socket.on('mesaAbierta', () => {
-      fetchMesas(); // Recargar las mesas
-    });
+    if (!socket) return;
 
-    // Cleanup del evento para evitar duplicados
-    return () => {
-      socket.off('mesaAbierta');
+    const manejarMesaAbierta = () => {
+      console.log("Evento 'mesaAbierta' recibido");
+      fetchMesas();
     };
-  }, []);
+
+    socket.on('mesaAbierta', manejarMesaAbierta);
+
+    return () => {
+      socket.off('mesaAbierta', manejarMesaAbierta);
+    };
+  }, [socket]);
 
   const handleMesaClick = (mesaId) => {
     navigate(`/mesas/${mesaId}`);

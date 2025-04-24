@@ -28,7 +28,7 @@ export const SocketProvider = ({ children }) => {
         socketInstance.disconnect();
       };
     }
-  }, [socket]); // Solo ejecutar si el socket es nulo
+  }, []);
 
   return (
     <SocketContext.Provider value={{ socket, cuentaSolicitada, setCuentaSolicitada }}>

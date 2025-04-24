@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useContext } from "react";
 import api from '../../utils/api';
-import io from 'socket.io-client';
+import { SocketContext } from "../../utils/socket";
 import PedidosFinalizados from './PedidosFinalizados';
 import './Cocina.css';
-
-const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const Cocina = () => {
   const [pedidos, setPedidos] = useState([]);
   const [mostrarFinalizados, setMostrarFinalizados] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  const { socket } = useContext(SocketContext);
 
   const calcularTiempoTranscurrido = (fecha) => {
     const ahora = new Date();
@@ -30,12 +30,18 @@ const Cocina = () => {
   };
 
   useEffect(() => {
-    socket.on('nuevoPedido', () => {
-      cargarPedidos();
-    });
+    if (!socket) return;
   
-    return () => socket.off('nuevoPedido');
-  }, []);
+    const manejarNuevoPedido = () => {
+      cargarPedidos();
+    };
+  
+    socket.on("nuevoPedido", manejarNuevoPedido);
+  
+    return () => {
+      socket.off("nuevoPedido", manejarNuevoPedido);
+    };
+  }, [socket]); // 👈 importante agregar socket como dependencia  
   
   const marcarProductoComoListo = async (pedidoId, productoId) => {
     try {

@@ -52,7 +52,7 @@ const ProductoCard = ({ producto, estrellas }) => {
             <p className="producto-descripcion">{descripcionTraducida}</p>
             {producto.img && (
               <div className="producto-img-container">
-                <img alt={producto.nombre} src={`${BASE_URL}${producto.img}`} />
+                <img alt={producto.nombre} src={`${BASE_URL}${producto.img}`} loading="lazy"/>
               </div>
             )}
           </div>
@@ -91,7 +91,7 @@ const ProductoCard = ({ producto, estrellas }) => {
           </div>
           {producto.img && (
             <div className="producto-img-container-prodCard">
-              <img alt={producto.nombre} src={`${BASE_URL}${producto.img}`} />
+              <img alt={producto.nombre} src={`${BASE_URL}${producto.img}`} loading="lazy"/>
             </div>
           )}
         </div>

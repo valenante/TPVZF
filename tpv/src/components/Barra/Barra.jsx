@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import api from '../../utils/api';
-import io from 'socket.io-client';
+import { SocketContext } from "../../utils/socket";
 import './Barra.css';
-
-// Conectar al servidor de Socket.io
-const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const Barra = () => {
   const [pedidos, setPedidos] = useState([]);
+  const { socket } = useContext(SocketContext);
 
   // Función para calcular tiempo transcurrido
   const calcularTiempoTranscurrido = (fecha) => {
@@ -29,16 +27,19 @@ const Barra = () => {
     }
   };
 
-  // Escuchar evento `nuevoPedido` y recargar pedidos de bebidas
   useEffect(() => {
-    socket.on('nuevoPedido', () => {
-      cargarPedidos();
-    });
-
-    return () => {
-      socket.off('nuevoPedido');
+    if (!socket) return;
+  
+    const manejarNuevoPedido = () => {
+      cargarPedidos(); // Recargar pedidos de bebidas
     };
-  }, []);
+  
+    socket.on('nuevoPedido', manejarNuevoPedido);
+  
+    return () => {
+      socket.off('nuevoPedido', manejarNuevoPedido);
+    };
+  }, [socket]); // Agregar socket como dependencia
 
   // Marcar un producto como listo
   const marcarProductoComoListo = async (pedidoId, productoId) => {
@@ -138,7 +139,7 @@ const Barra = () => {
                     </li>
                   ))}
                 </ul>
-                
+
                 {/* Botón para marcar el pedido como terminado (solo si todos los productos están listos) */}
                 {todosListos && (
                   <button

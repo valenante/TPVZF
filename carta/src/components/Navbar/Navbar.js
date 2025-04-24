@@ -85,6 +85,8 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
     .map((producto) => producto.categoria)
     .filter((categoria, index, self) => self.indexOf(categoria) === index);
 
+  console.log(numeroMesa);
+
   return (
     <div className="container">
       <nav className="navbar">
@@ -132,9 +134,11 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
                 </button>
               </div>
 
-              <div className="carrito-icono">
-                <CarritoIcono abrirModal={() => setMostrarModal(true)} />
-              </div>
+              {numeroMesa && (
+                <div className="carrito-icono">
+                  <CarritoIcono abrirModal={() => setMostrarModal(true)} />
+                </div>
+              )}
             </div>
           </div>
         ) : (
@@ -160,7 +164,6 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
                 </div>
               </div>
 
-              {/* Fila 2: Select + Botón Bebidas/Platos + Carrito */}
               <div className="navbar-fila navbar-fila-opciones">
                 <select
                   value={categoriaSeleccionada}
@@ -181,9 +184,11 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
                   {mostrarSoloBebidas ? <Trans id="platos">Platos</Trans> : <Trans id="bebidas">Bebidas</Trans>}
                 </button>
 
-                <div className="carrito-icono">
-                  <CarritoIcono abrirModal={() => setMostrarModal(true)} />
-                </div>
+                {numeroMesa && (
+                  <div className="carrito-icono">
+                    <CarritoIcono abrirModal={() => setMostrarModal(true)} />
+                  </div>
+                )}
               </div>
 
               {/* Fila 3: Botón de Cuenta (centrado) */}

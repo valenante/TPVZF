@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef, use } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client"; // Importar cliente de Socket.IO
-import axios from "axios";
 import api from "../utils/api";
 import MetodoPago from "../components/DetallesMesa/MetodoPago";
 import RightBar from "../components/RightBar/RightBar";
 import { useAuth } from "../context/AuthContext";
+import { SocketContext } from "../utils/socket";
 import "../styles/DetallesMesa.css";
 
 const DetalleMesa = () => {
@@ -15,7 +15,7 @@ const DetalleMesa = () => {
   const [productosDetalles, setProductosDetalles] = useState({});
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const socketRef = useRef(null); // Usar `useRef` para la instancia de `socket`
+  const { socket } = useContext(SocketContext);
 
   useEffect(() => {
     const fetchMesa = async () => {
@@ -67,30 +67,27 @@ const DetalleMesa = () => {
     };
 
     fetchMesa();
+  }, [id]);
 
-    // Inicializar `socket` solo una vez
-    if (!socketRef.current) {
-      socketRef.current = io(process.env.REACT_APP_SOCKET_URL);
+  // 🟩 2. Escuchar evento nuevoPedido con socket
+  useEffect(() => {
+    if (!socket) return;
 
-      // Escuchar el evento `nuevoPedido`
-      socketRef.current.on("nuevoPedido", (pedidoActualizado) => {
-        if (pedidoActualizado.mesaId === id) {
-          setMesa((prevMesa) => ({
-            ...prevMesa,
-            pedidos: [...prevMesa.pedidos, pedidoActualizado],
-          }));
-        }
-      });
-    }
-
-    // Limpiar la conexión de `socket` al desmontar el componente
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
+    const manejarNuevoPedido = (pedidoActualizado) => {
+      if (pedidoActualizado.mesaId === id) {
+        setMesa((prevMesa) => ({
+          ...prevMesa,
+          pedidos: [...prevMesa.pedidos, pedidoActualizado],
+        }));
       }
     };
-  }, [id]); // Eliminar `socket` del arreglo de dependencias
+
+    socket.on("nuevoPedido", manejarNuevoPedido);
+
+    return () => {
+      socket.off("nuevoPedido", manejarNuevoPedido);
+    };
+  }, [socket, id]);
 
   const cerrarMesa = async (metodoPago) => {
     try {
@@ -118,12 +115,12 @@ const DetalleMesa = () => {
     try {
       // Determinar si el producto es una bebida o un plato
       const esBebida = productoPersonalizado.tipo === "bebida";
-  
+
       // Definir la ruta dependiendo del tipo
-      const ruta = esBebida 
-        ? `pedidosBebidas/${mesa._id}/agregar-producto` 
+      const ruta = esBebida
+        ? `pedidosBebidas/${mesa._id}/agregar-producto`
         : `pedidos/${mesa._id}/agregar-producto`;
-  
+
       const { data } = await api.post(ruta, {
         productos: {
           producto: productoPersonalizado._id,
@@ -138,20 +135,20 @@ const DetalleMesa = () => {
           ingredientes: productoPersonalizado.ingredientes || [],
           opcionesPersonalizables: (productoPersonalizado.opciones && Object.keys(productoPersonalizado.opciones).length > 0)
             ? Object.entries(productoPersonalizado.opciones).map(([tipo, opcion]) => ({
-                tipo,
-                opcion
-              }))
+              tipo,
+              opcion
+            }))
             : [],
-        },        
+        },
       });
-  
+
       setMesa((prevMesa) => ({
         ...prevMesa,
         pedidos: data.pedidos,
       }));
-  
+
       alert(`Producto ${esBebida ? "bebida" : "plato"} agregado al pedido con éxito.`);
-  
+
       // Refrescar la página
       window.location.reload();
     } catch (error) {

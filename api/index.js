@@ -63,7 +63,15 @@ app.use((req, res, next) => {
 connectToDatabase();
 
 //Devolver imagenes
-app.use(express.static("public"));
+app.use(express.static("public", {
+  maxAge: "30d", // Cachear por 30 días
+  setHeaders: (res, path) => {
+    if (path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png") || path.endsWith(".avif")) {
+      res.setHeader("Cache-Control", "public, max-age=2592000"); // 30 días en segundos
+    }
+  }
+}));
+
 
 // Registrar rutas
 app.use("/api/mesas", mesaRoutes);
