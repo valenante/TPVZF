@@ -30,7 +30,6 @@ const CerrarCajaModal = ({ onClose }) => {
         if (cajaAbierta) {
           setTotalCaja(cajaAbierta.total);
           setMetodoPago(cajaAbierta.detallesMetodoPago);
-          console.log("✅ Caja abierta encontrada:", cajaAbierta);
         } else {
           console.warn("⚠️ No se encontró una caja abierta.");
           setError("No hay una caja abierta disponible.");

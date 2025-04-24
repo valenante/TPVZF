@@ -20,7 +20,7 @@ const ReservasPage = () => {
       <FormularioReservaModal
         visible={mostrarModal}
         onClose={() => setMostrarModal(false)}
-        onSuccess={() => console.log("Reserva creada desde TPV")}
+        onSuccess={() => ("Reserva creada desde TPV")}
       />
     </div>
   );

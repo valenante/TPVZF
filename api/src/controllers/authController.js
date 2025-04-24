@@ -206,7 +206,7 @@ export const login = async (req, res) => {
 };
 
 export const obtenerUsuario = async (req, res) => {
-  console.log('Sesión:', req.session);
+  ('Sesión:', req.session);
   try {
     // ✅ Verifica si el usuario está en la sesión
     if (!req.session.user) {

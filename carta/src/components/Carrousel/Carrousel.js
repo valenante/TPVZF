@@ -7,6 +7,7 @@ import burgerImg from "../../assets/images/main-burgers.jpeg";
 import cocktailImg from "../../assets/images/main-cocktel.jpeg";
 import "../../styles/HomeCarrousel.css";
 import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
 
 const HomeCarousel = () => {
   const navigate = useNavigate();
@@ -22,13 +23,9 @@ const HomeCarousel = () => {
     },
   ];
 
-  const handleReservaClick = () => {
-    navigate("/reservas");
-  };
+  const handleReservaClick = useCallback(() => navigate("/reservas"), [navigate]);
 
-  const handleCartaClick = () => {
-    navigate("/carta");
-  };
+  const handleCartaClick = useCallback(() => navigate("/carta"), [navigate]);
 
   return (
     <Swiper

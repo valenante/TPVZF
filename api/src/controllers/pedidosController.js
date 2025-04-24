@@ -9,7 +9,7 @@ export const crearPedido = async (req, res) => {
     try {
         const { mesa, productos, total, comensales, alergias, pan, cartId, precioSeleccionado, tipoPrecio } = req.body;
 
-        console.log(req.body);
+        (req.body);
 
         // Buscar la mesa usando el ObjectId
         const mesaExistente = await Mesa.findById(mesa);
@@ -105,7 +105,7 @@ export const agregarProductoAlPedido = async (req, res) => {
     const { mesaId } = req.params;
     const { productos } = req.body;
 
-    console.log(req.body);
+    (req.body);
 
     // Validar datos entrantes
     if (!productos || !productos.producto || !productos.cantidad || !productos.total || !productos.precioSeleccionado) {

@@ -89,7 +89,7 @@ export const integrarDinero = async (req, res) => {
 export const retirarDinero = async (req, res) => {
     const { monto, razon } = req.body;
 
-    console.log(monto, razon);
+    (monto, razon);
 
     if (!monto || !razon) {
         return res.status(400).json({ error: "Monto y razón son obligatorios." });
@@ -97,7 +97,7 @@ export const retirarDinero = async (req, res) => {
 
     try {
 
-        console.log("Retirando dinero...");
+        ("Retirando dinero...");
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Establece la hora a 00:00:00 para evitar problemas con la comparación
 
@@ -109,16 +109,16 @@ export const retirarDinero = async (req, res) => {
             return res.status(404).json({ error: "Caja no encontrada." });
         }
 
-        console.log("Caja encontrada:", caja);
+        ("Caja encontrada:", caja);
             
         const montoNumerico = parseFloat(monto);
         if (isNaN(montoNumerico) || montoNumerico <= 0) {
             return res.status(400).json({ error: "El monto debe ser un número mayor a 0." });
         }
 
-        console.log("Monto a retirar:", montoNumerico);
+        ("Monto a retirar:", montoNumerico);
 
-        console.log(
+        (
             caja.detallesMetodoPago.efectivo,
             caja.detallesMetodoPago.tarjeta,
             caja.detallesMetodoPago.propina
@@ -131,7 +131,7 @@ export const retirarDinero = async (req, res) => {
         caja.detallesMetodoPago.efectivo -= montoNumerico;
         caja.total -= montoNumerico;
 
-        console.log("Efectivo después de la operación:", caja.detallesMetodoPago.efectivo);
+        ("Efectivo después de la operación:", caja.detallesMetodoPago.efectivo);
 
         // Registrar la operación
         caja.operaciones.push({
@@ -183,7 +183,7 @@ export const cerrarCaja = async (req, res) => {
                 }
             });
 
-        console.log("Mesas cerradas con pedidos:", JSON.stringify(mesasCerradas, null, 2));
+        ("Mesas cerradas con pedidos:", JSON.stringify(mesasCerradas, null, 2));
 
 
         if (!mesasCerradas || mesasCerradas.length === 0) {

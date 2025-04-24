@@ -13,8 +13,6 @@ const FormularioReservaModal = ({ visible, onClose, onSuccess }) => {
     horaSeleccionada: "",
   });
 
-  console.log(franjas);
-
   const fechaHoy = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {

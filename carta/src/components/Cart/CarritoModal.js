@@ -11,13 +11,12 @@ const CarritoModal = ({ cerrarModal }) => {
   const numeroMesa = searchParams.get("mesa");
   const { comensal } = useComensal();
   const { comensales, alergias } = comensal;
-  
-  console.log(carrito.items);
 
   useEffect(() => {
     // Aquí estamos llamando a la función para obtener el ID de la mesa (asumiendo que la mesa es la 1, o puedes pasar otro número de mesa)
     obtenerMesaId(numeroMesa);
-  }, [obtenerMesaId]); // Dependemos de `obtenerMesaId` para que se ejecute solo cuando se monte el componente
+  }, [obtenerMesaId, numeroMesa]);
+
 
   const esLider = async () => {
     try {
@@ -72,8 +71,6 @@ const CarritoModal = ({ cerrarModal }) => {
       // Separar productos en platos y bebidas
       const productosPlatos = [];
       const productosBebidas = [];
-
-      console.log(carrito.items);
 
       carrito.items.forEach((item) => {
         const productoData = {
@@ -190,7 +187,12 @@ const CarritoModal = ({ cerrarModal }) => {
   };
 
   return (
-    <div className="modal-overlay-carritoModal">
+    <div
+      className="modal-overlay-carritoModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-carrito"
+    >
       <div className="modal-content-carritoModal">
         <button className="modal-close-carritoModal" onClick={cerrarModal}>
           ✖

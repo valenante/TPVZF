@@ -95,7 +95,7 @@ export const obtenerMesas = async (req, res) => {
 
 // Obtener una mesa activa por ID
 export const obtenerMesaPorId = async (req, res) => {
-  console.log('nanananannana');
+  ('nanananannana');
   const { id } = req.params;
   try {
     const mesa = await Mesa.findById(id).populate('pedidos');

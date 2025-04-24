@@ -11,9 +11,6 @@ const Cocina = () => {
   const [mostrarFinalizados, setMostrarFinalizados] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
-
-  console.log('Pedidos:', pedidos);
-
   const calcularTiempoTranscurrido = (fecha) => {
     const ahora = new Date();
     const fechaPedido = new Date(fecha);

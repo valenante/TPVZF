@@ -13,8 +13,6 @@ const Valoraciones = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  console.log(mesaId)
-
   useEffect(() => {
     // Cargar productos desde el backend
     const cargarProductos = async () => {

@@ -75,8 +75,6 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
             : null
   );
 
-  console.log(tipoPrecio); // Verificar el valor de tipoPrecio
-
   const manejarCantidad = (incremento) => {
     setCantidad((prev) => Math.max(1, prev + incremento));
   };
@@ -153,8 +151,6 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
       console.error('Error al agregar al carrito:', error);
     }
   };
-
-  console.log("Número de mesa:", numeroMesa); // Verificar el número de mesa
 
   return ReactDOM.createPortal(
     <div className="modal-detalle">
@@ -263,6 +259,7 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
             </div>
           </>
         )}
+
 
         {producto.tipo === "bebida" &&
           categoriasConAcompanante.includes(producto.categoria.toLowerCase()) && (

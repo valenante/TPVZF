@@ -300,7 +300,7 @@ export const cancelarReserva = async (req, res) => {
 export const obtenerReservasPorFecha = async (req, res) => {
   const { fecha, estado } = req.query;
 
-  console.log("Obteniendo reservas por fecha...", fecha, estado);
+  ("Obteniendo reservas por fecha...", fecha, estado);
 
   try {
     const filtros = {};
@@ -316,7 +316,7 @@ export const obtenerReservasPorFecha = async (req, res) => {
     }
 
     const reservas = await Reserva.find(filtros).sort({ hora: 1 });
-    console.log("Reservas encontradas:", reservas.length);
+    ("Reservas encontradas:", reservas.length);
     res.json(reservas);
   } catch (error) {
     console.error("Error al obtener reservas:", error);
@@ -326,7 +326,7 @@ export const obtenerReservasPorFecha = async (req, res) => {
 
 // Ejemplo backend
 export const obtenerFechasConReservas = async (req, res) => {
-  console.log("Obteniendo fechas con reservas...");
+  ("Obteniendo fechas con reservas...");
   try {
     const reservas = await Reserva.aggregate([
       {
@@ -350,7 +350,7 @@ export const obtenerFechasConReservas = async (req, res) => {
     ]);
 
     const fechas = reservas.map(r => r.fecha);
-    console.log("Fechas con reservas:", fechas);
+    ("Fechas con reservas:", fechas);
     res.json(fechas);
   } catch (error) {
     console.error("Error al obtener fechas con reservas:", error);

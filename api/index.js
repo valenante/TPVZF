@@ -107,10 +107,10 @@ process.on("unhandledRejection", (reason) => {
 
 // Configurar eventos de Socket.IO
 io.on("connection", (socket) => {
-  console.log(`Cliente conectado: ${socket.id}`);
+  (`Cliente conectado: ${socket.id}`);
 
   socket.on("disconnect", (reason) => {
-    console.log(`Cliente desconectado: ${socket.id}, motivo: ${reason}`);
+    (`Cliente desconectado: ${socket.id}, motivo: ${reason}`);
   });
 });
 

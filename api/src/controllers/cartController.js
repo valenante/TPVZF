@@ -25,7 +25,7 @@ export const obtenerCarrito = async (req, res) => {
 export const agregarAlCarrito = async (req, res) => {
   let { mesa, items } = req.body;
 
-  console.log(req.body);
+  (req.body);
 
   try {
     // 🔹 Verificar que `mesa` esté presente
@@ -135,11 +135,7 @@ export const agregarAlCarrito = async (req, res) => {
 
 // Actualizar la cantidad de un producto en el carrito
 export const actualizarItem = async (req, res) => {
-  const { tempCartId, itemId, cantidad } = req.body;
-
-  if (!tempCartId) {
-    return res.status(400).json({ error: 'Falta el identificador del carrito.' });
-  }
+  const { itemId, cantidad } = req.body;
 
   try {
     const cart = await Cart.findOne({ cartId: tempCartId });
@@ -223,7 +219,7 @@ export const eliminarDelCarrito = async (req, res) => {
 
 // Vaciar el carrito basado en el número de mesa
 export const vaciarCarrito = async (req, res) => {
-  const { mesa } = req.body; // Ahora recibimos `mesa` en lugar de `tempCartId`
+  const { mesa } = req.body;
 
   if (!mesa) {
     return res.status(400).json({ error: "El número de mesa es obligatorio." });
