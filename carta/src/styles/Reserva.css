@@ -13,7 +13,7 @@
   font-size: 2rem;
   margin-bottom: 1.5rem;
   text-align: center;
-  color: #6A0DAD; /* Morado principal */
+  color: var(--color-principal); /* Morado principal */
 }
 
 .reserva-form form {
@@ -46,7 +46,7 @@
 .reserva-form input:focus,
 .reserva-form select:focus,
 .reserva-form textarea:focus {
-  border-color: #6A0DAD;
+  border-color: var(--color-principal);
   outline: none;
 }
 
@@ -63,7 +63,7 @@
 }
 
 .reserva-form button {
-  background-color: #6A0DAD;
+  background-color: var(--color-principal);
   color: white;
   padding: 0.75rem;
   border: none;
@@ -87,7 +87,7 @@
   margin-top: 2rem;
   padding: 1rem;
   background-color: #f9f7fd;
-  border-left: 5px solid #6A0DAD;
+  border-left: 5px solid var(--color-principal);
   border-radius: 0.5rem;
   font-size: 0.95rem;
 }
@@ -137,7 +137,7 @@
 }
 
 .modal-contenido button {
-  background-color: #6A0DAD;
+  background-color: var(--color-principal);
   color: white;
   padding: 0.6rem 1rem;
   border: none;

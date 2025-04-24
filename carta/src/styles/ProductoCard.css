@@ -1,6 +1,6 @@
 /* Estilo para la tarjeta del producto */
 .producto-card-prodCard {
-  border-bottom: 5px solid rgb(84, 20, 108);
+  border-bottom: 5px solid var(--color-principal);
   /* Borde inferior más grueso */
   margin-bottom: 2em;
   border-radius: 8px;
@@ -41,7 +41,7 @@
 
 .producto-info-prodCard h3 {
   font-size: 1.5rem;
-  color: rgb(84, 20, 108);
+  color: var(--color-principal);
   margin-bottom: 10px;
 }
 
@@ -62,7 +62,7 @@
 
 /* Botón de agregar al carrito */
 .agregar-carrito-btn-prodCard {
-  background-color: rgb(84, 20, 108);
+  background-color: var(--color-principal);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -126,9 +126,9 @@ button.cantidad-btn:active {
 
 /* Botón de cancelar */
 button.cancelar-btn {
-  background-color: #F5F5F5;
+  background-color: var(--color-secundario);
   /* Gris claro */
-  color: #333333;
+  color: white;
   /* Texto oscuro */
   border: 2px solid #FF6700;
   /* Borde naranja */
@@ -141,9 +141,9 @@ button.cancelar-btn {
 }
 
 button.cancelar-btn:hover {
-  background-color: #FF6700;
+  background-color: #ffffff;
   /* Naranja vibrante */
-  color: #FFFFFF;
+  color: var(--color-secundario);
   /* Texto blanco */
   border-color: #E65A00;
   /* Borde más oscuro */
@@ -151,7 +151,7 @@ button.cancelar-btn:hover {
 
 /* Botón de agregar al carrito */
 button.agregar-btn {
-  background-color: #6A0DAD;
+  background-color: var(--color-principal);
   /* Morado profundo */
   color: #FFFFFF;
   /* Blanco puro */
@@ -216,7 +216,7 @@ button.agregar-btn:active {
   }
 
   .agregar-carrito-btn {
-    background-color: #FF6700;
+    background-color: var(--color-secundario);
     color: white;
     border: none;
     padding: 8px;

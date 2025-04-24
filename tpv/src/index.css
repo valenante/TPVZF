@@ -9,3 +9,54 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+:root {
+  --color-principal: #6A0DAD;
+  --color-principal-oscuro: #5c0bb8; /* una versión ligeramente más oscura */
+  --color-secundario: #FF6700;
+  --blanco: #ffffff;
+  --gris-claro: #f5f5f5;
+  --gris-oscuro: #333333;
+}
+
+/* Clases de colores */
+.bg-principal {
+  background-color: var(--color-principal);
+}
+
+.bg-principal-oscuro {
+  background-color: var(--color-principal-oscuro);
+}
+
+.bg-secundario {
+  background-color: var(--color-secundario);
+}
+
+.text-principal {
+  color: var(--color-principal);
+}
+
+.text-principal-oscuro {
+  color: var(--color-principal-oscuro);
+}
+
+.text-secundario {
+  color: var(--color-secundario);
+}
+
+/* Extras */
+.text-blanco {
+  color: var(--blanco);
+}
+
+.bg-blanco {
+  background-color: var(--blanco);
+}
+
+.bg-gris-claro {
+  background-color: var(--gris-claro);
+}
+
+.text-gris-oscuro {
+  color: var(--gris-oscuro);
+}

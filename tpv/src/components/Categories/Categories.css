@@ -9,7 +9,7 @@
 /* Título */
 .titulo-categoria--categories {
     font-size: 1.8rem;
-    color: #6A0DAD;
+    color: var(--color-principal);
     /* Morado profundo */
     margin-bottom: 20px;
 }
@@ -17,7 +17,7 @@
 /* Mensaje de sin productos */
 .sin-productos--categories {
     font-size: 1.2rem;
-    color: #FF6700;
+    color: var(--color-secundario);
     /* Naranja vibrante */
     margin-top: 10px;
 }
@@ -37,12 +37,12 @@
 
 /* Cuadrados de productos */
 .producto-card--categories {
-    background-color: #6A0DAD;
+    background-color: var(--color-principal);
     /* Blanco */
     color: white;
     border-radius: 10px;
     /* Bordes redondeados */
-    border: 2px solid #FF6700;
+    border: 2px solid var(--color-secundario);
     padding: 15px;
     text-align: center;
     width: 100%;
@@ -67,7 +67,7 @@
 
 .boton-editar--categories,
 .boton-eliminar--categories {
-    background-color: #FF6700;
+    background-color: var(--color-secundario);
     /* Naranja vibrante */
     color: #FFFFFF;
     border: none;
@@ -79,7 +79,7 @@
 }
 
 .boton-editar--categories:hover {
-    background-color: #6A0DAD;
+    background-color: var(--color-principal);
     /* Morado profundo */
 }
 
@@ -90,7 +90,7 @@
 
 /* Botón para crear productos */
 .boton-crear--categories {
-    background-color: #6A0DAD;
+    background-color: var(--color-principal);
     /* Morado profundo */
     color: #FFFFFF;
     border: none;
@@ -103,7 +103,7 @@
 }
 
 .boton-crear--categories:hover {
-    background-color: #FF6700;
+    background-color: var(--color-secundario);
     /* Naranja vibrante */
     transform: scale(1.05);
 }

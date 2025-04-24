@@ -1,0 +1,8 @@
+:root {
+    --color-principal: #6A0DAD;
+    --color-principal-oscuro: #5c0bb8; /* una versión ligeramente más oscura */
+    --color-secundario: #FF6700;
+    --blanco: #ffffff;
+    --gris-claro: #f5f5f5;
+    --gris-oscuro: #333333;
+  }

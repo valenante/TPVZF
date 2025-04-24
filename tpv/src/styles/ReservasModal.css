@@ -35,7 +35,7 @@
     margin-bottom: 1rem;
     font-size: 1.6rem;
     text-align: center;
-    color: #6A0DAD;
+    color: var(--color-principal);
   }
   
   .modal-contenido input,
@@ -79,7 +79,7 @@
   }
   
   .botones button[type="submit"] {
-    background-color: #6A0DAD;
+    background-color: var(--color-principal);
     color: white;
   }
   

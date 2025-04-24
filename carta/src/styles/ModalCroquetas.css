@@ -31,7 +31,7 @@
   .modal-croquetas-content h2 {
     font-size: 1.8rem;
     margin-bottom: 10px;
-    color: rgb(84, 20, 108); /* Morado */
+    color: var(--color-principal); /* Morado */
   }
   
   .modal-croquetas-content p {
@@ -45,7 +45,7 @@
   .modal-croquetas-content h4 {
     font-size: 1.2rem;
     margin-bottom: 10px;
-    color: rgb(84, 20, 108); /* Morado */
+    color: var(--color-principal); /* Morado */
   }
 
   .sabor-croquetas input[type="radio"] {
@@ -56,7 +56,7 @@
   .cantidad-btn-croquetas{
     background-color: white;
     border: none;
-    color: rgb(84, 20, 108);
+    color: var(--color-principal);
     gap: 10px;
     margin-bottom: 20px;
   }
@@ -86,7 +86,7 @@
   }
   
   .cantidad-croquetas button {
-    background-color: rgb(84, 20, 108);
+    background-color: var(--color-principal);
     color: #fff;
     border: none;
     padding: 8px 12px;
@@ -122,12 +122,12 @@
   }
   
   .modal-botones-croquetas button:last-child {
-    background-color: rgb(84, 20, 108);
+    background-color: var(--color-principal);
     color: #fff;
   }
   
   .modal-botones-croquetas button:last-child:hover {
-    background-color: rgba(84, 20, 108, 0.8);
+    background-color: var(--color-principal);
   }
   
   .error-message {

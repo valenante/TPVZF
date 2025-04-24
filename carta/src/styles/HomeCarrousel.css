@@ -34,7 +34,7 @@
   .reserva-btn {
     padding: 0.7rem 1.5rem;
     font-size: 1.2rem;
-    background-color: #FF6700;
+    background-color: var(--color-secundario);
     color: white;
     border: none;
     cursor: pointer;
@@ -56,7 +56,7 @@
   }
   
   .carta-btn:hover {
-    background-color: #550b9e;
+    background-color: var(--color-principal);;
   }
   
 

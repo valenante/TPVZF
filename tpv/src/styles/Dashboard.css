@@ -1,7 +1,7 @@
 /* General container for the dashboard */
 .container--dashboard {
   padding: 20px;
-  background-color: #6A0DAD; /* Morado Profundo */
+  background-color: var(--color-principal); /* Morado Profundo */
   width: 100%;
   align-items: center;
   justify-content: center;
@@ -57,7 +57,7 @@
 
 /* Estado styling */
 .mesa--dashboard.abierta--dashboard {
-  background-color: #FF6700; /* Naranja Vibrante */
+  background-color: var(--color-secundario); /* Naranja Vibrante */
   color: white;
 }
 
@@ -82,7 +82,7 @@
   padding: 15px; /* Espacio interno */
   margin-top: 15vh;
   font-size: 1.2rem; /* Texto más grande */
-  border: 2px solid #6A0DAD; /* Borde morado */
+  border: 2px solid var(--color-principal); /* Borde morado */
   border-radius: 10px; /* Bordes redondeados */
   outline: none; /* Quitar contorno al hacer foco */
   transition: border-color 0.3s ease;
@@ -90,7 +90,7 @@
 
 /* Efecto al enfocar el input */
 .search-input--dashboard:focus {
-  border-color: #FF6700; /* Cambiar a naranja al enfocar */
+  border-color: var(--color-secundario); /* Cambiar a naranja al enfocar */
 }
 
 /* Botón de búsqueda */
@@ -102,8 +102,8 @@
   font-size: 1.2rem; /* Texto más grande */
   font-weight: bold; /* Texto en negrita */
   color: #FFFFFF; /* Texto blanco */
-  background-color: #FF6700; /* Naranja Vibrante */
-  border: 2px solid #6A0DAD; /* Borde morado */
+  background-color: var(--color-secundario); /* Naranja Vibrante */
+  border: 2px solid var(--color-principal); /* Borde morado */
   border-radius: 10px; /* Bordes redondeados */
   cursor: pointer; /* Cambiar cursor al pasar por encima */
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -111,14 +111,14 @@
 
 /* Hover del botón */
 .search-button--dashboard:hover {
-  background-color: #6A0DAD; /* Cambiar a morado */
-  border-color: #FF6700; /* Cambiar borde a naranja */
+  background-color: var(--color-principal); /* Cambiar a morado */
+  border-color: var(--color-secundario); /* Cambiar borde a naranja */
   transform: scale(1.01); /* Ampliar ligeramente */
 }
 
 /* Active del botón */
 .search-button--dashboard:active {
   transform: scale(0.98); /* Reducir ligeramente al hacer clic */
-  background-color: #FF6700; /* Volver a naranja */
-  border-color: #6A0DAD; /* Borde morado */
+  background-color: var(--color-secundario); /* Volver a naranja */
+  border-color: var(--color-principal); /* Borde morado */
 }

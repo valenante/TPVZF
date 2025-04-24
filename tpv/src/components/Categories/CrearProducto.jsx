@@ -280,7 +280,7 @@ const CrearProducto = ({ onClose }) => {
 
         <div className="botones--crear">
           <button type="submit" className="boton--crear">Guardar</button>
-          <button type="button" onClick={onClose} className="boton--crear">Cancelar</button>
+          <button type="button" onClick={onClose} className="boton--cancelar">Cancelar</button>
         </div>
       </form >
     </div >

@@ -7,7 +7,7 @@
   .titulo-valoraciones {
     text-align: center;
     font-size: 2rem;
-    color: #6a0dad; /* Morado */
+    color: var(--color-principal); /* Morado */
     margin-bottom: 20px;
   }
   
@@ -43,7 +43,7 @@
     display: block;
     margin: 20px auto;
     padding: 10px 20px;
-    background-color: #6a0dad;
+    background-color: var(--color-principal);
     color: #fff;
     border: none;
     border-radius: 5px;

@@ -257,7 +257,7 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           <button type="submit" disabled={hasErrors} className="boton--editar">
             Guardar
           </button>
-          <button type="button" onClick={onCancel} className="boton--editar">
+          <button type="button" onClick={onCancel} className="boton--cancelar">
             Cancelar
           </button>
         </div>

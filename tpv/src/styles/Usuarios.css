@@ -15,7 +15,7 @@
   /* Título */
   .titulo--register {
     font-size: 2rem;
-    color: #6a0dad; /* Morado profundo */
+    color: var(--color-principal); /* Morado profundo */
     text-align: center;
     margin-bottom: 20px;
   }
@@ -39,7 +39,7 @@
   .select--register {
     width: 100%;
     padding: 10px;
-    border: 1px solid #6a0dad; /* Morado profundo */
+    border: 1px solid var(--color-principal); /* Morado profundo */
     border-radius: 5px;
     font-size: 1rem;
     color: #333;
@@ -48,7 +48,7 @@
   .input--register:focus,
   .select--register:focus {
     outline: none;
-    border-color: #ff6700; /* Naranja vibrante */
+    border-color: var(--color-secundario); /* Naranja vibrante */
     box-shadow: 0 0 5px rgba(255, 103, 0, 0.5);
   }
   
@@ -62,7 +62,7 @@
   /* Botón */
   .boton--register {
     padding: 10px;
-    background-color: #6a0dad; /* Morado profundo */
+    background-color: var(--color-principal); /* Morado profundo */
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -78,7 +78,7 @@
   }
   
   .boton--register:hover:not(:disabled) {
-    background-color: #ff6700; /* Naranja vibrante */
+    background-color: var(--color-secundario); /* Naranja vibrante */
     transform: scale(1.05);
   }
   

@@ -29,9 +29,9 @@
 .boton-tipo--rightbar {
   background-color: #FFFFFF;
   /* Blanco */
-  border: 2px solid #6A0DAD;
+  border: 2px solid var(--color-principal);
   /* Morado */
-  color: #6A0DAD;
+  color: var(--color-principal);
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
@@ -41,14 +41,14 @@
 }
 
 .boton-tipo--rightbar.activo--rightbar {
-  background-color: #6A0DAD;
+  background-color: var(--color-principal);
   /* Morado activo */
   color: #FFFFFF;
   /* Texto blanco */
 }
 
 .boton-tipo--rightbar:hover {
-  background-color: #FF6700;
+  background-color: var(--color-secundario);
   /* Naranja vibrante */
   color: #FFFFFF;
 }
@@ -61,7 +61,7 @@
 .titulo-categorias--rightbar {
   font-size: var(--font-size-large);
   font-weight: var(--font-weight-bold);
-  color: #6A0DAD;
+  color: var(--color-principal);
   margin-bottom: 10px;
 }
 
@@ -80,14 +80,14 @@
 }
 
 .categoria--rightbar.seleccionada--rightbar {
-  background-color: #FF6700;
+  background-color: var(--color-secundario);
   /* Naranja vibrante */
   color: #FFFFFF;
   /* Blanco */
 }
 
 .categoria--rightbar:hover {
-  background-color: #6A0DAD;
+  background-color: var(--color-principal);
   /* Morado */
   color: #FFFFFF;
   /* Blanco */
@@ -101,7 +101,7 @@
 .titulo-productos--rightbar {
   font-size: var(--font-size-large);
   font-weight: var(--font-weight-bold);
-  color: #6A0DAD;
+  color: var(--color-principal);
   margin-bottom: 10px;
 }
 
@@ -135,7 +135,7 @@
 
 /* Botón agregar */
 .boton-agregar--rightbar {
-  background-color: #FF6700;
+  background-color: var(--color-secundario);
   /* Naranja */
   color: #FFFFFF;
   /* Blanco */
@@ -149,7 +149,7 @@
 }
 
 .boton-agregar--rightbar:hover {
-  background-color: #6A0DAD;
+  background-color: var(--color-principal);
   /* Morado */
   transform: scale(1.05);
 }
@@ -197,7 +197,7 @@
   }
 
   .boton-agregar--rightbar {
-    background-color: #FF6700;
+    background-color: var(--color-secundario);
     /* Naranja vibrante */
     color: #FFFFFF;
     border: none;

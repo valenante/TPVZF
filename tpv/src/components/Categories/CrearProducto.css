@@ -37,7 +37,7 @@
 .titulo--crear {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #6a0dad; /* Morado profundo */
+  color: var(--color-principal); /* Morado profundo */
   text-align: center;
   margin-bottom: 20px;
 }
@@ -75,7 +75,7 @@
 
 .input--crear:focus,
 .textarea--crear:focus {
-  border-color: #6a0dad;
+  border-color: var(--color-principal);
   outline: none;
 }
 
@@ -90,7 +90,7 @@
 /* ============================= */
 
 .fieldset--crear {
-  border: 2px solid #6a0dad;
+  border: 2px solid var(--color-principal);
   border-radius: 8px;
   padding: 15px;
 }
@@ -98,7 +98,7 @@
 .legend--crear {
   font-size: 1.1rem;
   font-weight: bold;
-  color: #6a0dad;
+  color: var(--color-principal);
   padding: 0 8px;
 }
 
@@ -112,7 +112,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  border: 2px dashed #6a0dad;
+  border: 2px dashed var(--color-principal);
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -120,7 +120,7 @@
 
 .drop-zone p {
   font-size: 1rem;
-  color: #6a0dad;
+  color: var(--color-principal);
 }
 
 .drop-zone.dragging {
@@ -156,7 +156,7 @@
 }
 
 .boton--crear {
-  background-color: #6a0dad; /* Morado profundo */
+  background-color: var(--color-principal); /* Morado profundo */
   color: #ffffff;
   border: none;
   border-radius: 6px;
@@ -168,7 +168,7 @@
 }
 
 .boton--crear:hover {
-  background-color: #ff6700; /* Naranja vibrante */
+  background-color: var(--color-secundario); /* Naranja vibrante */
   transform: scale(1.05);
 }
 

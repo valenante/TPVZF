@@ -14,7 +14,7 @@
     font-size: 2.5rem;
     text-align: center;
     color: #ffffff;
-    background-color: #6a0dad; /* Morado profundo */
+    background-color: var(--color-principal); /* Morado profundo */
     padding: 10px;
     border-radius: 10px;
 }
@@ -22,7 +22,7 @@
 /* Botón Finalizados */
 .boton-finalizados--barra {
     padding: 10px 25px;
-    background-color: #6a0dad; /* Morado profundo */
+    background-color: var(--color-principal); /* Morado profundo */
     border: none;
     color: #fff;
     border-radius: 10px;
@@ -42,7 +42,7 @@
 .mensaje-vacio--barra {
     text-align: center;
     font-size: 1.4rem;
-    color: #ff6700; /* Naranja vibrante */
+    color: var(--color-secundario); /* Naranja vibrante */
     font-style: italic;
 }
 
@@ -73,14 +73,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #ff6700;
+    border-bottom: 2px solid var(--color-secundario);
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
 
 .pedido-header--barra h3 {
     font-size: 1.5rem;
-    color: #6a0dad;
+    color: var(--color-principal);
     margin: 0;
 }
 
@@ -92,13 +92,7 @@
 
 .alergias--barra {
     font-size: 1rem;
-    color: #e55b00;
-    font-weight: bold;
-}
-
-.alergias--barra {
-    font-size: 1rem;
-    color: #e55b00;
+    color: var(--color-secundario);
     font-weight: bold;
 }
 
@@ -117,14 +111,14 @@
 }
 
 .producto-item--barra label:hover {
-    color: #ff6700; /* Naranja vibrante */
+    color: var(--color-secundario); /* Naranja vibrante */
 }
 
 /* Botón Terminar Pedido */
 .boton-terminar--barra {
     margin-top: auto; /* Empuja el botón hacia el fondo */
     padding: 10px 25px;
-    background-color: #ff6700; /* Naranja vibrante */
+    background-color: var(--color-secundario); /* Naranja vibrante */
     color: #fff;
     border: none;
     border-radius: 10px;
@@ -135,7 +129,7 @@
 }
 
 .boton-terminar--barra:hover {
-    background-color: #e55b00;
+    background-color: #df5a01;
     transform: scale(1.05);
 }
 
@@ -147,7 +141,7 @@
 .acompanante-badge {
     margin-left: 6px;
     padding: 2px 6px;
-    background-color: #FF6700; /* O el color que estés usando para destacar */
+    background-color: var(--color-secundario); /* O el color que estés usando para destacar */
     color: #fff;
     border-radius: 12px;
     font-size: 0.85rem;

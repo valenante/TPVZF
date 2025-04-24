@@ -11,7 +11,7 @@
 
 .reservas-info h2 {
   font-size: 1.8rem;
-  color: #6A0DAD;
+  color: var(--color-principal);
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -60,7 +60,7 @@
 }
 
 .reservas-info button:nth-child(2) {
-  background-color: #6A0DAD;
+  background-color: var(--color-principal);
   /* cancelar o rechazar */
   color: white;
 }
@@ -104,7 +104,7 @@
 }
 
 .react-calendar__tile--active {
-  background-color: #6a0dad !important;
+  background-color: var(--color-principal) !important;
   color: white !important;
 }
 
@@ -127,7 +127,7 @@
   .reservas-info h2 {
     font-size: 1.8rem;
     margin-top: 2rem;
-    color: #6A0DAD;
+    color: var(--color-principal);
     margin-bottom: 0rem;
     text-align: center;
   }

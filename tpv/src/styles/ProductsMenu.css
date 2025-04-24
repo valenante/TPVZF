@@ -5,7 +5,7 @@
     align-items: center;
     height: 80vh; /* Ocupa toda la altura de la pantalla */
     max-height: 80vh;
-    background-color: #6A0DAD; /* Gris claro */
+    background-color: var(--color-principal); /* Gris claro */
   }
   
   /* Contenedor de los botones */
@@ -19,9 +19,9 @@
   
   /* Botones estilizados */
   .button--productos {
-    background-color: #6A0DAD; /* Morado profundo */
+    background-color: var(--color-principal); /* Morado profundo */
     color: #FFFFFF; /* Texto blanco */
-    border: 2px solid #FF6700;
+    border: 2px solid var(--color-secundario);
     border-radius: 10px; /* Bordes redondeados */
     padding: 15px 30px; /* Tamaño del botón */
     font-size: 1.2rem; /* Tamaño del texto */
@@ -32,7 +32,7 @@
   
   /* Hover y efecto de interacción */
   .button--productos:hover {
-    background-color: #FF6700; /* Naranja vibrante */
+    background-color: var(--color-secundario); /* Naranja vibrante */
     transform: scale(1.1); /* Ampliar ligeramente */
   }
   

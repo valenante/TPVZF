@@ -9,7 +9,7 @@ html, body {
   
 /* Fondo morado para toda la pantalla */
 .preMenu-father {
-    background-color: #6A0DAD; /* Fondo morado */
+    background-color: var(--color-principal); /* Fondo morado */
     height: 100vh; /* Ocupa toda la altura de la ventana */
     display: flex; /* Centra el contenido */
     justify-content: center;
@@ -36,7 +36,7 @@ html, body {
   /* Título */
   .titulo--preMenu {
     font-size: 2rem;
-    color: #6a0dad; /* Morado profundo */
+    color: var(--color-principal); /* Morado profundo */
     text-align: center;
     margin-bottom: 20px;
   }
@@ -54,7 +54,7 @@ html, body {
   .input--preMenu {
     width: 100%;
     padding: 10px;
-    border: 1px solid #6a0dad; /* Morado profundo */
+    border: 1px solid var(--color-principal); /* Morado profundo */
     border-radius: 5px;
     font-size: 1rem;
     color: #333;
@@ -76,7 +76,7 @@ html, body {
   /* Botón */
   .boton--preMenu {
     padding: 10px;
-    background-color: #6a0dad; /* Morado profundo */
+    background-color: var(--color-principal); /* Morado profundo */
     color: #fff;
     border: none;
     border-radius: 5px;

@@ -92,7 +92,7 @@
   }
   
   .boton-confirmar--cuenta {
-    background-color: #ff6700; /* Naranja vibrante */
+    background-color: var(--color-secundario); /* Naranja vibrante */
     color: #ffffff;
   }
   
