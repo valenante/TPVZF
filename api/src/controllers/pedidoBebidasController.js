@@ -305,6 +305,7 @@ export const agregarProductoBebida = async (req, res) => {
                 tipo: productos.tipo,
                 categoria: productos.categoria,
                 precioSeleccionado: productos.precioSeleccionado,
+                acompanante: productos.acompanante,
             });
             pedidoExistente.total += productos.total; // Actualizar el total del pedido
             await pedidoExistente.save();
@@ -320,6 +321,7 @@ export const agregarProductoBebida = async (req, res) => {
                         tipo: productos.tipo,
                         categoria: productos.categoria,
                         precioSeleccionado: productos.precioSeleccionado,
+                        acompanante: productos.acompanante,
                     },
                 ],
                 estado: "pendiente",

@@ -104,7 +104,8 @@ export const crearPedido = async (req, res) => {
 export const agregarProductoAlPedido = async (req, res) => {
     const { mesaId } = req.params;
     const { productos } = req.body;
-    const { precioSeleccionado } = req.body;
+
+    console.log(req.body);
 
     // Validar datos entrantes
     if (!productos || !productos.producto || !productos.cantidad || !productos.total || !productos.precioSeleccionado) {
@@ -133,8 +134,13 @@ export const agregarProductoAlPedido = async (req, res) => {
                 tipo: productos.tipo,
                 categoria: productos.categoria,
                 precioSeleccionado: productos.precioSeleccionado,
+                tipoPrecio: productos.tipoPrecio,
+                tipoPlato: productos.tipoPlato || null,
+                acompanante: productos.acompanante || null,
+                ingredientesEliminados: productos.ingredientes || [],
+                opcionesPersonalizables: productos.opcionesPersonalizables || [],
             });
-            pedidoExistente.total += productos.total; // Actualizar el total del pedido
+            pedidoExistente.total += productos.total;
             await pedidoExistente.save();
         } else {
             // Crear un nuevo pedido con el producto
@@ -145,20 +151,21 @@ export const agregarProductoAlPedido = async (req, res) => {
                         producto: productos.producto,
                         cantidad: productos.cantidad,
                         total: productos.total,
-                        precios: productos.precios,
                         tipo: productos.tipo,
                         categoria: productos.categoria,
                         precioSeleccionado: productos.precioSeleccionado,
+                        tipoPrecio: productos.tipoPrecio,
+                        tipoPlato: productos.tipoPlato || null,
+                        acompanante: productos.acompanante || null,
+                        ingredientesEliminados: productos.ingredientes || [],
+                        opcionesPersonalizables: productos.opcionesPersonalizables || [],
                     },
                 ],
                 estado: "pendiente",
                 total: productos.total,
             });
 
-            // Guardar el nuevo pedido
             const pedidoGuardado = await nuevoPedido.save();
-
-            // Asociar el nuevo pedido a la mesa
             mesa.pedidos.push(pedidoGuardado._id);
         }
 
@@ -343,7 +350,7 @@ export const verificarPedidosMesa = async (req, res) => {
         }
 
         const pedidos = await Pedido.find({ mesa: mesa._id });
-        
+
         if (pedidos.length === 0) {
             // ✅ Si no hay pedidos, devolver false
             return res.status(200).json({ todosListos: false });
