@@ -186,14 +186,77 @@
     max-width: 700px;
   }
   
-  /* FOOTER */
   .footer {
-    background-color: var(--color-principal);;
+    background-color: var(--color-principal);
     color: white;
-    text-align: center;
     padding: 2rem 1rem;
     margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* CENTRA todo el contenido */
+    gap: 2rem;
   }
+  
+  .footer-top {
+    display: flex;
+    justify-content: center; /* CENTRA las columnas */
+    gap: 4rem;
+    flex-wrap: wrap;
+    text-align: center; /* También centramos el texto dentro */
+  }
+  
+  .footer-info,
+  .footer-horario {
+    flex: 1 1 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* CENTRA el contenido interno */
+    gap: 0.5rem;
+  }
+  
+  .footer-title {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  
+  .footer-item {
+    font-size: 1rem;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #ddd;
+  }  
+
+  .map-section {
+    margin: 40px 0;
+    text-align: center;
+  }
+  
+  .map-wrapper {
+    margin-top: 15px;
+    position: relative;
+  }
+  
+  .btn-llegar {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: var(--color-principal); /* Usa tu color morado */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-llegar:hover {
+    background-color: #4d0b8d; /* Versión más oscura del morado */
+  }
+  
   
   @media screen and (max-width: 768px) {
     /* HERO */
@@ -246,5 +309,6 @@
       font-size: 0.9rem;
       padding: 1.5rem 0.5rem;
     }
+    
   }
   

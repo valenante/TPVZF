@@ -58,7 +58,13 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      setError(error.message || "Ocurrió un problema al iniciar sesión.");
+    
+      // Mostrar solo errores definidos por el servidor, o genérico si es técnico
+      if (error.message && !error.message.includes("The string did not match")) {
+        setError(error.message);
+      } else {
+        setError("No se pudo iniciar sesión. Por favor, verifica tus datos o intenta más tarde.");
+      }    
     } finally {
       setIsLoading(false);
     }

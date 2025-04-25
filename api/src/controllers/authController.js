@@ -200,8 +200,8 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('[ERROR] Problema en el inicio de sesión:', error);
-    return res.status(500).json({ error: 'Error interno del servidor.' });
+    console.error('[ERROR] Fallo en el inicio de sesión:', error.message || error);
+    return res.status(500).json({ error: 'No se pudo completar el inicio de sesión. Intenta más tarde.' });
   }
 };
 

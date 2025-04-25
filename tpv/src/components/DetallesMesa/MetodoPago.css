@@ -83,16 +83,16 @@
   }
   
   .boton-cancelar--cuenta {
-    background-color: #cccccc; /* Gris */
-    color: #333333;
+    background-color: var(--color-secundario); /* Gris */
+    color: white;
   }
   
   .boton-cancelar--cuenta:hover {
-    background-color: #999999;
+    background-color: var(--color-principal);
   }
   
   .boton-confirmar--cuenta {
-    background-color: var(--color-secundario); /* Naranja vibrante */
+    background-color: var(--color-principal); 
     color: #ffffff;
   }
   

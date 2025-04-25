@@ -40,6 +40,15 @@ app.use(cors(corsOptions));
 // Configurar sesión
 app.use(session(sessionConfig));
 
+app.use((req, res, next) => {
+  if (!req.session.views) {
+    req.session.views = 1;
+  } else {
+    req.session.views++;
+  }
+  next();
+});
+
 // Middleware de compresión HTTP
 app.use(compression());
 

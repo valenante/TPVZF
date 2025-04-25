@@ -2,6 +2,7 @@
 import { Server } from "socket.io";
 import { config } from "dotenv";
 import { connect } from "mongoose";
+import MongoStore from "connect-mongo";
 
 // Cargar variables de entorno
 config();
@@ -34,15 +35,20 @@ export const corsOptions = {
 
 // Configuración de la sesión
 export const sessionConfig = {
-  secret: process.env.SESSION_SECRET, // Clave secreta para firmar la cookie
-  resave: false, // No guarda la sesión si no hay cambios
-  saveUninitialized: false, // No crea sesiones vacías
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
   cookie: {
-    httpOnly: true, // Solo accesible desde el servidor
-    secure: process.env.NODE_ENV === "production", // Solo HTTPS en producción
-    sameSite: "Strict", // Protege contra ataques CSRF
-    maxAge: 15 * 60 * 1000, // 15 minutos de duración
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+    maxAge: 15 * 60 * 1000, // 15 minutos
   },
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI, // tu conexión a Mongo Atlas o local
+    collectionName: "sessions",
+    ttl: 15 * 60, // duración de la sesión en segundos (15 min)
+  }),
 };
 
 // Configuración de Socket.IO
