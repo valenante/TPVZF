@@ -644,3 +644,10 @@
 [2025-04-25 00:33:38] WARN: [LOGIN BLOQUEADO] Usuario: Valen intentó iniciar sesión antes del tiempo permitido.
 [2025-04-25 11:58:36] INFO: Servidor escuchando en el puerto 3000
 [2025-04-25 12:01:04] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.142, Hora: 2025-04-25T10:01:04.501Z
+[2025-04-25 12:21:14] INFO: Servidor escuchando en el puerto 3000
+[2025-04-25 12:23:28] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.142, Hora: 2025-04-25T10:23:28.756Z
+[2025-04-25 12:30:00] INFO: Servidor escuchando en el puerto 3000
+[2025-04-26 15:01:01] INFO: Servidor escuchando en el puerto 3000
+[2025-04-26 15:02:34] INFO: Servidor escuchando en el puerto 3000
+[2025-04-26 15:04:52] INFO: Servidor escuchando en el puerto 3000
+[2025-04-26 15:07:04] INFO: Servidor escuchando en el puerto 3000

@@ -6,6 +6,7 @@ import { createServer } from "http";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import cors from "cors";
+import helmet from "helmet";
 import { corsOptions, sessionConfig, configureSocketIO, connectToDatabase, PORT } from "./config/config.js"; // ✅ Importamos la configuración
 import mesaRoutes from "./src/routes/mesaRoutes.js";
 import productoRoutes from "./src/routes/productosRoutes.js";
@@ -56,8 +57,11 @@ app.use(compression());
 app.use(cookieParser());
 
 // Middleware para parsear JSON y formularios
-app.use(express.json());
+app.use(express.json({ limit: '10kb' })); 
 app.use(express.urlencoded({ extended: true }));
+
+// Middleware de seguridad
+app.use(helmet());
 
 // Configurar Socket.IO
 const io = configureSocketIO(server);

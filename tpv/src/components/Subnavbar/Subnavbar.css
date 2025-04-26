@@ -71,6 +71,21 @@
   background-color: var(--color-principal);
 }
 
+.btn-cerrar-caja--subnavbar.disabled {
+  background-color: gray;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-cerrar-caja--subnavbar.disabled:hover {
+  background-color: gray;
+  color: white;
+  transform: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+
 /* Responsive: SubNavbar en pantallas pequeñas */
 @media (max-width: 768px) {
   .subnavbar-menu--subnavbar {

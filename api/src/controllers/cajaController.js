@@ -13,6 +13,22 @@ import path from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+export const obtenerCajaAbierta = async (req, res) => {
+    try {
+        // Buscar la caja que esté actualmente abierta
+        const caja = await Caja.findOne({ estado: "abierta" });
+
+        if (caja) {
+            return res.status(200).json({ abierta: true, cajaId: caja._id });
+        } else {
+            return res.status(200).json({ abierta: false });
+        }
+    } catch (error) {
+        console.error("[ERROR] Al verificar caja abierta:", error);
+        return res.status(500).json({ error: "Error al verificar el estado de la caja." });
+    }
+};
+
 export const obtenerCaja = async (req, res) => {
     try {
         // Obtener parámetros opcionales de fecha
@@ -110,7 +126,7 @@ export const retirarDinero = async (req, res) => {
         }
 
         ("Caja encontrada:", caja);
-            
+
         const montoNumerico = parseFloat(monto);
         if (isNaN(montoNumerico) || montoNumerico <= 0) {
             return res.status(400).json({ error: "El monto debe ser un número mayor a 0." });
@@ -127,7 +143,7 @@ export const retirarDinero = async (req, res) => {
         if (caja.detallesMetodoPago.efectivo < montoNumerico) {
             return res.status(400).json({ error: "No hay suficiente efectivo en la caja para retirar este monto." });
         }
-                // Actualizar el efectivo y el total en la caja
+        // Actualizar el efectivo y el total en la caja
         caja.detallesMetodoPago.efectivo -= montoNumerico;
         caja.total -= montoNumerico;
 

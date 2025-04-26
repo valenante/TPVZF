@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../utils/api";
 import PasswordModal from "../Password/PasswordModal";
 import CerrarCajaModal from "../Caja/CerrarCajaModal";
 import RecuperarMesaModal from "../MesasCerradas/ModalMesasCerradas";
@@ -13,6 +14,9 @@ const SubNavbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [mostrarRecuperarModal, setMostrarRecuperarModal] = useState(false);
   const [menuAbierto, setMenuAbierto] = useState(false); // Estado para el menú hamburguesa
+  const [cajaAbierta, setCajaAbierta] = useState(false); // Estado para verificar si la caja está abierta
+
+  console.log("Estado de la caja:", cajaAbierta);
 
   const abrirRecuperarModal = () => setMostrarRecuperarModal(true);
   const cerrarRecuperarModal = () => setMostrarRecuperarModal(false);
@@ -20,6 +24,20 @@ const SubNavbar = () => {
   const toggleMenu = () => {
     setMenuAbierto((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    const verificarCaja = async () => {
+      try {
+        const { data } = await api.get("/caja/abierta");
+        setCajaAbierta(data.abierta); // data.abierta true/false
+      } catch (error) {
+        console.error("Error al verificar caja abierta:", error);
+        setCajaAbierta(false);
+      }
+    };
+
+    verificarCaja();
+  }, []);
 
   return (
     <div className="subnavbar--subnavbar">
@@ -76,12 +94,16 @@ const SubNavbar = () => {
         >
           Caja Diaria
         </button>
+
+        {/* Botón de Cerrar Caja */}
         <button
           onClick={() => setShowModal(true)}
-          className="subnavbar-button--subnavbar btn-cerrar-caja--subnavbar"
+          className={`subnavbar-button--subnavbar btn-cerrar-caja--subnavbar ${!cajaAbierta ? "disabled" : ""}`}
+          disabled={!cajaAbierta}
         >
           Cerrar Caja
         </button>
+
         <button onClick={logout} className="subnavbar-button--subnavbar">
           Cerrar Sesión
         </button>

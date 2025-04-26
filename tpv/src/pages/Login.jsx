@@ -5,10 +5,9 @@ import "../styles/Login.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ name: "", password: "" });
-  const { setUser } = useAuth();
+  const { setUser, setAccessToken } = useAuth();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { setAccessToken } = useAuth();
   const navigate = useNavigate();
 
   // Manejar cambios en los campos del formulario
@@ -21,7 +20,7 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-  
+
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
         method: "POST",
@@ -31,18 +30,18 @@ const Login = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Ocurrió un error desconocido");
       }
-  
+
       const data = await response.json();
       const { accessToken, user } = data;
-  
+
       setAccessToken(accessToken);
       setUser(user);
-  
+
       switch (user.role) {
         case "admin":
           navigate("/");
@@ -58,17 +57,18 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-    
-      // Mostrar solo errores definidos por el servidor, o genérico si es técnico
-      if (error.message && !error.message.includes("The string did not match")) {
+
+      if (error.name === 'TypeError') {
+        setError("No se pudo conectar al servidor. Intenta más tarde.");
+      } else if (error.message && !error.message.includes("The string did not match")) {
         setError(error.message);
       } else {
         setError("No se pudo iniciar sesión. Por favor, verifica tus datos o intenta más tarde.");
-      }    
+      }
     } finally {
       setIsLoading(false);
     }
-  };  
+  };
 
   return (
     <div className="login--login">
@@ -80,6 +80,7 @@ const Login = () => {
           value={formData.name}
           onChange={handleChange}
           required
+          autoFocus
           className="input--login"
           placeholder="Nombre de usuario"
         />
