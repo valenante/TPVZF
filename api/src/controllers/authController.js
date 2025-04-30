@@ -182,13 +182,12 @@ export const login = async (req, res) => {
     const accessToken = generarAccessToken(user);
     const refreshToken = generarRefreshToken(user);
 
-    // Establecer el refresh token como cookie
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días en milisegundos
-    });
+      secure: process.env.NODE_ENV === 'production', // Solo funciona con HTTPS
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // ✅ permite cookies cross-site si es necesario
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });    
 
     return res.status(200).json({
       message: 'Inicio de sesión exitoso',
