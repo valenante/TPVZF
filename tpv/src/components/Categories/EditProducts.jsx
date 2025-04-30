@@ -9,8 +9,6 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
   const [formData, setFormData] = useState({ ...product });
   const [errors, setErrors] = useState({});
 
-  console.log("FormData:", formData);
-
   const validateField = (name, value) => {
     let error = "";
     switch (name) {

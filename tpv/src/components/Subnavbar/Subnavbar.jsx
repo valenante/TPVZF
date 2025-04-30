@@ -16,8 +16,6 @@ const SubNavbar = () => {
   const [menuAbierto, setMenuAbierto] = useState(false); // Estado para el menú hamburguesa
   const [cajaAbierta, setCajaAbierta] = useState(false); // Estado para verificar si la caja está abierta
 
-  console.log("Estado de la caja:", cajaAbierta);
-
   const abrirRecuperarModal = () => setMostrarRecuperarModal(true);
   const cerrarRecuperarModal = () => setMostrarRecuperarModal(false);
 
