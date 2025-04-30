@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { io } from "socket.io-client"; // Importar cliente de Socket.IO
 import api from "../utils/api";
 import MetodoPago from "../components/DetallesMesa/MetodoPago";
 import RightBar from "../components/RightBar/RightBar";
@@ -162,9 +161,7 @@ const DetalleMesa = () => {
     if (!confirmacion) return;
 
     try {
-      const response = await api.post(`/productos/${pedidoId}/${productoId}`, {
-        withCredentials: true,
-      });
+      const response = await api.post(`/productos/${pedidoId}/${productoId}`);
 
       setMesa((prevMesa) => ({
         ...prevMesa,

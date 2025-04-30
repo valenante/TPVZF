@@ -41,7 +41,7 @@ export const sessionConfig = {
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict",
+    sameSite: "None",
     maxAge: 15 * 60 * 1000, // 15 minutos
   },
   store: MongoStore.create({
