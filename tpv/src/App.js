@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import DetalleMesa from "./pages/DetallesMesa";
 import DetallePedido from "./components/DetallesPedido";
@@ -34,7 +34,7 @@ const AppContent = () => {
       <CuentaPopup />
       {mostrarNavbar && <Navbar />}
       <Routes>
-        {/* Rutas públicas */}
+      {/* Rutas públicas */}
         <Route
           path="/"
           element={
@@ -127,14 +127,14 @@ const AppContent = () => {
           }
         />
         <Route path="/reservas" element={<ReservasPage />} />
-      </Routes>
-    </>
+        </Routes>
+      </>
   );
 };
 
 const App = () => {
   return (
-    <Router>
+    <BrowserRouter basename="/tpv">
       <AuthProvider>
         <ImagesProvider>
           <SocketProvider>
@@ -146,7 +146,7 @@ const App = () => {
           </SocketProvider>
         </ImagesProvider>
       </AuthProvider>
-    </Router>
+    </BrowserRouter>
   );
 };
 
