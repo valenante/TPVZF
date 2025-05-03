@@ -26,7 +26,10 @@ export const corsOptions = {
     "http://192.168.1.142:3002",
     "http://192.168.18.26:3001",
     "http://192.168.18.26:3000",
-    "http://192.168.18.26:3002"
+    "http://192.168.18.26:3002",
+    "http://192.168.1.150:3000",
+    "http://192.168.1.150:3001",
+    "http://192.168.1.150:3002"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Cart-ID"],
@@ -40,7 +43,7 @@ export const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     sameSite: "None",
     maxAge: 15 * 60 * 1000, // 15 minutos
   },

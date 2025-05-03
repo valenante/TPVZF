@@ -653,3 +653,69 @@
 [2025-04-26 15:07:04] INFO: Servidor escuchando en el puerto 3000
 [2025-04-30 14:11:55] INFO: Servidor escuchando en el puerto 3000
 [2025-04-30 14:13:42] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.142, Hora: 2025-04-30T12:13:42.287Z
+[2025-05-03 16:05:19] INFO: Servidor escuchando en el puerto 3000
+[2025-05-03 16:08:34] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:08:34] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:08:34] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:08:34] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:08:34] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:08:34] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:08:34] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:08:34] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:09:17] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:09:17] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:09:17] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:09:17] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:09:17] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:09:17] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:09:17] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:09:17] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:09:26] INFO: Servidor escuchando en el puerto 3000
+[2025-05-03 16:09:28] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:09:28] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:09:28] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:09:28] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:09:28] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:09:28] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:09:28] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:09:28] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:09:30] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:09:30] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:09:30] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:09:30] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:09:30] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:09:30] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:09:30] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:09:30] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:10:07] INFO: Servidor escuchando en el puerto 3000
+[2025-05-03 16:10:09] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:10:09] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:10:09] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:10:09] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:10:09] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:10:09] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:10:09] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:10:09] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:10:10] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:10:10] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:10:10] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:10:10] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:10:10] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:10:10] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:10:10] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:10:10] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:12:39] INFO: Servidor escuchando en el puerto 3000
+[2025-05-03 16:12:41] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:12:41] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:12:41] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:12:41] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:12:41] ERROR: [GET] /api/mesas - secret option required for sessions
+[2025-05-03 16:12:41] ERROR: [GET] /api/cart?numeroMesa=null - secret option required for sessions
+[2025-05-03 16:12:41] ERROR: [GET] /api/productos - secret option required for sessions
+[2025-05-03 16:12:41] ERROR: [GET] /api/valoraciones/valoraciones/mas-valorados - secret option required for sessions
+[2025-05-03 16:15:13] INFO: Servidor escuchando en el puerto 3000
+[2025-05-03 16:54:44] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-03T14:54:44.220Z
+[2025-05-03 16:58:28] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-03T14:58:28.445Z
+[2025-05-03 17:01:33] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-03T15:01:33.159Z
+[2025-05-03 17:01:51] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-03T15:01:51.960Z
+[2025-05-03 17:01:55] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-03T15:01:55.534Z
