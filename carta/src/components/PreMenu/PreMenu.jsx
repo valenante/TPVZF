@@ -201,7 +201,7 @@ const PreMenu = () => {
             value={formData.alergias}
             onChange={handleChange}
             className="input--preMenu"
-            placeholder={i18n._("Alergias (si tienes)")}
+            placeholder={i18n._("Alergias")}
             rows={2}
           />
           {errors.alergias && (
