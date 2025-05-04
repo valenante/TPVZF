@@ -16,7 +16,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/components/PreMenu/PreMenu.jsx:218
 msgid "Número de comensales"
-msgstr "Número de comensales"
+msgstr "Number of guests"
 
 #. js-lingui-explicit-id
 #: src/pages/Valoraciones.js:103
