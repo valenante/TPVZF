@@ -29,10 +29,11 @@ export const ProductosProvider = ({ children }) => {
   }, [numeroMesa]);
 
   useEffect(() => {
-    // Escuchar el evento "carritoActualizado" para actualizar el carrito
-    socket.on('carritoActualizado', ({ cartId, totalItems }) => {
-      localStorage.setItem('carritoMongoId', cartId);
-      cargarCarrito(cartId);
+    socket.on('carritoActualizado', ({ cartId, totalItems, numeroMesa: mesaEvento }) => {
+      if (mesaEvento === numeroMesa) {
+        localStorage.setItem(`carritoMongoId-${numeroMesa}`, cartId);
+        cargarCarrito(); // recarga el carrito SOLO si es la misma mesa
+      }
     });
 
     // Escuchar el evento "nuevoPedido" para actualizar el carrito

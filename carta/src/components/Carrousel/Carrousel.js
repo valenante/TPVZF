@@ -19,7 +19,7 @@ const HomeCarousel = () => {
     },
     {
       src: cocktailImg,
-      text: "El cóctel perfecto para cada ocasión",
+      text: "El cóctel perfecto para la ocasión",
     },
   ];
 
@@ -40,7 +40,7 @@ const HomeCarousel = () => {
           <div className="slide-container">
             <img src={slide.src} alt={`Slide ${index + 1}`} className="carousel-img" />
             <div className="slide-overlay">
-              <h2>{slide.text}</h2>
+              <h2 className="title-text">{slide.text}</h2>
               <div className="carousel-buttons">
                 <button className="reserva-btn" onClick={handleReservaClick}>¡RESERVA MESA!</button>
                 <button className="carta-btn" onClick={handleCartaClick}>VER CARTA</button>

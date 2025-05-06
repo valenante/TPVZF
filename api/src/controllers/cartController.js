@@ -118,11 +118,11 @@ export const agregarAlCarrito = async (req, res) => {
     // 🔹 Guardar el carrito actualizado
     await cart.save();
 
-    // 🔹 Emitir evento de actualización del carrito para actualizar la UI en tiempo real
-    req.io.emit("carritoActualizado", {
+    req.io.emit('carritoActualizado', {
       cartId: cart._id,
-      totalItems: cart.items.reduce((total, item) => total + item.cantidad, 0),
-    });
+      totalItems: cart.items.length,
+      numeroMesa: cart.mesa, // 👈 Asegúrate de que esté aquí
+    });    
 
     res.status(200).json(cart);
   } catch (error) {

@@ -1,132 +1,130 @@
 .home-container {
-    font-family: Arial, sans-serif;
-  }
-  
-  /* HERO */
-  .hero {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .carousel {
-    width: 100%;
-    height: 90vh;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .carousel-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-  }
+  font-family: Arial, sans-serif;
+}
 
-  
-  .overlay-text {
-    position: absolute;
-    top: 20%;
-    left: 10%;
-    color: white;
-    z-index: 2;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-  }
-  
-  .overlay-text h1 {
-    font-size: 3rem;
-    margin: 0;
-  }
-  
-  .overlay-text p {
-    font-size: 1.5rem;
-    margin: 0.5rem 0;
-  }
-  
-  .reserva-btn {
-    margin-top: 1rem;
-    padding: 0.7rem 1.5rem;
-    font-size: 1rem;
-    background-color: rgb(84, 20, 108);
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .reserva-btn:hover {
-    background-color: var(--color-secundario);;
-  }
-  
-  .features {
-    padding: 3rem 1rem;
-    text-align: center;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+/* HERO */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
 
-  }
-  
-  .features-title h2 {
-    font-size: 3rem;
-    font-family: 'Courier New', Courier, monospace;
-    margin-bottom: 3rem;
-    color: var(--color-principal);
-  }
-  
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 2 columnas ahora */
-    gap: 2rem;
-    justify-items: center;
-  }
+.carousel {
+  width: 100%;
+  height: fit-content;
+  overflow: hidden;
+  position: relative;
+}
 
-  .feature-image-wrapper:hover {
-    /* Zoom on hover */
-    transform: scale(1.05);
-    transition: 300ms all;
-  }
+.carousel-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
 
-  .feature {
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .feature-image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .feature img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-    display: block;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+.overlay-text {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  color: white;
+  z-index: 2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  min-height: 250px;
+}
 
-  }
-  
-  .feature-text {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-    font-weight: bold;
-    padding: 1rem;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    font-size: 1.2rem;
-    text-align: center;
-  }
-  
-  .feature.empty {
-    visibility: hidden;
-  }  
-  
-  .platos {
+.overlay-text h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.overlay-text p {
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.reserva-btn {
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  background-color: rgb(84, 20, 108);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.reserva-btn:hover {
+  background-color: var(--color-secundario);
+}
+
+.features {
+  padding: 3rem 1rem;
+  text-align: center;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.features-title h2 {
+  font-size: 3rem;
+  font-family: "Courier New", Courier, monospace;
+  margin-bottom: 3rem;
+  color: var(--color-principal);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 2 columnas ahora */
+  gap: 2rem;
+  justify-items: center;
+}
+
+.feature-image-wrapper:hover {
+  /* Zoom on hover */
+  transform: scale(1.05);
+  transition: 300ms all;
+}
+
+.feature {
+  width: 100%;
+  max-width: 400px;
+}
+
+.feature-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.feature img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feature-text {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  font-weight: bold;
+  padding: 1rem;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.feature.empty {
+  visibility: hidden;
+}
+
+.platos {
   padding: 3rem 1rem;
   text-align: center;
 }
@@ -145,7 +143,7 @@
   justify-content: center;
   align-self: center;
   font-family: Arial, Helvetica, sans-serif;
-  color:white;
+  color: white;
   border-radius: 5%;
 }
 
@@ -158,157 +156,157 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.plato-image-wrapper{
+.plato-image-wrapper {
   text-align: center;
   border-radius: 5%;
-  color: var(--color-principal);;
+  color: var(--color-principal);
   font-weight: bold;
 }
 
-.plato-text h3{
+.plato-text h3 {
   font-size: 4vh;
   margin-top: 1vh;
   font-weight: bold;
   text-align: center;
   border-radius: 5%;
 }
-  
-  /* RESEÑAS */
-  .reseñas {
-    background-color: #f5f5f5;
-    padding: 3rem 1rem;
-    text-align: center;
-  }
-  
-  .reseñas p {
-    font-style: italic;
-    margin: 1rem auto;
-    max-width: 700px;
-  }
-  
-  .footer {
-    background-color: var(--color-principal);
-    color: white;
-    padding: 2rem 1rem;
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* CENTRA todo el contenido */
-    gap: 2rem;
-  }
-  
-  .footer-top {
-    display: flex;
-    justify-content: center; /* CENTRA las columnas */
-    gap: 4rem;
-    flex-wrap: wrap;
-    text-align: center; /* También centramos el texto dentro */
-  }
-  
-  .footer-info,
-  .footer-horario {
-    flex: 1 1 250px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* CENTRA el contenido interno */
-    gap: 0.5rem;
-  }
-  
-  .footer-title {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-  }
-  
-  .footer-item {
-    font-size: 1rem;
-  }
-  
-  .footer-bottom {
-    text-align: center;
-    font-size: 0.9rem;
-    color: #ddd;
+
+/* RESEÑAS */
+.reseñas {
+  background-color: #f5f5f5;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.reseñas p {
+  font-style: italic;
+  margin: 1rem auto;
+  max-width: 700px;
+}
+
+.footer {
+  background-color: var(--color-principal);
+  color: white;
+  padding: 2rem 1rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* CENTRA todo el contenido */
+  gap: 2rem;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: center; /* CENTRA las columnas */
+  gap: 4rem;
+  flex-wrap: wrap;
+  text-align: center; /* También centramos el texto dentro */
+}
+
+.footer-info,
+.footer-horario {
+  flex: 1 1 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* CENTRA el contenido interno */
+  gap: 0.5rem;
+}
+
+.footer-title {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.footer-item {
+  font-size: 1rem;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+.map-section {
+  margin: 40px 0;
+  text-align: center;
+}
+
+.map-wrapper {
+  margin-top: 15px;
+  position: relative;
+}
+
+.btn-llegar {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: var(--color-principal); /* Usa tu color morado */
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-llegar:hover {
+  background-color: #4d0b8d; /* Versión más oscura del morado */
+}
+
+
+@media screen and (max-width: 768px) {
+  .carousel {
+    width: 100%;
+    height: fit-content;
+    overflow: hidden;
+    position: relative;
   }  
 
-  .map-section {
-    margin: 40px 0;
-    text-align: center;
+  /* FEATURES */
+  .features-title h2 {
+    font-size: 2rem;
   }
-  
-  .map-wrapper {
-    margin-top: 15px;
-    position: relative;
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
-  
-  .btn-llegar {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: var(--color-principal); /* Usa tu color morado */
-    color: #fff;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+
+  .feature {
+    max-width: 90%;
   }
-  
-  .btn-llegar:hover {
-    background-color: #4d0b8d; /* Versión más oscura del morado */
+
+  .feature-text {
+    font-size: 1rem;
+    padding: 0.8rem;
   }
-  
-  
-  @media screen and (max-width: 768px) {
-    /* HERO */
-    .carousel {
-      height: 40vh;
-    }
-  
-    /* FEATURES */
-    .features-title h2 {
-      font-size: 2rem;
-    }
-  
-    .features-grid {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-  
-    .feature {
-      max-width: 90%;
-    }
-  
-    .feature-text {
-      font-size: 1rem;
-      padding: 0.8rem;
-    }
-  
-    /* PLATOS */
-    .platos-grid {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-  
-    .plato img {
-      width: 80vw;
-      height: auto;
-    }
-  
-    .plato-text h3 {
-      font-size: 1.2rem;
-    }
-  
-    /* RESEÑAS */
-    .reseñas p {
-      font-size: 0.95rem;
-      padding: 0 1rem;
-    }
-  
-    /* FOOTER */
-    .footer {
-      font-size: 0.9rem;
-      padding: 1.5rem 0.5rem;
-    }
-    
+
+  /* PLATOS */
+  .platos-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
-  
+
+  .plato img {
+    width: 80vw;
+    height: auto;
+  }
+
+  .plato-text h3 {
+    font-size: 1.2rem;
+  }
+
+  /* RESEÑAS */
+  .reseñas p {
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
+
+  /* FOOTER */
+  .footer {
+    font-size: 0.9rem;
+    padding: 1.5rem 0.5rem;
+  }
+}

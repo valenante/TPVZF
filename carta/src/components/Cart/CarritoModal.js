@@ -1,12 +1,13 @@
-import React, { useContext, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { ProductosContext } from '../../context/ProductosContext';
+import React, { useContext, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { ProductosContext } from "../../context/ProductosContext";
 import { useComensal } from "../../context/ComensalesContext"; // 👈 Importar el hook
-import api from '../../utils/api';
-import '../../styles/CarritoModal.css';
+import api from "../../utils/api";
+import "../../styles/CarritoModal.css";
 
 const CarritoModal = ({ cerrarModal }) => {
-  const { carrito, cargarCarrito, mesaId, obtenerMesaId } = useContext(ProductosContext);
+  const { carrito, cargarCarrito, mesaId, obtenerMesaId } =
+  useContext(ProductosContext);
   const [searchParams] = useSearchParams();
   const numeroMesa = searchParams.get("mesa");
   const { comensal } = useComensal();
@@ -17,11 +18,12 @@ const CarritoModal = ({ cerrarModal }) => {
     obtenerMesaId(numeroMesa);
   }, [obtenerMesaId, numeroMesa]);
 
-
   const esLider = async () => {
     try {
       const tokenLocal = localStorage.getItem("tokenLider");
-      const response = await api.get(`/mesas/token-lider/token-lider/check/${mesaId}`);
+      const response = await api.get(
+        `/mesas/token-lider/token-lider/check/${mesaId}`
+      );
       const tokenLider = response.data.tokenLider;
       return tokenLocal === tokenLider; // Retorna true si es líder
     } catch (error) {
@@ -66,7 +68,7 @@ const CarritoModal = ({ cerrarModal }) => {
     }
 
     try {
-      const carritoId = localStorage.getItem("carritoMongoId");
+      const carritoId = localStorage.getItem(`carritoMongoId-${numeroMesa}`);
 
       // Separar productos en platos y bebidas
       const productosPlatos = [];
@@ -82,7 +84,9 @@ const CarritoModal = ({ cerrarModal }) => {
           cantidad: item.cantidad,
           precioSeleccionado: item.precioSeleccionado,
           tipoPrecio: item.tipoPrecio,
-          total: (item.precioSeleccionado || item.productId.precios.precioBase) * item.cantidad,
+          total:
+            (item.precioSeleccionado || item.productId.precios.precioBase) *
+            item.cantidad,
           precios: item.productId.precios,
           nombreComensal: item.nombre,
           alergiasComensal: item.alergias,
@@ -117,14 +121,21 @@ const CarritoModal = ({ cerrarModal }) => {
           mesa: mesaId,
           cartId: carritoId,
           productos: productosBebidas,
-          total: productosBebidas.reduce((total, item) => total + item.total, 0),
+          total: productosBebidas.reduce(
+            (total, item) => total + item.total,
+            0
+          ),
           comensales,
         };
         await api.post("/pedidosBebidas", pedidoBebidas);
       }
 
       //Eliminar el carrito
-      await api.delete(`/cart/${numeroMesa}`);
+      await api.delete(`/cart/${carritoId}`, {
+        headers: { "X-Cart-ID": carritoId },
+      });
+      
+      localStorage.removeItem(`carritoMongoId-${numeroMesa}`);
 
       cargarCarrito();
       cerrarModal();
@@ -134,10 +145,13 @@ const CarritoModal = ({ cerrarModal }) => {
   };
 
   const calcularTotal = () => {
-    return carrito.items?.reduce((total, item) => {
-      const precio = item.precioSeleccionado || item.productId.precios.precioBase; // Usar precio seleccionado o precio base
-      return total + precio * item.cantidad;
-    }, 0).toFixed(2);
+    return carrito.items
+      ?.reduce((total, item) => {
+        const precio =
+          item.precioSeleccionado || item.productId.precios.precioBase; // Usar precio seleccionado o precio base
+        return total + precio * item.cantidad;
+      }, 0)
+      .toFixed(2);
   };
 
   const renderizarItems = () => {
@@ -149,7 +163,7 @@ const CarritoModal = ({ cerrarModal }) => {
 
       // Verifica si ya existe una entrada con la misma combinación de opciones e ingredientes eliminados
       const key = `${item.productId._id}-${opciones}-${ingredientesEliminados}`;
-      const itemExistente = itemsAgrupados.find(i => i.key === key);
+      const itemExistente = itemsAgrupados.find((i) => i.key === key);
 
       if (itemExistente) {
         itemExistente.cantidad += item.cantidad; // Sumar cantidades si ya existe la combinación
@@ -163,23 +177,35 @@ const CarritoModal = ({ cerrarModal }) => {
 
     return itemsAgrupados.map(({ key, item }) => (
       <li key={key} className="modal-item-carritoModal">
-        {item.nombre?.length > 0 && <h3 className="item-name-carritoModal">{item.nombre}</h3>}
+        {item.nombre?.length > 0 && (
+          <h3 className="item-name-carritoModal">{item.nombre}</h3>
+        )}
         <h3 className="item-title-carritoModal">{item.productId.nombre}</h3>
         {item.ingredientes?.length > 0 && (
-          <p className="item-details-carritoModal">Sin {item.ingredientes.join(", ")}</p>
+          <p className="item-details-carritoModal">
+            Sin {item.ingredientes.join(", ")}
+          </p>
         )}
         {item.opciones && Object.entries(item.opciones).length > 0 && (
           <p className="item-details-carritoModal">
             {" "}
-            {Object.entries(item.opciones || {}).map(([k, v]) => `${k}: ${v}`).join(", ")}
+            {Object.entries(item.opciones || {})
+              .map(([k, v]) => `${k}: ${v}`)
+              .join(", ")}
           </p>
         )}
         <p className="item-details-carritoModal">
           Precio:{" "}
-          {(item.precioSeleccionado || item.productId.precios.precioBase).toFixed(2)} €
+          {(
+            item.precioSeleccionado || item.productId.precios.precioBase
+          ).toFixed(2)}{" "}
+          €
         </p>
         <p className="item-details-carritoModal">Cantidad: {item.cantidad}</p>
-        <button className="btn-delete-carritoModal" onClick={() => eliminarProducto(item._id)}>
+        <button
+          className="btn-delete-carritoModal"
+          onClick={() => eliminarProducto(item._id)}
+        >
           Eliminar
         </button>
       </li>
@@ -197,9 +223,7 @@ const CarritoModal = ({ cerrarModal }) => {
         <button className="modal-close-carritoModal" onClick={cerrarModal}>
           ✖
         </button>
-        <ul className="modal-items-carritoModal">
-          {renderizarItems()}
-        </ul>
+        <ul className="modal-items-carritoModal">{renderizarItems()}</ul>
         <h3 className="total-carritoModal">Total: {calcularTotal()} €</h3>
         <button onClick={enviarPedido} className="btn-submit-carritoModal">
           Enviar Pedido
