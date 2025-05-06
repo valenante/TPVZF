@@ -1,54 +1,38 @@
-import Reserva from "../models/Reserva.js";
-import Mesa from "../models/Mesa.js";
-import ConfiguracionReserva from "../models/ConfiguracionReserva.js";
-import nodemailer from "nodemailer";
-
-// configurar el transporter (puedes usar Gmail, Mailtrap, etc.)
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+import Reserva from '../models/Reserva.js';
+import Mesa from '../models/Mesa.js';
+import ConfiguracionReserva from '../models/ConfiguracionReserva.js';
+import { enviarEmail } from '../../utils/enviarEmail.js';
 
 const enviarConfirmacionEmail = async (reserva) => {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: reserva.email,
-    subject: "¡Tu reserva ha sido confirmada!",
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-        <div style="text-align: center; margin-bottom: 20px;">
-          <img src="cid:logo" alt="Zabor Féten" style="max-width: 150px;" />
-        </div>
-        <h2 style="color: #6A0DAD;">¡Reserva confirmada!</h2>
-        <p>Hola <strong>${reserva.nombre || "cliente"}</strong>,</p>
-        <p>Tu reserva para el <strong>${new Date(reserva.hora).toLocaleString("es-ES", {
-          hour: "2-digit",
-          minute: "2-digit",
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour12: false
-        })}</strong> ha sido <strong>confirmada</strong> exitosamente.</p>
-        <p style="margin-top: 20px;">Te esperamos en <strong>Zabor Féten</strong> 🥂</p>
-        <p style="font-size: 0.9em; color: #555; margin-top: 40px;">
-          Si necesitas modificar o cancelar tu reserva, contáctanos directamente.
-        </p>
-        <p style="margin-top: 10px;"><em>El equipo de <strong>Zabor Féten</strong></em></p>
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="cid:logoZf.jpg" alt="Zabor Féten" style="max-width: 150px;" />
       </div>
-    `,
-    attachments: [
-      {
-        filename: "logoZf.jpg",
-        path: "public/images/logoZf.jpg", // Asegúrate de que este path sea accesible
-        cid: "logo",
-      },
-    ],
-  };
+      <h2 style="color: #6A0DAD;">¡Reserva confirmada!</h2>
+      <p>Hola <strong>${reserva.nombre || 'cliente'}</strong>,</p>
+      <p>Tu reserva para el <strong>${new Date(reserva.hora).toLocaleString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour12: false
+      })}</strong> ha sido <strong>confirmada</strong> exitosamente.</p>
+      <p style="margin-top: 20px;">Te esperamos en <strong>Zabor Féten</strong> 🥂</p>
+      <p style="font-size: 0.9em; color: #555; margin-top: 40px;">
+        Si necesitas modificar o cancelar tu reserva, contáctanos directamente.
+      </p>
+      <p style="margin-top: 10px;"><em>El equipo de <strong>Zabor Féten</strong></em></p>
+    </div>
+  `;
 
-  await transporter.sendMail(mailOptions);
+  await enviarEmail({
+    to: reserva.email,
+    subject: '¡Tu reserva ha sido confirmada!',
+    html,
+    attachments: ['public/images/logoZf.jpg'],
+  });
 };
 
 
@@ -56,7 +40,7 @@ export const crearReserva = async (req, res) => {
   const { nombre, email, telefono, personas, hora, mensaje } = req.body;
 
   if (!nombre || !email || !telefono || !personas || !hora) {
-    return res.status(400).json({ mensaje: "Faltan datos obligatorios." });
+    return res.status(400).json({ mensaje: 'Faltan datos obligatorios.' });
   }
 
   try {
@@ -64,12 +48,14 @@ export const crearReserva = async (req, res) => {
     let config = await ConfiguracionReserva.findOne({ fecha });
 
     if (!config) {
-      const ultimaConfig = await ConfiguracionReserva.findOne().sort({ fecha: -1 });
+      const ultimaConfig = await ConfiguracionReserva.findOne().sort({
+        fecha: -1,
+      });
 
       config = ultimaConfig || {
         franjas: [
-          { horaInicio: "13:00", horaFin: "15:00", maxReservas: 10 },
-          { horaInicio: "20:00", horaFin: "21:30", maxReservas: 10 },
+          { horaInicio: '13:00', horaFin: '15:00', maxReservas: 10 },
+          { horaInicio: '20:00', horaFin: '21:30', maxReservas: 10 },
         ],
       };
     }
@@ -82,19 +68,25 @@ export const crearReserva = async (req, res) => {
     const yaReservo = await Reserva.findOne({
       hora: { $gte: inicioDia, $lte: finDia },
       $or: [{ email: email.toLowerCase() }, { telefono: telefono.trim() }],
-      estado: { $ne: "rechazada" },
+      estado: { $ne: 'rechazada' },
     });
 
     if (yaReservo) {
-      return res.status(400).json({ mensaje: "Ya tienes una reserva para este día." });
+      return res
+        .status(400)
+        .json({ mensaje: 'Ya tienes una reserva para este día.' });
     }
 
-    const franja = config.franjas.find(f =>
-      horaStr >= f.horaInicio && horaStr <= f.horaFin
+    const franja = config.franjas.find(
+      (f) => horaStr >= f.horaInicio && horaStr <= f.horaFin
     );
 
     if (!franja) {
-      return res.status(400).json({ mensaje: "La hora seleccionada no está en una franja válida." });
+      return res
+        .status(400)
+        .json({
+          mensaje: 'La hora seleccionada no está en una franja válida.',
+        });
     }
 
     const desde = new Date(`${fecha}T${franja.horaInicio}:00`);
@@ -102,7 +94,7 @@ export const crearReserva = async (req, res) => {
 
     const reservasExistentes = await Reserva.countDocuments({
       hora: { $gte: desde, $lte: hasta },
-      estado: { $in: ["confirmada", "auto-confirmada"] },
+      estado: { $in: ['confirmada', 'auto-confirmada'] },
     });
 
     const hayDisponibilidad = reservasExistentes < franja.maxReservas;
@@ -112,11 +104,11 @@ export const crearReserva = async (req, res) => {
       const mesas = await Mesa.find();
       const reservasMismoHorario = await Reserva.find({
         hora: new Date(hora),
-        estado: { $in: ["confirmada", "auto-confirmada"] },
+        estado: { $in: ['confirmada', 'auto-confirmada'] },
       });
 
-      const mesasOcupadas = reservasMismoHorario.map(r => r.mesaAsignada);
-      const mesaLibre = mesas.find(m => !mesasOcupadas.includes(m.numero));
+      const mesasOcupadas = reservasMismoHorario.map((r) => r.mesaAsignada);
+      const mesaLibre = mesas.find((m) => !mesasOcupadas.includes(m.numero));
 
       if (!mesaLibre) {
         nuevaReserva = await Reserva.create({
@@ -126,11 +118,15 @@ export const crearReserva = async (req, res) => {
           personas,
           hora,
           mensaje,
-          estado: "pendiente",
+          estado: 'pendiente',
           mesaAsignada: null,
         });
 
-        return res.status(200).json({ mensaje: "No hay mesas libres. Solicitud enviada para confirmar." });
+        return res
+          .status(200)
+          .json({
+            mensaje: 'No hay mesas libres. Solicitud enviada para confirmar.',
+          });
       }
 
       nuevaReserva = await Reserva.create({
@@ -140,13 +136,17 @@ export const crearReserva = async (req, res) => {
         personas,
         hora,
         mensaje,
-        estado: "auto-confirmada",
+        estado: 'auto-confirmada',
         mesaAsignada: mesaLibre.numero,
       });
 
-      await enviarConfirmacionEmail(nuevaReserva); 
+      await enviarConfirmacionEmail(nuevaReserva);
 
-      return res.status(200).json({ mensaje: "Reserva confirmada automáticamente. ¡Te esperamos!" });
+      return res
+        .status(200)
+        .json({
+          mensaje: 'Reserva confirmada automáticamente. ¡Te esperamos!',
+        });
     }
 
     nuevaReserva = await Reserva.create({
@@ -156,15 +156,18 @@ export const crearReserva = async (req, res) => {
       personas,
       hora,
       mensaje,
-      estado: "pendiente",
+      estado: 'pendiente',
       mesaAsignada: null,
     });
 
-    res.status(200).json({ mensaje: "Tu solicitud ha sido enviada. Te confirmaremos pronto." });
-
+    res
+      .status(200)
+      .json({
+        mensaje: 'Tu solicitud ha sido enviada. Te confirmaremos pronto.',
+      });
   } catch (error) {
-    console.error("Error al crear reserva:", error);
-    res.status(500).json({ mensaje: "Error al crear la reserva." });
+    console.error('Error al crear reserva:', error);
+    res.status(500).json({ mensaje: 'Error al crear la reserva.' });
   }
 };
 
@@ -180,8 +183,8 @@ export const obtenerReservas = async (req, res) => {
 
     res.json(reservas);
   } catch (error) {
-    console.error("Error al obtener reservas:", error);
-    res.status(500).json({ mensaje: "Error al obtener reservas." });
+    console.error('Error al obtener reservas:', error);
+    res.status(500).json({ mensaje: 'Error al obtener reservas.' });
   }
 };
 
@@ -191,29 +194,29 @@ export const confirmarReserva = async (req, res) => {
   try {
     const reserva = await Reserva.findById(id);
     if (!reserva) {
-      return res.status(404).json({ mensaje: "Reserva no encontrada." });
+      return res.status(404).json({ mensaje: 'Reserva no encontrada.' });
     }
 
-    reserva.estado = "confirmada";
+    reserva.estado = 'confirmada';
     await reserva.save();
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+
+    await enviarEmail({
       to: reserva.email,
-      subject: "¡Tu reserva ha sido confirmada!",
+      subject: '¡Tu reserva ha sido confirmada!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
           <div style="text-align: center; margin-bottom: 20px;">
-            <img src="cid:logo" alt="Zabor Féten" style="max-width: 150px;" />
+            <img src="cid:logoZf.jpg" alt="Zabor Féten" style="max-width: 150px;" />
           </div>
           <h2 style="color: #6A0DAD;">¡Reserva confirmada!</h2>
-          <p>Hola <strong>${reserva.nombre || "cliente"}</strong>,</p>
-          <p>Tu reserva para el <strong>${new Date(reserva.hora).toLocaleString("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit",
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
+          <p>Hola <strong>${reserva.nombre || 'cliente'}</strong>,</p>
+          <p>Tu reserva para el <strong>${new Date(reserva.hora).toLocaleString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
             hour12: false
           })}</strong> ha sido <strong>confirmada</strong> exitosamente.</p>
           <p style="margin-top: 20px;">Te esperamos en <strong>Zabor Féten</strong> 🥂</p>
@@ -222,77 +225,60 @@ export const confirmarReserva = async (req, res) => {
           </p>
           <p style="margin-top: 10px;"><em>El equipo de <strong>Zabor Féten</strong></em></p>
         </div>
-      `,
-      attachments: [
-        {
-          filename: "logoZf.jpg",
-          path: "public/images/logoZf.jpg", // Asegurate de tenerlo aquí
-          cid: "logo", // ID usado en cid:logo
-        },
-      ],
-    };
+      `
+    });    
 
-    await transporter.sendMail(mailOptions);
-
-    res.json({ mensaje: "Reserva confirmada y correo enviado." });
-
+    res.json({ mensaje: 'Reserva confirmada y correo enviado.' });
   } catch (error) {
-    console.error("Error al confirmar reserva:", error);
-    res.status(500).json({ mensaje: "Error al confirmar la reserva." });
+    console.error('Error al confirmar reserva:', error);
+    res.status(500).json({ mensaje: 'Error al confirmar la reserva.' });
   }
 };
-
 
 export const cancelarReserva = async (req, res) => {
   const { id } = req.params;
   const { razon } = req.body;
 
-  if (!razon || razon.trim() === "") {
-    return res.status(400).json({ mensaje: "Debes incluir una razón de cancelación." });
+  if (!razon || razon.trim() === '') {
+    return res
+      .status(400)
+      .json({ mensaje: 'Debes incluir una razón de cancelación.' });
   }
+
+  const htmlCancelacion = `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+    <div style="text-align: center; margin-bottom: 20px;">
+      <img src="cid:logoZf.jpg" alt="Zabor Féten" style="max-width: 150px;" />
+    </div>
+    <h2 style="color: #B22222;">Hola ${reserva.nombre || 'cliente'},</h2>
+    <p>Lamentamos informarte que tu reserva para el día <strong>${new Date(reserva.hora).toLocaleString('es-ES')}</strong> ha sido <strong style="color: #B22222;">cancelada</strong>.</p>
+    <p><strong>Motivo:</strong> ${razon}</p>
+    <p style="margin-top: 20px;">Para más información puedes contactarnos directamente.</p>
+    <p>Disculpa las molestias.</p>
+    <p style="margin-top: 30px;"><em>El equipo de <strong>Zabor Féten</strong></em></p>
+  </div>
+`;
 
   try {
     const reserva = await Reserva.findById(id);
     if (!reserva) {
-      return res.status(404).json({ mensaje: "Reserva no encontrada." });
+      return res.status(404).json({ mensaje: 'Reserva no encontrada.' });
     }
 
-    reserva.estado = "rechazada";
+    reserva.estado = 'rechazada';
     await reserva.save();
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    await enviarEmail({
       to: reserva.email,
-      subject: "Tu reserva ha sido cancelada",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-          <div style="text-align: center; margin-bottom: 20px;">
-            <img src="cid:logo" alt="Zabor Féten" style="max-width: 150px;" />
-          </div>
-          <h2 style="color: #B22222;">Hola ${reserva.nombre || "cliente"},</h2>
-          <p>Lamentamos informarte que tu reserva para el día <strong>${new Date(reserva.hora).toLocaleString("es-ES")}</strong> ha sido <strong style="color: #B22222;">cancelada</strong>.</p>
-          <p><strong>Motivo:</strong> ${razon}</p>
-          <p style="margin-top: 20px;">Para más información puedes contactarnos directamente.</p>
-          <p>Disculpa las molestias.</p>
-          <p style="margin-top: 30px;"><em>El equipo de <strong>Zabor Féten</strong></em></p>
-        </div>
-      `,
-      attachments: [
-        {
-          filename: "logoZf.jpg",
-          path: "public/images/logoZf.jpg", // Asegúrate de que esta ruta exista y sea accesible
-          cid: "logo", // ID que usamos en cid:logo
-        },
-      ],
-    };
-
-    await transporter.sendMail(mailOptions);
-
-    res.json({ mensaje: "Reserva cancelada y correo enviado al cliente." });
-
+      subject: 'Tu reserva ha sido cancelada',
+      html: htmlCancelacion, // usa el bloque completo como arriba
+      attachments: ['public/images/logoZf.jpg'],
+    });
+    
+    res.json({ mensaje: 'Reserva cancelada y correo enviado al cliente.' });
   } catch (error) {
-    console.error("Error al cancelar reserva:", error);
-    res.status(500).json({ mensaje: "Error al cancelar la reserva." });
+    console.error('Error al cancelar reserva:', error);
+    res.status(500).json({ mensaje: 'Error al cancelar la reserva.' });
   }
 };
 
@@ -300,7 +286,7 @@ export const cancelarReserva = async (req, res) => {
 export const obtenerReservasPorFecha = async (req, res) => {
   const { fecha, estado } = req.query;
 
-  ("Obteniendo reservas por fecha...", fecha, estado);
+  'Obteniendo reservas por fecha...', fecha, estado;
 
   try {
     const filtros = {};
@@ -316,44 +302,44 @@ export const obtenerReservasPorFecha = async (req, res) => {
     }
 
     const reservas = await Reserva.find(filtros).sort({ hora: 1 });
-    ("Reservas encontradas:", reservas.length);
+    'Reservas encontradas:', reservas.length;
     res.json(reservas);
   } catch (error) {
-    console.error("Error al obtener reservas:", error);
-    res.status(500).json({ mensaje: "Error al obtener reservas." });
+    console.error('Error al obtener reservas:', error);
+    res.status(500).json({ mensaje: 'Error al obtener reservas.' });
   }
 };
 
 // Ejemplo backend
 export const obtenerFechasConReservas = async (req, res) => {
-  ("Obteniendo fechas con reservas...");
+  ('Obteniendo fechas con reservas...');
   try {
     const reservas = await Reserva.aggregate([
       {
         $match: {
-          estado: { $ne: "rechazada" }
-        }
+          estado: { $ne: 'rechazada' },
+        },
       },
       {
         $group: {
           _id: {
-            $dateToString: { format: "%Y-%m-%d", date: "$hora" }
-          }
-        }
+            $dateToString: { format: '%Y-%m-%d', date: '$hora' },
+          },
+        },
       },
       {
         $project: {
-          fecha: "$_id",
-          _id: 0
-        }
-      }
+          fecha: '$_id',
+          _id: 0,
+        },
+      },
     ]);
 
-    const fechas = reservas.map(r => r.fecha);
-    ("Fechas con reservas:", fechas);
+    const fechas = reservas.map((r) => r.fecha);
+    'Fechas con reservas:', fechas;
     res.json(fechas);
   } catch (error) {
-    console.error("Error al obtener fechas con reservas:", error);
-    res.status(500).json({ mensaje: "Error al obtener las fechas." });
+    console.error('Error al obtener fechas con reservas:', error);
+    res.status(500).json({ mensaje: 'Error al obtener las fechas.' });
   }
 };
