@@ -10,6 +10,7 @@ import "../../styles/Navbar.css";
 import { useSearchParams } from 'react-router-dom';
 import socket from "../../utils/socket";
 
+
 const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
   const [searchParams] = useSearchParams();
   const numeroMesa = searchParams.get("mesa");
@@ -56,11 +57,12 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
           setPedidosListos(data.todosListos);
         }
       });
+  
       return () => {
         socket.off("pedidosActualizados");
       };
     }
-  }, [socket, numeroMesa]);
+  }, [socket, numeroMesa]);  
 
   const handleCategoriaChange = (event) => {
     setCategoriaSeleccionada(event.target.value);

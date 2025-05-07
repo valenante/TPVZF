@@ -34,7 +34,6 @@ const Dashboard = () => {
     if (!socket) return;
 
     const manejarMesaAbierta = () => {
-      console.log("Evento 'mesaAbierta' recibido");
       fetchMesas();
     };
 

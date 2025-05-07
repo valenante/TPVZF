@@ -41,8 +41,8 @@ const Navbar = () => {
             value={selectValue}
           >
             <option value="" disabled>Ir a...</option>
-            <option value="/cocina">Cocina</option>
-            <option value="/barra">Barra</option>
+            <option value="/tpv/cocina">Cocina</option>
+            <option value="/tpv/barra">Barra</option>
           </select>
         </li>
         <li className="navbar-item--navbar">

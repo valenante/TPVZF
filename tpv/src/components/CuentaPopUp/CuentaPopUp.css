@@ -1,21 +1,80 @@
 .popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+  padding: 1rem; /* espacio para evitar que toque bordes en móviles */
+}
+
+.popup-content {
+  background: #ffffff;
+  padding: 30px 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  border-top: 5px solid var(--color-principal);
+}
+
+.popup-content h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: var(--color-principal);
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.popup-content button {
+  padding: 12px 24px;
+  background-color: var(--color-principal);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.popup-content button:hover {
+  background-color: rgba(84, 20, 108, 0.8);
+  transform: scale(1.05);
+}
+
+/* 📱 Responsive para móviles pequeños */
+@media (max-width: 760px) {
+  .popup {
     position: fixed;
-    top: 0;
-    left: 0;
+    margin: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    backdrop-filter: blur(2px);
   }
-  
+
   .popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    text-align: center;
+    width: 30vh;
   }
-  
+
+  .popup-content h3 {
+    font-size: 18px;
+  }
+
+  .popup-content button {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+  }
+}

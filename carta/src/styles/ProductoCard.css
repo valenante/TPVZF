@@ -60,6 +60,33 @@
   margin-bottom: 15px;
 }
 
+/* Estilo para el selector de precios */
+.producto-precio-boton select {
+  width: 100%;
+  max-width: 15vh;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid var(--color-principal);
+  border-radius: 5px;
+  background-color: #fff;
+  color: var(--color-principal);
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.producto-precio-boton select:hover {
+  border-color: #5a0c9a;
+  box-shadow: 0 0 5px rgba(106, 13, 173, 0.3);
+}
+
+.producto-precio-boton select:focus {
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 6px rgba(255, 103, 0, 0.5);
+}
+
+
 /* Botón de agregar al carrito */
 .agregar-carrito-btn-prodCard {
   background-color: var(--color-principal);

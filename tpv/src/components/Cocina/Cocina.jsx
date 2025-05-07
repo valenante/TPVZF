@@ -11,8 +11,6 @@ const Cocina = () => {
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const { socket } = useContext(SocketContext);
 
-  console.log(pedidos);
-
   const calcularTiempoTranscurrido = (fecha) => {
     const ahora = new Date();
     const fechaPedido = new Date(fecha);

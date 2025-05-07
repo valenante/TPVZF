@@ -7,8 +7,6 @@ const Barra = () => {
   const [pedidos, setPedidos] = useState([]);
   const { socket } = useContext(SocketContext);
 
-  console.log(pedidos);
-
   // Función para calcular tiempo transcurrido
   const calcularTiempoTranscurrido = (fecha) => {
     const ahora = new Date();

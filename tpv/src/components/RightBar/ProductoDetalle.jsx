@@ -130,8 +130,6 @@ const ProductoDetalle = ({
     onConfirm(productoPersonalizado);
   };
 
-  console.log(precioSeleccionado);
-
   return ReactDOM.createPortal(
     <div className="modal-detalle--productoDetalle">
       <div className="modal-contenido--productoDetalle">

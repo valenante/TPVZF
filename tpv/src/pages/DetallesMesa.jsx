@@ -206,8 +206,6 @@ const DetalleMesa = () => {
     );
   }
 
-  console.log(mesa.pedidos);
-
   return (
     <div className="detalle-mesa--mesadetalles">
       <div className="contenido-mesa--mesadetalles">

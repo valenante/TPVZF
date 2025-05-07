@@ -4,7 +4,8 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
+    max-width: 70;
     background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
     display: flex;
     justify-content: center;
@@ -42,6 +43,10 @@
     list-style: none;
     padding: 0;
     margin: 20px 0;
+    max-height: 300px; /* Limita la altura visible */
+    overflow-y: auto;  /* Habilita scroll vertical si se excede */
+    border: 1px solid #ddd; /* (opcional) para distinguir el área */
+    border-radius: 5px;
   }
   
   .mesa-item--recuperar {

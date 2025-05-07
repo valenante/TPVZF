@@ -1,111 +1,141 @@
 /* Navbar container */
 .navbar--navbar {
-    background-color: #6A0DAD; /* Morado Profundo */
-    padding: 10px 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para efecto */
-  }
+  background-color: #6a0dad; /* Morado Profundo */
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para efecto */
+}
 
-  /* Estilo para el logo en el navbar */
+/* Estilo para el logo en el navbar */
 .navbar-logo--navbar {
-    width: 40px; /* Ancho fijo para hacerlo pequeño */
-    height: auto; /* Mantiene la proporción original */
-    border-radius: 5px; /* Opcional: Bordes ligeramente redondeados */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animación al pasar el cursor */
-  }
-  
-  /* Hover effect para el logo */
-  .navbar-logo--navbar:hover {
-    transform: scale(1.1); /* Ampliar ligeramente al pasar el cursor */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Agregar sombra */
-  }
-  
-  
-  /* Navbar list */
-  .navbar-list--navbar {
-    list-style: none;
+  width: 40px; /* Ancho fijo para hacerlo pequeño */
+  height: auto; /* Mantiene la proporción original */
+  border-radius: 5px; /* Opcional: Bordes ligeramente redondeados */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animación al pasar el cursor */
+}
+
+/* Hover effect para el logo */
+.navbar-logo--navbar:hover {
+  transform: scale(1.1); /* Ampliar ligeramente al pasar el cursor */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Agregar sombra */
+}
+
+/* Navbar list */
+.navbar-list--navbar {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar items */
+.navbar-item--navbar {
+  font-size: 1.2rem; /* Tamaño de fuente base */
+  font-weight: bold;
+}
+
+/* Navbar links */
+.navbar-link--navbar {
+  text-decoration: none;
+  color: #ffffff; /* Blanco */
+  transition: color 0.3s ease;
+}
+
+/* Hover effect for links */
+.navbar-link--navbar:hover {
+  color: var(--color-secundario); /* Naranja vibrante */
+}
+
+.only-mobile {
+  display: none;
+}
+
+.only-desktop {
+  display: block;
+}
+
+.navbar-select--navbar {
+  font-size: 1.2rem;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #6a0dad; /* Morado */
+  color: #ffffff; /* Blanco */
+  font-weight: bold;
+  cursor: pointer;
+  appearance: none; /* Quita estilos nativos del navegador */
+}
+
+@media (max-width: 768px) {
+  .navbar--navbar {
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
     margin: 0;
     padding: 0;
   }
-  
-  /* Navbar items */
+
+  .navbar-list--navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    padding: 0;
+    gap: 5px;
+    margin: 0;
+    list-style: none;
+  }
+
+  .navbar-logo--navbar {
+    display: none;
+  }
+
   .navbar-item--navbar {
-    font-size: 1.2rem; /* Tamaño de fuente base */
-    font-weight: bold;
+    text-align: center;
+    flex: 1 1 auto;
+    max-width: 120px;
+    font-size: .8rem;
   }
-  
-  /* Navbar links */
+
   .navbar-link--navbar {
+    font-size: 1rem;
+    color: white;
     text-decoration: none;
-    color: #FFFFFF; /* Blanco */
-    transition: color 0.3s ease;
+    font-weight: bold;
+    display: inline-block;
+    padding: 10px 0;
+    width: 100%;
   }
-  
-  /* Hover effect for links */
-  .navbar-link--navbar:hover {
-    color: var(--color-secundario); /* Naranja vibrante */
+
+  .navbar-item--navbar.only-mobile {
+    max-width: none;
+    flex: 1 1 auto;
+    padding: 0 10px;
+  }
+
+  .navbar-select--navbar {
+    font-size: 1rem;
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #ffffff;
+    color: #6a0dad;
+    font-weight: bold;
+    width: 0%;
+    min-width: 120px;
+    text-align: center;
+    appearance: none; /* Estilo más uniforme */
+  }
+
+  .only-desktop {
+    display: none;
   }
 
   .only-mobile {
-    display: none;
-  }
-  
-  .only-desktop {
     display: block;
   }
-  
-  .navbar-select--navbar {
-    font-size: 1.2rem;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #6A0DAD; /* Morado */
-    color: #FFFFFF;            /* Blanco */
-    font-weight: bold;
-    cursor: pointer;
-    appearance: none; /* Quita estilos nativos del navegador */
-  }  
-  
-  /* Responsive: Navbar for small screens */
-@media (max-width: 768px) {
-    /* Cambiar estructura del navbar */
-    .navbar--navbar {
-      flex-direction: column; /* Coloca logo y lista en filas separadas */
-      align-items: center; /* Centra el contenido */
-    }
-
-    .navbar-logo--navbar {
-      display: none;
-    }
-  
-    /* Lista del navbar en fila */
-    .navbar-list--navbar {
-      flex-direction: row; /* Cambiar a fila */
-      justify-content: center; /* Centra las columnas */
-      gap: 20px; /* Espaciado entre columnas */
-    }
-  
-    /* Cada ítem ocupa una columna */
-    .navbar-item--navbar {
-      font-size: 1.2rem; /* Reducir tamaño de fuente */
-      flex: 1 1 30%; /* Cada elemento ocupa un 30% del ancho disponible */
-      text-align: center; /* Centrar el texto */
-      max-width: 100px; /* Limitar el ancho máximo */
-    }
-  
-    .navbar-link--navbar {
-      font-size: 1.1rem; /* Aún más pequeño en pantallas pequeñas */
-    }
-
-    .only-mobile {
-      display: block;
-    }
-  
-    .only-desktop {
-      display: none;
-    }
-  }
+}

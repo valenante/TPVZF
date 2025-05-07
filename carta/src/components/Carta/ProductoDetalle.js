@@ -259,9 +259,7 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
             producto.precios.racion !== null ||
             producto.precios.surtido !== null) && (
             <>
-              <h4>
-                <Trans>Selecciona el tipo de plato:</Trans>
-              </h4>
+
               <select
                 value={tipoPrecio}
                 onChange={(e) => {
@@ -311,9 +309,6 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
               </p>
             ) : (
               <>
-                <h4>
-                  <Trans>Selecciona presentación:</Trans>
-                </h4>
                 <select
                   value={tipoPrecio}
                   onChange={(e) => {
@@ -345,9 +340,6 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
 
         {producto.tipo !== "bebida" && (
           <>
-            <h4>
-              <Trans>Tipo de plato:</Trans>
-            </h4>
             <div className="tipo-plato-select-container-detalle">
               <select
                 value={tipoPlato}

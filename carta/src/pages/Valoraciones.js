@@ -111,9 +111,6 @@ const Valoraciones = () => {
           {productos.map((producto) => (
             <div key={producto.productoId._id} className="producto-valoraciones">
               <h3 className="producto-nombre-valoraciones">{producto.nombre}</h3>
-              <label className="etiqueta-valoraciones">
-                <Trans id="estrellas">Estrellas:</Trans>
-              </label>
               <select
                 value={valoraciones.find((v) => v.productoId === producto.productoId._id)?.estrellas || 5}
                 onChange={(e) =>
@@ -131,9 +128,6 @@ const Valoraciones = () => {
                   </option>
                 ))}
               </select>
-              <label className="etiqueta-valoraciones">
-                <Trans id="comentario">Comentario:</Trans>
-              </label>
               <textarea
                 value={
                   valoraciones.find((v) => v.productoId === producto.productoId._id)?.comentario || ""
