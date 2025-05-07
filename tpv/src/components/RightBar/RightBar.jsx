@@ -40,13 +40,6 @@ const RightBar = ({ mesaId, agregarProducto }) => {
     setShowModal(false);
   };
 
-  const manejarCambioPrecio = (productoId, nuevoPrecio) => {
-    setPreciosSeleccionados((prev) => ({
-      ...prev,
-      [productoId]: Number(nuevoPrecio), // Guardar el precio seleccionado por productoId
-    }));
-  };
-
   return (
     <div className="right-bar--rightbar">
       <div className="filtros-tipo--rightbar">

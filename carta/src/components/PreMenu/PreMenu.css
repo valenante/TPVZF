@@ -22,7 +22,8 @@ html, body {
 .preMenu--container {
     display: flex;
     flex-direction: column;
-    width: 50vh;
+    width: 90%;
+    max-width: 400px; /* Límitar el ancho máximo en pantallas grandes */
     height: auto;
     margin: 100px auto;
     justify-content: center;
@@ -99,31 +100,30 @@ html, body {
   /* Estilos para pantallas pequeñas */
   @media (max-width: 768px) {
     .preMenu--container {
-      width: 100%;
-      height: auto;
+      width: 95%;
+      padding: 15px;
     }
   
     .titulo--preMenu {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
+      font-size: 1.4rem;
+      margin-bottom: 10px;
     }
   
     .formulario--preMenu {
-      gap: 10px;
+      gap: 12px;
     }
   
     .input--preMenu {
-      padding: 8px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      padding: 9px;
     }
   
     .boton--preMenu {
-      padding: 8px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      padding: 9px;
     }
   
     .error--preMenu {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
   }
-  

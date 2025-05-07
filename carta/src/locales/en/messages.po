@@ -14,9 +14,10 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:218
-msgid "Número de comensales"
-msgstr "Number of guests"
+#: src/components/Navbar/Navbar.js:102
+#: src/components/Navbar/Navbar.js:173
+msgid "todas-categorias"
+msgstr "categories
 
 #. js-lingui-explicit-id
 #: src/pages/Valoraciones.js:103
@@ -70,6 +71,11 @@ msgid "Alergias"
 msgstr "Allergies"
 
 #. js-lingui-explicit-id
+#: src/components/PreMenu/PreMenu.jsx:218
+msgid "Número de comensales"
+msgstr "Number of guests"
+
+#. js-lingui-explicit-id
 #: src/components/PreMenu/PreMenu.jsx:228
 msgid "Contraseña"
 msgstr "Password"
@@ -83,12 +89,6 @@ msgstr "Processing..."
 #: src/components/PreMenu/PreMenu.jsx:240
 msgid "Continuar"
 msgstr "Continue"
-
-#. js-lingui-explicit-id
-#: src/components/Navbar/Navbar.js:102
-#: src/components/Navbar/Navbar.js:173
-msgid "todas-categorias"
-msgstr "All Categories"
 
 #. js-lingui-explicit-id
 #: src/components/Navbar/Navbar.js:112
@@ -149,183 +149,93 @@ msgstr "Cancel"
 msgid "agregar-al-carrito"
 msgstr "Add to cart"
 
-#. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:192
-#~ msgid "Alergias en mesa"
-#~ msgstr "Allergies at the table"
-
-#. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:206
-#~ msgid "Comensales"
-#~ msgstr "Diners"
-
-#. js-lingui-explicit-id
-#: src/components/Carta/ProductoCard.js:77
-#: src/components/Carta/ProductoCard.js:122
-#~ msgid "tapa"
-#~ msgstr "Small Portion"
-
-#. js-lingui-explicit-id
-#: src/components/Carta/ProductoCard.js:82
-#: src/components/Carta/ProductoCard.js:127
-#~ msgid "racion"
-#~ msgstr "Full Portion"
-
-#. js-lingui-explicit-id
-#: src/components/Carta/ProductoCard.js:87
-#: src/components/Carta/ProductoCard.js:132
-#~ msgid "surtido"
-#~ msgstr "surtido"
-
-#. js-lingui-explicit-id
-#: src/components/Carta/ModalCroquetas.js:80
-#~ msgid "boton-disminuir"
-#~ msgstr "Decrease button"
-
-#. js-lingui-explicit-id
-#: src/components/Carta/ModalCroquetas.js:87
-#~ msgid "boton-aumentar"
-#~ msgstr "Increase button"
-
-#. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:143
-#~ msgid "configuracion-inicial"
-#~ msgstr "Initial Configuration"
-
-#. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:173
-#~ msgid "error-nombre"
-#~ msgstr "Name is required"
-
-#. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:188
-#~ msgid "error-alergias"
-#~ msgstr "Allergies can only contain letters, spaces, and commas"
-
-#. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:202
-#~ msgid "error-comensales"
-#~ msgstr "Number of diners must be between 1 and 20"
-
-#. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:218
-#~ msgid "error-contraseña"
-#~ msgstr "Password is required"
-
-#. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:224
-#~ msgid "procesando"
-#~ msgstr "Processing..."
-
-#. js-lingui-explicit-id
-#: src/components/PreMenu/PreMenu.jsx:226
-#~ msgid "continuar"
-#~ msgstr "Continue"
-
-#. js-lingui-explicit-id
-#: src/components/Carta/ProductoCard.js:63
-#~ msgid "copa"
-#~ msgstr "Glass"
-
-#. js-lingui-explicit-id
-#: src/components/Carta/ProductoCard.js:68
-#~ msgid "botella"
-#~ msgstr "Bottle"
-
-#. js-lingui-explicit-id
-#: src/pages/Valoraciones.js:147
-#~ msgid "Escribe tu comentario (máximo 80 caracteres)"
-#~ msgstr "Write your comment (maximum 80 characters)"
-
 #. placeholder {0}: producto.nombre
 #. placeholder {0}: opcion.tipo
-#: src/components/Carta/ProductoDetalle.js:158
-#: src/components/Carta/ProductoDetalle.js:182
+#: src/components/Carta/ProductoDetalle.js:193
+#: src/components/Carta/ProductoDetalle.js:225
 msgid "{0}"
 msgstr "{0}"
 
-#: src/components/Carta/ProductoDetalle.js:111
-#~ msgid "{ingrediente}"
-#~ msgstr "{ingredient}"
-
-#: src/components/Carta/ProductoDetalle.js:282
+#: src/components/Carta/ProductoDetalle.js:387
 msgid "{nombre}"
 msgstr "{nombre}"
 
-#: src/components/Carta/ProductoDetalle.js:192
+#: src/components/Carta/ProductoDetalle.js:236
 msgid "{op}"
 msgstr "{op}"
 
-#: src/components/Carta/ProductoDetalle.js:272
+#: src/components/Carta/ProductoDetalle.js:374
 msgid "Acompañante:"
 msgstr "Acompañante:"
 
-#: src/components/Carta/ProductoDetalle.js:298
+#: src/components/Carta/ProductoDetalle.js:405
 msgid "Agregar al carrito"
 msgstr "Add to cart"
 
-#~ msgid "Alergias"
-#~ msgstr "Allergies"
+#: src/components/Carta/ProductoDetalle.js:337
+msgid "Botella"
+msgstr "Botella"
 
-#: src/components/Carta/ProductoDetalle.js:293
+#: src/components/Carta/ProductoDetalle.js:400
 msgid "Cancelar"
 msgstr "Cancel"
 
-#: src/components/Carta/ProductoDetalle.js:200
+#: src/components/Carta/ProductoDetalle.js:245
 msgid "Cantidad:"
 msgstr "Quantity:"
 
-#: src/components/Carta/ProductoDetalle.js:261
+#: src/components/Carta/ProductoDetalle.js:358
 msgid "Compartir"
 msgstr "Share"
 
-#: src/components/Carta/ProductoDetalle.js:262
+#: src/components/Carta/ProductoDetalle.js:332
+msgid "Copa"
+msgstr "Copa"
+
+#: src/components/Carta/ProductoDetalle.js:361
 msgid "Individual"
 msgstr "Individual"
 
-#: src/components/Carta/ProductoDetalle.js:160
+#: src/components/Carta/ProductoDetalle.js:197
 msgid "Ingredientes:"
 msgstr "Ingredients:"
 
-#~ msgid "Número de comensales"
-#~ msgstr "Number of guests"
-
-#: src/components/Carta/ProductoDetalle.js:179
+#: src/components/Carta/ProductoDetalle.js:220
 msgid "Opciones:"
 msgstr "Options:"
 
-#: src/components/Carta/ProductoDetalle.js:104
-#~ msgid "Personaliza tu {0}"
-#~ msgstr "Customize your {0}"
-
-#: src/components/Carta/ProductoDetalle.js:252
+#: src/components/Carta/ProductoDetalle.js:310
 msgid "Precio:"
 msgstr "Precio:"
 
-#: src/components/Carta/ProductoDetalle.js:234
+#: src/components/Carta/ProductoDetalle.js:288
 msgid "Ración"
 msgstr "Ración"
 
-#: src/components/Carta/ProductoDetalle.js:210
+#: src/components/Carta/ProductoDetalle.js:263
 msgid "Selecciona el tipo de plato:"
 msgstr "Selecciona el tipo de plato:"
 
-#: src/components/Carta/ProductoDetalle.js:279
+#: src/components/Carta/ProductoDetalle.js:315
+msgid "Selecciona presentación:"
+msgstr "Selecciona presentación:"
+
+#: src/components/Carta/ProductoDetalle.js:383
 msgid "Selecciona un acompañante"
 msgstr "Selecciona un acompañante"
 
-#: src/components/Carta/ProductoDetalle.js:285
+#: src/components/Carta/ProductoDetalle.js:391
 msgid "Sin acompañante"
 msgstr "Sin acompañante"
 
-#: src/components/Carta/ProductoDetalle.js:239
+#: src/components/Carta/ProductoDetalle.js:294
 msgid "Surtido"
 msgstr "Surtido"
 
-#: src/components/Carta/ProductoDetalle.js:229
+#: src/components/Carta/ProductoDetalle.js:283
 msgid "Tapa"
 msgstr "Tapa"
 
-#: src/components/Carta/ProductoDetalle.js:258
+#: src/components/Carta/ProductoDetalle.js:349
 msgid "Tipo de plato:"
 msgstr "Dish type"

@@ -136,6 +136,10 @@
     gap: 10px;
   }
 
+  .navbar-select{
+    max-width: 20vh;
+  }
+
   /* Asegurar que los elementos se alineen bien en la fila 2 */
   .navbar-select,
   .navbar-btn,

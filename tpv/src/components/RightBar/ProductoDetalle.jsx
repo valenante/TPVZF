@@ -40,11 +40,35 @@ const ProductoDetalle = ({
   ];
 
   useEffect(() => {
-    setTipoPrecio(producto.tipoPrecio || "precioBase");
-    const inicial = producto.precios[producto.tipoPrecio || "precioBase"];
-    setPrecioSeleccionado(typeof inicial === "number" && !isNaN(inicial) ? inicial : 0);
+    let initialTipo = "precioBase";
+    let initialPrecio = 0;
+
+    if (producto.categoria.toLowerCase().includes("vino")) {
+      if (producto.precios.copa !== null && producto.precios.copa >= 0) {
+        initialTipo = "copa";
+        initialPrecio = producto.precios.copa;
+      } else if (
+        producto.precios.botella !== null &&
+        producto.precios.botella >= 0
+      ) {
+        initialTipo = "botella";
+        initialPrecio = producto.precios.botella;
+      }
+    } else {
+      const precios = producto.precios;
+      const prioridades = ["tapa", "racion", "surtido", "precioBase"];
+      for (let key of prioridades) {
+        if (precios[key] !== null && precios[key] >= 0) {
+          initialTipo = key;
+          initialPrecio = precios[key];
+          break;
+        }
+      }
+    }
+
+    setTipoPrecio(initialTipo);
+    setPrecioSeleccionado(initialPrecio);
   }, [producto]);
-  
 
   useEffect(() => {
     // Actualiza el precio seleccionado cada vez que cambia el tipoPrecio
@@ -168,27 +192,46 @@ const ProductoDetalle = ({
           <button onClick={() => manejarCantidad(1)}>+</button>
         </div>
 
-        {Object.entries(producto.precios).some(
-          ([_, val]) => typeof val === "number"
-        ) && (
+        {producto.categoria.toLowerCase().includes("vino") ? (
           <>
-            <h4>Tipo de precio:</h4>
+            <h4>Tipo de presentación:</h4>
             <select
               value={tipoPrecio}
               onChange={(e) => setTipoPrecio(e.target.value)}
             >
-              {Object.entries(producto.precios).map(([key, val]) => {
-                if (typeof val === "number") {
-                  return (
-                    <option key={key} value={key}>
-                      {key.charAt(0).toUpperCase() + key.slice(1)} - {val} €
-                    </option>
-                  );
-                }
-                return null;
-              })}
+              {producto.precios.copa !== null && (
+                <option value="copa">Copa - {producto.precios.copa} €</option>
+              )}
+              {producto.precios.botella !== null && (
+                <option value="botella">
+                  Botella - {producto.precios.botella} €
+                </option>
+              )}
             </select>
           </>
+        ) : (
+          Object.entries(producto.precios).some(
+            ([_, val]) => typeof val === "number"
+          ) && (
+            <>
+              <h4>Tipo de precio:</h4>
+              <select
+                value={tipoPrecio}
+                onChange={(e) => setTipoPrecio(e.target.value)}
+              >
+                {Object.entries(producto.precios).map(([key, val]) => {
+                  if (typeof val === "number") {
+                    return (
+                      <option key={key} value={key}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)} - {val} €
+                      </option>
+                    );
+                  }
+                  return null;
+                })}
+              </select>
+            </>
+          )
         )}
 
         <h4>Tipo de plato:</h4>

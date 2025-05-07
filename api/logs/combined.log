@@ -776,3 +776,22 @@
 [2025-05-07 12:20:48] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:20:48.101Z
 [2025-05-07 12:20:52] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:20:52.667Z
 [2025-05-07 12:22:01] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.153, Hora: 2025-05-07T10:22:01.845Z
+[2025-05-07 12:26:39] INFO: Servidor escuchando en el puerto 3000
+[2025-05-07 12:30:33] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.153, Hora: 2025-05-07T10:30:33.509Z
+[2025-05-07 12:32:49] INFO: Servidor escuchando en el puerto 3000
+[2025-05-07 12:33:29] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:33:29.310Z
+[2025-05-07 12:35:13] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:35:13.625Z
+[2025-05-07 12:35:47] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:35:47.145Z
+[2025-05-07 12:36:29] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:36:29.258Z
+[2025-05-07 12:41:30] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:41:30.410Z
+[2025-05-07 12:41:57] INFO: Servidor escuchando en el puerto 3000
+[2025-05-07 12:41:58] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:41:58.377Z
+[2025-05-07 12:42:19] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:42:19.962Z
+[2025-05-07 12:42:31] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:42:31.090Z
+[2025-05-07 12:42:43] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:42:43.459Z
+[2025-05-07 12:42:57] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-07T10:42:57.819Z
+[2025-05-07 12:45:36] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.153, Hora: 2025-05-07T10:45:36.737Z
+[2025-05-07 12:56:51] INFO: Servidor escuchando en el puerto 3000
+[2025-05-07 12:58:14] INFO: Servidor escuchando en el puerto 3000
+[2025-05-07 12:59:19] INFO: Servidor escuchando en el puerto 3000
+[2025-05-07 13:00:46] INFO: Servidor escuchando en el puerto 3000

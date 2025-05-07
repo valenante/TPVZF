@@ -99,7 +99,7 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
                 className="navbar-select me-3"
               >
                 <option value="">
-                  <Trans id="todas-categorias">Todas las Categorías</Trans>
+                  <Trans id="todas-categorias">Categorías</Trans>
                 </option>
                 {categoriasFiltradas.map((categoria) => (
                   <option key={categoria} value={categoria}>
@@ -170,7 +170,7 @@ const Navbar = ({ setMostrarSoloBebidas, mostrarSoloBebidas }) => {
                   className="navbar-select"
                 >
                   <option value="">
-                    <Trans id="todas-categorias">Todas las Categorías</Trans>
+                    <Trans id="todas-categorias">Categorías</Trans>
                   </option>
                   {categoriasFiltradas.map((categoria) => (
                     <option key={categoria} value={categoria}>
