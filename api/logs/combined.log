@@ -759,3 +759,6 @@
 [2025-05-06 17:49:38] INFO: [LOGIN ATTEMPT] Usuario: Manuel, IP: ::ffff:192.168.1.150, Hora: 2025-05-06T15:49:38.545Z
 [2025-05-06 17:49:56] INFO: [LOGIN ATTEMPT] Usuario: Manuel, IP: ::ffff:192.168.1.150, Hora: 2025-05-06T15:49:56.104Z
 [2025-05-06 17:50:47] INFO: Servidor escuchando en el puerto 3000
+[2025-05-07 01:53:08] INFO: Servidor escuchando en el puerto 3000
+[2025-05-07 01:57:18] INFO: Servidor escuchando en el puerto 3000
+[2025-05-07 10:44:18] INFO: Servidor escuchando en el puerto 3000
