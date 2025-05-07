@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-import api from '../../utils/api';
+import React, { useState, useEffect, useContext } from "react";
+import api from "../../utils/api";
 import { SocketContext } from "../../utils/socket";
-import './Barra.css';
+import "./Barra.css";
 
 const Barra = () => {
   const [pedidos, setPedidos] = useState([]);
   const { socket } = useContext(SocketContext);
+
+  console.log(pedidos);
 
   // Función para calcular tiempo transcurrido
   const calcularTiempoTranscurrido = (fecha) => {
@@ -18,26 +20,26 @@ const Barra = () => {
   // Función para cargar pedidos pendientes de bebidas
   const cargarPedidos = async () => {
     try {
-      const response = await api.get('/pedidosBebidas/pendientes/pendientes', {
-        params: { tipo: 'bebida' },
+      const response = await api.get("/pedidosBebidas/pendientes/pendientes", {
+        params: { tipo: "bebida" },
       });
       setPedidos(response.data);
     } catch (error) {
-      console.error('Error al cargar pedidos de bebidas:', error);
+      console.error("Error al cargar pedidos de bebidas:", error);
     }
   };
 
   useEffect(() => {
     if (!socket) return;
-  
+
     const manejarNuevoPedido = () => {
       cargarPedidos(); // Recargar pedidos de bebidas
     };
-  
-    socket.on('nuevoPedido', manejarNuevoPedido);
-  
+
+    socket.on("nuevoPedido", manejarNuevoPedido);
+
     return () => {
-      socket.off('nuevoPedido', manejarNuevoPedido);
+      socket.off("nuevoPedido", manejarNuevoPedido);
     };
   }, [socket]); // Agregar socket como dependencia
 
@@ -45,39 +47,40 @@ const Barra = () => {
   const marcarProductoComoListo = async (pedidoId, productoId) => {
     try {
       await api.put(`/pedidosBebidas/${pedidoId}/producto/${productoId}`, {
-        estadoPreparacion: 'listo',
+        estadoPreparacion: "listo",
       });
 
       // Actualizar el estado eliminando productos listos
       setPedidos((prevPedidos) =>
-        prevPedidos
-          .map((pedido) => {
-            if (pedido._id === pedidoId) {
-              const nuevosProductos = pedido.productos.map((producto) =>
-                producto._id === productoId
-                  ? { ...producto, estadoPreparacion: 'listo' }
-                  : producto
-              );
+        prevPedidos.map((pedido) => {
+          if (pedido._id === pedidoId) {
+            const nuevosProductos = pedido.productos.map((producto) =>
+              producto._id === productoId
+                ? { ...producto, estadoPreparacion: "listo" }
+                : producto
+            );
 
-              return { ...pedido, productos: nuevosProductos };
-            }
-            return pedido;
-          })
+            return { ...pedido, productos: nuevosProductos };
+          }
+          return pedido;
+        })
       );
     } catch (error) {
-      console.error('Error al marcar producto como listo:', error);
+      console.error("Error al marcar producto como listo:", error);
     }
   };
 
   // Marcar el pedido entero como listo
   const marcarPedidoComoListo = async (pedidoId) => {
     try {
-      await api.put(`/pedidosBebidas/${pedidoId}`, { estado: 'listo' });
+      await api.put(`/pedidosBebidas/${pedidoId}`, { estado: "listo" });
 
       // Filtrar el pedido eliminado de la UI
-      setPedidos((prevPedidos) => prevPedidos.filter((pedido) => pedido._id !== pedidoId));
+      setPedidos((prevPedidos) =>
+        prevPedidos.filter((pedido) => pedido._id !== pedidoId)
+      );
     } catch (error) {
-      console.error('Error al marcar pedido como listo:', error);
+      console.error("Error al marcar pedido como listo:", error);
     }
   };
 
@@ -91,13 +94,15 @@ const Barra = () => {
     <div className="barra--barra">
       <h1 className="titulo--barra">Pedidos Pendientes</h1>
       {pedidos.length === 0 ? (
-        <p className="mensaje-vacio--barra">No hay pedidos de bebidas pendientes</p>
+        <p className="mensaje-vacio--barra">
+          No hay pedidos de bebidas pendientes
+        </p>
       ) : (
         <div className="pedidos-container--barra">
           {pedidos.map((pedido) => {
             // Verificar si todos los productos del pedido están listos
             const todosListos = pedido.productos.every(
-              (producto) => producto.estadoPreparacion === 'listo'
+              (producto) => producto.estadoPreparacion === "listo"
             );
 
             return (
@@ -107,7 +112,8 @@ const Barra = () => {
                   <p>Comensales: {pedido.comensales}</p>
                 </div>
                 <p>
-                  <strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}
+                  <strong>Hace:</strong>{" "}
+                  {calcularTiempoTranscurrido(pedido.fecha)}
                 </p>
                 <ul className="productos-list--barra">
                   {pedido.productos.map((producto) => (
@@ -115,19 +121,31 @@ const Barra = () => {
                       <label>
                         <input
                           type="checkbox"
-                          checked={producto.estadoPreparacion === 'listo'}
+                          checked={producto.estadoPreparacion === "listo"}
                           onChange={() =>
                             marcarProductoComoListo(pedido._id, producto._id)
                           }
                         />
-                        {producto.cantidad}x {producto.producto?.nombre || "Producto no disponible"}
-
+                        {producto.cantidad}x{" "}
+                        {producto.producto?.nombre || "Producto no disponible"}
                         {/* Mostrar acompañante solo si existe */}
-                        {producto.acompanante && producto.acompanante.trim() !== "" && (
-                          <span className="acompanante-badge">
-                            {" "}+ {producto.acompanante}
-                          </span>
-                        )}
+                        {producto.acompanante &&
+                          producto.acompanante.trim() !== "" && (
+                            <span className="acompanante-badge">
+                              {" "}
+                              + {producto.acompanante}
+                            </span>
+                          )}
+                        {/* Mostrar tipoPrecio si es vino */}
+                        {producto.producto?.categoria
+                          ?.toLowerCase()
+                          .includes("vino") &&
+                          producto.tipoPrecio && (
+                            <span className="tipo-precio-badge">
+                              {" "}
+                              ({producto.tipoPrecio})
+                            </span>
+                          )}
                       </label>
 
                       {producto.especificaciones.length > 0 && (

@@ -4,7 +4,13 @@ import "./EditProducts.css";
 
 const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
   // Obtener las funciones del contexto de imágenes
-  const { dragging, handleDragOver, handleDragLeave, handleDrop, handleFileChange } = useContext(ImageContext);
+  const {
+    dragging,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    handleFileChange,
+  } = useContext(ImageContext);
   const [imageFile, setImageFile] = useState(null);
   const [formData, setFormData] = useState({ ...product });
   const [errors, setErrors] = useState({});
@@ -14,7 +20,8 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
     switch (name) {
       case "nombre":
         if (!value.trim()) error = "El nombre es obligatorio.";
-        else if (value.length < 3) error = "El nombre debe tener al menos 3 caracteres.";
+        else if (value.length < 3)
+          error = "El nombre debe tener al menos 3 caracteres.";
         break;
       case "categoria":
         if (!value.trim()) error = "La categoría es obligatoria.";
@@ -27,7 +34,8 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
         break;
       case "precios.tapa":
       case "precios.racion":
-        if (value && value <= 0) error = "El precio debe ser mayor a 0 si está definido.";
+        if (value && value <= 0)
+          error = "El precio debe ser mayor a 0 si está definido.";
         break;
       default:
         break;
@@ -72,7 +80,10 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
     for (const key in formData) {
       if (key === "precios") {
         for (const priceKey in formData.precios) {
-          const error = validateField(`precios.${priceKey}`, formData.precios[priceKey]);
+          const error = validateField(
+            `precios.${priceKey}`,
+            formData.precios[priceKey]
+          );
           if (error) newErrors[`precios.${priceKey}`] = error;
         }
       } else {
@@ -122,7 +133,9 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
             className="textarea--editar"
           />
         </label>
-        {errors.descripcion && <p className="error--editar">{errors.descripcion}</p>}
+        {errors.descripcion && (
+          <p className="error--editar">{errors.descripcion}</p>
+        )}
 
         {/* Ingredientes */}
         <label className="label--editar">
@@ -146,71 +159,92 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
             className="input--editar"
           />
         </label>
-        {errors.categoria && <p className="error--editar">{errors.categoria}</p>}
+        {errors.categoria && (
+          <p className="error--editar">{errors.categoria}</p>
+        )}
 
         {/* Tipo */}
         <label className="label--editar">
           Tipo:
-          <input
-            type="text"
+          <select
             name="tipo"
             value={formData.tipo}
             onChange={handleChange}
             className="input--editar"
-          />
+          >
+            <option value="">Selecciona un tipo</option>
+            <option value="plato">Plato</option>
+            <option value="bebida">Bebida</option>
+          </select>
         </label>
         {errors.tipo && <p className="error--editar">{errors.tipo}</p>}
 
         {/* Precios */}
         <fieldset className="fieldset--editar">
           <legend className="legend--editar">Precios</legend>
-          <label className="label--editar">
-            Precio Base:
-            <input
-              type="number"
-              name="precios.precioBase"
-              value={formData.precios.precioBase || ""}
-              onChange={handleChange}
-              className="input--editar"
-            />
-          </label>
-          {errors["precios.precioBase"] && (
-            <p className="error--editar">{errors["precios.precioBase"]}</p>
-          )}
 
-          <label className="label--editar">
-            Precio Tapa:
-            <input
-              type="number"
-              name="precios.tapa"
-              value={formData.precios.tapa || ""}
-              onChange={handleChange}
-              className="input--editar"
-            />
-          </label>
-          {errors["precios.tapa"] && (
-            <p className="error--editar">{errors["precios.tapa"]}</p>
-          )}
-
-          <label className="label--editar">
-            Precio Ración:
-            <input
-              type="number"
-              name="precios.racion"
-              value={formData.precios.racion || ""}
-              onChange={handleChange}
-              className="input--editar"
-            />
-          </label>
-          {errors["precios.racion"] && (
-            <p className="error--editar">{errors["precios.racion"]}</p>
+          {formData.tipo === "bebida" ? (
+            <>
+              <label className="label--editar">
+                Precio Base:
+                <input
+                  type="number"
+                  name="precios.precioBase"
+                  value={formData.precios.precioBase || ""}
+                  onChange={handleChange}
+                  className="input--editar"
+                />
+              </label>
+              <label className="label--editar">
+                Precio Copa:
+                <input
+                  type="number"
+                  name="precios.copa"
+                  value={formData.precios.copa || ""}
+                  onChange={handleChange}
+                  className="input--editar"
+                />
+              </label>
+              <label className="label--editar">
+                Precio Botella:
+                <input
+                  type="number"
+                  name="precios.botella2"
+                  value={formData.precios.botella || ""}
+                  onChange={handleChange}
+                  className="input--editar"
+                />
+              </label>
+            </>
+          ) : (
+            <>
+              <label className="label--editar">
+                Precio Tapa:
+                <input
+                  type="number"
+                  name="precios.tapa"
+                  value={formData.precios.tapa || ""}
+                  onChange={handleChange}
+                  className="input--editar"
+                />
+              </label>
+              <label className="label--editar">
+                Precio Ración:
+                <input
+                  type="number"
+                  name="precios.racion"
+                  value={formData.precios.racion || ""}
+                  onChange={handleChange}
+                  className="input--editar"
+                />
+              </label>
+            </>
           )}
         </fieldset>
 
         {/* 🔹 Subida de Imágenes */}
         <label className="label--editar">
           Imagen:
-
           {/* Campo de texto para URL de la imagen */}
           <input
             type="text"
@@ -220,7 +254,6 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
             className="input--editar"
             placeholder="URL de la imagen"
           />
-
           {/* ✅ Área de subida de imágenes con Drag & Drop */}
           <div
             className={`drop-zone ${dragging ? "dragging" : ""}`}

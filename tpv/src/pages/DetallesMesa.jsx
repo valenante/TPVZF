@@ -270,9 +270,6 @@ const DetalleMesa = () => {
           {mesa?.pedidosBebidas?.length > 0 ? (
             mesa.pedidosBebidas.map((pedido) => (
               <li key={pedido._id} className="pedido--mesadetalles">
-                <p className="pedido-alergias--mesadetalles">
-                  Alergias: {pedido.alergias || "Sin especificar"}
-                </p>
                 <p className="pedido-estado--mesadetalles">{pedido.estado}</p>
                 <ul className="lista-productos--mesadetalles">
                   {pedido.productos?.length > 0 ? (
