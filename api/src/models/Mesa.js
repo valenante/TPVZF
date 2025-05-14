@@ -14,10 +14,14 @@ const mesaSchema = new Schema({
     type: Number,
     default: 0,
     set: function(value) {
-      // Redondea el valor a dos decimales antes de guardarlo
       return parseFloat(value.toFixed(2));
     }
   },
+  comensales: {
+    type: Number,
+    default: 1, // ✅ Por defecto 1 si no se especifica
+    min: 1      // ✅ No puede ser menor que 1
+  }
 });
 
 export default model('Mesa', mesaSchema);

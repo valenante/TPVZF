@@ -6,12 +6,16 @@ import Cart from "../models/Cart.js";
 import Eliminaciones from "../models/Eliminacion.js";
 import Mesa from "../models/Mesa.js";
 import PDFDocument from "pdfkit";
-import nodemailer from "nodemailer";
 import { fileURLToPath } from "url";
 import path from "path";
+import axios from 'axios';
+import FormData from 'form-data';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY;
+const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
+const MAILGUN_REGION = process.env.MAILGUN_REGION || 'eu';
 
 export const obtenerCajaAbierta = async (req, res) => {
     try {
@@ -368,26 +372,32 @@ const generarPDF = (mesasCerradas, total, totalesMetodoPago) => {
     });
 };
 
-const enviarEmailConPDF = async (pdfBuffer) => {
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
 
-    await transporter.sendMail({
-        from: '"Sistema TPV" valentinoantenucci1@gmail.com',
-        to: "valentinoantenucci1@gmail.com", // Correo del destinatario
-        subject: "Informe Diario - Cierre de Caja",
-        text: "Adjunto se encuentra el informe diario del cierre de caja.",
-        attachments: [
-            {
-                filename: `informe-diario-${new Date().toISOString().slice(0, 10)}.pdf`,
-                content: pdfBuffer,
-                contentType: "application/pdf",
-            },
-        ],
+export const enviarEmailConPDF = async (pdfBuffer) => {
+  const form = new FormData();
+
+  form.append('from', `Zabor Féten <no-reply@${MAILGUN_DOMAIN}>`);
+  form.append('to', 'valentinoantenucci1@gmail.com');
+  form.append('subject', 'Informe Diario - Cierre de Caja');
+  form.append('text', 'Adjunto se encuentra el informe diario del cierre de caja.');
+
+  form.append('attachment', pdfBuffer, {
+    filename: `informe-diario-${new Date().toISOString().slice(0, 10)}.pdf`,
+    contentType: 'application/pdf',
+  });
+
+  const apiUrl = `https://api.${MAILGUN_REGION}.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`;
+
+  try {
+    await axios.post(apiUrl, form, {
+      auth: {
+        username: 'api',
+        password: MAILGUN_API_KEY,
+      },
+      headers: form.getHeaders(),
     });
+    console.log('✅ Correo enviado con Mailgun');
+  } catch (err) {
+    console.error('❌ Error al enviar correo con Mailgun:', err.response?.data || err);
+  }
 };

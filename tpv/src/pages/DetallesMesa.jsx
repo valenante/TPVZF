@@ -41,6 +41,8 @@ const DetalleMesa = () => {
           pedidosBebidas: pedidosBebidasDetalles,
         }));
 
+        console.log(mesa);
+
         // Obtener productos únicos de pedidos y pedidosBebidas
         const productIds = [
           ...new Set([
@@ -121,6 +123,36 @@ const DetalleMesa = () => {
     }
   };
 
+  const abrirMesa = async () => {
+    const comensales = prompt("¿Cuántos comensales hay? (número)");
+
+    if (!comensales || isNaN(comensales) || Number(comensales) <= 0) {
+      alert("Número de comensales inválido.");
+      return;
+    }
+
+    try {
+      await api.put(`/mesas/mesas/${mesa._id}/abrir`, { comensales: Number(comensales) });
+      alert("Mesa abierta con éxito");
+      navigate(0); // Recarga la vista
+    } catch (error) {
+      console.error("Error al abrir la mesa:", error);
+      alert(error.response?.data?.error || "Hubo un problema al abrir la mesa.");
+    }
+  };
+
+
+  const imprimirCuenta = async () => {
+    try {
+      await api.post(`/cuenta/${mesa._id}/imprimir-cuenta`);
+      alert("Cuenta enviada a impresión.");
+    } catch (error) {
+      console.error("Error al imprimir la cuenta:", error);
+      alert(error.response?.data?.error || "Hubo un problema al imprimir la cuenta.");
+    }
+  };
+
+
   const agregarProducto = async (productoPersonalizado) => {
     try {
       // Determinar si el producto es una bebida o un plato
@@ -147,13 +179,13 @@ const DetalleMesa = () => {
           ingredientes: productoPersonalizado.ingredientes || [],
           opcionesPersonalizables:
             productoPersonalizado.opciones &&
-            Object.keys(productoPersonalizado.opciones).length > 0
+              Object.keys(productoPersonalizado.opciones).length > 0
               ? Object.entries(productoPersonalizado.opciones).map(
-                  ([tipo, opcion]) => ({
-                    tipo,
-                    opcion,
-                  })
-                )
+                ([tipo, opcion]) => ({
+                  tipo,
+                  opcion,
+                })
+              )
               : [],
         },
       });
@@ -164,8 +196,7 @@ const DetalleMesa = () => {
       }));
 
       alert(
-        `Producto ${
-          esBebida ? "bebida" : "plato"
+        `Producto ${esBebida ? "bebida" : "plato"
         } agregado al pedido con éxito.`
       );
 
@@ -206,6 +237,8 @@ const DetalleMesa = () => {
     );
   }
 
+  console.log(mesa.pedidos)
+
   return (
     <div className="detalle-mesa--mesadetalles">
       <div className="contenido-mesa--mesadetalles">
@@ -224,11 +257,10 @@ const DetalleMesa = () => {
                       return (
                         <li
                           key={producto.productoId}
-                          className={`producto--mesadetalles ${
-                            producto.estadoPreparacion === "listo"
-                              ? "producto-listo"
-                              : ""
-                          }`}
+                          className={`producto--mesadetalles ${producto.estadoPreparacion === "listo"
+                            ? "producto-listo"
+                            : ""
+                            }`}
                         >
                           {detalle
                             ? `${detalle.nombre} - ${producto.cantidad} unidad(es)`
@@ -275,11 +307,10 @@ const DetalleMesa = () => {
                       return (
                         <li
                           key={producto.producto._id}
-                          className={`producto--mesadetalles ${
-                            producto.estadoPreparacion === "listo"
-                              ? "producto-listo"
-                              : ""
-                          }`}
+                          className={`producto--mesadetalles ${producto.estadoPreparacion === "listo"
+                            ? "producto-listo"
+                            : ""
+                            }`}
                         >
                           {producto.producto
                             ? `${producto.producto.nombre} - ${producto.cantidad} unidad(es)`
@@ -323,6 +354,24 @@ const DetalleMesa = () => {
         >
           Cerrar Mesa
         </button>
+        {mesa.estado === "cerrada" && (
+          <button
+            onClick={abrirMesa}
+            className="boton-abrir--mesadetalles"
+          >
+            Abrir Mesa
+          </button>
+        )}
+
+        {mesa.estado === "abierta" && (
+          <button
+            onClick={imprimirCuenta}
+            className="boton-imprimir--mesadetalles"
+          >
+            Imprimir Cuenta
+          </button>
+        )}
+
         {showModal && (
           <MetodoPago
             total={mesa.total}

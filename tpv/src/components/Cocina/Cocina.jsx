@@ -10,6 +10,16 @@ const Cocina = () => {
   const [mostrarFinalizados, setMostrarFinalizados] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const { socket } = useContext(SocketContext);
+  const [mesas, setMesas] = useState([]);
+
+  const cargarMesas = async () => {
+    try {
+      const response = await api.get('/mesas/mesas-abiertas/mesas-abiertas');
+      setMesas(response.data);
+    } catch (error) {
+      console.error('Error al cargar mesas:', error);
+    }
+  };
 
   const calcularTiempoTranscurrido = (fecha) => {
     const ahora = new Date();
@@ -31,18 +41,18 @@ const Cocina = () => {
 
   useEffect(() => {
     if (!socket) return;
-  
+
     const manejarNuevoPedido = () => {
       cargarPedidos();
     };
-  
+
     socket.on("nuevoPedido", manejarNuevoPedido);
-  
+
     return () => {
       socket.off("nuevoPedido", manejarNuevoPedido);
     };
   }, [socket]); // 👈 importante agregar socket como dependencia  
-  
+
   const marcarProductoComoListo = async (pedidoId, productoId) => {
     try {
       await api.put(`/pedidos/${pedidoId}/producto/${productoId}`, { estadoPreparacion: 'listo' });
@@ -63,9 +73,25 @@ const Cocina = () => {
 
   useEffect(() => {
     cargarPedidos();
-    const interval = setInterval(cargarPedidos, 30000);
+    cargarMesas();
+    const interval = setInterval(() => {
+      cargarPedidos();
+      cargarMesas();
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  const getComensalesMesa = (numeroMesa) => {
+    const mesa = mesas.find(m => m.numero === numeroMesa);
+    return mesa?.comensales || 1;
+  };
+
+  const getComensalesPedido = (pedido) => {
+    return pedido.comensales && pedido.comensales > 0
+      ? pedido.comensales
+      : getComensalesMesa(pedido.mesa.numero);
+  };
+
 
   const toggleDetalle = (producto) => {
     setProductoSeleccionado(productoSeleccionado === producto ? null : producto);
@@ -92,7 +118,7 @@ const Cocina = () => {
               <div key={pedido._id} className="pedido-card--cocina">
                 <div className="pedido-header--cocina">
                   <h3>Mesa {pedido.mesa.numero}</h3>
-                  <p>{pedido.comensales} comensales</p>
+                  <p>{getComensalesPedido(pedido)} comensales</p>
                 </div>
                 <p><strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}</p>
 

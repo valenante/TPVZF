@@ -6,6 +6,9 @@ import Producto from '../models/Producto.js';
 import { io } from '../../index.js';
 
 // Crear un nuevo pedido
+import axios from 'axios';
+
+// Crear un nuevo pedido
 export const crearPedido = async (req, res) => {
   try {
     const {
@@ -20,9 +23,6 @@ export const crearPedido = async (req, res) => {
       tipoPrecio,
     } = req.body;
 
-    req.body;
-
-    // Buscar la mesa usando el ObjectId
     const mesaExistente = await Mesa.findById(mesa);
 
     if (!mesaExistente) {
@@ -30,70 +30,44 @@ export const crearPedido = async (req, res) => {
       return res.status(404).json({ error: 'Mesa no encontrada' });
     }
 
-    // Crear el nuevo pedido con el ObjectId de la mesa
     const nuevoPedido = new Pedido({
-      productos, // Pasamos los productos directamente desde la solicitud
-      total, // Total del pedido
+      productos,
+      total,
       comensales,
       alergias,
       pan,
       tipoPrecio,
-      mesa: mesaExistente._id, // Asignar el ObjectId de la mesa
+      mesa: mesaExistente._id,
       precioSeleccionado,
     });
 
-    // Redondear el total del pedido a dos decimales
     nuevoPedido.total = parseFloat(nuevoPedido.total.toFixed(2));
-
-    // Guardar el nuevo pedido en la base de datos
     await nuevoPedido.save();
 
-    // Agregar el ID del nuevo pedido al campo 'pedidos' de la mesa
     mesaExistente.pedidos.push(nuevoPedido._id);
-
-    // Sumar el total del nuevo pedido al total de la mesa
     mesaExistente.total += nuevoPedido.total;
-
-    // Redondear el total de la mesa a dos decimales
     mesaExistente.total = parseFloat(mesaExistente.total.toFixed(2));
-
-    // Guardar la mesa actualizada
     await mesaExistente.save();
 
-    // Crear ventas para cada producto del pedido
     for (const producto of productos) {
-      // Crear la venta
       const venta = new Venta({
-        producto: producto.producto, // Asociamos el producto a la venta
-        pedidoId: nuevoPedido._id, // Asociamos el pedido a la venta
+        producto: producto.producto,
+        pedidoId: nuevoPedido._id,
         cantidad: producto.cantidad,
         total,
       });
 
-      // Guardar la venta en la base de datos
       await venta.save();
 
-      // Ahora, agregar la venta directamente al producto en la colección de productos
       const productoEnDB = await Producto.findById(producto.producto);
 
       if (productoEnDB) {
-        // Añadimos la venta al campo `ventas` del producto
         productoEnDB.ventas.push(venta._id);
-
-        // Guardar el producto con la venta asociada
+        productoEnDB.stock -= producto.cantidad;
         await productoEnDB.save();
-
-        // **Restar la cantidad al stock del producto**
-        productoEnDB.stock -= producto.cantidad; // Restar la cantidad vendida al stock
-        await productoEnDB.save(); // Guardar la actualización del stock
       } else {
-        console.error(
-          'Producto no encontrado en la base de datos:',
-          producto.productoId
-        );
-        return res
-          .status(400)
-          .json({ error: 'Producto no encontrado en la base de datos' });
+        console.error('Producto no encontrado en la base de datos:', producto.productoId);
+        return res.status(400).json({ error: 'Producto no encontrado en la base de datos' });
       }
     }
 
@@ -101,19 +75,40 @@ export const crearPedido = async (req, res) => {
       await Cart.findByIdAndDelete(cartId);
     }
 
-    // Emitir un evento con el nuevo pedido para los clientes conectados
+    // Emitir el evento de nuevo pedido
     req.io.emit('nuevoPedido', nuevoPedido);
+
+    // Enviar a impresión
+    try {
+      await axios.post('http://localhost:4000/imprimir', {
+        mesaNumero: mesaExistente.numero,
+        comensales: nuevoPedido.comensales,
+        productos: productos.map(p => ({
+          nombre: p.nombre,
+          cantidad: p.cantidad,
+          opcionesPersonalizables: p.opcionesPersonalizables,
+          alergiasComensal: p.alergiasComensal,
+          tipoPrecio: p.tipoPrecio,
+        })),
+        total: nuevoPedido.total,
+      });
+      console.log('Pedido enviado a la impresora');
+    } catch (error) {
+      console.error('Error al enviar el pedido a la impresora:', error.message);
+    }
 
     res.status(201).json({
       message: 'Pedido creado con éxito',
       pedidoId: nuevoPedido._id,
       pedido: nuevoPedido,
     });
+
   } catch (error) {
     console.error('Error al procesar el pedido:', error);
     res.status(400).json({ error: error.message });
   }
 };
+
 
 export const agregarProductoAlPedido = async (req, res) => {
   const { mesaId } = req.params;

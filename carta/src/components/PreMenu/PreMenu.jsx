@@ -147,7 +147,7 @@ const PreMenu = () => {
       localStorage.setItem("tokenPreMenu", "validated");
       localStorage.setItem("nombreComensal", formData.nombre);
       localStorage.setItem("alergiasComensal", formData.alergias);
-
+      localStorage.setItem("comensales", formData.comensales);
 
       navigate(`/carta?mesa=${mesa}`);
     } catch (error) {
