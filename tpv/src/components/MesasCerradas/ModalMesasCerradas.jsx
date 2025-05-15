@@ -42,8 +42,8 @@ const RecuperarMesaModal = ({ onClose }) => {
     setRecuperando(true);
     try {
       await api.post(`/mesas/recuperar-mesa/${mesaId}`);
-      alert("Mesa recuperada con éxito.");
       setMesasCerradas((prev) => prev.filter((mesa) => mesa._id !== mesaId));
+      window.location.reload(); // Recargar la página para reflejar los cambios
       onClose();
     } catch (error) {
       console.error("Error al recuperar la mesa:", error);

@@ -20,6 +20,7 @@ const PedidosFinalizados = ({ onClose }) => {
   }, []);
 
   return (
+    <div className="modal-overlay--finalizados">
       <div className="pedidos-finalizados">
         <h2>Pedidos Finalizados (últimos 20m)</h2>
         <button onClick={onClose} className="boton-cerrar--finalizados">Cerrar</button>
@@ -42,6 +43,7 @@ const PedidosFinalizados = ({ onClose }) => {
           ))
         )}
       </div>    
+    </div>
   );
 };
 

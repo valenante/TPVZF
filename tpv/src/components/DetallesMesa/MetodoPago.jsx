@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import "./MetodoPago.css";
+import "../Modal/ModalConfirmacion";
 
 const MetodoPagoModal = ({ total, onClose, onConfirm }) => {
   const [efectivo, setEfectivo] = useState("");
   const [tarjeta, setTarjeta] = useState("");
   const [propina, setPropina] = useState(""); // Campo separado para propina
   const [error, setError] = useState("");
+  const [mostrarConfirmacionFinal, setMostrarConfirmacionFinal] = useState(false);
+  const [confirmacionMensaje, setConfirmacionMensaje] = useState("");
 
   const handleConfirm = () => {
     const efectivoValue = parseFloat(efectivo) || 0;
     const tarjetaValue = parseFloat(tarjeta) || 0;
-    const propinaValue = parseFloat(propina) || 0; // Propina como campo independiente
+    const propinaValue = parseFloat(propina) || 0;
     const totalPago = efectivoValue + tarjetaValue;
 
     if (totalPago < total) {
@@ -20,15 +23,16 @@ const MetodoPagoModal = ({ total, onClose, onConfirm }) => {
       return;
     }
 
-    const confirmacion = window.confirm(
-      `El total ingresado es ${totalPago.toFixed(2)} €.\n${
-        propinaValue > 0 ? `Incluye una propina de ${propinaValue.toFixed(2)} €.` : ""
-      } ¿Estás seguro de confirmar este método de pago?`
-    );
+    const cambio = totalPago - total;
+    const mensaje = `El cliente ha pagado ${totalPago.toFixed(2)} €. ${cambio > 0
+      ? `Debe devolver ${cambio.toFixed(2)} €.`
+      : `Sin cambio.`}${propinaValue > 0
+        ? ` Además, ha dejado una propina de ${propinaValue.toFixed(2)} €.`
+        : ''
+      } ¿Deseas confirmar este pago?`;
 
-    if (!confirmacion) return;
-
-    onConfirm({ efectivo: efectivoValue, tarjeta: tarjetaValue, propina: propinaValue });
+    setConfirmacionMensaje(mensaje);
+    setMostrarConfirmacionFinal(true);
   };
 
   return (
@@ -76,6 +80,31 @@ const MetodoPagoModal = ({ total, onClose, onConfirm }) => {
           </button>
         </div>
       </div>
+      {mostrarConfirmacionFinal && (
+        <div className="modal--cuenta">
+          <div className="modal-content--cuenta">
+            <p>{confirmacionMensaje}</p>
+            <div className="botones--cuenta">
+              <button onClick={() => setMostrarConfirmacionFinal(false)} className="boton-cancelar--cuenta">
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  onConfirm({
+                    efectivo: parseFloat(efectivo) || 0,
+                    tarjeta: parseFloat(tarjeta) || 0,
+                    propina: parseFloat(propina) || 0,
+                    cambio: (parseFloat(efectivo) || 0) + (parseFloat(tarjeta) || 0) - total
+                  });
+                }}
+                className="boton-confirmar--cuenta"
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

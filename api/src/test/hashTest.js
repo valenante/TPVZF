@@ -9,5 +9,3 @@ const ejemploFactura = {
 
 const hashAnterior = "0000";
 const hashGenerado = generarHashFactura(ejemploFactura, hashAnterior);
-
-console.log("Hash generado:", hashGenerado);

@@ -62,8 +62,6 @@ export const crearPedido = async (req, res) => {
     // Emitir evento para clientes conectados
     req.io.emit('nuevoPedido', nuevoPedido);
 
-    console.log(nuevoPedido.productos)
-
     // Enviar a impresión
     try {
       await axios.post('http://localhost:4000/imprimir-bebidas', {
@@ -77,7 +75,6 @@ export const crearPedido = async (req, res) => {
           alergiasComensal: p.alergiasComensal || '',
         })),
       });
-      console.log('Pedido de bebidas enviado a la impresora');
     } catch (error) {
       console.error('Error al enviar el pedido de bebidas a la impresora:', error.message);
     }
@@ -284,8 +281,6 @@ export const agregarProductoBebida = async (req, res) => {
   const { mesaId } = req.params;
   const { productos } = req.body;
 
-  console.log('Productos bebida recibidos:', productos);
-
   if (!Array.isArray(productos) || productos.length === 0) {
     return res.status(400).json({ error: 'Debes enviar al menos una bebida válida.' });
   }
@@ -371,7 +366,6 @@ export const agregarProductoBebida = async (req, res) => {
           mensaje: mensaje || '', // Guarda el mensaje si existe
         })),
       });
-      console.log('Pedido de bebidas enviado a la impresora');
     } catch (error) {
       console.error('Error al enviar el pedido de bebidas a la impresora:', error.message);
     }

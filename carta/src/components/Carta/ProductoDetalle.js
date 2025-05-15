@@ -23,6 +23,7 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
   const [acompanantesDisponibles, setAcompanantesDisponibles] = useState([]);
   const [seleccionPrecio, setSeleccionPrecio] = useState(null);
   const [tipoPrecio, setTipoPrecio] = useState(null);
+  const [adicionalesSeleccionados, setAdicionalesSeleccionados] = useState({});
 
   const categoriasConAcompanante = [
     "vodka",
@@ -68,7 +69,7 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
   useEffect(() => {
     let initialTipoPrecio = null;
     let initialSeleccionPrecio = null;
-  
+
     if (producto.tipo === "bebida") {
       if (producto.precios.precioBase !== null && producto.precios.precioBase >= 0) {
         initialTipoPrecio = "precioBase";
@@ -95,10 +96,10 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
         initialSeleccionPrecio = producto.precios.precioBase;
       }
     }
-  
+
     setTipoPrecio(initialTipoPrecio);
     setSeleccionPrecio(initialSeleccionPrecio);
-  }, [producto]);  
+  }, [producto]);
 
   const manejarCantidad = (incremento) => {
     setCantidad((prev) => Math.max(1, prev + incremento));
@@ -134,13 +135,21 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
       toast.error("Debes seleccionar un precio válido antes de continuar.");
       return;
     }
-    
+    const adicionalesSeleccionados = producto.adicionales
+      ?.filter((_, index) => opcionesSeleccionadas[`adicional_${index}`])
+      .map((a) => ({ nombre: a.nombre, precio: a.precio })) || [];
+
+    const totalAdicionales = adicionalesSeleccionados.reduce(
+      (acc, a) => acc + a.precio,
+      0
+    );
+
     const pedido = {
       productId: producto._id,
       cantidad,
       ingredientes: ingredientesEliminados, // Solo ingredientes eliminados
       opciones: opcionesSeleccionadas,
-      precioSeleccionado: seleccionPrecio, // Asegúrate de incluir este campo
+      precioSeleccionado: seleccionPrecio + totalAdicionales, // Asegúrate de incluir este campo
       total: seleccionPrecio * cantidad, // Calcular el total basado en el precio seleccionado
       tipoPrecio: tipoPrecio, // Asegúrate de incluir este campo
       mesa: numeroMesa,
@@ -148,6 +157,7 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
       alergias,
       acompanante,
       tipoPlato: tipoPlato, // Agregar tipo de plato (compartir o individual)
+      adicionales: adicionalesSeleccionados, // Incluye adicionales
     };
 
     try {
@@ -183,8 +193,6 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
       console.error("Error al agregar al carrito:", error);
     }
   };
-
-  console.log(producto);
 
   return ReactDOM.createPortal(
     <div className="modal-detalle">
@@ -303,7 +311,7 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
         ) : (
           <p>
             {producto.precios.precioBase !== null &&
-            producto.precios.precioBase !== undefined ? (
+              producto.precios.precioBase !== undefined ? (
               <p>
                 <Trans>Precio:</Trans> {producto.precios.precioBase} €
               </p>
@@ -386,6 +394,31 @@ const ProductoDetalle = ({ producto, cerrarModal }) => {
               </div>
             </>
           )}
+
+         {producto.adicionales && producto.adicionales.length > 0 && (
+          <>
+            <h4>Adicionales:</h4>
+            <ul>
+              {producto.adicionales.map((adicional, index) => (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={opcionesSeleccionadas[`adicional_${index}`] || false}
+                      onChange={(e) =>
+                        setOpcionesSeleccionadas((prev) => ({
+                          ...prev,
+                          [`adicional_${index}`]: e.target.checked,
+                        }))
+                      }
+                    />
+                    {adicional.nombre} (+{adicional.precio} €)
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         <div>
           <button className="cancelar-btn" onClick={cerrarModal}>

@@ -1,0 +1,110 @@
+/* Contenedor del modal */
+.modal-categoria {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Contenido del modal */
+.modal-contenido {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+}
+
+/* Título */
+.modal-contenido h2 {
+  text-align: center;
+  color: #6A0DAD;
+  margin-bottom: 20px;
+}
+
+/* Lista de productos en formato grid */
+.modal-contenido ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+  justify-content: center;
+}
+/* Bloques clicables de productos */
+.modal-contenido li {
+  width: 100px;
+  height: 100px;
+  background: var(--color-secundario); /* Tu naranja */
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.modal-contenido li:hover {
+  background: var(--color-principal); /* Tu morado */
+}
+
+/* Cantidad en la esquina superior derecha */
+.modal-contenido li span.cantidad {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #6A0DAD;
+  color: #fff;
+  border-radius: 50%;
+  padding: 5px 8px;
+  font-size: 0.8rem;
+}
+
+/* Botones de confirmar y cerrar */
+.modal-contenido button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--color-principal);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-contenido button:first-of-type {
+  background-color: #FF6700;
+  color: #fff;
+}
+
+.modal-contenido button:first-of-type:hover {
+  background-color: #6A0DAD;
+}
+
+.modal-contenido button:last-of-type {
+  background-color: #ccc;
+}
+
+.modal-contenido button:last-of-type:hover {
+  background-color: #bbb;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .modal-contenido {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .modal-contenido ul {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+}

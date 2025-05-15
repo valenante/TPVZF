@@ -88,6 +88,26 @@
 
 /* Responsive: SubNavbar en pantallas pequeñas */
 @media (max-width: 768px) {
+    .subnavbar-menu--subnavbar.open--subnavbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Añadido para centrar verticalmente */
+    gap: 10px; /* Separación entre botones */
+  }
+
+
+  .subnavbar-button--subnavbar {
+    width: 80%; /* Para que no se vean tan pegados a los bordes */
+    max-width: 300px; /* Límite de tamaño en pantallas grandes */
+    margin: 5px 0;
+    text-align: center; /* Centra el texto dentro del botón */
+  }
+
+  .subnavbar-button--subnavbar select {
+    width: 100%;
+  }
+
   .subnavbar-menu--subnavbar {
     display: none;
     flex-direction: column;

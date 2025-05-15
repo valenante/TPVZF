@@ -7,7 +7,7 @@ import "../../styles/CarritoModal.css";
 
 const CarritoModal = ({ cerrarModal }) => {
   const { carrito, cargarCarrito, mesaId, obtenerMesaId } =
-  useContext(ProductosContext);
+    useContext(ProductosContext);
   const [searchParams] = useSearchParams();
   const numeroMesa = searchParams.get("mesa");
   const { comensal } = useComensal();
@@ -91,6 +91,7 @@ const CarritoModal = ({ cerrarModal }) => {
           nombreComensal: item.nombre,
           alergiasComensal: item.alergias,
           acompanante: item.acompanante,
+          adicionales: item.adicionales,
         };
 
         if (item.productId.tipo === "bebida") {
@@ -112,6 +113,8 @@ const CarritoModal = ({ cerrarModal }) => {
           ingredientesEliminados: productosPlatos.ingredientes,
           comensales,
           tipoPrecio: productosPlatos.tipoPrecio,
+          adicionales: productosPlatos.adicionales,
+
         };
         await api.post("/pedidos", pedidoPlatos);
       }
@@ -134,7 +137,7 @@ const CarritoModal = ({ cerrarModal }) => {
       await api.delete(`/cart/${carritoId}`, {
         headers: { "X-Cart-ID": carritoId },
       });
-      
+
       localStorage.removeItem(`carritoMongoId-${numeroMesa}`);
 
       cargarCarrito();
@@ -147,9 +150,18 @@ const CarritoModal = ({ cerrarModal }) => {
   const calcularTotal = () => {
     return carrito.items
       ?.reduce((total, item) => {
-        const precio =
-          item.precioSeleccionado || item.productId.precios.precioBase; // Usar precio seleccionado o precio base
-        return total + precio * item.cantidad;
+        const precioBase =
+          item.precioSeleccionado || item.productId.precios.precioBase;
+
+        // Sumar los precios de los adicionales seleccionados
+        const totalAdicionales = (item.adicionales || []).reduce(
+          (acc, adicional) => acc + (adicional.precio || 0),
+          0
+        );
+
+        const precioFinalUnitario = precioBase + totalAdicionales;
+
+        return total + precioFinalUnitario * item.cantidad;
       }, 0)
       .toFixed(2);
   };

@@ -1,0 +1,140 @@
+:root {
+  --color-principal: #6A0DAD; /* Morado */
+  --color-secundario: #FF6700; /* Naranja */
+  --color-fondo: #f9f9f9;
+  --color-texto: #333;
+  --color-borde: #ddd;
+  --color-exito: #4CAF50;
+  --color-error: #f44336;
+}
+
+/* Contenedor principal */
+.facturas-page {
+  max-width: 170vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  margin: auto;
+  padding: 1rem;
+  background-color: var(--color-fondo);
+  border-radius: 8px;
+}
+
+/* Título */
+.facturas-page h1 {
+  color: var(--color-principal);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Filtros */
+.filtros-facturas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.filtros-facturas input {
+  padding: 0.5rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 4px;
+}
+
+/* Botones */
+.filtros-facturas button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-principal);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.filtros-facturas button:hover {
+  background-color: var(--color-secundario);
+}
+
+/* Tabla */
+.facturas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.facturas-table th,
+.facturas-table td {
+  border: 1px solid var(--color-borde);
+  padding: 0.5rem;
+  text-align: left;
+  word-break: break-word;
+}
+
+.facturas-table th {
+  background-color: var(--color-principal);
+  color: white;
+}
+
+/* Botón de acción en la tabla */
+.facturas-table button {
+  padding: 0.3rem 0.7rem;
+  background-color: var(--color-secundario);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.facturas-table button:hover {
+  background-color: #e55b00;
+}
+
+.paginacion-facturas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.paginacion-facturas button {
+  padding: 8px 16px;
+  border: none;
+  background-color: var(--color-principal); /* Morado profundo */
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.paginacion-facturas button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.paginacion-facturas button:hover:not(:disabled) {
+  background-color: var(--color-secundario); /* Naranja vibrante */
+  transform: scale(1.05);
+}
+
+.paginacion-facturas span {
+  font-size: 1rem;
+  color: var(--color-principal);
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filtros-facturas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .facturas-table th, .facturas-table td {
+    font-size: 0.9rem;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api";
 import PasswordModal from "../Password/PasswordModal";
@@ -101,6 +101,21 @@ const SubNavbar = () => {
         >
           Cerrar Caja
         </button>
+        <div className="subnavbar-button--subnavbar">
+          <select
+            onChange={(e) => {
+              const opcion = e.target.value;
+              if (opcion === "facturas") {
+                navigate("/facturas");
+              }
+            }}
+            defaultValue=""
+          >
+            <option value="" disabled>Más</option>
+            <option value="facturas">Facturas</option>
+          </select>
+        </div>
+
 
         <button onClick={logout} className="subnavbar-button--subnavbar">
           Cerrar Sesión

@@ -59,8 +59,6 @@ const Reserva = () => {
         api.get("/disponibilidad"),
       ]);
 
-      console.log(resFranjas);
-
       if (resFranjas.data?.franjas) {
         setFranjas(resFranjas.data.franjas);
       }

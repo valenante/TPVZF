@@ -273,6 +273,25 @@ const EditProduct = ({ product, onSave, onCancel, onDelete }) => {
           </div>
         </label>
 
+        {/* Adicional */}
+        <label className="label--editar">
+          Precio Adicional (Unidad extra):
+          <input
+            type="number"
+            value={formData.adicionales?.[0]?.precio || ""}
+            placeholder="Precio del adicional"
+            onChange={(e) => {
+              const nuevoPrecio = parseFloat(e.target.value);
+              setFormData((prev) => ({
+                ...prev,
+                adicionales: [{ nombre: "Unidad adicional", precio: nuevoPrecio }],
+              }));
+            }}
+            className="input--editar"
+          />
+        </label>
+
+
         {/* Editar Stock */}
         <label className="label--editar">
           Stock:

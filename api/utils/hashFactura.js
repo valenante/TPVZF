@@ -7,8 +7,6 @@ import crypto from 'crypto';
  * @returns {string} - Hash generado en base64.
  */
 export function generarHashFactura(factura, hashAnterior) {
-  console.log('Generando hash para la factura:', factura);
-  console.log('Hash anterior:', hashAnterior);
   const datos = [
     factura.numeroFactura,
     factura.fechaExpedicion,

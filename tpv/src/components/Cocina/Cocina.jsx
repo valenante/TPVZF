@@ -91,12 +91,6 @@ const Cocina = () => {
       ? pedido.comensales
       : getComensalesMesa(pedido.mesa.numero);
   };
-
-
-  const toggleDetalle = (producto) => {
-    setProductoSeleccionado(productoSeleccionado === producto ? null : producto);
-  };
-
   return (
     <div className="cocina--cocina">
       <h1 className="titulo--cocina">Pedidos Pendientes</h1>
@@ -121,7 +115,6 @@ const Cocina = () => {
                   <p>{getComensalesPedido(pedido)} comensales</p>
                 </div>
                 <p><strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}</p>
-
                 <ul className="productos-list--cocina">
                   {pedido.productos
                     .filter((producto) => ['plato', 'tapaRacion'].includes(producto.tipo))
@@ -140,17 +133,10 @@ const Cocina = () => {
                               onChange={() => marcarProductoComoListo(pedido._id, producto._id)}
                             />
                             <span style={{ color: nombreColor }}>
-                              {producto.cantidad}x {producto.producto?.nombre || 'Producto no disponible'} {producto.tipoPrecio !== 'precioBase' && `(${producto.tipoPrecio})`}
+                              {producto.cantidad}x {producto.tipoPrecio !== 'precioBase' && `${producto.tipoPrecio}`} {producto.producto?.nombre || 'Producto no disponible'} {producto.adicionales.length > 0 && (
+                                <p>{producto.adicionales.map(ad => `${ad.nombre}`)}</p>
+                              )}
                             </span>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleDetalle(producto);
-                              }}
-                              className="info-btn"
-                            >
-                              ℹ️
-                            </button>
                           </label>
 
                           {producto.alergiasComensal && (
@@ -178,13 +164,10 @@ const Cocina = () => {
                           {producto.especificaciones.length > 0 && (
                             <p><strong>Especificaciones:</strong> {producto.especificaciones.join(', ')}</p>
                           )}
-                          {producto.opcionesPersonalizables?.length > 0 && (
-                            <ul>
-                              {producto.opcionesPersonalizables.map((op, i) => (
-                                <li key={i}><strong>{op.tipo}: </strong>{op.opcion.join(', ')}</li>
-                              ))}
-                            </ul>
+                          {producto.mensaje && (
+                            <p className="mensaje-producto--cocina">{producto.mensaje}</p>
                           )}
+
                         </li>
                       );
                     })}

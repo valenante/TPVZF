@@ -73,7 +73,7 @@ const Dashboard = () => {
           <div className="search-container--dashboard">
             <form onSubmit={handleSearchSubmit}>
               <input
-                type="text"
+                type="number"
                 className="search-input--dashboard"
                 placeholder="Número de mesa"
                 value={searchInput}

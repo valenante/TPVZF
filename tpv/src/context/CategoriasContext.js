@@ -12,7 +12,7 @@ export const CategoriasProvider = ({ children }) => {
       console.error("Tipo inválido:", type);
       return;
     }
-  
+
     try {
       const response = await api.get(`/productos/categories/${type}`);
       setCategories((prevCategories) => {
@@ -27,31 +27,24 @@ export const CategoriasProvider = ({ children }) => {
       console.error("Error al obtener categorías:", error);
     }
   };
-  
 
   const fetchProducts = async (category) => {
     if (!category) {
       console.error("Categoría inválida:", category);
-      return;
+      return [];
     }
-  
+
     try {
-      setProducts((prevProducts) => {
-        // Verifica si ya existen productos para la categoría
-        if (prevProducts.some((product) => product.categoria === category)) {
-          return prevProducts; // Evita recargar productos
-        }
-        return prevProducts;
-      });
-  
-      // Si no están cargados, realiza la solicitud
       const response = await api.get(`/productos/category/${encodeURIComponent(category)}`);
-      setProducts(response.data.products);
+      const loadedProducts = response.data.products || [];
+      setProducts(loadedProducts);
+      return loadedProducts;  // ✅ Devuelve los productos
     } catch (error) {
       console.error("Error al obtener productos:", error);
+      return [];
     }
   };
-  
+
   const updateProduct = async (product) => {
     try {
       await api.put(`/productos/${product._id}`, product);

@@ -1,16 +1,29 @@
-/* Contenedor de Pedidos Finalizados */
+.modal-overlay--finalizados {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
 .pedidos-finalizados {
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    margin: 20px auto;
-    border: 3px solid var(--color-principal);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  max-height: 80vh; /* Limita la altura */
+  overflow-y: auto; /* Scroll si es necesario */
+  border: 3px solid var(--color-principal);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 /* Título */

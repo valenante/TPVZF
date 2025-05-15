@@ -7,7 +7,7 @@ import { generarHashFactura } from '../../utils/hashFactura.js';
  * @returns {Promise<Object>} - FacturaHash guardada.
  */
 export const registrarFacturaConHash = async (datosFactura) => {
-  const { numeroFactura, fechaExpedicion, clienteNombre, clienteNIF, importeTotal } = datosFactura;
+  const { numeroFactura, fechaExpedicion, clienteNombre, clienteNIF, productos, importeTotal } = datosFactura;
 
   // Buscar la última factura registrada para encadenar el hash
   const ultimaFactura = await FacturaHash.findOne().sort({ createdAt: -1 });
@@ -33,6 +33,7 @@ export const registrarFacturaConHash = async (datosFactura) => {
     fechaExpedicion,
     clienteNombre,
     clienteNIF,
+    productos,
     importeTotal,
     hash: nuevoHash,
     hashAnterior

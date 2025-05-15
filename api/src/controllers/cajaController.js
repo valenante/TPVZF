@@ -396,7 +396,6 @@ export const enviarEmailConPDF = async (pdfBuffer) => {
       },
       headers: form.getHeaders(),
     });
-    console.log('✅ Correo enviado con Mailgun');
   } catch (err) {
     console.error('❌ Error al enviar correo con Mailgun:', err.response?.data || err);
   }

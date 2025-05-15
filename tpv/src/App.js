@@ -12,6 +12,7 @@ import EstadisticasPage from "./pages/EstadisticasPage";
 import Login from "./pages/Login";
 import RutaProtegida from "./components/RutaProtegida/RutaProtegida";
 import Usuarios from "./pages/Usuarios";
+import Facturas from "./components/Facturas/FacturasPage";
 import Eliminacion from "./pages/Eliminaciones/Eliminaciones";
 import CajaDiaria from "./components/CajaDiaria/CajaDiaria";
 import MesasCerradas from "./components/MesasCerradas/MesasCerradas";
@@ -58,6 +59,14 @@ const AppContent = () => {
           element={
             <RutaProtegida rolesPermitidos={["admin"]}>
               <MesasCerradas />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path="/facturas"
+          element={
+            <RutaProtegida rolesPermitidos={["admin"]}>
+              <Facturas />
             </RutaProtegida>
           }
         />

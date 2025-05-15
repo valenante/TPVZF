@@ -92,7 +92,6 @@ export const crearPedido = async (req, res) => {
         })),
         total: nuevoPedido.total,
       });
-      console.log('Pedido enviado a la impresora');
     } catch (error) {
       console.error('Error al enviar el pedido a la impresora:', error.message);
     }
@@ -111,8 +110,6 @@ export const crearPedido = async (req, res) => {
 export const agregarProductoAlPedido = async (req, res) => {
   const { mesaId } = req.params;
   const { productos } = req.body;
-
-  console.log('Productos recibidos:', productos);
 
   if (!Array.isArray(productos) || productos.length === 0) {
     return res.status(400).json({ error: 'Debes enviar al menos un producto válido.' });
@@ -207,7 +204,6 @@ export const agregarProductoAlPedido = async (req, res) => {
         })),
         total: productos.reduce((sum, p) => sum + p.total, 0),
       });
-      console.log('Pedido enviado a la impresora');
     } catch (error) {
       console.error('Error al enviar el pedido a la impresora:', error.message);
     }

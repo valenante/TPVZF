@@ -15,10 +15,12 @@ const ProductoDetalle = ({
   ]);
   const [opcionesSeleccionadas, setOpcionesSeleccionadas] = useState({});
   const [acompanante, setAcompanante] = useState("");
+  const [mensajeProducto, setMensajeProducto] = useState("");
   const [acompanantesDisponibles, setAcompanantesDisponibles] = useState([]);
   const [tipoPrecio, setTipoPrecio] = useState(
     producto.tipoPrecio || "precioBase"
   );
+
   const [precioSeleccionado, setPrecioSeleccionado] = useState(() => {
     const inicial =
       typeof seleccionPrecioInicial === "number"
@@ -115,10 +117,19 @@ const ProductoDetalle = ({
   };
 
   const confirmarProducto = () => {
+    const adicionalesSeleccionados = producto.adicionales
+      ?.filter((_, index) => opcionesSeleccionadas[`adicional_${index}`])
+      .map((a) => ({ nombre: a.nombre, precio: a.precio })) || [];
+
+    const totalAdicionales = adicionalesSeleccionados.reduce(
+      (acc, a) => acc + a.precio,
+      0
+    );
+
     const productoPersonalizado = {
       ...producto,
       cantidad,
-      precioSeleccionado,
+      precioSeleccionado: precioSeleccionado + totalAdicionales,
       tipoPrecio,
       tipoPlato,
       acompanante,
@@ -126,7 +137,10 @@ const ProductoDetalle = ({
       ingredientes: producto.ingredientes.filter(
         (i) => !ingredientesSeleccionados.includes(i)
       ),
+      mensaje: mensajeProducto,
+      adicionales: adicionalesSeleccionados, // Guardamos los adicionales seleccionados
     };
+
     onConfirm(productoPersonalizado);
   };
 
@@ -232,14 +246,16 @@ const ProductoDetalle = ({
           )
         )}
 
-        <h4>Tipo de plato:</h4>
-        <select
-          value={tipoPlato}
-          onChange={(e) => setTipoPlato(e.target.value)}
-        >
-          <option value="compartir">Compartir</option>
-          <option value="individual">Individual</option>
-        </select>
+        {producto.tipo !== "bebida" && (
+          <><h4>Tipo de plato:</h4>
+            <select
+              value={tipoPlato}
+              onChange={(e) => setTipoPlato(e.target.value)}
+            >
+              <option value="compartir">Compartir</option>
+              <option value="individual">Individual</option>
+            </select>  </>
+        )}
 
         {producto.tipo === "bebida" &&
           categoriasConAcompanante.includes(
@@ -262,7 +278,38 @@ const ProductoDetalle = ({
             </>
           )}
 
+        {producto.adicionales && producto.adicionales.length > 0 && (
+          <>
+            <h4>Adicionales:</h4>
+            <ul>
+              {producto.adicionales.map((adicional, index) => (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={opcionesSeleccionadas[`adicional_${index}`] || false}
+                      onChange={(e) =>
+                        setOpcionesSeleccionadas((prev) => ({
+                          ...prev,
+                          [`adicional_${index}`]: e.target.checked,
+                        }))
+                      }
+                    />
+                    {adicional.nombre} (+{adicional.precio} €)
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
         <div className="modal-botones--productoDetalle">
+          <textarea
+            placeholder="Mensaje para cocina/barra sobre este producto (opcional)"
+            value={mensajeProducto}
+            onChange={(e) => setMensajeProducto(e.target.value)}
+            className="mensaje-producto-textarea"
+          />
           <button
             className="boton-cancelar--productoDetalle"
             onClick={cerrarModal}
@@ -271,7 +318,7 @@ const ProductoDetalle = ({
           </button>
           <button
             className="boton-agregar--productoDetalle"
-            onClick={confirmarProducto}
+            onClick={confirmarProducto} // ✅ Llamar a la función que ya tienes
           >
             Agregar
           </button>

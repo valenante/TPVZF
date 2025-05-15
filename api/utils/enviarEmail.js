@@ -39,7 +39,6 @@ export const enviarEmail = async ({ to, subject, html, attachments = [] }) => {
         headers: form.getHeaders(),
       }
     );
-    console.log('Correo enviado con Mailgun');
   } catch (err) {
     console.error(
       'Error al enviar correo con Mailgun:',

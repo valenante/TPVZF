@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api";
 import "./CerrarCajaModal.css";
+import AlertaMensaje from "../AlertaMensaje/AlertaMensaje";
+import ModalConfirmacion from "../Modal/ModalConfirmacion";
 
 const CerrarCajaModal = ({ onClose }) => {
   const navigate = useNavigate();
@@ -17,6 +19,10 @@ const CerrarCajaModal = ({ onClose }) => {
   const [monto, setMonto] = useState(""); // Monto para modificar caja
   const [razon, setRazon] = useState(""); // Razón para modificar caja
   const [isLoading, setIsLoading] = useState(true);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
+  const [accionModal, setAccionModal] = useState(null);
+  const [mostrarModalConfirmacion, setMostrarModalConfirmacion] = useState(false);
+
 
   useEffect(() => {
     const fetchCaja = async () => {
@@ -45,7 +51,7 @@ const CerrarCajaModal = ({ onClose }) => {
     fetchCaja();
   }, []);
 
-  const handleAccion = async (tipo) => {
+  const handleAccion = (tipo) => {
     const montoNumerico = parseFloat(monto);
 
     if (!monto || !razon) {
@@ -63,35 +69,36 @@ const CerrarCajaModal = ({ onClose }) => {
       return;
     }
 
-    // Confirmación antes de realizar la acción
-    const confirmacion = window.confirm(
-      `¿Estás seguro de que deseas ${tipo === "retirar" ? "retirar" : "integrar"} ${montoNumerico.toFixed(2)} €?`
-    );
-    if (!confirmacion) return;
+    // Mostrar modal de confirmación personalizado
+    setAccionModal({
+      titulo: "Confirmar acción",
+      mensaje: `¿Estás seguro de que deseas ${tipo === "retirar" ? "retirar" : "integrar"} ${montoNumerico.toFixed(2)} €?`,
+      onConfirm: async () => {
+        try {
+          setIsLoading(true);
+          const response = await api.post(`/caja/${tipo}`, {
+            monto: montoNumerico,
+            razon,
+          });
 
-    try {
-      setIsLoading(true);
-      const response = await api.post(`/caja/${tipo}`, {
-        monto: montoNumerico,
-        razon,
-      });
+          setTotalCaja(response.data.total);
+          setMetodoPago(response.data.detallesMetodoPago);
+          setMonto("");
+          setRazon("");
+          setError("");
+          setMensajeAlerta({ tipo: "exito", mensaje: `Dinero ${tipo === "retirar" ? "retirado" : "integrado"} correctamente.` });
+          window.location.reload();
+        } catch (error) {
+          console.error(`Error al ${tipo} dinero:`, error);
+          setError(`Error al ${tipo} dinero.`);
+        } finally {
+          setIsLoading(false);
+        }
+      },
+    });
 
-      setTotalCaja(response.data.total);
-      setMetodoPago(response.data.detallesMetodoPago);
-      setMonto("");
-      setRazon("");
-      setError("");
-      alert(`Dinero ${tipo === "retirar" ? "retirado" : "integrado"} correctamente.`);
-      //Refrescar la pagina
-      window.location.reload();
-    } catch (error) {
-      console.error(`Error al ${tipo} dinero:`, error);
-      setError(`Error al ${tipo} dinero.`);
-    } finally {
-      setIsLoading(false);
-    }
+    setMostrarModalConfirmacion(true);
   };
-
   const handleCerrarCaja = async () => {
     if (!password) {
       setError("Por favor, introduce la contraseña.");
@@ -102,20 +109,19 @@ const CerrarCajaModal = ({ onClose }) => {
       setIsLoading(true);
       const response = await api.post("/caja/cerrar", { password });
 
-      // Si la caja se cierra correctamente
       if (response.status === 200) {
-        alert("Caja cerrada correctamente.");
-        localStorage.clear();
-        navigate("/login");
-        onClose();
+        setMensajeAlerta({ tipo: "exito", mensaje: "Caja cerrada correctamente." });
+        setTimeout(() => {
+          localStorage.clear();
+          navigate("/login");
+          onClose();
+        }, 2000);
       }
     } catch (error) {
       console.error("Error al cerrar la caja:", error);
       if (error.response?.status === 401) {
-        // Contraseña incorrecta
         setError("Contraseña incorrecta. Por favor, inténtalo de nuevo.");
       } else {
-        // Otro tipo de error
         setError("Error al cerrar la caja. Inténtalo más tarde.");
       }
     } finally {
@@ -179,9 +185,8 @@ const CerrarCajaModal = ({ onClose }) => {
                   {error && <p className="error--cerrar-caja">{error}</p>}
                   <button
                     onClick={() => handleAccion(accion)}
-                    className={`boton-confirmar--cerrar-caja ${
-                      accion === "retirar" ? "retirar" : "integrar"
-                    }`}
+                    className={`boton-confirmar--cerrar-caja ${accion === "retirar" ? "retirar" : "integrar"
+                      }`}
                   >
                     Confirmar {accion === "retirar" ? "Retiro" : "Integración"}
                   </button>
@@ -212,6 +217,25 @@ const CerrarCajaModal = ({ onClose }) => {
           </>
         )}
       </div>
+      {mostrarModalConfirmacion && (
+        <ModalConfirmacion
+          titulo={accionModal?.titulo}
+          mensaje={accionModal?.mensaje}
+          onConfirm={() => {
+            accionModal?.onConfirm();
+            setMostrarModalConfirmacion(false);
+          }}
+          onClose={() => setMostrarModalConfirmacion(false)}
+        />
+      )}
+
+      {mensajeAlerta && (
+        <AlertaMensaje
+          tipo={mensajeAlerta.tipo}
+          mensaje={mensajeAlerta.mensaje}
+          onClose={() => setMensajeAlerta(null)}
+        />
+      )}
     </div>
   );
 };

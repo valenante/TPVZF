@@ -1,0 +1,87 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-contenido {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-contenido input {
+  width: 90%;
+  padding: 8px;
+  margin: 10px 0;
+}
+
+.modal-botones {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.boton-aceptar-modal{
+    background-color: var(--color-principal);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-aceptar-modal:hover {
+    background-color: #5a2d91;
+    transform: scale(1.05);
+}
+
+.boton-cancelar-modal{
+    background-color: var(--color-secundario);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-cancelar-modal:hover {
+    background-color: #d76a2b;
+    transform: scale(1.05);
+}
+
+/* ✅ Mejora para pantallas pequeñas */
+@media (max-width: 480px) {
+  .modal-contenido {
+    width: 90%;
+    max-width: 300px;
+    padding: 15px;
+  }
+
+  .modal-contenido h2 {
+    font-size: 1.2rem;
+  }
+
+  .modal-contenido p {
+    font-size: 0.9rem;
+  }
+
+  .modal-contenido input {
+    padding: 6px;
+  }
+
+  .modal-botones button {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+}

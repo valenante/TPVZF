@@ -5,6 +5,8 @@ import MetodoPago from "../components/DetallesMesa/MetodoPago";
 import RightBar from "../components/RightBar/RightBar";
 import { SocketContext } from "../utils/socket";
 import "../styles/DetallesMesa.css";
+import ModalConfirmacion from "../components/Modal/ModalConfirmacion";
+import AlertaMensaje from "../components/AlertaMensaje/AlertaMensaje";
 
 const DetalleMesa = () => {
   const { id } = useParams(); // Obtener el `id` de la mesa desde la URL
@@ -13,65 +15,69 @@ const DetalleMesa = () => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const { socket } = useContext(SocketContext);
+  const [mostrarFacturaModal, setMostrarFacturaModal] = useState(false);
+  const [datosFactura, setDatosFactura] = useState({ nombre: "", nif: "" });
+  const [metodoPagoFactura, setMetodoPagoFactura] = useState(null);
+  const [mostrarModalConfirmacion, setMostrarModalConfirmacion] = useState(false);
+  const [accionModal, setAccionModal] = useState(null);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
+
+  const fetchMesa = async () => {
+    try {
+      const { data } = await api.get(`/mesas/${id}`);
+      setMesa(data);
+
+      // Obtener IDs de pedidos de bebidas
+      const pedidosBebidasIds = data.pedidosBebidas || [];
+
+      // Si hay pedidos de bebidas, obtener detalles
+      let pedidosBebidasDetalles = [];
+      if (pedidosBebidasIds.length > 0) {
+        const { data: pedidosBebidasData } = await api.get(
+          `/pedidosBebidas`,
+          {
+            params: { ids: pedidosBebidasIds.join(",") },
+          }
+        );
+        pedidosBebidasDetalles = pedidosBebidasData;
+      }
+
+      // Asignar los pedidos de bebidas con detalles a la mesa
+      setMesa((prevMesa) => ({
+        ...prevMesa,
+        pedidosBebidas: pedidosBebidasDetalles,
+      }));
+
+      // Obtener productos únicos de pedidos y pedidosBebidas
+      const productIds = [
+        ...new Set([
+          ...data.pedidos.flatMap((pedido) =>
+            pedido.productos.map((p) => p.productoId)
+          ),
+          ...pedidosBebidasDetalles.flatMap((pedido) =>
+            pedido.productos.map((p) => p.productoId)
+          ),
+        ]),
+      ];
+
+      if (productIds.length > 0) {
+        const { data: productosData } = await api.get(`/productos`, {
+          params: { ids: productIds.join(",") },
+        });
+
+        const productosMap = productosData.reduce((acc, producto) => {
+          acc[producto._id] = producto;
+          return acc;
+        }, {});
+
+        setProductosDetalles(productosMap);
+      }
+    } catch (error) {
+      console.error("Error al obtener los detalles de la mesa:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchMesa = async () => {
-      try {
-        const { data } = await api.get(`/mesas/${id}`);
-        setMesa(data);
-
-        // Obtener IDs de pedidos de bebidas
-        const pedidosBebidasIds = data.pedidosBebidas || [];
-
-        // Si hay pedidos de bebidas, obtener detalles
-        let pedidosBebidasDetalles = [];
-        if (pedidosBebidasIds.length > 0) {
-          const { data: pedidosBebidasData } = await api.get(
-            `/pedidosBebidas`,
-            {
-              params: { ids: pedidosBebidasIds.join(",") },
-            }
-          );
-          pedidosBebidasDetalles = pedidosBebidasData;
-        }
-
-        // Asignar los pedidos de bebidas con detalles a la mesa
-        setMesa((prevMesa) => ({
-          ...prevMesa,
-          pedidosBebidas: pedidosBebidasDetalles,
-        }));
-
-        console.log(mesa);
-
-        // Obtener productos únicos de pedidos y pedidosBebidas
-        const productIds = [
-          ...new Set([
-            ...data.pedidos.flatMap((pedido) =>
-              pedido.productos.map((p) => p.productoId)
-            ),
-            ...pedidosBebidasDetalles.flatMap((pedido) =>
-              pedido.productos.map((p) => p.productoId)
-            ),
-          ]),
-        ];
-
-        if (productIds.length > 0) {
-          const { data: productosData } = await api.get(`/productos`, {
-            params: { ids: productIds.join(",") },
-          });
-
-          const productosMap = productosData.reduce((acc, producto) => {
-            acc[producto._id] = producto;
-            return acc;
-          }, {});
-
-          setProductosDetalles(productosMap);
-        }
-      } catch (error) {
-        console.error("Error al obtener los detalles de la mesa:", error);
-      }
-    };
-
     fetchMesa();
   }, [id]);
 
@@ -95,6 +101,32 @@ const DetalleMesa = () => {
     };
   }, [socket, id]);
 
+  const emitirFactura = async () => {
+    try {
+      const pedidosNoFinalizados = mesa.pedidos.filter(p => p.estado !== "listo");
+
+      if (pedidosNoFinalizados.length > 0) {
+        setMensajeAlerta({ tipo: "error", mensaje: "No puedes emitir la factura. Todos los pedidos deben estar finalizados." });
+        return;
+      }
+      const response = await api.put(`/mesas/${mesa._id}/cerrar`, {
+        metodoPago: metodoPagoFactura,
+        clienteNombre: datosFactura.nombre,
+        clienteNIF: datosFactura.nif,
+      });
+
+      const { numeroFactura, hashFactura, fechaExpedicion } = response.data;
+
+      setMensajeAlerta({ tipo: "exito", mensaje: `Factura emitida correctamente:\nNúmero: ${numeroFactura}\nFecha: ${new Date(fechaExpedicion).toLocaleString()}\nHash: ${hashFactura}` });
+
+      setMostrarFacturaModal(false);
+      setMesa(null);
+      navigate("/");
+    } catch (error) {
+      alert(error.response?.data?.error || "Hubo un problema al emitir la factura.");
+    }
+  };
+
   const cerrarMesa = async (metodoPago) => {
     try {
       // Verifica si hay pedidos no finalizados
@@ -103,52 +135,48 @@ const DetalleMesa = () => {
       );
 
       if (pedidosNoFinalizados.length > 0) {
-        alert(
-          "No puedes cerrar la mesa. Todos los pedidos deben estar finalizados."
-        );
+        setMensajeAlerta({ tipo: "error", mensaje: "No puedes cerrar la mesa. Todos los pedidos deben estar finalizados." });
         return;
       }
 
       // Enviar la solicitud al backend con el método de pago
       await api.put(`/mesas/${mesa._id}/cerrar`, { metodoPago });
-
-      alert("Mesa cerrada con éxito");
-      setMesa(null); // Limpia el estado de la mesa
       navigate("/"); // Navega fuera de la vista actual
     } catch (error) {
-      console.error("Error al cerrar la mesa:", error);
-      alert(
-        error.response?.data?.error || "Hubo un problema al cerrar la mesa."
-      );
+      setMensajeAlerta({ tipo: "error", mensaje: error.response?.data?.error || "Hubo un problema." });
     }
   };
 
-  const abrirMesa = async () => {
-    const comensales = prompt("¿Cuántos comensales hay? (número)");
+  const abrirMesa = () => {
+    setAccionModal({
+      titulo: "Abrir Mesa",
+      mensaje: "¿Cuántos comensales hay?",
+      placeholder: "Número de comensales",
+      onConfirm: async (comensalesInput) => {
+        if (!comensalesInput || isNaN(comensalesInput) || Number(comensalesInput) <= 0) {
+          setMensajeAlerta({ tipo: "error", mensaje: "Número de comensales inválido." });
+          return;
+        }
 
-    if (!comensales || isNaN(comensales) || Number(comensales) <= 0) {
-      alert("Número de comensales inválido.");
-      return;
-    }
+        try {
+          await api.put(`/mesas/mesas/${mesa._id}/abrir`, { comensales: Number(comensalesInput) });
+          setMensajeAlerta({ tipo: "exito", mensaje: "Mesa abierta con éxito" });
+          fetchMesa(); // ✅ Reutiliza tu función existente;
+        } catch (error) {
+          console.error("Error al abrir la mesa:", error);
+        }
+      },
+    });
 
-    try {
-      await api.put(`/mesas/mesas/${mesa._id}/abrir`, { comensales: Number(comensales) });
-      alert("Mesa abierta con éxito");
-      navigate(0); // Recarga la vista
-    } catch (error) {
-      console.error("Error al abrir la mesa:", error);
-      alert(error.response?.data?.error || "Hubo un problema al abrir la mesa.");
-    }
+    setMostrarModalConfirmacion(true);
   };
-
 
   const imprimirCuenta = async () => {
     try {
       await api.post(`/cuenta/${mesa._id}/imprimir-cuenta`);
-      alert("Cuenta enviada a impresión.");
+      setMensajeAlerta({ tipo: "exito", mensaje: "Cuenta enviada a impresión." });
     } catch (error) {
-      console.error("Error al imprimir la cuenta:", error);
-      alert(error.response?.data?.error || "Hubo un problema al imprimir la cuenta.");
+      setMensajeAlerta({ tipo: "error", mensaje: error.response?.data?.error || "Hubo un problema." });
     }
   };
 
@@ -195,39 +223,37 @@ const DetalleMesa = () => {
         pedidos: data.pedidos,
       }));
 
-      alert(
-        `Producto ${esBebida ? "bebida" : "plato"
-        } agregado al pedido con éxito.`
-      );
+      setMensajeAlerta({ tipo: "exito", mensaje: `Producto ${esBebida ? "bebida" : "plato"} agregado al pedido con éxito.` });
 
       // Refrescar la página
       window.location.reload();
     } catch (error) {
       console.error("Error al agregar el producto al pedido:", error);
-      alert("Hubo un problema al agregar el producto al pedido.");
+      setMensajeAlerta({ tipo: "error", mensaje: error.response?.data?.error || "Hubo un problema." });
     }
   };
 
-  const eliminarProducto = async (pedidoId, productoId) => {
-    const confirmacion = window.confirm(
-      "¿Estás seguro de que quieres eliminar este producto del pedido?"
-    );
-    if (!confirmacion) return;
+  const eliminarProducto = (pedidoId, productoId) => {
+    setAccionModal({
+      titulo: "Confirmar Eliminación",
+      mensaje: "¿Estás seguro de que quieres eliminar este producto del pedido?",
+      onConfirm: async () => {
+        try {
+          const response = await api.post(`/productos/${pedidoId}/${productoId}`);
+          setMesa((prevMesa) => ({
+            ...prevMesa,
+            pedidos: response.data.pedidos,
+          }));
+          setMensajeAlerta({ tipo: "exito", mensaje: "Producto eliminado con éxito." });
+          window.location.reload();
+        } catch (error) {
+          console.error("Error al eliminar el producto:", error);
+          setMensajeAlerta({ tipo: "error", mensaje: "Hubo un problema al eliminar el producto." });
+        }
+      },
+    });
 
-    try {
-      const response = await api.post(`/productos/${pedidoId}/${productoId}`);
-
-      setMesa((prevMesa) => ({
-        ...prevMesa,
-        pedidos: response.data.pedidos,
-      }));
-
-      alert("Producto eliminado con éxito.");
-      window.location.reload();
-    } catch (error) {
-      console.error("Error al eliminar el producto:", error);
-      alert("Hubo un problema al eliminar el producto.");
-    }
+    setMostrarModalConfirmacion(true);
   };
 
   // ⛔ AÑADE ESTO AQUÍ ANTES DEL RETURN
@@ -237,19 +263,43 @@ const DetalleMesa = () => {
     );
   }
 
-  console.log(mesa.pedidos)
-
   return (
     <div className="detalle-mesa--mesadetalles">
+      <div className="rightbar--mesadetalles">
+        <RightBar mesaId={mesa._id} agregarProducto={agregarProducto} />
+      </div>
       <div className="contenido-mesa--mesadetalles">
+        {mostrarFacturaModal && (
+          <div className="modal-factura">
+            <div className="modal-contenido">
+              <h2>Datos de la Factura</h2>
+              <input
+                type="text"
+                placeholder="Nombre o Razón Social"
+                value={datosFactura.nombre}
+                onChange={(e) =>
+                  setDatosFactura({ ...datosFactura, nombre: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                placeholder="NIF o CIF"
+                value={datosFactura.nif}
+                onChange={(e) =>
+                  setDatosFactura({ ...datosFactura, nif: e.target.value })
+                }
+              />
+              <button onClick={() => emitirFactura()}>Emitir Factura</button>
+              <button onClick={() => setMostrarFacturaModal(false)}>Cancelar</button>
+            </div>
+          </div>
+        )}
         <h1 className="titulo-mesa--mesadetalles">Mesa {mesa.numero}</h1>
-        <p className="total-mesa--mesadetalles">Total Mesa: {mesa.total} €</p>
-        <p className="pedidos-titulo--mesadetalles">Pedidos:</p>
+        <p className="total-mesa--mesadetalles">Total: {mesa.total} €</p>
         <ul className="lista-pedidos--mesadetalles">
           {mesa?.pedidos?.length > 0 ? (
             mesa.pedidos.map((pedido) => (
               <li key={pedido._id} className="pedido--mesadetalles">
-                <p className="pedido-estado--mesadetalles">{pedido.estado}</p>
                 <ul className="lista-productos--mesadetalles">
                   {pedido.productos?.length > 0 ? (
                     pedido.productos.map((producto) => {
@@ -263,7 +313,7 @@ const DetalleMesa = () => {
                             }`}
                         >
                           {detalle
-                            ? `${detalle.nombre} - ${producto.cantidad} unidad(es)`
+                            ? `${producto.cantidad} ${detalle.nombre}  `
                             : "Cargando producto..."}
                           <button
                             onClick={() =>
@@ -271,7 +321,7 @@ const DetalleMesa = () => {
                             }
                             className="boton-eliminar--mesadetalles"
                           >
-                            Eliminar
+                            x
                           </button>
                         </li>
                       );
@@ -282,10 +332,6 @@ const DetalleMesa = () => {
                     </p>
                   )}
                 </ul>
-                <p className="total-pedido--mesadetalles">
-                  Total Pedido:{" "}
-                  {pedido.total ? pedido.total.toFixed(2) : "0.00"} €
-                </p>
               </li>
             ))
           ) : (
@@ -294,13 +340,10 @@ const DetalleMesa = () => {
             </p>
           )}
         </ul>
-
-        <p className="pedidos-titulo--mesadetalles">Bebidas:</p>
         <ul className="lista-pedidos--mesadetalles">
           {mesa?.pedidosBebidas?.length > 0 ? (
             mesa.pedidosBebidas.map((pedido) => (
               <li key={pedido._id} className="pedido--mesadetalles">
-                <p className="pedido-estado--mesadetalles">{pedido.estado}</p>
                 <ul className="lista-productos--mesadetalles">
                   {pedido.productos?.length > 0 ? (
                     pedido.productos.map((producto) => {
@@ -313,7 +356,7 @@ const DetalleMesa = () => {
                             }`}
                         >
                           {producto.producto
-                            ? `${producto.producto.nombre} - ${producto.cantidad} unidad(es)`
+                            ? `${producto.cantidad} ${producto.producto.nombre}   `
                             : "Cargando bebida..."}
                           <button
                             onClick={() =>
@@ -324,7 +367,7 @@ const DetalleMesa = () => {
                             }
                             className="boton-eliminar--mesadetalles"
                           >
-                            Eliminar
+                            x
                           </button>
                         </li>
                       );
@@ -348,12 +391,15 @@ const DetalleMesa = () => {
           )}
         </ul>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="boton-cerrar--mesadetalles"
-        >
-          Cerrar Mesa
-        </button>
+        {mesa.estado === "abierta" && (
+          <button
+            onClick={() => setShowModal("cierre")}
+            className="boton-cerrar--mesadetalles"
+          >
+            Cerrar Mesa
+          </button>
+        )}
+
         {mesa.estado === "cerrada" && (
           <button
             onClick={abrirMesa}
@@ -364,27 +410,59 @@ const DetalleMesa = () => {
         )}
 
         {mesa.estado === "abierta" && (
-          <button
-            onClick={imprimirCuenta}
-            className="boton-imprimir--mesadetalles"
-          >
-            Imprimir Cuenta
-          </button>
+          <div className="contenedor-botones--mesadetalles">
+            <button
+              onClick={imprimirCuenta}
+              className="boton-imprimir--mesadetalles"
+            >
+              Cuenta
+            </button>
+
+            <button
+              onClick={() => setShowModal("factura")}
+              className="boton-factura--mesadetalles"
+            >
+              Factura
+            </button>
+          </div>
         )}
 
-        {showModal && (
+
+        {(showModal === "cierre" || showModal === "factura") && (
           <MetodoPago
             total={mesa.total}
             onClose={() => setShowModal(false)}
             onConfirm={(metodoPago) => {
-              cerrarMesa(metodoPago);
+              if (showModal === "factura") {
+                setMetodoPagoFactura(metodoPago);
+                setShowModal(false);
+                setMostrarFacturaModal(true);  // Abre el modal de datos fiscales
+              } else {
+                cerrarMesa(metodoPago);        // Cierra sin factura
+              }
             }}
           />
         )}
       </div>
-      <div className="rightbar--mesadetalles">
-        <RightBar mesaId={mesa._id} agregarProducto={agregarProducto} />
-      </div>
+      {mostrarModalConfirmacion && (
+        <ModalConfirmacion
+          titulo={accionModal?.titulo}
+          mensaje={accionModal?.mensaje}
+          placeholder={accionModal?.placeholder}
+          onConfirm={(valor) => {
+            accionModal?.onConfirm(valor);
+            setMostrarModalConfirmacion(false);
+          }}
+          onClose={() => setMostrarModalConfirmacion(false)}
+        />
+      )}
+      {mensajeAlerta && (
+        <AlertaMensaje
+          tipo={mensajeAlerta.tipo}
+          mensaje={mensajeAlerta.mensaje}
+          onClose={() => setMensajeAlerta(null)}
+        />
+      )}
     </div>
   );
 };

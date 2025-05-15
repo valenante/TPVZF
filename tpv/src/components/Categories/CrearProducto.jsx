@@ -34,12 +34,12 @@ const CrearProducto = ({ onClose }) => {
       try {
         const response = await api.get("/productos");
         const productos = response.data;
-  
+
         // Extraer y limpiar las categorías únicas
         const categoriasUnicas = [...new Set(productos
           .map((p) => p.categoria?.trim()?.toLowerCase())
           .filter((cat) => !!cat))];
-  
+
         setCategorias(categoriasUnicas);
       } catch (error) {
         console.error("Error al cargar categorías:", error);
@@ -47,7 +47,7 @@ const CrearProducto = ({ onClose }) => {
     };
     fetchCategorias();
   }, []);
-  
+
 
   // Manejo de los cambios en los campos de formulario
   const handleChange = (e) => {
@@ -222,6 +222,25 @@ const CrearProducto = ({ onClose }) => {
                   Precio Ración:
                   <input type="number" name="precios.racion" value={formData.precios.racion || ""} onChange={handleChange} className="input--crear" />
                 </label>
+                {/* Campo para definir el precio del adicional */}
+                <fieldset className="fieldset--crear">
+                  <legend className="legend--crear">Adicional (Unidad extra)</legend>
+                  <label className="label--crear">
+                    Precio del adicional:
+                    <input
+                      type="number"
+                      value={formData.adicionales?.[0]?.precio || ""}
+                      onChange={(e) => {
+                        const nuevoPrecio = parseFloat(e.target.value);
+                        setFormData((prev) => ({
+                          ...prev,
+                          adicionales: [{ nombre: "Unidad adicional", precio: nuevoPrecio }],
+                        }));
+                      }}
+                      className="input--crear"
+                    />
+                  </label>
+                </fieldset>
                 <fieldset className="fieldset--crear">
                   <legend className="legend--crear">Opciones Personalizables</legend>
                   {formData.opcionesPersonalizables.map((opcion, index) => (
@@ -275,9 +294,9 @@ const CrearProducto = ({ onClose }) => {
             <fieldset className="fieldset--crear">
               <legend className="legend--crear">Opciones de Bebida</legend>
               <label className="label--crear">
-                  Precio Base:
-                  <input type="number" name="precios.precioBase" value={formData.precios.precioBase} onChange={handleChange} className="input--crear" required />
-                </label>
+                Precio Base:
+                <input type="number" name="precios.precioBase" value={formData.precios.precioBase} onChange={handleChange} className="input--crear" required />
+              </label>
               {/* Label para precios.precioCopa */}
               <label className="label--crear">
                 Precio Copa:

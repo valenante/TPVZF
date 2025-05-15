@@ -7,21 +7,7 @@ import { v4 as uuidv4 } from "uuid"; // Generador de UUID
 import { registrarFacturaConHash } from '../services/registroFacturaService.js';
 import ContadorFactura from '../models/ContadorFactura.js';
 import EventoFactura from '../models/EventosFactura.js';
-
-
-export const obtenerNumeroFactura = async () => {
-  const year = new Date().getFullYear();
-
-  let contador = await ContadorFactura.findOne({ year });
-  if (!contador) {
-    contador = new ContadorFactura({ year, lastNumber: 1 });
-  } else {
-    contador.lastNumber += 1;
-  }
-
-  await contador.save();
-  return `${year}-${contador.lastNumber.toString().padStart(4, '0')}`;
-};
+import { obtenerNumeroFactura } from '../services/numeroFacturaServices.js';
 
 
 export const verificarTokenLider = async (req, res) => {
@@ -186,6 +172,8 @@ export const cerrarMesa = async (req, res) => {
   const { metodoPago, clienteNombre, clienteNIF } = req.body;
 
   try {
+    let numeroFactura = null;
+    let hashFactura = null;
     const mesa = await Mesa.findById(id)
       .populate({
         path: 'pedidos',
@@ -196,18 +184,22 @@ export const cerrarMesa = async (req, res) => {
         populate: { path: 'productos.producto' }
       });
 
-    const { efectivo = 0, tarjeta = 0, propina = 0 } = metodoPago || {};
+    const { efectivo = 0, tarjeta = 0, propina = 0, cambio = 0 } = metodoPago || {};
     const totalPagado = efectivo + tarjeta;
     const totalMesa = mesa.total;
 
+    // Validación del monto pagado
     if (totalPagado < totalMesa) {
       return res.status(400).json({
         error: `El monto ingresado (${totalPagado} €) es menor que el total de la mesa (${totalMesa} €).`,
       });
     }
 
-    const propinaCalculada = totalPagado > totalMesa ? totalPagado - totalMesa : propina;
+    // Calcula la propina real solo si es explícita o es el excedente
+    const cambioCalculado = totalPagado - totalMesa;
+    const propinaCalculada = propina;  // Solo si fue escrita explícitamente
 
+    // Guarda la mesa cerrada incluyendo el cambio como registro informativo
     const mesaCerrada = new MesaCerrada({
       numero: mesa.numero,
       pedidos: mesa.pedidos.map((pedido) => pedido._id),
@@ -216,7 +208,7 @@ export const cerrarMesa = async (req, res) => {
       inicio: mesa.inicio,
       cierre: new Date(),
       comensales: mesa.comensales || 1,
-      metodoPago: { efectivo, tarjeta, propina: propinaCalculada },
+      metodoPago: { efectivo, tarjeta, propina: propinaCalculada, cambio: cambioCalculado },
     });
 
     await mesaCerrada.save();
@@ -228,7 +220,11 @@ export const cerrarMesa = async (req, res) => {
     const caja = await Caja.findOne({ fechaApertura: { $gte: inicioDelDia, $lte: finDelDia }, estado: "abierta" });
 
     if (caja) {
-      caja.detallesMetodoPago.efectivo += efectivo;
+      const efectivoReal = Math.min(efectivo, totalMesa);
+      const tarjetaReal = Math.min(tarjeta, totalMesa - efectivoReal);
+
+      caja.detallesMetodoPago.efectivo += efectivoReal;
+      caja.detallesMetodoPago.tarjeta += tarjetaReal;
       caja.detallesMetodoPago.tarjeta += tarjeta;
       caja.detallesMetodoPago.propina += propinaCalculada;
       caja.total += totalMesa;
@@ -243,62 +239,63 @@ export const cerrarMesa = async (req, res) => {
       await nuevaCaja.save();
     }
 
-    // SOLO GENERAR FACTURA SI SE PROPORCIONAN DATOS DE CLIENTE
-    let numeroFactura = null;
-    let hashFactura = null;
-
-    if (clienteNombre && clienteNIF) {
-      numeroFactura = await obtenerNumeroFactura();
-      hashFactura = await registrarFacturaConHash({
-        numeroFactura,
-        fechaExpedicion: new Date(),
-        clienteNombre,
-        clienteNIF,
-        importeTotal: mesa.total,
-      });
-
-      const productos = mesa.pedidos.flatMap(pedido => pedido.productos.map(p => ({
+    // Generar número y hash siempre
+    numeroFactura = await obtenerNumeroFactura();
+    hashFactura = await registrarFacturaConHash({
+      numeroFactura,
+      fechaExpedicion: new Date(),
+      clienteNombre: clienteNombre || "Consumidor Final",
+      clienteNIF: clienteNIF || "N/A",
+      productos: mesa.pedidos.flatMap(pedido => pedido.productos.map(p => ({
         nombre: p.producto.nombre || 'Producto desconocido',
         cantidad: p.cantidad,
         precio: p.precioSeleccionado || 0,
-      })));
+      }))),
+      importeTotal: mesa.total,
+    });
 
-      const productosBebidas = mesa.pedidosBebidas.flatMap(pedido => pedido.productos.map(p => ({
-        nombre: p.producto.nombre || 'Bebida sin nombre',
-        cantidad: p.cantidad,
-        precio: p.precioSeleccionado || 0,
-      })));
+    // Preparar productos para la impresión
+    const productos = mesa.pedidos.flatMap(pedido => pedido.productos.map(p => ({
+      nombre: p.producto.nombre || 'Producto desconocido',
+      cantidad: p.cantidad,
+      precio: p.precioSeleccionado || 0,
+    })));
 
-      productos.push(...productosBebidas);
+    const productosBebidas = mesa.pedidosBebidas.flatMap(pedido => pedido.productos.map(p => ({
+      nombre: p.producto.nombre || 'Bebida sin nombre',
+      cantidad: p.cantidad,
+      precio: p.precioSeleccionado || 0,
+    })));
 
-      await axios.post('http://localhost:4000/imprimir-factura', {
-        mesaNumero: mesa.numero,
-        comensales: mesa.comensales || 1,
-        clienteNombre,
-        clienteNIF,
-        numeroFactura,
-        fechaExpedicion: new Date().toISOString(),
-        productos,
-        total: mesa.total,
-        hash: hashFactura.hash,
-      });
+    productos.push(...productosBebidas);
 
-      // Registrar el evento de creación de la factura
-      const eventoFactura = new EventoFactura({
-        tipoEvento: 'creación',  // El tipo de evento es creación
-        numeroFactura: numeroFactura,
-        clienteNombre,
-        clienteNIF,
-        motivo: 'Generación de la factura al cierre de la mesa',  // Puedes incluir un motivo
-        importeTotal: mesa.total,
-        hashFactura: hashFactura.hash,
-        facturaOriginalId: null,  // No aplica en este caso ya que es la factura original
-        facturaRectificativaId: null  // No aplica ya que no es una factura rectificativa
-      });
+    // Enviar a impresión siempre
+    await axios.post('http://localhost:4000/imprimir-factura', {
+      mesaNumero: mesa.numero,
+      comensales: mesa.comensales || 1,
+      clienteNombre: clienteNombre || "Consumidor Final",
+      clienteNIF: clienteNIF || "N/A",
+      numeroFactura,
+      fechaExpedicion: new Date().toISOString(),
+      productos,
+      total: mesa.total,
+      hash: hashFactura.hash,
+    });
 
-      await eventoFactura.save();
-      console.log('Evento de creación de factura registrado correctamente.');
-    }
+    // Registrar el evento siempre
+    const eventoFactura = new EventoFactura({
+      tipoEvento: 'creación',
+      numeroFactura: numeroFactura,
+      clienteNombre: clienteNombre || "Consumidor Final",
+      clienteNIF: clienteNIF || "N/A",
+      motivo: 'Generación de la factura al cierre de la mesa',
+      importeTotal: mesa.total,
+      hashFactura: hashFactura.hash,
+      facturaOriginalId: null,
+      facturaRectificativaId: null,
+    });
+
+    await eventoFactura.save();
 
     // Resetear mesa
     mesa.estado = 'cerrada';
@@ -313,6 +310,7 @@ export const cerrarMesa = async (req, res) => {
       message: 'Mesa cerrada con éxito',
       mesaCerrada,
       propina: propinaCalculada,
+      cambio: cambioCalculado,
       facturaEmitida: !!hashFactura,
       numeroFactura: numeroFactura || null,
       hashFactura: hashFactura?.hash || null,

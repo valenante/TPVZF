@@ -1,62 +1,68 @@
 /* Contenedor principal */
 .detalle-mesa--mesadetalles {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    padding: 20px;
-    min-height: 90vh;
-  }
-  
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  min-height: 90vh;
+}
+
 /* Contenido principal centrado */
 .contenido-mesa--mesadetalles {
   width: 60%;
-  background-color: #FFFFFF; /* Blanco */
+  overflow-y: auto;
+  background-color: #FFFFFF;
+  /* Blanco */
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Ocultar contenido que exceda los límites */
+  overflow: hidden;
+  /* Ocultar contenido que exceda los límites */
 }
-  /* Títulos */
-  .titulo-mesa--mesadetalles {
-    font-size: 2rem;
-    color: var(--color-principal); /* Morado profundo */
-    margin-bottom: 10px;
-  }
-  
-  .pedidos-titulo--mesadetalles,
-  .productos-titulo--mesadetalles {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-top: 20px;
-  }
 
-  .producto-listo {
-    color: green;
-    font-weight: bold;
-  }  
-  
-  /* Textos */
-  .estado-mesa--mesadetalles,
-  .total-mesa--mesadetalles,
-  .pedido-comensales--mesadetalles,
-  .pedido-alergias--mesadetalles,
-  .pedido-estado--mesadetalles,
-  .total-pedido--mesadetalles {
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
+/* Títulos */
+.titulo-mesa--mesadetalles {
+  font-size: 2rem;
+  color: var(--color-principal);
+  /* Morado profundo */
+  margin-bottom: 10px;
+}
 
-  /* Lista de pedidos con scroll */
+.pedidos-titulo--mesadetalles,
+.productos-titulo--mesadetalles {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.producto-listo {
+  color: green;
+  font-weight: bold;
+}
+
+/* Textos */
+.estado-mesa--mesadetalles,
+.total-mesa--mesadetalles,
+.pedido-comensales--mesadetalles,
+.pedido-alergias--mesadetalles,
+.pedido-estado--mesadetalles,
+.total-pedido--mesadetalles {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+/* Lista de pedidos con scroll */
 .lista-pedidos--mesadetalles {
   list-style: none;
   padding: 0;
   margin: 0;
   width: 100%;
-  max-height: 90vh; /* Altura máxima para la lista de pedidos */
-  overflow-y: auto; /* Hacer scroll vertical */
-  scrollbar-width: thin; /* Estilo de scrollbar para navegadores compatibles */
+  max-height: 90vh;
+  /* Altura máxima para la lista de pedidos */
+  overflow-y: auto;
+  /* Hacer scroll vertical */
+  scrollbar-width: thin;
+  /* Estilo de scrollbar para navegadores compatibles */
 }
 
 /* Estilo del scrollbar */
@@ -65,25 +71,29 @@
 }
 
 .lista-pedidos--mesadetalles::-webkit-scrollbar-thumb {
-  background-color: var(--color-principal); /* Morado profundo */
+  background-color: var(--color-principal);
+  /* Morado profundo */
   border-radius: 4px;
-}  
-  /* Lista de pedidos */
-  .lista-pedidos--mesadetalles,
-  .lista-productos--mesadetalles {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  
+}
+
+/* Lista de pedidos */
+.lista-pedidos--mesadetalles,
+.lista-productos--mesadetalles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 /* Cada pedido con altura limitada */
 .pedido--mesadetalles {
-  padding: 15px;
-  margin-bottom: 10px;
-  background-color: #F5F5F5; /* Gris claro */
+  margin-bottom: 2vh;
   border-radius: 5px;
-  max-height: 30vh; /* Altura máxima por pedido */
-  overflow-y: auto; /* Scroll dentro de cada pedido si excede el límite */
+  max-height: 30vh;
+  /* sombreado */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  /* Altura máxima por pedido */
+  overflow-y: auto;
+  /* Scroll dentro de cada pedido si excede el límite */
 }
 
 /* Estilo del scrollbar dentro de los pedidos */
@@ -92,58 +102,192 @@
 }
 
 .pedido--mesadetalles::-webkit-scrollbar-thumb {
-  background-color: var(--color-secundario); /* Naranja vibrante */
+  background-color: var(--color-secundario);
+  /* Naranja vibrante */
   border-radius: 4px;
 }
-  /* Botones */
-  .boton-eliminar--mesadetalles,
-  .boton-cerrar--mesadetalles {
-    background-color: var(--color-secundario); /* Naranja vibrante */
-    color: #FFFFFF;
-    border: none;
-    font-size: 20px;
-    border-radius: 5px;
-    padding: 10px 15px;
-    margin:  10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+
+/* Botones */
+.boton-eliminar--mesadetalles,
+.boton-cerrar--mesadetalles {
+  background-color: var(--color-secundario);
+  /* Naranja vibrante */
+  color: #FFFFFF;
+  border: none;
+  font-size: 20px;
+  border-radius: 5px;
+  padding: 3px 5px;
+  margin: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-eliminar--mesadetalles:hover,
+.boton-cerrar--mesadetalles:hover {
+  background-color: var(--color-principal);
+  /* Morado profundo */
+  transform: scale(1.05);
+}
+
+/* RightBar (40%) */
+.rightbar--mesadetalles {
+  width: 40%;
+  background-color: #FFFFFF;
+  /* Blanco */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.boton-imprimir--mesadetalles,
+.boton-factura--mesadetalles,
+.boton-abrir--mesadetalles {
+  background-color: var(--color-principal);
+  /* Morado profundo */
+  color: #FFFFFF;
+  border: none;
+  font-size: 1rem;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 10px 10px 0 0;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Contenedor con 2 columnas */
+.contenedor-botones--mesadetalles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Botones ya definidos previamente */
+.boton-imprimir--mesadetalles,
+.boton-factura--mesadetalles {
+  flex: 1;
+  /* Ocupar la mitad cada uno */
+  background-color: var(--color-principal);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 0;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Hover */
+.boton-imprimir--mesadetalles:hover,
+.boton-factura--mesadetalles:hover {
+  background-color: var(--color-secundario);
+  /* Naranja vibrante */
+  transform: scale(1.05);
+}
+
+/* 🔹 Estilo para el fondo oscuro del modal */
+.modal-factura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegura que esté por encima */
+}
+
+/* 🔹 Contenido del modal */
+.modal-contenido {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 🔹 Inputs del modal */
+.modal-contenido input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* 🔹 Botones del modal */
+.modal-contenido button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: var(--color-principal);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* 🔹 Hover en botones */
+.modal-contenido button:hover {
+  background: var(--color-secundario);
+}
+
+/* 🔹 Responsive */
+@media (max-width: 500px) {
+  .modal-contenido {
+    width: 90%;
+    padding: 15px;
   }
-  
-  .boton-eliminar--mesadetalles:hover,
-  .boton-cerrar--mesadetalles:hover {
-    background-color: var(--color-principal); /* Morado profundo */
-    transform: scale(1.05);
+
+  .modal-contenido input,
+  .modal-contenido button {
+    font-size: 0.9rem;
+    padding: 8px;
   }
-  
-  /* RightBar (40%) */
-  .rightbar--mesadetalles {
-    width: 40%;
-    background-color: #FFFFFF; /* Blanco */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Media Query para pantallas pequeñas */
+}
+
+/* Media Query para pantallas pequeñas */
 @media (max-width: 768px) {
   .detalle-mesa--mesadetalles {
-    flex-direction: column; /* Cambiar a columnas */
+    flex-direction: column;
+    /* Cambiar a columnas */
   }
 
   .contenido-mesa--mesadetalles,
   .rightbar--mesadetalles {
-    width: auto; /* Ocupan el ancho completo */
+    width: auto;
+    /* Ocupan el ancho completo */
   }
-    /* Botones */
-    .boton-eliminar--mesadetalles,
-    .boton-cerrar--mesadetalles {
-      background-color: var(--color-secundario); /* Naranja vibrante */
-      color: #FFFFFF;
-      border: none;
-      font-size: .9rem;
-      border-radius: 5px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-    
+
+  .contenedor-botones--mesadetalles {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    /* Espacio entre los botones */
+  }
+
+  .boton-imprimir--mesadetalles,
+  .boton-factura--mesadetalles {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+
+  /* Botones */
+  .boton-eliminar--mesadetalles,
+  .boton-cerrar--mesadetalles {
+    background-color: var(--color-secundario);
+    /* Naranja vibrante */
+    color: #FFFFFF;
+    border: none;
+    margin: 0;
+    height: auto;
+    width: auto;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
 }

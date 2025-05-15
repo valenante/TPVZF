@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api"; // Importa la configuración de axios
 import "./MesasCerradas.css"; // Importa el archivo de estilos
+import ModalConfirmacion from "../Modal/ModalConfirmacion"; // Importa el componente de modal
+import AlertaMensaje from "../AlertaMensaje/AlertaMensaje"; // Importa el componente de alert
 
 const MesasCerradas = () => {
   const [mesas, setMesas] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [mostrarModalConfirmacion, setMostrarModalConfirmacion] = useState(false);
+  const [accionModal, setAccionModal] = useState(null);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
 
   // Función para obtener las mesas activas desde el backend
   useEffect(() => {
@@ -23,63 +28,59 @@ const MesasCerradas = () => {
   }, []);
 
   // Función para crear una mesa
-  const crearMesa = async () => {
-    let numeroMesa;
+  const crearMesa = () => {
+    setAccionModal({
+      titulo: "Crear Mesa",
+      mensaje: "Introduce el número de la mesa que deseas crear (solo números):",
+      placeholder: "Número de mesa",
+      onConfirm: async (numeroMesaInput) => {
+        if (!numeroMesaInput || isNaN(numeroMesaInput) || parseInt(numeroMesaInput, 10) <= 0) {
+          setMensajeAlerta({ tipo: "error", mensaje: "Por favor, introduce un número válido." });
+          return;
+        }
 
-    while (true) {
-      numeroMesa = prompt("Introduce el número de la mesa que deseas crear (solo números):");
+        try {
+          setIsLoading(true);
+          const response = await api.post("/mesas/crear-mesa/crear-mesa", { numero: parseInt(numeroMesaInput, 10) });
+          setMensajeAlerta({ tipo: "exito", mensaje: "Mesa creada exitosamente." });
+        } catch (error) {
+          console.error("Error al crear la mesa:", error);
+          setMensajeAlerta({ tipo: "error", mensaje: error.response?.data?.error || "Error al crear la mesa." });
+        } finally {
+          setIsLoading(false);
+        }
+      },
+    });
 
-      // Verifica si el usuario canceló el prompt
-      if (numeroMesa === null) return;
-
-      // Validar que el valor sea un número
-      if (!isNaN(numeroMesa) && parseInt(numeroMesa, 10) > 0) {
-        break; // Salir del bucle si es un número válido
-      } else {
-        alert("Por favor, introduce un número válido.");
-      }
-    }
-
-    try {
-      setIsLoading(true);
-      const response = await api.post("/mesas/crear-mesa/crear-mesa", { numero: parseInt(numeroMesa, 10) });
-      alert("Mesa creada exitosamente.");
-    } catch (error) {
-      console.error("Error al crear la mesa:", error);
-      setError(error.response?.data?.error || "Error al crear la mesa.");
-    } finally {
-      setIsLoading(false);
-    }
+    setMostrarModalConfirmacion(true);
   };
 
   // Función para eliminar una mesa
-  const eliminarMesa = async () => {
-    let numeroMesa;
+  const eliminarMesa = () => {
+    setAccionModal({
+      titulo: "Eliminar Mesa",
+      mensaje: "Introduce el número de la mesa que deseas eliminar (solo números):",
+      placeholder: "Número de mesa",
+      onConfirm: async (numeroMesaInput) => {
+        if (!numeroMesaInput || isNaN(numeroMesaInput) || parseInt(numeroMesaInput, 10) <= 0) {
+          setMensajeAlerta({ tipo: "error", mensaje: "Por favor, introduce un número válido." });
+          return;
+        }
 
-    while (true) {
-      numeroMesa = prompt("Introduce el número de la mesa que deseas eliminar (solo números):");
+        try {
+          setIsLoading(true);
+          await api.delete(`/mesas/eliminar-mesa?numero=${numeroMesaInput}`);
+          setMensajeAlerta({ tipo: "exito", mensaje: "Mesa eliminada exitosamente." });
+        } catch (error) {
+          console.error("Error al eliminar la mesa:", error);
+          setMensajeAlerta({ tipo: "error", mensaje: error.response?.data?.error || "Error al eliminar la mesa." });
+        } finally {
+          setIsLoading(false);
+        }
+      },
+    });
 
-      // Verifica si el usuario canceló el prompt
-      if (numeroMesa === null) return;
-
-      // Validar que el valor sea un número
-      if (!isNaN(numeroMesa) && parseInt(numeroMesa, 10) > 0) {
-        break; // Salir del bucle si es un número válido
-      } else {
-        alert("Por favor, introduce un número válido.");
-      }
-    }
-
-    try {
-      setIsLoading(true);
-      await api.delete(`/mesas/eliminar-mesa?numero=${numeroMesa}`); // Pasa el número como parámetro de consulta
-      alert("Mesa eliminada exitosamente.");
-    } catch (error) {
-      console.error("Error al eliminar la mesa:", error);
-      setError(error.response?.data?.error || "Error al eliminar la mesa.");
-    } finally {
-      setIsLoading(false);
-    }
+    setMostrarModalConfirmacion(true);
   };
 
   if (error) {
@@ -153,6 +154,26 @@ const MesasCerradas = () => {
             </tbody>
           </table>
         </div>
+      )}
+      {mostrarModalConfirmacion && (
+        <ModalConfirmacion
+          titulo={accionModal?.titulo}
+          mensaje={accionModal?.mensaje}
+          placeholder={accionModal?.placeholder}
+          onConfirm={(valor) => {
+            accionModal?.onConfirm(valor);
+            setMostrarModalConfirmacion(false);
+          }}
+          onClose={() => setMostrarModalConfirmacion(false)}
+        />
+      )}
+
+      {mensajeAlerta && (
+        <AlertaMensaje
+          tipo={mensajeAlerta.tipo}
+          mensaje={mensajeAlerta.mensaje}
+          onClose={() => setMensajeAlerta(null)}
+        />
       )}
     </div>
   );
