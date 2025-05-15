@@ -6,8 +6,19 @@ import EventoFactura from '../models/EventosFactura.js';
 
 export const listarFacturasEncadenadas = async (req, res) => {
   try {
-    const facturas = await FacturaHash.find().sort({ createdAt: -1 });
-    res.status(200).json(facturas);
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20; // Puedes ajustar este límite
+    const skip = (page - 1) * limit;
+
+    const totalFacturas = await FacturaHash.countDocuments();
+    const facturas = await FacturaHash.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalPaginas = Math.ceil(totalFacturas / limit);
+
+    res.status(200).json({ facturas, totalPaginas });
   } catch (error) {
     console.error('Error al obtener las facturas encadenadas:', error);
     res.status(500).json({ error: 'Error al obtener las facturas encadenadas.' });

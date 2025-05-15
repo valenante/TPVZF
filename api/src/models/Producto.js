@@ -57,7 +57,11 @@ const productoSchema = new Schema({
         cantidad: Number
     }],
     default: [],
-    tipoCroqueta: { type: String, default: 'normal' }, // Tipo de croqueta
+    tipoCroqueta: { type: String, default: 'normal' }, // Tipo de croqueta,
+      mensaje: {
+    type: String,
+    default: '',
+  },
 },
 
   // Estado y tipo de preparación

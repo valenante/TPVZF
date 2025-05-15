@@ -18,9 +18,13 @@ const PedidoBebidasSchema = new Schema({
       especificaciones: { type: [String], default: [] }, // Ejemplo: "Sin hielo", "Doble carga"
       estadoPreparacion: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
       tipoPrecio: { type: String, enum: ['tapa', 'racion', 'surtido', 'precioBase', 'copa', 'botella'], required: true }, // Tipo de precio seleccionado
-      tipoPedido: { type: String, enum: ['copa', 'botella']}, // Tipo específico de bebida
+      tipoPedido: { type: String, enum: ['copa', 'botella'] }, // Tipo específico de bebida
       acompanante: { type: String, required: false }, // 👈 AÑADIR AQUÍ
       total: { type: Number, required: true },
+      mensaje: {
+        type: String,
+        default: '',
+      },
     },
   ],
   total: { type: Number, required: true },

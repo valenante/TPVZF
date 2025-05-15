@@ -46,6 +46,10 @@ const PedidoSchema = new Schema({
       estadoPreparacion: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
       tipoPlato: { type: String, enum: ['individual', 'compartir'], required: false }, // Tipo de plato
       tipoCroqueta: { type: String, default: 'normal' }, // Tipo de croqueta
+      mensaje: {
+        type: String,
+        default: '',
+      },
       total: { type: Number, required: true },
     },
   ],

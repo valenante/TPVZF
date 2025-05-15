@@ -108,22 +108,23 @@ export const crearPedido = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
-
 export const agregarProductoAlPedido = async (req, res) => {
   const { mesaId } = req.params;
   const { productos } = req.body;
 
-  if (
-    !productos ||
-    !productos.producto ||
-    !productos.cantidad ||
-    !productos.total ||
-    !productos.precioSeleccionado
-  ) {
+  console.log('Productos recibidos:', productos);
+
+  if (!Array.isArray(productos) || productos.length === 0) {
+    return res.status(400).json({ error: 'Debes enviar al menos un producto válido.' });
+  }
+
+  const errores = productos.filter(p =>
+    !p.producto || !p.cantidad || !p.total || !p.precioSeleccionado
+  );
+
+  if (errores.length > 0) {
     return res.status(400).json({
-      error:
-        'Faltan datos obligatorios: `producto`, `cantidad`, `total` y `precios`.',
+      error: 'Cada producto debe tener: `producto`, `cantidad`, `total` y `precioSeleccionado`.',
     });
   }
 
@@ -135,56 +136,79 @@ export const agregarProductoAlPedido = async (req, res) => {
     }
 
     let pedidoModificado;
-
     const pedidoExistente = mesa.pedidos.find((p) => p.estado === 'pendiente');
 
     if (pedidoExistente) {
-      pedidoExistente.productos.push({
-        producto: productos.producto,
-        cantidad: productos.cantidad,
-        total: productos.total,
-        tipo: productos.tipo,
-        categoria: productos.categoria,
-        precioSeleccionado: productos.precioSeleccionado,
-        tipoPrecio: productos.tipoPrecio,
-        tipoPlato: productos.tipoPlato || null,
-        acompanante: productos.acompanante || null,
-        ingredientesEliminados: productos.ingredientes || [],
-        opcionesPersonalizables: productos.opcionesPersonalizables || [],
+      productos.forEach(p => {
+        pedidoExistente.productos.push({
+          producto: p.producto,
+          cantidad: p.cantidad,
+          total: p.total,
+          tipo: p.tipo,
+          categoria: p.categoria,
+          precioSeleccionado: p.precioSeleccionado,
+          tipoPrecio: p.tipoPrecio,
+          tipoPlato: p.tipoPlato || null,
+          acompanante: p.acompanante || null,
+          ingredientesEliminados: p.ingredientes || [],
+          opcionesPersonalizables: p.opcionesPersonalizables || [],
+          mensaje: p.mensaje || '', // Guarda el mensaje si existe
+        });
+        pedidoExistente.total += p.total;
       });
-      pedidoExistente.total += productos.total;
+
       pedidoModificado = await pedidoExistente.save();
     } else {
+      const nuevosProductos = productos.map(p => ({
+        producto: p.producto,
+        cantidad: p.cantidad,
+        total: p.total,
+        tipo: p.tipo,
+        categoria: p.categoria,
+        precioSeleccionado: p.precioSeleccionado,
+        tipoPrecio: p.tipoPrecio,
+        tipoPlato: p.tipoPlato || null,
+        acompanante: p.acompanante || null,
+        ingredientesEliminados: p.ingredientes || [],
+        opcionesPersonalizables: p.opcionesPersonalizables || [],
+        mensaje: p.mensaje || '', // Guarda el mensaje si existe
+      }));
+
       const nuevoPedido = new Pedido({
         mesa: mesa._id,
-        productos: [
-          {
-            producto: productos.producto,
-            cantidad: productos.cantidad,
-            total: productos.total,
-            tipo: productos.tipo,
-            categoria: productos.categoria,
-            precioSeleccionado: productos.precioSeleccionado,
-            tipoPrecio: productos.tipoPrecio,
-            tipoPlato: productos.tipoPlato || null,
-            acompanante: productos.acompanante || null,
-            ingredientesEliminados: productos.ingredientes || [],
-            opcionesPersonalizables: productos.opcionesPersonalizables || [],
-          },
-        ],
+        productos: nuevosProductos,
         estado: 'pendiente',
-        total: productos.total,
+        total: productos.reduce((sum, p) => sum + p.total, 0),
       });
 
       pedidoModificado = await nuevoPedido.save();
       mesa.pedidos.push(pedidoModificado._id);
     }
 
-    mesa.total += productos.total;
+    mesa.total += productos.reduce((sum, p) => sum + p.total, 0);
     await mesa.save();
 
-    // 🔥 Emitir el evento a través de Socket.IO
+    // Emitir el evento de nuevo pedido
     req.io.emit('nuevoPedido', pedidoModificado);
+
+    // Enviar a impresión
+    try {
+      await axios.post('http://localhost:4000/imprimir', {
+        mesaNumero: mesa.numero,
+        comensales: mesa.comensales || 0,
+        productos: productos.map(p => ({
+          nombre: p.nombre,
+          cantidad: p.cantidad,
+          opcionesPersonalizables: p.opcionesPersonalizables,
+          alergiasComensal: p.alergiasComensal,
+          tipoPrecio: p.tipoPrecio,
+        })),
+        total: productos.reduce((sum, p) => sum + p.total, 0),
+      });
+      console.log('Pedido enviado a la impresora');
+    } catch (error) {
+      console.error('Error al enviar el pedido a la impresora:', error.message);
+    }
 
     res.json(mesa);
   } catch (error) {
@@ -277,26 +301,26 @@ export const actualizarProducto = async (req, res) => {
 
     const pedido = await Pedido.findById(pedidoId).populate("mesa");
     if (!pedido) return res.status(404).json({ error: 'Pedido no encontrado' });
-    
+
     const producto = pedido.productos.id(productoId);
     if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
-    
+
     producto.estadoPreparacion = estadoPreparacion;
     await pedido.save();
-    
+
     // Verificar si TODOS los productos de TODOS los pedidos de la misma mesa están listos
     const pedidosMesa = await Pedido.find({ mesa: pedido.mesa._id });
-    
+
     const todosListos = pedidosMesa.every(ped =>
       ped.productos.every(prod => prod.estadoPreparacion === "listo")
     );
-    
+
     // Emitir el evento usando el número real de mesa
     io.emit("pedidosActualizados", {
       numeroMesa: pedido.mesa.numero,
       todosListos,
     });
-    
+
     res.status(200).json({ message: 'Producto actualizado correctamente' });
   } catch (error) {
     console.error('Error al actualizar producto:', error);
