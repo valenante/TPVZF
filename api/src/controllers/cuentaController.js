@@ -47,9 +47,8 @@ export const imprimirCuenta = async (req, res) => {
 
     mesa.pedidos.forEach(pedido => {
       pedido.productos.forEach(producto => {
-        console.log('Producto en pedido:', producto);  // Log del producto
         productos.push({
-          nombre: producto.producto?.nombre || 'Producto sin nombre',
+          nombre: producto.producto?.nombre || 'Producto desconocido',
           cantidad: producto.cantidad,
           opcionesPersonalizables: producto.opcionesPersonalizables || [],
           alergiasComensal: producto.alergiasComensal || '',
@@ -61,7 +60,6 @@ export const imprimirCuenta = async (req, res) => {
 
     mesa.pedidosBebidas.forEach(pedido => {
       pedido.productos.forEach(producto => {
-        console.log('Producto en bebida:', producto);  // Log del producto bebida
         productos.push({
           nombre: producto.producto?.nombre || 'Bebida sin nombre',
           cantidad: producto.cantidad,
@@ -72,8 +70,6 @@ export const imprimirCuenta = async (req, res) => {
         });
       });
     });
-
-    console.log('Productos para enviar al servidor de impresión:', productos);  // Log del listado completo
 
     // Llamar al servidor de impresión
     await axios.post('http://localhost:4000/imprimir-cuenta', {
