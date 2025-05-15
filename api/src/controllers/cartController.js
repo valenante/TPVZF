@@ -25,8 +25,6 @@ export const obtenerCarrito = async (req, res) => {
 export const agregarAlCarrito = async (req, res) => {
   let { mesa, items } = req.body;
 
-  (req.body);
-
   try {
     // 🔹 Verificar que `mesa` esté presente
     if (!mesa) {
@@ -52,6 +50,7 @@ export const agregarAlCarrito = async (req, res) => {
       acompanante,
       sabor,
       tipoCroqueta,
+      adicionales,
     } = items[0];
 
     // 🔹 Asegurar que `cantidad` es un número válido
@@ -112,6 +111,7 @@ export const agregarAlCarrito = async (req, res) => {
         acompanante,
         sabor,
         mesa,
+        adicionales
       });
     }
 

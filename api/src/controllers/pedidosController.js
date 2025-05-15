@@ -153,6 +153,7 @@ export const agregarProductoAlPedido = async (req, res) => {
           ingredientesEliminados: p.ingredientes || [],
           opcionesPersonalizables: p.opcionesPersonalizables || [],
           mensaje: p.mensaje || '', // Guarda el mensaje si existe
+          adicionales: p.adicionales || [],
         });
         pedidoExistente.total += p.total;
       });
@@ -172,6 +173,7 @@ export const agregarProductoAlPedido = async (req, res) => {
         ingredientesEliminados: p.ingredientes || [],
         opcionesPersonalizables: p.opcionesPersonalizables || [],
         mensaje: p.mensaje || '', // Guarda el mensaje si existe
+        adicionales: p.adicionales || [],
       }));
 
       const nuevoPedido = new Pedido({

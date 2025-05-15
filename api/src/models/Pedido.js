@@ -1,18 +1,13 @@
 import { Schema, model } from 'mongoose';
-
-// Subesquema para precios específicos
-const precioSchema = new Schema({
-  precioBase: { type: Number, required: true }, // Precio general
-  tapa: { type: Number, default: null }, // Opcional para platos
-  racion: { type: Number, default: null }, // Opcional para platos
-  copa: { type: Number, default: null }, // Opcional para bebidas
-  botella: { type: Number, default: null }, // Opcional para bebidas
-}, { _id: false });
-
 // Subesquema para presentaciones y opciones personalizables
 const opcionPersonalizableSchema = new Schema({
   tipo: { type: String, required: true }, // Ejemplo: "queso", "acompañamiento"
   opcion: { type: [String], default: [] }, // Ejemplo: ["cheddar", "mozzarella"]
+}, { _id: false });
+
+const adicionalSchema = new Schema({
+  nombre: { type: String, required: true },  // Ejemplo: "Unidad adicional"
+  precio: { type: Number, required: true }   // Ejemplo: 2.1
 }, { _id: false });
 
 const PedidoSchema = new Schema({
@@ -45,7 +40,8 @@ const PedidoSchema = new Schema({
       especificaciones: { type: [String], default: [] }, // Ejemplo: "Sin sal", "Extra picante"
       estadoPreparacion: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
       tipoPlato: { type: String, enum: ['individual', 'compartir'], required: false }, // Tipo de plato
-      tipoCroqueta: { type: String, default: 'normal' }, // Tipo de croqueta
+      tipoCroqueta: { type: String, default: 'normal' }, // Tipo de croqueta,
+      adicionales: [adicionalSchema],
       mensaje: {
         type: String,
         default: '',

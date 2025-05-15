@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 // Subesquema para precios específicos
 const precioSchema = new Schema({
-  precioBase: { type: Number, default: null}, // Precio general
+  precioBase: { type: Number, default: null }, // Precio general
   tapa: { type: Number, default: null }, // Opcional para platos
   racion: { type: Number, default: null }, // Opcional para platos
   copa: { type: Number, default: null }, // Opcional para bebidas
@@ -13,6 +13,11 @@ const precioSchema = new Schema({
 const opcionPersonalizableSchema = new Schema({
   tipo: { type: String, required: true }, // Ejemplo: "queso", "acompañamiento"
   opciones: { type: [String], default: [] }, // Ejemplo: ["cheddar", "mozzarella"]
+}, { _id: false });
+
+const adicionalSchema = new Schema({
+  nombre: { type: String, required: true },  // Ejemplo: "Unidad adicional"
+  precio: { type: Number, required: true }   // Ejemplo: 2.1
 }, { _id: false });
 
 // Modelo principal
@@ -44,25 +49,27 @@ const productoSchema = new Schema({
   ingredientes: { type: [String], default: [] }, // Ejemplo: ["pollo", "patatas"]
   ingredientesEliminados: { type: [String], default: [] }, // Ingredientes que el cliente ha solicitado quitar
   puntosDeCoccion: [{ type: String }], // Ej: "Poco hecho", "Bien hecho"
-  opcionesPersonalizables: [opcionPersonalizableSchema], // Opciones personalizables para el cliente
+  opcionesPersonalizables: [opcionPersonalizableSchema], // Opciones personalizables para el cliente  
+  adicionales: [adicionalSchema],
+
   especificaciones: [
     {
-      nombre: { type: String},
-      valor: { type: String}
+      nombre: { type: String },
+      valor: { type: String }
     }
   ],
   sabor: {
     type: [{
-        ingrediente: String,
-        cantidad: Number
+      ingrediente: String,
+      cantidad: Number
     }],
     default: [],
     tipoCroqueta: { type: String, default: 'normal' }, // Tipo de croqueta,
-      mensaje: {
-    type: String,
-    default: '',
+    mensaje: {
+      type: String,
+      default: '',
+    },
   },
-},
 
   // Estado y tipo de preparación
   estado: { type: String, enum: ['habilitado', 'deshabilitado'], default: 'habilitado' },

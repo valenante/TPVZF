@@ -1,6 +1,11 @@
 import { Schema as _Schema, model } from 'mongoose';
 const Schema = _Schema;
 
+const adicionalSchema = new Schema({
+  nombre: { type: String, required: true },  // Ejemplo: "Unidad adicional"
+  precio: { type: Number, required: true }   // Ejemplo: 2.1
+}, { _id: false });
+
 const CartItemSchema = new Schema({
   productId: { type: _Schema.Types.ObjectId, ref: 'Producto', required: true },
   cantidad: { type: Number, required: true, default: 1 },
@@ -17,7 +22,7 @@ const CartItemSchema = new Schema({
   precioSeleccionado: { type: Number, required: true }, // Precio seleccionado por el usuario
   tipoPrecio: {
     type: String,
-    enum: ['tapa', 'racion', 'surtido', 'precioBase', 'copa','botella'],
+    enum: ['tapa', 'racion', 'surtido', 'precioBase', 'copa', 'botella'],
     required: true
   },
 
@@ -26,6 +31,7 @@ const CartItemSchema = new Schema({
   nombre: { type: String, required: false },    // Nombre del comensal
   alergias: { type: String, required: false },  // Alergias del comensal
   acompanante: { type: String, required: false }, // 👈 AÑADIDO AQUÍ
+  adicionales: [adicionalSchema],
 });
 
 const CartSchema = new Schema({
