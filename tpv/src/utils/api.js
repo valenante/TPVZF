@@ -1,5 +1,5 @@
-import axios from 'axios';
-import renovarToken from './RenovarToken';
+import axios from "axios";
+import renovarToken from "./RenovarToken";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -14,7 +14,7 @@ const api = axios.create({
 
 // Interceptor para manejar errores de respuesta
 api.interceptors.response.use(
-  (response) => response, 
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
@@ -24,13 +24,13 @@ api.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedRequestsQueue.push({ resolve, reject });
         })
-        .then((token) => {
-          originalRequest.headers['Authorization'] = `Bearer ${token}`;
-          return api.request(originalRequest);
-        })
-        .catch((err) => {
-          return Promise.reject(err);
-        });
+          .then((token) => {
+            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+            return api.request(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
       }
 
       originalRequest._retry = true;
@@ -38,7 +38,7 @@ api.interceptors.response.use(
 
       try {
         const setAccessToken = (newToken) => {
-          api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+          api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
         };
 
         // Intentar renovar el token
@@ -48,14 +48,14 @@ api.interceptors.response.use(
         failedRequestsQueue.forEach((req) => req.resolve(newToken));
         failedRequestsQueue = [];
 
-        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
         return api.request(originalRequest);
       } catch (refreshError) {
         failedRequestsQueue.forEach((req) => req.reject(refreshError));
         failedRequestsQueue = [];
 
-        console.error('🚨 Error al renovar el token:', refreshError);
-        
+        console.error("🚨 Error al renovar el token:", refreshError);
+
         // Forzar cierre de sesión si la renovación falla
         window.location.href = "/login";
         return Promise.reject(error);
@@ -65,7 +65,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

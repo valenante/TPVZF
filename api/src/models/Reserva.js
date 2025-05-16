@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const reservaSchema = new mongoose.Schema({
   nombre: {
@@ -28,8 +28,8 @@ const reservaSchema = new mongoose.Schema({
   },
   estado: {
     type: String,
-    enum: ["pendiente", "confirmada", "rechazada", "auto-confirmada"],
-    default: "pendiente",
+    enum: ['pendiente', 'confirmada', 'rechazada', 'auto-confirmada'],
+    default: 'pendiente',
   },
   mesaAsignada: {
     type: Number,
@@ -38,7 +38,7 @@ const reservaSchema = new mongoose.Schema({
   mensaje: {
     type: String,
     trim: true,
-    default: "",
+    default: '',
   },
   creadaEn: {
     type: Date,
@@ -46,4 +46,4 @@ const reservaSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Reserva", reservaSchema);
+export default mongoose.model('Reserva', reservaSchema);

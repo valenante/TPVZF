@@ -1,9 +1,10 @@
 import globals from 'globals';
 import pluginJs from '@eslint/js';
+import pluginPrettier from 'eslint-plugin-prettier';
+import pluginUnusedImports from 'eslint-plugin-unused-imports';
 
-/** @type {import('eslint').Linter.Config[]} */
+/** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
-  // Configuración para todos los archivos
   {
     files: ['**/*.{js,mjs,cjs,jsx}'],
     languageOptions: {
@@ -14,14 +15,19 @@ export default [
         ...globals.node,
       },
     },
-  },
-  // Configuración específica para Prettier
-  {
-    plugins: ['prettier'],
-    extends: ['plugin:prettier/recommended'],
-    rules: {
-      'prettier/prettier': 'error', // Muestra errores de formato como errores de ESLint
+    plugins: {
+      prettier: pluginPrettier,
+      'unused-imports': pluginUnusedImports,
     },
-  },
-  pluginJs.configs.recommended,
+    rules: {
+      ...pluginJs.configs.recommended.rules, // <<✅ ESTA ES LA FORMA CORRECTA
+      'prettier/prettier': 'error',
+      'no-unused-vars': 'off',
+      'unused-imports/no-unused-imports': 'warn',
+      'unused-imports/no-unused-vars': [
+        'warn',
+        { vars: 'all', varsIgnorePattern: '^', args: 'after-used', argsIgnorePattern: '^' },
+      ],
+    },
+  },
 ];

@@ -1,12 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 
 // Guardar el token después del inicio de sesión
 export const saveToken = (token) => {
-  localStorage.setItem('token', token);
+  localStorage.setItem("token", token);
 };
 
 // Recuperar el token para incluirlo en las solicitudes
-const getToken = () => localStorage.getItem('token');
+const getToken = () => localStorage.getItem("token");
 
 // Configurar Axios con la base URL usando variable de entorno
 const api = axios.create({
@@ -21,7 +21,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 export default api;
