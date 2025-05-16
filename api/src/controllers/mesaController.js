@@ -191,26 +191,19 @@ export const cerrarMesa = async (req, res) => {
         populate: { path: 'productos.producto' },
       });
 
-    const {
-      efectivo = 0,
-      tarjeta = 0,
-      propina = 0
-    } = metodoPago || {};
+    const { efectivo = 0, tarjeta = 0, propina = 0 } = metodoPago || {};
     const totalPagado = efectivo + tarjeta;
     const totalMesa = mesa.total;
 
-    // Validación del monto pagado
     if (totalPagado < totalMesa) {
       return res.status(400).json({
         error: `El monto ingresado (${totalPagado} €) es menor que el total de la mesa (${totalMesa} €).`,
       });
     }
 
-    // Calcula la propina real solo si es explícita o es el excedente
     const cambioCalculado = totalPagado - totalMesa;
-    const propinaCalculada = propina; // Solo si fue escrita explícitamente
+    const propinaCalculada = propina;
 
-    // Guarda la mesa cerrada incluyendo el cambio como registro informativo
     const mesaCerrada = new MesaCerrada({
       numero: mesa.numero,
       pedidos: mesa.pedidos.map((pedido) => pedido._id),
@@ -219,17 +212,11 @@ export const cerrarMesa = async (req, res) => {
       inicio: mesa.inicio,
       cierre: new Date(),
       comensales: mesa.comensales || 1,
-      metodoPago: {
-        efectivo,
-        tarjeta,
-        propina: propinaCalculada,
-        cambio: cambioCalculado,
-      },
+      metodoPago: { efectivo, tarjeta, propina: propinaCalculada, cambio: cambioCalculado },
     });
 
     await mesaCerrada.save();
 
-    // Actualizar caja del día
     const hoy = new Date();
     const inicioDelDia = new Date(hoy.setHours(0, 0, 0, 0));
     const finDelDia = new Date(hoy.setHours(23, 59, 59, 999));
@@ -244,7 +231,6 @@ export const cerrarMesa = async (req, res) => {
 
       caja.detallesMetodoPago.efectivo += efectivoReal;
       caja.detallesMetodoPago.tarjeta += tarjetaReal;
-      caja.detallesMetodoPago.tarjeta += tarjeta;
       caja.detallesMetodoPago.propina += propinaCalculada;
       caja.total += totalMesa;
       caja.operaciones.push({
@@ -257,18 +243,11 @@ export const cerrarMesa = async (req, res) => {
       const nuevaCaja = new Caja({
         total: totalMesa,
         detallesMetodoPago: { efectivo, tarjeta, propina: propinaCalculada },
-        operaciones: [
-          {
-            tipo: 'cierre',
-            monto: totalMesa,
-            razon: `Cierre de la mesa número ${mesa.numero}`,
-          },
-        ],
+        operaciones: [{ tipo: 'cierre', monto: totalMesa, razon: `Cierre de la mesa número ${mesa.numero}` }],
       });
       await nuevaCaja.save();
     }
 
-    // Generar número y hash siempre
     numeroFactura = await obtenerNumeroFactura();
     hashFactura = await registrarFacturaConHash({
       numeroFactura,
@@ -285,7 +264,6 @@ export const cerrarMesa = async (req, res) => {
       importeTotal: mesa.total,
     });
 
-    // Preparar productos para la impresión
     const productos = mesa.pedidos.flatMap((pedido) =>
       pedido.productos.map((p) => ({
         nombre: p.producto.nombre || 'Producto desconocido',
@@ -304,20 +282,6 @@ export const cerrarMesa = async (req, res) => {
 
     productos.push(...productosBebidas);
 
-    // Enviar a impresión siempre
-    await axios.post('http://localhost:4000/imprimir-factura', {
-      mesaNumero: mesa.numero,
-      comensales: mesa.comensales || 1,
-      clienteNombre: clienteNombre || 'Consumidor Final',
-      clienteNIF: clienteNIF || 'N/A',
-      numeroFactura,
-      fechaExpedicion: new Date().toISOString(),
-      productos,
-      total: mesa.total,
-      hash: hashFactura.hash,
-    });
-
-    // Registrar el evento siempre
     const eventoFactura = new EventoFactura({
       tipoEvento: 'creación',
       numeroFactura: numeroFactura,
@@ -332,7 +296,6 @@ export const cerrarMesa = async (req, res) => {
 
     await eventoFactura.save();
 
-    // Resetear mesa
     mesa.estado = 'cerrada';
     mesa.total = 0;
     mesa.pedidos = [];
@@ -341,15 +304,27 @@ export const cerrarMesa = async (req, res) => {
     mesa.tokenLider = null;
     await mesa.save();
 
+    // ✅ Devolver datos de impresión al Frontend
     res.status(200).json({
       message: 'Mesa cerrada con éxito',
       mesaCerrada,
       propina: propinaCalculada,
       cambio: cambioCalculado,
       facturaEmitida: !!hashFactura,
-      numeroFactura: numeroFactura || null,
+      numeroFactura: numeroFactura,
       hashFactura: hashFactura?.hash || null,
-      fechaExpedicion: new Date().toISOString(), // ✅ Aquí agregas la fecha
+      fechaExpedicion: new Date().toISOString(),
+      datosImpresion: {
+        mesaNumero: mesa.numero,
+        comensales: mesa.comensales || 1,
+        clienteNombre: clienteNombre || 'Consumidor Final',
+        clienteNIF: clienteNIF || 'N/A',
+        numeroFactura,
+        fechaExpedicion: new Date().toISOString(),
+        productos,
+        total: mesa.total,
+        hash: hashFactura.hash,
+      },
     });
   } catch (error) {
     console.error('Error al cerrar la mesa:', error);

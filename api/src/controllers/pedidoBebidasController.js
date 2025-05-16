@@ -18,7 +18,6 @@ export const crearPedido = async (req, res) => {
     } = req.body;
 
     const mesaExistente = await Mesa.findById(mesa);
-
     if (!mesaExistente) {
       console.error('Mesa no encontrada');
       return res.status(404).json({ error: 'Mesa no encontrada' });
@@ -26,14 +25,13 @@ export const crearPedido = async (req, res) => {
 
     const nuevoPedido = new PedidoBebida({
       productos,
-      total,
+      total: parseFloat(total.toFixed(2)),
       comensales,
       alergias,
       mesa: mesaExistente._id,
       precioSeleccionado,
     });
 
-    nuevoPedido.total = parseFloat(nuevoPedido.total.toFixed(2));
     await nuevoPedido.save();
 
     mesaExistente.pedidosBebidas.push(nuevoPedido._id);
@@ -41,6 +39,7 @@ export const crearPedido = async (req, res) => {
     mesaExistente.total = parseFloat(mesaExistente.total.toFixed(2));
     await mesaExistente.save();
 
+    // Registrar cada producto como venta
     for (const producto of productos) {
       const venta = new Venta({
         producto: producto.producto,
@@ -52,19 +51,13 @@ export const crearPedido = async (req, res) => {
       await venta.save();
 
       const productoEnDB = await Producto.findById(producto.producto);
-
       if (productoEnDB) {
         productoEnDB.ventas.push(venta._id);
         productoEnDB.stock -= producto.cantidad;
         await productoEnDB.save();
       } else {
-        console.error(
-          'Producto no encontrado en la base de datos:',
-          producto.productoId
-        );
-        return res
-          .status(400)
-          .json({ error: 'Producto no encontrado en la base de datos' });
+        console.error('Producto no encontrado en la base de datos:', producto.producto);
+        return res.status(400).json({ error: 'Producto no encontrado en la base de datos' });
       }
     }
 
@@ -72,28 +65,10 @@ export const crearPedido = async (req, res) => {
       await Cart.findByIdAndDelete(cartId);
     }
 
-    // Emitir evento para clientes conectados
+    // Emitir evento para actualizar en tiempo real
     req.io.emit('nuevoPedido', nuevoPedido);
 
-    // Enviar a impresión
-    try {
-      await axios.post('http://localhost:4000/imprimir-bebidas', {
-        mesaNumero: mesaExistente.numero,
-        comensales: nuevoPedido.comensales,
-        productos: productos.map((p) => ({
-          nombre: p.nombre,
-          cantidad: p.cantidad,
-          tipoPrecio: p.tipoPrecio,
-          opcionesPersonalizables: p.opcionesPersonalizables || [],
-          alergiasComensal: p.alergiasComensal || '',
-        })),
-      });
-    } catch (error) {
-      console.error(
-        'Error al enviar el pedido de bebidas a la impresora:',
-        error.message
-      );
-    }
+    // ✅ No se envía nada a impresión aquí
 
     res.status(201).json({
       message: 'Pedido creado con éxito',
@@ -105,6 +80,7 @@ export const crearPedido = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 export const obtenerPedidos = async (req, res) => {
   try {
@@ -297,77 +273,39 @@ export const verificarPedidosMesa = async (req, res) => {
     console.error('Error al verificar pedidos de la mesa:', error);
     res.status(500).json({ error: 'Error al verificar pedidos de la mesa.' });
   }
-};
-export const agregarProductoBebida = async (req, res) => {
+};export const agregarProductoBebida = async (req, res) => {
   const { mesaId } = req.params;
   const { productos } = req.body;
 
   if (!Array.isArray(productos) || productos.length === 0) {
-    return res
-      .status(400)
-      .json({ error: 'Debes enviar al menos una bebida válida.' });
+    return res.status(400).json({ error: 'Debes enviar al menos una bebida válida.' });
   }
 
-  const errores = productos.filter(
-    (p) => !p.producto || !p.cantidad || !p.total || !p.precioSeleccionado
-  );
-
+  const errores = productos.filter(p => !p.producto || !p.cantidad || !p.total || !p.precioSeleccionado);
   if (errores.length > 0) {
-    return res.status(400).json({
-      error:
-        'Cada bebida debe tener: `producto`, `cantidad`, `total` y `precioSeleccionado`.',
-    });
+    return res.status(400).json({ error: 'Cada bebida debe tener: producto, cantidad, total y precioSeleccionado.' });
   }
 
   try {
     const mesa = await Mesa.findById(mesaId).populate('pedidosBebidas');
-
-    if (!mesa) {
-      return res.status(404).json({ error: 'Mesa no encontrada' });
-    }
+    if (!mesa) return res.status(404).json({ error: 'Mesa no encontrada' });
 
     let pedidoModificado;
-    const pedidoExistente = mesa.pedidosBebidas.find(
-      (p) => p.estado === 'pendiente'
-    );
+    const pedidoExistente = mesa.pedidosBebidas.find(p => p.estado === 'pendiente');
 
     if (pedidoExistente) {
-      productos.forEach((p) => {
-        pedidoExistente.productos.push({
-          producto: p.producto,
-          cantidad: p.cantidad,
-          total: p.total,
-          tipo: p.tipo,
-          tipoPrecio: p.tipoPrecio,
-          categoria: p.categoria,
-          precioSeleccionado: p.precioSeleccionado,
-          acompanante: p.acompanante,
-          mensaje: p.mensaje || '', // Guarda el mensaje si existe
-        });
+      productos.forEach(p => {
+        pedidoExistente.productos.push({ ...p });
         pedidoExistente.total += p.total;
       });
-
       pedidoModificado = await pedidoExistente.save();
     } else {
-      const nuevosProductos = productos.map((p) => ({
-        producto: p.producto,
-        cantidad: p.cantidad,
-        total: p.total,
-        tipo: p.tipo,
-        tipoPrecio: p.tipoPrecio,
-        categoria: p.categoria,
-        precioSeleccionado: p.precioSeleccionado,
-        acompanante: p.acompanante,
-        mensaje: p.mensaje || '', // Guarda el mensaje si existe
-      }));
-
       const nuevoPedidoBebida = new PedidoBebida({
         mesa: mesa._id,
-        productos: nuevosProductos,
+        productos,
         estado: 'pendiente',
         total: productos.reduce((sum, p) => sum + p.total, 0),
       });
-
       pedidoModificado = await nuevoPedidoBebida.save();
       mesa.pedidosBebidas.push(pedidoModificado._id);
     }
@@ -375,31 +313,29 @@ export const agregarProductoBebida = async (req, res) => {
     mesa.total += productos.reduce((sum, p) => sum + p.total, 0);
     await mesa.save();
 
-    // Emitir evento para clientes conectados
     req.io.emit('nuevoPedido', pedidoModificado);
 
-    // Enviar a impresión
-    try {
-      await axios.post('http://localhost:4000/imprimir-bebidas', {
-        mesaNumero: mesa.numero,
-        comensales: mesa.comensales || 0,
-        productos: productos.map((p) => ({
-          nombre: p.nombre,
+    // Buscar nombres reales desde la base de datos
+    const idsProductos = productos.map(p => p.producto);
+    const productosDB = await Producto.find({ _id: { $in: idsProductos } });
+
+    const datosRespuesta = {
+      mesaNumero: mesa.numero,
+      comensales: mesa.comensales || 0,
+      productos: productos.map(p => {
+        const productoInfo = productosDB.find(prod => prod._id.toString() === p.producto);
+        return {
+          nombre: productoInfo?.nombre || 'Producto desconocido',
           cantidad: p.cantidad,
           tipoPrecio: p.tipoPrecio,
           opcionesPersonalizables: p.opcionesPersonalizables || [],
           alergiasComensal: p.alergiasComensal || '',
-          mensaje: mensaje || '', // Guarda el mensaje si existe
-        })),
-      });
-    } catch (error) {
-      console.error(
-        'Error al enviar el pedido de bebidas a la impresora:',
-        error.message
-      );
-    }
-
-    res.json(mesa);
+          mensaje: p.mensaje || '',
+        };
+      }),
+      total: productos.reduce((sum, p) => sum + p.total, 0),
+    };
+    res.json(datosRespuesta);
   } catch (error) {
     console.error('Error al agregar bebida:', error);
     res.status(500).json({ error: 'Error al agregar bebida' });

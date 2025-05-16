@@ -83,24 +83,6 @@ export const crearPedido = async (req, res) => {
     // Emitir el evento de nuevo pedido
     req.io.emit('nuevoPedido', nuevoPedido);
 
-    // Enviar a impresión
-    try {
-      await axios.post('http://localhost:4000/imprimir', {
-        mesaNumero: mesaExistente.numero,
-        comensales: nuevoPedido.comensales,
-        productos: productos.map((p) => ({
-          nombre: p.nombre,
-          cantidad: p.cantidad,
-          opcionesPersonalizables: p.opcionesPersonalizables,
-          alergiasComensal: p.alergiasComensal,
-          tipoPrecio: p.tipoPrecio,
-        })),
-        total: nuevoPedido.total,
-      });
-    } catch (error) {
-      console.error('Error al enviar el pedido a la impresora:', error.message);
-    }
-
     res.status(201).json({
       message: 'Pedido creado con éxito',
       pedidoId: nuevoPedido._id,
@@ -111,84 +93,40 @@ export const crearPedido = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 export const agregarProductoAlPedido = async (req, res) => {
   const { mesaId } = req.params;
   const { productos } = req.body;
 
   if (!Array.isArray(productos) || productos.length === 0) {
-    return res
-      .status(400)
-      .json({ error: 'Debes enviar al menos un producto válido.' });
+    return res.status(400).json({ error: 'Debes enviar al menos un producto válido.' });
   }
 
-  const errores = productos.filter(
-    (p) => !p.producto || !p.cantidad || !p.total || !p.precioSeleccionado
-  );
-
+  const errores = productos.filter(p => !p.producto || !p.cantidad || !p.total || !p.precioSeleccionado);
   if (errores.length > 0) {
-    return res.status(400).json({
-      error:
-        'Cada producto debe tener: `producto`, `cantidad`, `total` y `precioSeleccionado`.',
-    });
+    return res.status(400).json({ error: 'Cada producto debe tener: producto, cantidad, total y precioSeleccionado.' });
   }
 
   try {
     const mesa = await Mesa.findById(mesaId).populate('pedidos');
-
-    if (!mesa) {
-      return res.status(404).json({ error: 'Mesa no encontrada' });
-    }
+    if (!mesa) return res.status(404).json({ error: 'Mesa no encontrada' });
 
     let pedidoModificado;
-    const pedidoExistente = mesa.pedidos.find((p) => p.estado === 'pendiente');
+    const pedidoExistente = mesa.pedidos.find(p => p.estado === 'pendiente');
 
     if (pedidoExistente) {
-      productos.forEach((p) => {
-        pedidoExistente.productos.push({
-          producto: p.producto,
-          cantidad: p.cantidad,
-          total: p.total,
-          tipo: p.tipo,
-          categoria: p.categoria,
-          precioSeleccionado: p.precioSeleccionado,
-          tipoPrecio: p.tipoPrecio,
-          tipoPlato: p.tipoPlato || null,
-          acompanante: p.acompanante || null,
-          ingredientesEliminados: p.ingredientes || [],
-          opcionesPersonalizables: p.opcionesPersonalizables || [],
-          mensaje: p.mensaje || '', // Guarda el mensaje si existe
-          adicionales: p.adicionales || [],
-          seccion: p.seccion || null,
-        });
+      productos.forEach(p => {
+        pedidoExistente.productos.push({ ...p });
         pedidoExistente.total += p.total;
       });
-
       pedidoModificado = await pedidoExistente.save();
     } else {
-      const nuevosProductos = productos.map((p) => ({
-        producto: p.producto,
-        cantidad: p.cantidad,
-        total: p.total,
-        tipo: p.tipo,
-        categoria: p.categoria,
-        precioSeleccionado: p.precioSeleccionado,
-        tipoPrecio: p.tipoPrecio,
-        tipoPlato: p.tipoPlato || null,
-        acompanante: p.acompanante || null,
-        ingredientesEliminados: p.ingredientes || [],
-        opcionesPersonalizables: p.opcionesPersonalizables || [],
-        mensaje: p.mensaje || '', // Guarda el mensaje si existe
-        adicionales: p.adicionales || [],
-        seccion: p.seccion || null,
-      }));
-
       const nuevoPedido = new Pedido({
         mesa: mesa._id,
-        productos: nuevosProductos,
+        productos,
         estado: 'pendiente',
         total: productos.reduce((sum, p) => sum + p.total, 0),
       });
-
       pedidoModificado = await nuevoPedido.save();
       mesa.pedidos.push(pedidoModificado._id);
     }
@@ -196,29 +134,29 @@ export const agregarProductoAlPedido = async (req, res) => {
     mesa.total += productos.reduce((sum, p) => sum + p.total, 0);
     await mesa.save();
 
-    // Emitir el evento de nuevo pedido
     req.io.emit('nuevoPedido', pedidoModificado);
 
-    // Enviar a impresión
-    try {
-      await axios.post('http://localhost:4000/imprimir', {
-        mesaNumero: mesa.numero,
-        comensales: mesa.comensales || 0,
-        productos: productos.map((p) => ({
-          nombre: p.nombre,
+    // Buscar nombres de los productos en la base de datos
+    const idsProductos = productos.map(p => p.producto);
+    const productosDB = await Producto.find({ _id: { $in: idsProductos } });
+
+    const datosRespuesta = {
+      mesaNumero: mesa.numero,
+      comensales: mesa.comensales || 0,
+      productos: productos.map(p => {
+        const productoInfo = productosDB.find(prod => prod._id.toString() === p.producto);
+        return {
+          nombre: productoInfo?.nombre || 'Producto desconocido',
           cantidad: p.cantidad,
           opcionesPersonalizables: p.opcionesPersonalizables,
           alergiasComensal: p.alergiasComensal,
           tipoPrecio: p.tipoPrecio,
           seccion: p.seccion,
-        })),
-        total: productos.reduce((sum, p) => sum + p.total, 0),
-      });
-    } catch (error) {
-      console.error('Error al enviar el pedido a la impresora:', error.message);
-    }
-
-    res.json(mesa);
+        };
+      }),
+      total: productos.reduce((sum, p) => sum + p.total, 0),
+    };
+    res.json(datosRespuesta);
   } catch (error) {
     console.error('Error al agregar producto:', error);
     res.status(500).json({ error: 'Error al agregar producto' });
