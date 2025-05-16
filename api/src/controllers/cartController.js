@@ -5,11 +5,15 @@ export const obtenerCarrito = async (req, res) => {
     const { numeroMesa } = req.query; // Obtener número de mesa desde la URL
 
     if (!numeroMesa) {
-      return res.status(400).json({ error: 'Falta el número de mesa en la solicitud.' });
+      return res
+        .status(400)
+        .json({ error: 'Falta el número de mesa en la solicitud.' });
     }
 
     // Buscar el carrito asociado a la mesa
-    const cart = await Cart.findOne({ mesa: numeroMesa }).populate('items.productId');
+    const cart = await Cart.findOne({ mesa: numeroMesa }).populate(
+      'items.productId'
+    );
 
     if (!cart) {
       return res.status(200).json({ items: [] });
@@ -28,12 +32,16 @@ export const agregarAlCarrito = async (req, res) => {
   try {
     // 🔹 Verificar que `mesa` esté presente
     if (!mesa) {
-      return res.status(400).json({ error: "El número de mesa es obligatorio." });
+      return res
+        .status(400)
+        .json({ error: 'El número de mesa es obligatorio.' });
     }
 
     // 🔹 Verificar que `items` es un array válido con al menos un elemento
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ error: "Debe haber al menos un producto en el carrito." });
+      return res
+        .status(400)
+        .json({ error: 'Debe haber al menos un producto en el carrito.' });
     }
 
     // 🔹 Extraemos el primer producto del array `items`
@@ -57,13 +65,28 @@ export const agregarAlCarrito = async (req, res) => {
     cantidad = parseInt(cantidad, 10);
 
     // 🔹 Validaciones de los datos esenciales
-    if (!productId || !nombre || !precioSeleccionado || isNaN(cantidad) || cantidad <= 0) {
-      console.error("❌ Error en los datos recibidos:", { productId, cantidad, nombre, precioSeleccionado });
-      return res.status(400).json({ error: "Faltan datos obligatorios o cantidad inválida." });
+    if (
+      !productId ||
+      !nombre ||
+      !precioSeleccionado ||
+      isNaN(cantidad) ||
+      cantidad <= 0
+    ) {
+      console.error('❌ Error en los datos recibidos:', {
+        productId,
+        cantidad,
+        nombre,
+        precioSeleccionado,
+      });
+      return res
+        .status(400)
+        .json({ error: 'Faltan datos obligatorios o cantidad inválida.' });
     }
 
-    if (tipoPlato === "surtido" && (!sabor || sabor.length !== 6)) {
-      return res.status(400).json({ error: "El surtido debe tener exactamente 6 sabores." });
+    if (tipoPlato === 'surtido' && (!sabor || sabor.length !== 6)) {
+      return res
+        .status(400)
+        .json({ error: 'El surtido debe tener exactamente 6 sabores.' });
     }
 
     let cart;
@@ -92,7 +115,7 @@ export const agregarAlCarrito = async (req, res) => {
     if (itemIndex > -1) {
       // 🔹 Si el producto ya está en el carrito, actualizar cantidad
       cart.items[itemIndex].cantidad += cantidad;
-      if (tipoPlato === "surtido") {
+      if (tipoPlato === 'surtido') {
         cart.items[itemIndex].sabor = sabor;
       }
     } else {
@@ -111,7 +134,7 @@ export const agregarAlCarrito = async (req, res) => {
         acompanante,
         sabor,
         mesa,
-        adicionales
+        adicionales,
       });
     }
 
@@ -122,16 +145,14 @@ export const agregarAlCarrito = async (req, res) => {
       cartId: cart._id,
       totalItems: cart.items.length,
       numeroMesa: cart.mesa, // 👈 Asegúrate de que esté aquí
-    });    
+    });
 
     res.status(200).json(cart);
   } catch (error) {
-    console.error("❌ Error al agregar al carrito:", error);
-    res.status(500).json({ error: "Error al agregar al carrito." });
+    console.error('❌ Error al agregar al carrito:', error);
+    res.status(500).json({ error: 'Error al agregar al carrito.' });
   }
 };
-
-
 
 // Actualizar la cantidad de un producto en el carrito
 export const actualizarItem = async (req, res) => {
@@ -143,9 +164,13 @@ export const actualizarItem = async (req, res) => {
       return res.status(404).json({ message: 'Carrito no encontrado.' });
     }
 
-    const itemIndex = cart.items.findIndex((item) => item._id.toString() === itemId);
+    const itemIndex = cart.items.findIndex(
+      (item) => item._id.toString() === itemId
+    );
     if (itemIndex === -1) {
-      return res.status(404).json({ message: 'Producto no encontrado en el carrito.' });
+      return res
+        .status(404)
+        .json({ message: 'Producto no encontrado en el carrito.' });
     }
 
     cart.items[itemIndex].cantidad = cantidad;
@@ -162,7 +187,9 @@ export const eliminarDelCarrito = async (req, res) => {
   const cartId = req.headers['x-cart-id']; // Obtener el identificador del carrito desde los encabezados
 
   if (!cartId) {
-    return res.status(400).json({ error: 'Falta el identificador del carrito.' });
+    return res
+      .status(400)
+      .json({ error: 'Falta el identificador del carrito.' });
   }
 
   try {
@@ -174,10 +201,14 @@ export const eliminarDelCarrito = async (req, res) => {
     }
 
     // Encontrar el índice del producto en el carrito
-    const itemIndex = cart.items.findIndex((item) => item._id.toString() === itemId);
+    const itemIndex = cart.items.findIndex(
+      (item) => item._id.toString() === itemId
+    );
 
     if (itemIndex === -1) {
-      return res.status(404).json({ error: 'Producto no encontrado en el carrito.' });
+      return res
+        .status(404)
+        .json({ error: 'Producto no encontrado en el carrito.' });
     }
 
     if (cart.items[itemIndex].cantidad > 1) {
@@ -210,10 +241,16 @@ export const eliminarDelCarrito = async (req, res) => {
       totalItems: cart.items.reduce((total, item) => total + item.cantidad, 0), // Actualizar el número total de ítems
     });
 
-    res.status(200).json({ message: 'Producto eliminado del carrito.', carritoEliminado: false, cart });
+    res.status(200).json({
+      message: 'Producto eliminado del carrito.',
+      carritoEliminado: false,
+      cart,
+    });
   } catch (error) {
     console.error('Error al eliminar el producto del carrito:', error);
-    res.status(500).json({ error: 'Error al eliminar el producto del carrito.' });
+    res
+      .status(500)
+      .json({ error: 'Error al eliminar el producto del carrito.' });
   }
 };
 
@@ -222,7 +259,7 @@ export const vaciarCarrito = async (req, res) => {
   const { mesa } = req.body;
 
   if (!mesa) {
-    return res.status(400).json({ error: "El número de mesa es obligatorio." });
+    return res.status(400).json({ error: 'El número de mesa es obligatorio.' });
   }
 
   try {
@@ -230,17 +267,18 @@ export const vaciarCarrito = async (req, res) => {
     const cart = await Cart.findOne({ mesa });
 
     if (!cart) {
-      return res.status(404).json({ message: "Carrito no encontrado para esta mesa." });
+      return res
+        .status(404)
+        .json({ message: 'Carrito no encontrado para esta mesa.' });
     }
 
     // Vaciamos el carrito
     cart.items = [];
     await cart.save();
 
-    res.status(200).json({ message: "Carrito vaciado.", cart });
+    res.status(200).json({ message: 'Carrito vaciado.', cart });
   } catch (error) {
-    console.error("❌ Error al vaciar el carrito:", error);
-    res.status(500).json({ error: "Error al vaciar el carrito." });
+    console.error('❌ Error al vaciar el carrito:', error);
+    res.status(500).json({ error: 'Error al vaciar el carrito.' });
   }
 };
-

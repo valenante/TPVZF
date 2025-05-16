@@ -1,5 +1,5 @@
 // controllers/disponibilidadController.js
-import Disponibilidad from "../models/Disponibilidad.js";
+import Disponibilidad from '../models/Disponibilidad.js';
 
 // Obtener la configuración actual
 export const obtenerDisponibilidad = async (req, res) => {
@@ -29,22 +29,15 @@ export const obtenerDisponibilidad = async (req, res) => {
       sábado: disponibilidad.sábado,
     });
   } catch (error) {
-    console.error("Error al obtener disponibilidad:", error);
-    res.status(500).json({ mensaje: "Error al obtener la disponibilidad." });
+    console.error('Error al obtener disponibilidad:', error);
+    res.status(500).json({ mensaje: 'Error al obtener la disponibilidad.' });
   }
 };
 
 // Actualizar los días habilitados
 export const actualizarDisponibilidad = async (req, res) => {
-  const {
-    domingo,
-    lunes,
-    martes,
-    miércoles,
-    jueves,
-    viernes,
-    sábado,
-  } = req.body;
+  const { domingo, lunes, martes, miércoles, jueves, viernes, sábado } =
+    req.body;
 
   try {
     let disponibilidad = await Disponibilidad.findOne();
@@ -67,9 +60,9 @@ export const actualizarDisponibilidad = async (req, res) => {
     }
 
     await disponibilidad.save();
-    res.json({ mensaje: "Disponibilidad actualizada correctamente." });
+    res.json({ mensaje: 'Disponibilidad actualizada correctamente.' });
   } catch (error) {
-    console.error("Error al actualizar disponibilidad:", error);
-    res.status(500).json({ mensaje: "Error al actualizar la disponibilidad." });
+    console.error('Error al actualizar disponibilidad:', error);
+    res.status(500).json({ mensaje: 'Error al actualizar la disponibilidad.' });
   }
 };

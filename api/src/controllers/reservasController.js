@@ -11,14 +11,17 @@ const enviarConfirmacionEmail = async (reserva) => {
       </div>
       <h2 style="color: #6A0DAD;">¡Reserva confirmada!</h2>
       <p>Hola <strong>${reserva.nombre || 'cliente'}</strong>,</p>
-      <p>Tu reserva para el <strong>${new Date(reserva.hora).toLocaleString('es-ES', {
-        hour: '2-digit',
-        minute: '2-digit',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour12: false
-      })}</strong> ha sido <strong>confirmada</strong> exitosamente.</p>
+      <p>Tu reserva para el <strong>${new Date(reserva.hora).toLocaleString(
+        'es-ES',
+        {
+          hour: '2-digit',
+          minute: '2-digit',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour12: false,
+        }
+      )}</strong> ha sido <strong>confirmada</strong> exitosamente.</p>
       <p style="margin-top: 20px;">Te esperamos en <strong>Zabor Féten</strong> 🥂</p>
       <p style="font-size: 0.9em; color: #555; margin-top: 40px;">
         Si necesitas modificar o cancelar tu reserva, contáctanos directamente.
@@ -34,7 +37,6 @@ const enviarConfirmacionEmail = async (reserva) => {
     attachments: ['public/images/logoZf.jpg'],
   });
 };
-
 
 export const crearReserva = async (req, res) => {
   const { nombre, email, telefono, personas, hora, mensaje } = req.body;
@@ -82,11 +84,9 @@ export const crearReserva = async (req, res) => {
     );
 
     if (!franja) {
-      return res
-        .status(400)
-        .json({
-          mensaje: 'La hora seleccionada no está en una franja válida.',
-        });
+      return res.status(400).json({
+        mensaje: 'La hora seleccionada no está en una franja válida.',
+      });
     }
 
     const desde = new Date(`${fecha}T${franja.horaInicio}:00`);
@@ -122,11 +122,9 @@ export const crearReserva = async (req, res) => {
           mesaAsignada: null,
         });
 
-        return res
-          .status(200)
-          .json({
-            mensaje: 'No hay mesas libres. Solicitud enviada para confirmar.',
-          });
+        return res.status(200).json({
+          mensaje: 'No hay mesas libres. Solicitud enviada para confirmar.',
+        });
       }
 
       nuevaReserva = await Reserva.create({
@@ -142,11 +140,9 @@ export const crearReserva = async (req, res) => {
 
       await enviarConfirmacionEmail(nuevaReserva);
 
-      return res
-        .status(200)
-        .json({
-          mensaje: 'Reserva confirmada automáticamente. ¡Te esperamos!',
-        });
+      return res.status(200).json({
+        mensaje: 'Reserva confirmada automáticamente. ¡Te esperamos!',
+      });
     }
 
     nuevaReserva = await Reserva.create({
@@ -160,11 +156,9 @@ export const crearReserva = async (req, res) => {
       mesaAsignada: null,
     });
 
-    res
-      .status(200)
-      .json({
-        mensaje: 'Tu solicitud ha sido enviada. Te confirmaremos pronto.',
-      });
+    res.status(200).json({
+      mensaje: 'Tu solicitud ha sido enviada. Te confirmaremos pronto.',
+    });
   } catch (error) {
     console.error('Error al crear reserva:', error);
     res.status(500).json({ mensaje: 'Error al crear la reserva.' });
@@ -200,7 +194,6 @@ export const confirmarReserva = async (req, res) => {
     reserva.estado = 'confirmada';
     await reserva.save();
 
-
     await enviarEmail({
       to: reserva.email,
       subject: '¡Tu reserva ha sido confirmada!',
@@ -211,22 +204,25 @@ export const confirmarReserva = async (req, res) => {
           </div>
           <h2 style="color: #6A0DAD;">¡Reserva confirmada!</h2>
           <p>Hola <strong>${reserva.nombre || 'cliente'}</strong>,</p>
-          <p>Tu reserva para el <strong>${new Date(reserva.hora).toLocaleString('es-ES', {
-            hour: '2-digit',
-            minute: '2-digit',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour12: false
-          })}</strong> ha sido <strong>confirmada</strong> exitosamente.</p>
+          <p>Tu reserva para el <strong>${new Date(reserva.hora).toLocaleString(
+            'es-ES',
+            {
+              hour: '2-digit',
+              minute: '2-digit',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour12: false,
+            }
+          )}</strong> ha sido <strong>confirmada</strong> exitosamente.</p>
           <p style="margin-top: 20px;">Te esperamos en <strong>Zabor Féten</strong> 🥂</p>
           <p style="font-size: 0.9em; color: #555; margin-top: 40px;">
             Si necesitas modificar o cancelar tu reserva, contáctanos directamente.
           </p>
           <p style="margin-top: 10px;"><em>El equipo de <strong>Zabor Féten</strong></em></p>
         </div>
-      `
-    });    
+      `,
+    });
 
     res.json({ mensaje: 'Reserva confirmada y correo enviado.' });
   } catch (error) {
@@ -250,8 +246,8 @@ export const cancelarReserva = async (req, res) => {
     <div style="text-align: center; margin-bottom: 20px;">
       <img src="cid:logoZf.jpg" alt="Zabor Féten" style="max-width: 150px;" />
     </div>
-    <h2 style="color: #B22222;">Hola ${reserva.nombre || 'cliente'},</h2>
-    <p>Lamentamos informarte que tu reserva para el día <strong>${new Date(reserva.hora).toLocaleString('es-ES')}</strong> ha sido <strong style="color: #B22222;">cancelada</strong>.</p>
+    <h2 style="color: #B22222;">Hola ${Reserva.nombre || 'cliente'},</h2>
+    <p>Lamentamos informarte que tu reserva para el día <strong>${new Date(Reserva.hora).toLocaleString('es-ES')}</strong> ha sido <strong style="color: #B22222;">cancelada</strong>.</p>
     <p><strong>Motivo:</strong> ${razon}</p>
     <p style="margin-top: 20px;">Para más información puedes contactarnos directamente.</p>
     <p>Disculpa las molestias.</p>
@@ -274,7 +270,7 @@ export const cancelarReserva = async (req, res) => {
       html: htmlCancelacion, // usa el bloque completo como arriba
       attachments: ['public/images/logoZf.jpg'],
     });
-    
+
     res.json({ mensaje: 'Reserva cancelada y correo enviado al cliente.' });
   } catch (error) {
     console.error('Error al cancelar reserva:', error);

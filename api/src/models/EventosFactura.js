@@ -9,8 +9,14 @@ const eventoFacturaSchema = new mongoose.Schema({
   importeTotal: { type: Number, required: true },
   fecha: { type: Date, default: Date.now },
   hashFactura: { type: String }, // Este campo es útil si quieres almacenar el hash de la factura
-  facturaOriginalId: { type: mongoose.Schema.Types.ObjectId, ref: 'FacturaHash' },
-  facturaRectificativaId: { type: mongoose.Schema.Types.ObjectId, ref: 'FacturaHash' }
+  facturaOriginalId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'FacturaHash',
+  },
+  facturaRectificativaId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'FacturaHash',
+  },
 });
 
 const EventoFactura = mongoose.model('EventoFactura', eventoFacturaSchema);

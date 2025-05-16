@@ -9,15 +9,15 @@ const mesaCerradaSchema = new Schema({
   cierre: { type: Date, default: Date.now }, // Hora en que se cerró la mesa
   metodoPago: {
     efectivo: {
-        type: Number,
-        default: 0
+      type: Number,
+      default: 0,
     },
     tarjeta: {
-        type: Number,
-        default: 0
+      type: Number,
+      default: 0,
     },
     propina: { type: Number, default: 0 }, // Campo para la propina
-}
+  },
 });
 
 export default model('MesaCerrada', mesaCerradaSchema);

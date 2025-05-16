@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const configuracionReservaSchema = new mongoose.Schema({
   fecha: {
@@ -8,7 +8,7 @@ const configuracionReservaSchema = new mongoose.Schema({
   franjas: [
     {
       horaInicio: { type: String, required: true }, // "13:00"
-      horaFin: { type: String, required: true },    // "17:00"
+      horaFin: { type: String, required: true }, // "17:00"
       maxReservas: { type: Number, required: true }, // por franja
     },
   ],
@@ -18,4 +18,7 @@ const configuracionReservaSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("ConfiguracionReserva", configuracionReservaSchema);
+export default mongoose.model(
+  'ConfiguracionReserva',
+  configuracionReservaSchema
+);

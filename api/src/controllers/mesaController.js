@@ -3,31 +3,31 @@ import Mesa from '../models/Mesa.js';
 import MesaCerrada from '../models/MesaCerrada.js';
 import Caja from '../models/Caja.js';
 import Comensal from '../models/Comensal.js';
-import { v4 as uuidv4 } from "uuid"; // Generador de UUID
+import { v4 as uuidv4 } from 'uuid'; // Generador de UUID
 import { registrarFacturaConHash } from '../services/registroFacturaService.js';
-import ContadorFactura from '../models/ContadorFactura.js';
 import EventoFactura from '../models/EventosFactura.js';
 import { obtenerNumeroFactura } from '../services/numeroFacturaServices.js';
-
 
 export const verificarTokenLider = async (req, res) => {
   //Conseguir el mesaId de los params
   const { mesaId } = req.params;
 
   if (!mesaId) {
-    return res.status(400).json({ error: "El número de la mesa es obligatorio" });
+    return res
+      .status(400)
+      .json({ error: 'El número de la mesa es obligatorio' });
   }
 
   try {
     const mesaDoc = await Mesa.findById(mesaId);
 
     if (!mesaDoc) {
-      return res.status(404).json({ error: "Mesa no encontrada" });
+      return res.status(404).json({ error: 'Mesa no encontrada' });
     }
     res.status(200).json({ tokenLider: mesaDoc.tokenLider });
   } catch (error) {
-    console.error("Error al verificar el tokenLider:", error);
-    res.status(500).json({ error: "Error al procesar la solicitud" });
+    console.error('Error al verificar el tokenLider:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
   }
 };
 
@@ -35,7 +35,9 @@ export const verificarTokenLiderPorNumero = async (req, res) => {
   const { mesa } = req.query; // Obtener el número de mesa desde los query params
 
   if (!mesa) {
-    return res.status(400).json({ error: 'El número de la mesa es obligatorio' });
+    return res
+      .status(400)
+      .json({ error: 'El número de la mesa es obligatorio' });
   }
 
   try {
@@ -58,35 +60,40 @@ export const crearTokenLider = async (req, res) => {
   const { mesa } = req.body;
 
   if (!mesa) {
-    return res.status(400).json({ error: "El número de la mesa es obligatorio" });
+    return res
+      .status(400)
+      .json({ error: 'El número de la mesa es obligatorio' });
   }
 
   try {
     const mesaDoc = await Mesa.findOne({ numero: mesa });
 
     if (!mesaDoc) {
-      return res.status(404).json({ error: "Mesa no encontrada" });
+      return res.status(404).json({ error: 'Mesa no encontrada' });
     }
 
     if (mesaDoc.tokenLider) {
-      return res.status(400).json({ error: "El tokenLider ya existe para esta mesa" });
+      return res
+        .status(400)
+        .json({ error: 'El tokenLider ya existe para esta mesa' });
     }
 
     // Generar tokenLider y cambiar estado a "abierto"
     mesaDoc.tokenLider = uuidv4();
-    mesaDoc.estado = "abierta";
+    mesaDoc.estado = 'abierta';
 
     req.io.emit('mesaAbierta', mesaDoc); // Emitir evento de apertura de mesa
 
     await mesaDoc.save();
 
-    res.status(201).json({ tokenLider: mesaDoc.tokenLider, estado: mesaDoc.estado });
+    res
+      .status(201)
+      .json({ tokenLider: mesaDoc.tokenLider, estado: mesaDoc.estado });
   } catch (error) {
-    console.error("Error al crear el tokenLider:", error);
-    res.status(500).json({ error: "Error al procesar la solicitud" });
+    console.error('Error al crear el tokenLider:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
   }
 };
-
 
 // Obtener todas las mesas activas
 export const obtenerMesas = async (req, res) => {
@@ -142,20 +149,20 @@ export const abrirMesa = async (req, res) => {
 // Reabrir una mesa existente y actualizar comensales
 export const abrirMesaCamarero = async (req, res) => {
   const { id } = req.params;
-  const { comensales } = req.body;  // ✅ Recibir comensales del body
+  const { comensales } = req.body; // ✅ Recibir comensales del body
 
   try {
     const mesa = await Mesa.findById(id);
     if (!mesa) {
-      return res.status(404).json({ error: "Mesa no encontrada" });
+      return res.status(404).json({ error: 'Mesa no encontrada' });
     }
 
-    if (mesa.estado === "abierta") {
-      return res.status(400).json({ error: "La mesa ya está abierta" });
+    if (mesa.estado === 'abierta') {
+      return res.status(400).json({ error: 'La mesa ya está abierta' });
     }
 
-    mesa.estado = "abierta";
-    mesa.comensales = comensales || mesa.comensales || 1;  // ✅ Guardar comensales o mantener el actual
+    mesa.estado = 'abierta';
+    mesa.comensales = comensales || mesa.comensales || 1; // ✅ Guardar comensales o mantener el actual
     await mesa.save();
 
     req.io.emit('mesaAbierta', mesa);
@@ -163,7 +170,7 @@ export const abrirMesaCamarero = async (req, res) => {
     res.status(200).json(mesa);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error al reabrir la mesa" });
+    res.status(500).json({ error: 'Error al reabrir la mesa' });
   }
 };
 
@@ -177,14 +184,18 @@ export const cerrarMesa = async (req, res) => {
     const mesa = await Mesa.findById(id)
       .populate({
         path: 'pedidos',
-        populate: { path: 'productos.producto' }
+        populate: { path: 'productos.producto' },
       })
       .populate({
         path: 'pedidosBebidas',
-        populate: { path: 'productos.producto' }
+        populate: { path: 'productos.producto' },
       });
 
-    const { efectivo = 0, tarjeta = 0, propina = 0, cambio = 0 } = metodoPago || {};
+    const {
+      efectivo = 0,
+      tarjeta = 0,
+      propina = 0
+    } = metodoPago || {};
     const totalPagado = efectivo + tarjeta;
     const totalMesa = mesa.total;
 
@@ -197,7 +208,7 @@ export const cerrarMesa = async (req, res) => {
 
     // Calcula la propina real solo si es explícita o es el excedente
     const cambioCalculado = totalPagado - totalMesa;
-    const propinaCalculada = propina;  // Solo si fue escrita explícitamente
+    const propinaCalculada = propina; // Solo si fue escrita explícitamente
 
     // Guarda la mesa cerrada incluyendo el cambio como registro informativo
     const mesaCerrada = new MesaCerrada({
@@ -208,7 +219,12 @@ export const cerrarMesa = async (req, res) => {
       inicio: mesa.inicio,
       cierre: new Date(),
       comensales: mesa.comensales || 1,
-      metodoPago: { efectivo, tarjeta, propina: propinaCalculada, cambio: cambioCalculado },
+      metodoPago: {
+        efectivo,
+        tarjeta,
+        propina: propinaCalculada,
+        cambio: cambioCalculado,
+      },
     });
 
     await mesaCerrada.save();
@@ -217,7 +233,10 @@ export const cerrarMesa = async (req, res) => {
     const hoy = new Date();
     const inicioDelDia = new Date(hoy.setHours(0, 0, 0, 0));
     const finDelDia = new Date(hoy.setHours(23, 59, 59, 999));
-    const caja = await Caja.findOne({ fechaApertura: { $gte: inicioDelDia, $lte: finDelDia }, estado: "abierta" });
+    const caja = await Caja.findOne({
+      fechaApertura: { $gte: inicioDelDia, $lte: finDelDia },
+      estado: 'abierta',
+    });
 
     if (caja) {
       const efectivoReal = Math.min(efectivo, totalMesa);
@@ -228,13 +247,23 @@ export const cerrarMesa = async (req, res) => {
       caja.detallesMetodoPago.tarjeta += tarjeta;
       caja.detallesMetodoPago.propina += propinaCalculada;
       caja.total += totalMesa;
-      caja.operaciones.push({ tipo: "cierre", monto: totalMesa, razon: `Cierre de la mesa número ${mesa.numero}` });
+      caja.operaciones.push({
+        tipo: 'cierre',
+        monto: totalMesa,
+        razon: `Cierre de la mesa número ${mesa.numero}`,
+      });
       await caja.save();
     } else {
       const nuevaCaja = new Caja({
         total: totalMesa,
         detallesMetodoPago: { efectivo, tarjeta, propina: propinaCalculada },
-        operaciones: [{ tipo: "cierre", monto: totalMesa, razon: `Cierre de la mesa número ${mesa.numero}` }],
+        operaciones: [
+          {
+            tipo: 'cierre',
+            monto: totalMesa,
+            razon: `Cierre de la mesa número ${mesa.numero}`,
+          },
+        ],
       });
       await nuevaCaja.save();
     }
@@ -244,28 +273,34 @@ export const cerrarMesa = async (req, res) => {
     hashFactura = await registrarFacturaConHash({
       numeroFactura,
       fechaExpedicion: new Date(),
-      clienteNombre: clienteNombre || "Consumidor Final",
-      clienteNIF: clienteNIF || "N/A",
-      productos: mesa.pedidos.flatMap(pedido => pedido.productos.map(p => ({
-        nombre: p.producto.nombre || 'Producto desconocido',
-        cantidad: p.cantidad,
-        precio: p.precioSeleccionado || 0,
-      }))),
+      clienteNombre: clienteNombre || 'Consumidor Final',
+      clienteNIF: clienteNIF || 'N/A',
+      productos: mesa.pedidos.flatMap((pedido) =>
+        pedido.productos.map((p) => ({
+          nombre: p.producto.nombre || 'Producto desconocido',
+          cantidad: p.cantidad,
+          precio: p.precioSeleccionado || 0,
+        }))
+      ),
       importeTotal: mesa.total,
     });
 
     // Preparar productos para la impresión
-    const productos = mesa.pedidos.flatMap(pedido => pedido.productos.map(p => ({
-      nombre: p.producto.nombre || 'Producto desconocido',
-      cantidad: p.cantidad,
-      precio: p.precioSeleccionado || 0,
-    })));
+    const productos = mesa.pedidos.flatMap((pedido) =>
+      pedido.productos.map((p) => ({
+        nombre: p.producto.nombre || 'Producto desconocido',
+        cantidad: p.cantidad,
+        precio: p.precioSeleccionado || 0,
+      }))
+    );
 
-    const productosBebidas = mesa.pedidosBebidas.flatMap(pedido => pedido.productos.map(p => ({
-      nombre: p.producto.nombre || 'Bebida sin nombre',
-      cantidad: p.cantidad,
-      precio: p.precioSeleccionado || 0,
-    })));
+    const productosBebidas = mesa.pedidosBebidas.flatMap((pedido) =>
+      pedido.productos.map((p) => ({
+        nombre: p.producto.nombre || 'Bebida sin nombre',
+        cantidad: p.cantidad,
+        precio: p.precioSeleccionado || 0,
+      }))
+    );
 
     productos.push(...productosBebidas);
 
@@ -273,8 +308,8 @@ export const cerrarMesa = async (req, res) => {
     await axios.post('http://localhost:4000/imprimir-factura', {
       mesaNumero: mesa.numero,
       comensales: mesa.comensales || 1,
-      clienteNombre: clienteNombre || "Consumidor Final",
-      clienteNIF: clienteNIF || "N/A",
+      clienteNombre: clienteNombre || 'Consumidor Final',
+      clienteNIF: clienteNIF || 'N/A',
       numeroFactura,
       fechaExpedicion: new Date().toISOString(),
       productos,
@@ -286,8 +321,8 @@ export const cerrarMesa = async (req, res) => {
     const eventoFactura = new EventoFactura({
       tipoEvento: 'creación',
       numeroFactura: numeroFactura,
-      clienteNombre: clienteNombre || "Consumidor Final",
-      clienteNIF: clienteNIF || "N/A",
+      clienteNombre: clienteNombre || 'Consumidor Final',
+      clienteNIF: clienteNIF || 'N/A',
       motivo: 'Generación de la factura al cierre de la mesa',
       importeTotal: mesa.total,
       hashFactura: hashFactura.hash,
@@ -314,7 +349,7 @@ export const cerrarMesa = async (req, res) => {
       facturaEmitida: !!hashFactura,
       numeroFactura: numeroFactura || null,
       hashFactura: hashFactura?.hash || null,
-      fechaExpedicion: new Date().toISOString()  // ✅ Aquí agregas la fecha
+      fechaExpedicion: new Date().toISOString(), // ✅ Aquí agregas la fecha
     });
   } catch (error) {
     console.error('Error al cerrar la mesa:', error);
@@ -342,7 +377,6 @@ export const getHistorialMesas = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener el historial de mesas' });
   }
 };
-
 
 //Obtener el ID de una mesa por su número
 export const obtenerMesaPorNumero = async (req, res) => {
@@ -384,7 +418,9 @@ export const obtenerMesasCerradas = async (req, res) => {
 
 export const obtenerMesasAbiertas = async (req, res) => {
   try {
-    const mesasAbiertas = await Mesa.find({ estado: 'abierta' }).populate('pedidos');
+    const mesasAbiertas = await Mesa.find({ estado: 'abierta' }).populate(
+      'pedidos'
+    );
     res.status(200).json(mesasAbiertas);
   } catch (error) {
     console.error('Error al obtener las mesas abiertas:', error);
@@ -419,31 +455,48 @@ export const recuperarMesa = async (req, res) => {
 
     // 5️⃣ Ajustar la caja actual restando el total de la mesa
     const hoy = new Date();
-    const inicioDelDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
-    const finDelDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
+    const inicioDelDia = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate(),
+      0,
+      0,
+      0
+    );
+    const finDelDia = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate(),
+      23,
+      59,
+      59
+    );
 
     // Buscar la caja abierta del día actual
     const cajaActual = await Caja.findOne({
       fechaApertura: { $gte: inicioDelDia, $lte: finDelDia },
-      estado: "abierta"
+      estado: 'abierta',
     });
 
     if (!cajaActual) {
-      console.warn("⚠️ No se encontró una caja abierta para ajustar el total.");
+      console.warn('⚠️ No se encontró una caja abierta para ajustar el total.');
     } else {
       // Restar el total de la mesa recuperada
       cajaActual.total -= mesaCerrada.total;
 
       // Restar las cantidades de los métodos de pago correspondientes
-      cajaActual.detallesMetodoPago.efectivo -= mesaCerrada.metodoPago.efectivo || 0;
-      cajaActual.detallesMetodoPago.tarjeta -= mesaCerrada.metodoPago.tarjeta || 0;
-      cajaActual.detallesMetodoPago.propina -= mesaCerrada.metodoPago.propina || 0;
+      cajaActual.detallesMetodoPago.efectivo -=
+        mesaCerrada.metodoPago.efectivo || 0;
+      cajaActual.detallesMetodoPago.tarjeta -=
+        mesaCerrada.metodoPago.tarjeta || 0;
+      cajaActual.detallesMetodoPago.propina -=
+        mesaCerrada.metodoPago.propina || 0;
 
       // Registrar la operación
       cajaActual.operaciones.push({
-        tipo: "ajuste",
+        tipo: 'ajuste',
         monto: -mesaCerrada.total,
-        razon: `Recuperación de la mesa número ${mesaCerrada.numero}`
+        razon: `Recuperación de la mesa número ${mesaCerrada.numero}`,
       });
 
       await cajaActual.save();
@@ -452,7 +505,9 @@ export const recuperarMesa = async (req, res) => {
     // 6️⃣ Eliminar la mesa cerrada
     await MesaCerrada.findByIdAndDelete(mesaId);
 
-    res.status(200).json({ message: '✅ Mesa recuperada y caja ajustada correctamente.' });
+    res
+      .status(200)
+      .json({ message: '✅ Mesa recuperada y caja ajustada correctamente.' });
   } catch (error) {
     console.error('❌ Error al recuperar la mesa:', error);
     res.status(500).json({ error: 'Error al recuperar la mesa.' });
@@ -466,7 +521,9 @@ export const crearMesa = async (req, res) => {
     // Verificar si el número de la mesa ya existe
     const mesaExistente = await Mesa.findOne({ numero });
     if (mesaExistente) {
-      return res.status(400).json({ error: `La mesa número ${numero} ya existe.` });
+      return res
+        .status(400)
+        .json({ error: `La mesa número ${numero} ya existe.` });
     }
 
     // Crear la nueva mesa
@@ -482,10 +539,12 @@ export const crearMesa = async (req, res) => {
 
     await nuevaMesa.save(); // Guarda la mesa en la base de datos
 
-    res.status(201).json({ message: "Mesa creada exitosamente", mesa: nuevaMesa });
+    res
+      .status(201)
+      .json({ message: 'Mesa creada exitosamente', mesa: nuevaMesa });
   } catch (error) {
-    console.error("Error al crear la mesa:", error);
-    res.status(500).json({ error: "Hubo un problema al crear la mesa." });
+    console.error('Error al crear la mesa:', error);
+    res.status(500).json({ error: 'Hubo un problema al crear la mesa.' });
   }
 };
 
@@ -495,7 +554,9 @@ export const eliminarMesa = async (req, res) => {
 
     // Verificar que el número fue proporcionado
     if (!numero) {
-      return res.status(400).json({ error: "El número de la mesa es obligatorio." });
+      return res
+        .status(400)
+        .json({ error: 'El número de la mesa es obligatorio.' });
     }
 
     // Buscar y eliminar la mesa por su número
@@ -503,7 +564,9 @@ export const eliminarMesa = async (req, res) => {
 
     // Si no se encontró la mesa, devolver un error
     if (!mesaEliminada) {
-      return res.status(404).json({ error: `No se encontró una mesa con el número ${numero}.` });
+      return res
+        .status(404)
+        .json({ error: `No se encontró una mesa con el número ${numero}.` });
     }
 
     res.status(200).json({
@@ -511,8 +574,8 @@ export const eliminarMesa = async (req, res) => {
       mesa: mesaEliminada,
     });
   } catch (error) {
-    console.error("Error al eliminar la mesa:", error);
-    res.status(500).json({ error: "Hubo un problema al eliminar la mesa." });
+    console.error('Error al eliminar la mesa:', error);
+    res.status(500).json({ error: 'Hubo un problema al eliminar la mesa.' });
   }
 };
 
@@ -522,7 +585,9 @@ export const registrarComensal = async (req, res) => {
     const { mesa, nombre, alergias, esLider, comensales } = req.body;
 
     if (!mesa || !nombre) {
-      return res.status(400).json({ message: "Mesa y nombre son obligatorios." });
+      return res
+        .status(400)
+        .json({ message: 'Mesa y nombre son obligatorios.' });
     }
 
     const nuevoComensal = new Comensal({
@@ -534,9 +599,9 @@ export const registrarComensal = async (req, res) => {
     });
 
     await nuevoComensal.save();
-    res.status(201).json({ message: "Comensal registrado correctamente." });
+    res.status(201).json({ message: 'Comensal registrado correctamente.' });
   } catch (error) {
-    console.error("Error al guardar comensal:", error);
-    res.status(500).json({ message: "Error interno del servidor." });
+    console.error('Error al guardar comensal:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };

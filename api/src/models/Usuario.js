@@ -1,14 +1,21 @@
 import { Schema, model } from 'mongoose';
 import { hash, compare } from 'bcrypt';
 
-const userSchema = new Schema({
-  name: { type: String, required: true },
-  password: { type: String, required: true },
-  role: { type: String, enum: ['admin', 'camarero', 'cocinero'], default: 'user' }, // Rol del usuario
-  isBlocked: { type: Boolean, default: false }, // Indica si la cuenta está bloqueada
-  blockedUntil: { type: Date, default: null },  // Tiempo hasta que se desbloquee la cuenta
-  failedAttempts: { type: Number, default: 0 }, // Intentos fallidos
-}, { timestamps: true });
+const userSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    password: { type: String, required: true },
+    role: {
+      type: String,
+      enum: ['admin', 'camarero', 'cocinero'],
+      default: 'user',
+    }, // Rol del usuario
+    isBlocked: { type: Boolean, default: false }, // Indica si la cuenta está bloqueada
+    blockedUntil: { type: Date, default: null }, // Tiempo hasta que se desbloquee la cuenta
+    failedAttempts: { type: Number, default: 0 }, // Intentos fallidos
+  },
+  { timestamps: true }
+);
 
 userSchema.methods.resetFailedAttempts = function () {
   this.failedAttempts = 0;

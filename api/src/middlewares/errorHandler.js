@@ -1,6 +1,6 @@
 import { error as _error } from '../../utils/logger.js'; // Asegúrate de tener `winston` configurado
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res) => {
   // Determina el estado HTTP (500 si no se especifica)
   const status = err.status || 500;
 
