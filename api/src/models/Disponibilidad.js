@@ -1,5 +1,5 @@
 // models/ReservasDisponibilidad.js
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const disponibilidadSchema = new mongoose.Schema({
   domingo: { type: Boolean, default: true },
@@ -15,4 +15,4 @@ const disponibilidadSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Disponibilidad", disponibilidadSchema);
+export default mongoose.model('Disponibilidad', disponibilidadSchema);

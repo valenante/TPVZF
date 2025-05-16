@@ -1,115 +1,121 @@
 import Producto from '../models/Producto.js';
 import Pedido from '../models/Pedido.js';
 import PedidoBebidas from '../models/PedidoBebidas.js';
-import jwt from 'jsonwebtoken';
 import Eliminacion from '../models/Eliminacion.js';
 import Mesa from '../models/Mesa.js';
 
 // Obtener todos los productos
 export const obtenerProductos = async (req, res) => {
-    try {
-        const productos = await Producto.find();
-        res.status(200).json(productos);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener los productos' });
-    }
+  try {
+    const productos = await Producto.find();
+    res.status(200).json(productos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los productos' });
+  }
 };
 
 // Obtener un producto por ID
 export const obtenerProductoPorId = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const producto = await Producto.findById(id);
-        if (!producto) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
-        res.status(200).json(producto);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener el producto' });
+  const { id } = req.params;
+  try {
+    const producto = await Producto.findById(id);
+    if (!producto) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
     }
+    res.status(200).json(producto);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener el producto' });
+  }
 };
 
 export const obtenerCategoriasPorTipo = async (req, res) => {
-    const { type } = req.params;
+  const { type } = req.params;
 
-    try {
-        const filtroTipo = type === "plato" ? ["plato", "tapaRacion"] : [type];
-        const categorias = await Producto.distinct("categoria", { tipo: { $in: filtroTipo } });
+  try {
+    const filtroTipo = type === 'plato' ? ['plato', 'tapaRacion'] : [type];
+    const categorias = await Producto.distinct('categoria', {
+      tipo: { $in: filtroTipo },
+    });
 
-        res.status(200).json({ categories: categorias });
-    } catch (error) {
-        console.error("Error al obtener categorías:", error);
-        res.status(500).json({ error: "Error al obtener las categorías" });
-    }
+    res.status(200).json({ categories: categorias });
+  } catch (error) {
+    console.error('Error al obtener categorías:', error);
+    res.status(500).json({ error: 'Error al obtener las categorías' });
+  }
 };
 
 //Editar producto
 export const editarProducto = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const productoActualizado = await Producto.findByIdAndUpdate
-        (id, req.body, { new: true });
+  const { id } = req.params;
+  try {
+    const productoActualizado = await Producto.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
 
-        if (req.file) {
-            productoActualizado.img = `/images/${req.file.filename}`;
-        }
-        if (!productoActualizado) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
-        res.status(200).json(productoActualizado);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ error: 'Error al actualizar el producto. Verifica los datos enviados.' });
+    if (req.file) {
+      productoActualizado.img = `/images/${req.file.filename}`;
     }
-}
+    if (!productoActualizado) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    res.status(200).json(productoActualizado);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      error: 'Error al actualizar el producto. Verifica los datos enviados.',
+    });
+  }
+};
 
 export const obtenerProductosPorCategoria = async (req, res) => {
-    const { category } = req.params;
+  const { category } = req.params;
 
-    try {
-        const productos = await Producto.find({ categoria: category });
-        
-        res.status(200).json({ products: productos });
-    } catch (error) {
-        console.error("Error al obtener productos por categoría:", error);
-        res.status(500).json({ error: 'Error al obtener los productos' });
-    }
-}
+  try {
+    const productos = await Producto.find({ categoria: category });
+
+    res.status(200).json({ products: productos });
+  } catch (error) {
+    console.error('Error al obtener productos por categoría:', error);
+    res.status(500).json({ error: 'Error al obtener los productos' });
+  }
+};
 
 // Crear un nuevo producto
 export const crearProducto = async (req, res) => {
-    try {
-        const nuevoProducto = new Producto(req.body);
-        if (req.file) {
-            nuevoProducto.img = `/images/${req.file.filename}`; // Asignar la ruta de la imagen
-        }
-        await nuevoProducto.save();
-
-        // Emitir evento de creación de producto
-        req.io.emit('productoCreado', nuevoProducto);
-
-        res.status(201).json(nuevoProducto);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ error: 'Error al crear el producto. Verifica los datos enviados.' });
+  try {
+    const nuevoProducto = new Producto(req.body);
+    if (req.file) {
+      nuevoProducto.img = `/images/${req.file.filename}`; // Asignar la ruta de la imagen
     }
+    await nuevoProducto.save();
+
+    // Emitir evento de creación de producto
+    req.io.emit('productoCreado', nuevoProducto);
+
+    res.status(201).json(nuevoProducto);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      error: 'Error al crear el producto. Verifica los datos enviados.',
+    });
+  }
 };
 
 export const eliminarProducto = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    try {
-        const producto = await Producto.findByIdAndDelete(id);
-        if (!producto) {
-            return res.status(404).json({ error: 'Producto no encontrado' });
-        }
-        res.status(200).json({ message: 'Producto eliminado con éxito' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al eliminar el producto' });
+  try {
+    const producto = await Producto.findByIdAndDelete(id);
+    if (!producto) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
     }
+    res.status(200).json({ message: 'Producto eliminado con éxito' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar el producto' });
+  }
 };
 
 export const eliminarProductoPedido = async (req, res) => {
@@ -119,7 +125,7 @@ export const eliminarProductoPedido = async (req, res) => {
   try {
     // Verificar que se envió el usuario
     if (!user) {
-      return res.status(401).json({ error: "Usuario no autenticado." });
+      return res.status(401).json({ error: 'Usuario no autenticado.' });
     }
 
     // Buscar el pedido en pedidos de productos
@@ -133,7 +139,7 @@ export const eliminarProductoPedido = async (req, res) => {
     }
 
     if (!pedido) {
-      return res.status(404).json({ error: "Pedido no encontrado." });
+      return res.status(404).json({ error: 'Pedido no encontrado.' });
     }
 
     // Buscar el producto en el pedido
@@ -142,7 +148,9 @@ export const eliminarProductoPedido = async (req, res) => {
     );
 
     if (!productoEliminado) {
-      return res.status(404).json({ error: "Producto no encontrado en el pedido." });
+      return res
+        .status(404)
+        .json({ error: 'Producto no encontrado en el pedido.' });
     }
 
     // Filtrar el producto del pedido y recalcular el total
@@ -150,7 +158,10 @@ export const eliminarProductoPedido = async (req, res) => {
       (producto) => producto.producto.toString() !== productoId
     );
 
-    pedido.total = pedido.productos.reduce((total, producto) => total + (producto.total || 0), 0);
+    pedido.total = pedido.productos.reduce(
+      (total, producto) => total + (producto.total || 0),
+      0
+    );
 
     // Si el pedido no tiene productos después de la eliminación, eliminar el pedido
     if (pedido.productos.length === 0) {
@@ -162,16 +173,22 @@ export const eliminarProductoPedido = async (req, res) => {
       }
 
       // Actualizar el total de la mesa
-      const mesa = await Mesa.findById(pedido.mesa).populate("pedidos pedidosBebidas");
+      const mesa = await Mesa.findById(pedido.mesa).populate(
+        'pedidos pedidosBebidas'
+      );
       if (!mesa) {
-        return res.status(404).json({ error: "Mesa no encontrada." });
+        return res.status(404).json({ error: 'Mesa no encontrada.' });
       }
 
       // Eliminar el pedido correspondiente
       if (pedidoTipo === 'producto') {
-        mesa.pedidos = mesa.pedidos.filter((p) => p._id.toString() !== pedidoId);
+        mesa.pedidos = mesa.pedidos.filter(
+          (p) => p._id.toString() !== pedidoId
+        );
       } else {
-        mesa.pedidosBebidas = mesa.pedidosBebidas.filter((p) => p._id.toString() !== pedidoId);
+        mesa.pedidosBebidas = mesa.pedidosBebidas.filter(
+          (p) => p._id.toString() !== pedidoId
+        );
       }
 
       // Recalcular el total de la mesa
@@ -195,7 +212,7 @@ export const eliminarProductoPedido = async (req, res) => {
       await eliminacion.save();
 
       return res.json({
-        message: `${pedidoTipo === 'bebida' ? "Bebida" : "Producto"} eliminado y pedido eliminado con éxito.`,
+        message: `${pedidoTipo === 'bebida' ? 'Bebida' : 'Producto'} eliminado y pedido eliminado con éxito.`,
         mesa: {
           id: mesa._id,
           total: mesa.total,
@@ -208,9 +225,11 @@ export const eliminarProductoPedido = async (req, res) => {
     await pedido.save();
 
     // Actualizar el total de la mesa
-    const mesa = await Mesa.findById(pedido.mesa).populate("pedidos pedidosBebidas");
+    const mesa = await Mesa.findById(pedido.mesa).populate(
+      'pedidos pedidosBebidas'
+    );
     if (!mesa) {
-      return res.status(404).json({ error: "Mesa no encontrada." });
+      return res.status(404).json({ error: 'Mesa no encontrada.' });
     }
 
     // Recalcular el total sumando los pedidos de productos y bebidas
@@ -234,7 +253,7 @@ export const eliminarProductoPedido = async (req, res) => {
     await eliminacion.save();
 
     res.json({
-      message: `${pedidoTipo === 'bebida' ? "Bebida" : "Producto"} eliminado y registrado con éxito.`,
+      message: `${pedidoTipo === 'bebida' ? 'Bebida' : 'Producto'} eliminado y registrado con éxito.`,
       mesa: {
         id: mesa._id,
         total: mesa.total,
@@ -246,8 +265,7 @@ export const eliminarProductoPedido = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error al eliminar producto/bebida:", error);
-    res.status(500).json({ error: "Error al eliminar producto/bebida."
-    });
+    console.error('Error al eliminar producto/bebida:', error);
+    res.status(500).json({ error: 'Error al eliminar producto/bebida.' });
   }
-}
+};
