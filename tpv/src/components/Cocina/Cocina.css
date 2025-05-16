@@ -146,4 +146,18 @@
     white-space: nowrap;
     font-size: 0.9rem;
   }
+
+  /* Cocina.css */
+.seccion-titulo--cocina {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  background-color: #6a0dad; /* morado */
+  color: white;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
   

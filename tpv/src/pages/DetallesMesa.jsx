@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import MetodoPago from "../components/DetallesMesa/MetodoPago";
@@ -102,48 +103,41 @@ const DetalleMesa = () => {
   }, [socket, id]);
 
   const emitirFactura = async () => {
+    const pedidosNoFinalizados = mesa.pedidos.filter(p => p.estado !== "listo");
+    if (pedidosNoFinalizados.length > 0) {
+      setMensajeAlerta({ tipo: "error", mensaje: "No puedes emitir la factura. Todos los pedidos deben estar finalizados." });
+      return;
+    }
+
+    await cerrarMesa(metodoPagoFactura, 'nominativa');
+  };
+
+  const enviarAFacturaPrinter = async (datosImpresion) => {
+    const rutaImpresion = 'http://192.168.1.150:4000/imprimir-factura';
     try {
-      const pedidosNoFinalizados = mesa.pedidos.filter(p => p.estado !== "listo");
-
-      if (pedidosNoFinalizados.length > 0) {
-        setMensajeAlerta({ tipo: "error", mensaje: "No puedes emitir la factura. Todos los pedidos deben estar finalizados." });
-        return;
-      }
-      const response = await api.put(`/mesas/${mesa._id}/cerrar`, {
-        metodoPago: metodoPagoFactura,
-        clienteNombre: datosFactura.nombre,
-        clienteNIF: datosFactura.nif,
-      });
-
-      const { numeroFactura, hashFactura, fechaExpedicion } = response.data;
-
-      setMensajeAlerta({ tipo: "exito", mensaje: `Factura emitida correctamente:\nNúmero: ${numeroFactura}\nFecha: ${new Date(fechaExpedicion).toLocaleString()}\nHash: ${hashFactura}` });
-
-      setMostrarFacturaModal(false);
-      setMesa(null);
-      navigate("/");
+      await axios.post(rutaImpresion, datosImpresion);
     } catch (error) {
-      alert(error.response?.data?.error || "Hubo un problema al emitir la factura.");
+      console.error(`Error al imprimir la factura:`, error.message);
     }
   };
 
   const cerrarMesa = async (metodoPago) => {
     try {
-      // Verifica si hay pedidos no finalizados
-      const pedidosNoFinalizados = mesa.pedidos.filter(
-        (pedido) => pedido.estado !== "listo"
-      );
+      const response = await api.put(`/mesas/${mesa._id}/cerrar`, {
+        metodoPago,
+        clienteNombre: datosFactura.nombre,
+        clienteNIF: datosFactura.nif
+      });
 
-      if (pedidosNoFinalizados.length > 0) {
-        setMensajeAlerta({ tipo: "error", mensaje: "No puedes cerrar la mesa. Todos los pedidos deben estar finalizados." });
-        return;
+      const { datosImpresion } = response.data;
+
+      if (datosImpresion) {
+        await enviarAFacturaPrinter(datosImpresion);
       }
 
-      // Enviar la solicitud al backend con el método de pago
-      await api.put(`/mesas/${mesa._id}/cerrar`, { metodoPago });
-      navigate("/"); // Navega fuera de la vista actual
+      navigate("/");
     } catch (error) {
-      setMensajeAlerta({ tipo: "error", mensaje: error.response?.data?.error || "Hubo un problema." });
+      console.error(error);
     }
   };
 
@@ -438,7 +432,7 @@ const DetalleMesa = () => {
                 setShowModal(false);
                 setMostrarFacturaModal(true);  // Abre el modal de datos fiscales
               } else {
-                cerrarMesa(metodoPago);        // Cierra sin factura
+                cerrarMesa(metodoPago, 'simplificada');        // Cierra sin factura
               }
             }}
           />

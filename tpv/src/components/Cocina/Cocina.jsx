@@ -12,6 +12,7 @@ const Cocina = () => {
   const { socket } = useContext(SocketContext);
   const [mesas, setMesas] = useState([]);
 
+
   const cargarMesas = async () => {
     try {
       const response = await api.get('/mesas/mesas-abiertas/mesas-abiertas');
@@ -91,6 +92,27 @@ const Cocina = () => {
       ? pedido.comensales
       : getComensalesMesa(pedido.mesa.numero);
   };
+
+  const agruparPorSeccion = (productos) => {
+    const agrupados = {
+      entrante: [],
+      medio: [],
+      final: [],
+      sinSeccion: [], // Para casos donde no esté definido
+    };
+
+    productos.forEach((producto) => {
+      const seccion = producto.seccion || 'sinSeccion';
+      if (agrupados[seccion]) {
+        agrupados[seccion].push(producto);
+      } else {
+        agrupados.sinSeccion.push(producto);
+      }
+    });
+
+    return agrupados;
+  };
+
   return (
     <div className="cocina--cocina">
       <h1 className="titulo--cocina">Pedidos Pendientes</h1>
@@ -107,6 +129,9 @@ const Cocina = () => {
             const todosProductosListos = pedido.productos
               .filter((producto) => ['plato', 'tapaRacion'].includes(producto.tipo))
               .every((producto) => producto.estadoPreparacion === 'listo');
+            const productosAgrupados = agruparPorSeccion(
+              pedido.productos.filter((producto) => ['plato', 'tapaRacion'].includes(producto.tipo))
+            );
 
             return (
               <div key={pedido._id} className="pedido-card--cocina">
@@ -115,64 +140,118 @@ const Cocina = () => {
                   <p>{getComensalesPedido(pedido)} comensales</p>
                 </div>
                 <p><strong>Hace:</strong> {calcularTiempoTranscurrido(pedido.fecha)}</p>
-                <ul className="productos-list--cocina">
-                  {pedido.productos
-                    .filter((producto) => ['plato', 'tapaRacion'].includes(producto.tipo))
-                    .map((producto) => {
-                      const nombreColor = producto.tipoPlato === 'individual' ? 'green' : 'purple';
-                      const mostrarCroqueta = producto.producto.nombre.toLowerCase().includes('croqueta')
-                        ? `${producto.tipoCroqueta}`
-                        : null;
+                {(['entrante', 'medio', 'final'].some(seccion => productosAgrupados[seccion]?.length > 0))
+                  ? ['entrante', 'medio', 'final'].map(seccion => (
+                    productosAgrupados[seccion]?.length > 0 && (
+                      <div key={seccion} className="seccion-pedido--cocina">
+                        <h4 className="seccion-titulo--cocina">{seccion.toUpperCase()}</h4>
+                        <ul className="productos-list--cocina">
+                          {productosAgrupados[seccion].map((producto) => {
+                            const nombreColor = producto.tipoPlato === 'individual' ? 'green' : 'purple';
+                            const mostrarCroqueta = producto.producto.nombre.toLowerCase().includes('croqueta')
+                              ? `${producto.tipoCroqueta}`
+                              : null;
 
-                      return (
-                        <li key={producto._id} className="producto-item--cocina">
-                          <label>
-                            <input
-                              type="checkbox"
-                              checked={producto.estadoPreparacion === 'listo'}
-                              onChange={() => marcarProductoComoListo(pedido._id, producto._id)}
-                            />
-                            <span style={{ color: nombreColor }}>
-                              {producto.cantidad}x {producto.tipoPrecio !== 'precioBase' && `${producto.tipoPrecio}`} {producto.producto?.nombre || 'Producto no disponible'} {producto.adicionales.length > 0 && (
-                                <p>{producto.adicionales.map(ad => `${ad.nombre}`)}</p>
+                            return (
+                              <li key={producto._id} className="producto-item--cocina">
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    checked={producto.estadoPreparacion === 'listo'}
+                                    onChange={() => marcarProductoComoListo(pedido._id, producto._id)}
+                                  />
+                                  <span style={{ color: nombreColor }}>
+                                    {producto.cantidad}x {producto.tipoPrecio !== 'precioBase' && `${producto.tipoPrecio}`} {producto.producto?.nombre || 'Producto no disponible'} {producto.adicionales.length > 0 && (
+                                      <p>{producto.adicionales.map(ad => `${ad.nombre}`)}</p>
+                                    )}
+                                  </span>
+                                </label>
+                                {producto.alergiasComensal && <p className="alergias-individual--cocina"><strong>A:</strong> {producto.alergiasComensal}</p>}
+                                {productoSeleccionado === producto && (
+                                  <div className="tooltip-detalle">
+                                    <p><strong>C:</strong> {producto.nombreComensal || 'No disponible'}</p>
+                                    {producto.alergiasComensal && <p><strong>A:</strong> {producto.alergiasComensal}</p>}
+                                  </div>
+                                )}
+                                {mostrarCroqueta && <p className="tipo-croqueta">{mostrarCroqueta}</p>}
+                                {producto.sabor?.length > 0 && (
+                                  <ul>
+                                    {producto.sabor.map((s, i) => (
+                                      <li key={i}>{s.cantidad}x {s.ingrediente}</li>
+                                    ))}
+                                  </ul>
+                                )}
+                                {producto.ingredientesEliminados.length > 0 && (
+                                  <p><strong>Sin:</strong> {producto.ingredientesEliminados.join(', ')}</p>
+                                )}
+                                {producto.especificaciones.length > 0 && (
+                                  <p><strong>Especificaciones:</strong> {producto.especificaciones.join(', ')}</p>
+                                )}
+                                {producto.mensaje && (
+                                  <p className="mensaje-producto--cocina">{producto.mensaje}</p>
+                                )}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )
+                  ))
+                  : (
+                    <div className="seccion-pedido--cocina">
+                      <h4 className="seccion-titulo--cocina">PRODUCTOS</h4>
+                      <ul className="productos-list--cocina">
+                        {pedido.productos.map((producto) => {
+                          const nombreColor = producto.tipoPlato === 'individual' ? 'green' : 'purple';
+                          const mostrarCroqueta = producto.producto.nombre.toLowerCase().includes('croqueta')
+                            ? `${producto.tipoCroqueta}`
+                            : null;
+
+                          return (
+                            <li key={producto._id} className="producto-item--cocina">
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={producto.estadoPreparacion === 'listo'}
+                                  onChange={() => marcarProductoComoListo(pedido._id, producto._id)}
+                                />
+                                <span style={{ color: nombreColor }}>
+                                  {producto.cantidad}x {producto.tipoPrecio !== 'precioBase' && `${producto.tipoPrecio}`} {producto.producto?.nombre || 'Producto no disponible'} {producto.adicionales.length > 0 && (
+                                    <p>{producto.adicionales.map(ad => `${ad.nombre}`)}</p>
+                                  )}
+                                </span>
+                              </label>
+                              {producto.alergiasComensal && <p className="alergias-individual--cocina"><strong>A:</strong> {producto.alergiasComensal}</p>}
+                              {productoSeleccionado === producto && (
+                                <div className="tooltip-detalle">
+                                  <p><strong>C:</strong> {producto.nombreComensal || 'No disponible'}</p>
+                                  {producto.alergiasComensal && <p><strong>A:</strong> {producto.alergiasComensal}</p>}
+                                </div>
                               )}
-                            </span>
-                          </label>
-
-                          {producto.alergiasComensal && (
-                            <p className="alergias-individual--cocina"><strong>A:</strong> {producto.alergiasComensal}</p>
-                          )}
-
-                          {productoSeleccionado === producto && (
-                            <div className="tooltip-detalle">
-                              <p><strong>C:</strong> {producto.nombreComensal || 'No disponible'}</p>
-                              {producto.alergiasComensal && <p><strong>A:</strong> {producto.alergiasComensal}</p>}
-                            </div>
-                          )}
-
-                          {mostrarCroqueta && <p className="tipo-croqueta">{mostrarCroqueta}</p>}
-                          {producto.sabor?.length > 0 && (
-                            <ul>
-                              {producto.sabor.map((s, i) => (
-                                <li key={i}>{s.cantidad}x {s.ingrediente}</li>
-                              ))}
-                            </ul>
-                          )}
-                          {producto.ingredientesEliminados.length > 0 && (
-                            <p><strong>Sin:</strong> {producto.ingredientesEliminados.join(', ')}</p>
-                          )}
-                          {producto.especificaciones.length > 0 && (
-                            <p><strong>Especificaciones:</strong> {producto.especificaciones.join(', ')}</p>
-                          )}
-                          {producto.mensaje && (
-                            <p className="mensaje-producto--cocina">{producto.mensaje}</p>
-                          )}
-
-                        </li>
-                      );
-                    })}
-                </ul>
-
+                              {mostrarCroqueta && <p className="tipo-croqueta">{mostrarCroqueta}</p>}
+                              {producto.sabor?.length > 0 && (
+                                <ul>
+                                  {producto.sabor.map((s, i) => (
+                                    <li key={i}>{s.cantidad}x {s.ingrediente}</li>
+                                  ))}
+                                </ul>
+                              )}
+                              {producto.ingredientesEliminados.length > 0 && (
+                                <p><strong>Sin:</strong> {producto.ingredientesEliminados.join(', ')}</p>
+                              )}
+                              {producto.especificaciones.length > 0 && (
+                                <p><strong>Especificaciones:</strong> {producto.especificaciones.join(', ')}</p>
+                              )}
+                              {producto.mensaje && (
+                                <p className="mensaje-producto--cocina">{producto.mensaje}</p>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )
+                }
                 <button
                   onClick={() => marcarPedidoComoListo(pedido._id)}
                   disabled={!todosProductosListos}

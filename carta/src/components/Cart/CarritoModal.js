@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import { ProductosContext } from "../../context/ProductosContext";
 import { useComensal } from "../../context/ComensalesContext"; // 👈 Importar el hook
@@ -61,6 +62,24 @@ const CarritoModal = ({ cerrarModal }) => {
     }
   };
 
+  const enviarPedidoAImpresora = async (mesaNumero, comensales, productos, total, tipo = 'platos') => {
+    const rutaImpresion =
+      tipo === 'bebidas'
+        ? 'http://192.168.1.150:4000/imprimir-bebidas'
+        : 'http://192.168.1.150:4000/imprimir';
+
+    try {
+      await axios.post(rutaImpresion, {
+        mesaNumero,
+        comensales,
+        productos,
+        total,
+      });
+    } catch (error) {
+      console.error(`Error al imprimir el pedido de ${tipo}:`, error.message);
+    }
+  };
+
   const enviarPedido = async () => {
     if (!(await esLider())) {
       alert("Solo el líder puede enviar el pedido.");
@@ -84,9 +103,7 @@ const CarritoModal = ({ cerrarModal }) => {
           cantidad: item.cantidad,
           precioSeleccionado: item.precioSeleccionado,
           tipoPrecio: item.tipoPrecio,
-          total:
-            (item.precioSeleccionado || item.productId.precios.precioBase) *
-            item.cantidad,
+          total: (item.precioSeleccionado || item.productId.precios.precioBase) * item.cantidad,
           precios: item.productId.precios,
           nombreComensal: item.nombre,
           alergiasComensal: item.alergias,
@@ -110,13 +127,24 @@ const CarritoModal = ({ cerrarModal }) => {
           cartId: carritoId,
           productos: productosPlatos,
           total: productosPlatos.reduce((total, item) => total + item.total, 0),
-          ingredientesEliminados: productosPlatos.ingredientes,
           comensales,
-          tipoPrecio: productosPlatos.tipoPrecio,
-          adicionales: productosPlatos.adicionales,
-
         };
         await api.post("/pedidos", pedidoPlatos);
+
+        await enviarPedidoAImpresora(
+          numeroMesa,
+          comensales,
+          productosPlatos.map(p => ({
+            nombre: p.nombre,
+            cantidad: p.cantidad,
+            opcionesPersonalizables: p.opcionesPersonalizables,
+            alergiasComensal: p.alergiasComensal,
+            tipoPrecio: p.tipoPrecio,
+            seccion: p.seccion,
+          })),
+          pedidoPlatos.total,
+          'platos'
+        );
       }
 
       if (productosBebidas.length > 0) {
@@ -124,15 +152,26 @@ const CarritoModal = ({ cerrarModal }) => {
           mesa: mesaId,
           cartId: carritoId,
           productos: productosBebidas,
-          total: productosBebidas.reduce(
-            (total, item) => total + item.total,
-            0
-          ),
+          total: productosBebidas.reduce((total, item) => total + item.total, 0),
           comensales,
         };
         await api.post("/pedidosBebidas", pedidoBebidas);
-      }
 
+        await enviarPedidoAImpresora(
+          numeroMesa,
+          comensales,
+          productosBebidas.map(p => ({
+            nombre: p.nombre,
+            cantidad: p.cantidad,
+            opcionesPersonalizables: p.opcionesPersonalizables,
+            alergiasComensal: p.alergiasComensal,
+            tipoPrecio: p.tipoPrecio,
+            seccion: p.seccion,
+          })),
+          pedidoBebidas.total,
+          'bebidas'
+        );
+      }
       //Eliminar el carrito
       await api.delete(`/cart/${carritoId}`, {
         headers: { "X-Cart-ID": carritoId },

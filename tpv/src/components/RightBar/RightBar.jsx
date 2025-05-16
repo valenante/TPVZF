@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import ProductoDetalle from "./ProductoDetalle.jsx";
 import { useCategorias } from "../../context/CategoriasContext";
 import api from "../../utils/api";
 import AlertaMensaje from "../AlertaMensaje/AlertaMensaje"; // ✅ Asegúrate de tenerlo creado
 import ModalProductosCategoria from "../ModalProductosCategoria/ModalProductosCategoria";
+import CarritoOrganizable from "../CarritoOrganizable/CarritoOrganizable";
 import "./RightBar.css";
 
 const RightBar = ({ mesaId }) => {
@@ -20,9 +22,13 @@ const RightBar = ({ mesaId }) => {
   const { categories, fetchCategories, products, fetchProducts } = useCategorias();
   const [mostrarResumen, setMostrarResumen] = useState(false);
   const [resumen, setResumen] = useState({});
-  const [mensajeProducto, setMensajeProducto] = useState("");
   const [mensajePedido, setMensajePedido] = useState("");
-
+  const [carritoBebidas, setCarritoBebidas] = useState([]);
+  const [carritoSecciones, setCarritoSecciones] = useState({
+    entrante: [],
+    medio: [],
+    final: [],
+  });
 
   useEffect(() => { fetchCategories(tipo); }, [tipo]);
   useEffect(() => { if (categoriaSeleccionada) fetchProducts(categoriaSeleccionada); }, [categoriaSeleccionada]);
@@ -44,23 +50,25 @@ const RightBar = ({ mesaId }) => {
   };
 
   const agregarAlCarrito = (productoPersonalizado) => {
-    setCarrito((prev) => [...prev, productoPersonalizado]);
+    if (productoPersonalizado.tipo === "bebida") {
+      setCarritoBebidas((prev) => [...prev, productoPersonalizado]);
+    } else {
+      setCarritoSecciones((prev) => ({
+        ...prev,
+        medio: [...prev.medio, { ...productoPersonalizado, seccion: 'medio' }],
+      }));
+    }
     cerrarModal();
-  };
-
-  const quitarDelCarrito = (index) => {
-    setCarrito((prev) => prev.filter((_, i) => i !== index));
   };
 
   const enviarPedido = async () => {
     try {
       setIsLoading(true);
 
-      const platos = carrito.filter(p => p.tipo !== "bebida");
-      const bebidas = carrito.filter(p => p.tipo === "bebida");
+      const pedidoOrdenado = [...carritoSecciones.entrante, ...carritoSecciones.medio, ...carritoSecciones.final];
 
-      if (platos.length > 0) {
-        const payloadPlatos = platos.map((p) => ({
+      if (pedidoOrdenado.length > 0) {
+        const payloadPlatos = pedidoOrdenado.map(p => ({
           producto: p._id,
           cantidad: p.cantidad,
           total: p.precioSeleccionado * p.cantidad,
@@ -71,17 +79,18 @@ const RightBar = ({ mesaId }) => {
           tipo: p.tipo,
           categoria: p.categoria,
           ingredientes: p.ingredientes || [],
-          opcionesPersonalizables: p.opciones
-            ? Object.entries(p.opciones).map(([tipo, opcion]) => ({ tipo, opcion }))
-            : [],
+          opcionesPersonalizables: p.opciones ? Object.entries(p.opciones).map(([tipo, opcion]) => ({ tipo, opcion })) : [],
           mensaje: p.mensaje || "",
           adicionales: p.adicionales || [],
+          seccion: p.seccion || null,
         }));
-        await api.post(`/pedidos/${mesaId}/agregar-producto`, { productos: payloadPlatos });
+
+        const { data } = await api.post(`/pedidos/${mesaId}/agregar-producto`, { productos: payloadPlatos });
+        await enviarAImpresora(data, 'platos');
       }
 
-      if (bebidas.length > 0) {
-        const payloadBebidas = bebidas.map((p) => ({
+      if (carritoBebidas.length > 0) {
+        const payloadBebidas = carritoBebidas.map(p => ({
           producto: p._id,
           cantidad: p.cantidad,
           total: p.precioSeleccionado * p.cantidad,
@@ -92,17 +101,33 @@ const RightBar = ({ mesaId }) => {
           categoria: p.categoria,
           mensaje: p.mensaje || "",
         }));
-        await api.post(`/pedidosBebidas/${mesaId}/agregar-producto`, { productos: payloadBebidas });
+
+        const { data } = await api.post(`/pedidosBebidas/${mesaId}/agregar-producto`, { productos: payloadBebidas });
+        await enviarAImpresora(data, 'bebidas');
       }
 
-      setMensajePedido("");
-      setCarrito([]);
+      setCarritoSecciones({ entrante: [], medio: [], final: [] });
+      setCarritoBebidas([]);
       setMensajeAlerta({ tipo: "exito", mensaje: "Pedido enviado correctamente." });
     } catch (error) {
       console.error("Error al enviar el pedido:", error);
       setMensajeAlerta({ tipo: "error", mensaje: "Error al enviar el pedido." });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Función para enviar a la impresora
+  const enviarAImpresora = async (datos, tipo = 'platos') => {
+    const rutaImpresion =
+      tipo === 'bebidas'
+        ? 'http://192.168.1.150:4000/imprimir-bebidas'
+        : 'http://192.168.1.150:4000/imprimir';
+
+    try {
+      await axios.post(rutaImpresion, datos);
+    } catch (error) {
+      console.error(`Error al imprimir el pedido de ${tipo}:`, error.message);
     }
   };
 
@@ -163,27 +188,23 @@ const RightBar = ({ mesaId }) => {
       {mostrarResumen && (
         <div className="resumen-pedido-panel">
           <h4>Pedido Actual</h4>
-          <ul className="lista-resumen-pedido">
-            {carrito.map((item, index) => (
-              <li key={index} className="item-resumen-pedido">
-                <span>{item.nombre} x{item.cantidad}</span>
-                <button
-                  className="boton-eliminar-item"
-                  onClick={() => quitarDelCarrito(index)}
-                >
-                  ✖
-                </button>
-              </li>
-            ))}
-          </ul>
-          {carrito.length > 0 && (
-            <button
-              onClick={enviarPedido}
-              disabled={isLoading}
-              className="boton-enviar-pedido"
-            >
-              {isLoading ? "Enviando..." : "Enviar Pedido"}
-            </button>
+          <CarritoOrganizable
+            carritoSecciones={carritoSecciones}
+            setCarritoSecciones={setCarritoSecciones}
+            enviarPedido={enviarPedido}
+            isLoading={isLoading}
+          />
+          {carritoBebidas.length > 0 && (
+            <div style={{ marginTop: "10px" }}>
+              <h4>Bebidas</h4>
+              <ul>
+                {carritoBebidas.map((bebida, index) => (
+                  <li key={index}>
+                    {bebida.nombre} x{bebida.cantidad}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       )}

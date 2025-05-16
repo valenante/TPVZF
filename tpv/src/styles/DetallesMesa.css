@@ -276,6 +276,11 @@
     padding: 8px 15px;
   }
 
+  .rightbar--mesadetalles{
+    margin: 0;
+    padding: 0;
+  }
+
   /* Botones */
   .boton-eliminar--mesadetalles,
   .boton-cerrar--mesadetalles {

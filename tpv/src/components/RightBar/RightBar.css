@@ -287,7 +287,7 @@
     background-color: #ffffff;
     /* Gris claro */
     border-radius: 10px;
-    padding: 0px;
+    padding: 10px;
     box-shadow: none;
     display: flex;
     flex-direction: column;
@@ -333,4 +333,52 @@
     width: 100%;
     font-size: 0.95rem;
   }
+
+  .categorias--rightbar{
+    padding: 0px;
+  }
+
+
+ .lista-categorias--rightbar {
+    list-style: none;
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas en móvil */
+    gap: 10px;
+    justify-items: center;
+    width: 100%;
+    max-width: 90vw;
+    border-radius: 10px;
+  }
+
+  /* Cuadrados reales */
+  .categoria--rightbar {
+    width: 12vh;
+    height: 12vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-bold);
+    background-color: var(--color-principal);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 5px;
+  }
+
+  /* Activa o seleccionada */
+  .categoria--rightbar.seleccionada--rightbar {
+    background-color: var(--color-secundario);
+    color: #FFFFFF;
+  }
+
+  /* Hover */
+  .categoria--rightbar:hover {
+    background-color: var(--color-principal);
+    color: #FFFFFF;
+  }
+
 }

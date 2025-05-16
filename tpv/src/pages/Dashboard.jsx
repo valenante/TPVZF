@@ -8,7 +8,6 @@ import { SocketContext } from "../utils/socket";
 const Dashboard = () => {
   const [mesas, setMesas] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Detecta si la pantalla es pequeña
-  const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
   const { socket } = useContext(SocketContext); // Obtener el socket del contexto
 
@@ -48,20 +47,6 @@ const Dashboard = () => {
     navigate(`/mesas/${mesaId}`);
   };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-
-    const mesaEncontrada = mesas.find(
-      (mesa) => mesa.numero.toString() === searchInput.trim()
-    );
-
-    if (mesaEncontrada) {
-      handleMesaClick(mesaEncontrada._id);
-    } else {
-      alert("Mesa no encontrada");
-    }
-  };
-
   return (
     <>
       <div className="subnavbar--dashboard">
@@ -69,22 +54,7 @@ const Dashboard = () => {
       </div>
 
       <div className="container--dashboard">
-        {isMobile ? (
-          <div className="search-container--dashboard">
-            <form onSubmit={handleSearchSubmit}>
-              <input
-                type="number"
-                className="search-input--dashboard"
-                placeholder="Número de mesa"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-              />
-              <button type="submit" className="search-button--dashboard">
-                Buscar Mesa
-              </button>
-            </form>
-          </div>
-        ) : (
+
           <div className="dashboard--dashboard">
             {mesas.map((mesa) => (
               <div
@@ -96,7 +66,6 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
-        )}
       </div>
     </>
   );

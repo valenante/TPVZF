@@ -150,7 +150,6 @@ const ProductoDetalle = ({
         <h2 className="titulo-modal--productoDetalle">
           Personaliza tu {producto.nombre}
         </h2>
-        <p className="descripcion--productoDetalle">{producto.descripcion}</p>
 
         {producto.ingredientes.length > 0 && (
           <>
