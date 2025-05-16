@@ -1,231 +1,273 @@
 /* Modal principal */
 .modal-detalle--productoDetalle {
-    position: fixed;
-    top: 0;
-    left: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  /* Fondo semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Contenido del modal */
+.modal-contenido--productoDetalle {
+  background: white;
+  /* Fondo blanco */
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 500px;
+  width: 85%;
+  height: 80%;
+  max-height: 80vh;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Sombra */
+  animation: slideDown 0.3s ease;
+  /* Animación */
+}
+
+/* Títulos y subtítulos */
+.titulo-modal--productoDetalle {
+  font-size: 1.8rem;
+  color: var(--color-principal);
+  /* Morado profundo */
+  margin-bottom: 10px;
+}
+
+.subtitulo--productoDetalle {
+  font-size: 1.2rem;
+  color: #333;
+  margin-top: 20px;
+}
+
+/* Descripción */
+.descripcion--productoDetalle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Lista de ingredientes */
+.lista-ingredientes--productoDetalle {
+  list-style: none;
+  padding: 0;
+}
+
+.ingrediente--productoDetalle {
+  margin-bottom: 10px;
+}
+
+.ingrediente--productoDetalle label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+}
+
+/* Opciones personalizables */
+.opcion--productoDetalle {
+  margin-top: 10px;
+}
+
+.tipo-opcion--productoDetalle {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.opcion-label--productoDetalle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+}
+
+/* Cantidad */
+.cantidad--productoDetalle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.boton-cantidad--productoDetalle {
+  background: var(--color-secundario);
+  /* Naranja */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.boton-cantidad--productoDetalle:hover {
+  background: var(--color-principal);
+  /* Morado */
+  transform: scale(1.1);
+}
+
+.cantidad-valor--productoDetalle {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Botones del modal */
+.modal-botones--productoDetalle {
+  display: flex;
+  justify-content: space-between;
+  width: fit-content;
+  margin-top: 20px;
+}
+
+.boton-cancelar--productoDetalle,
+.boton-agregar--productoDetalle {
+  background: var(--color-secundario);
+  /* Naranja */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-cancelar--productoDetalle:hover,
+.boton-agregar--productoDetalle:hover {
+  background: var(--color-principal);
+  /* Morado */
+  transform: scale(1.05);
+}
+
+.mensaje-producto-textarea {
+  width: auto;
+}
+
+.modal-botones--productoDetalle {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Botón Cancelar (color secundario) */
+.boton-cancelar--productoDetalle {
+  background-color: #FF6700;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-cancelar--productoDetalle:hover {
+  background-color: #e35d00;
+  transform: scale(1.05);
+}
+
+/* Botón Agregar (color principal) */
+.boton-agregar--productoDetalle {
+  background-color: #6A0DAD;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-agregar--productoDetalle:hover {
+  background-color: #5c0998;
+  transform: scale(1.05);
+}
+
+/* Animación del modal */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-contenido--productoDetalle {
+    width: 40vh;
+    height: auto;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    overflow-y: auto;
+    padding-bottom: 16px;
+    /* Un pequeño margen inferior */
+  }
+
+  .lista-ingredientes--productoDetalle,
+  .opcion--productoDetalle,
+  select,
+  .mensaje-producto-textarea {
+    width: auto;
+    min-height: 60px;
+    resize: vertical;
+    font-size: 1rem;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .select-precio--productoDetalle,
+  .select-tipoPlato--productoDetalle,
+  .select-acompanante--productoDetalle {
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+    padding: 14px 12px;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    appearance: none;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+  }
+
+  .select-precio--productoDetalle:focus,
+  .select-tipoPlato--productoDetalle:focus,
+  .select-acompanante--productoDetalle:focus {
+    border-color: var(--color-principal);
+    outline: none;
+  }
+
+  .cantidad--productoDetalle {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-  }
-  
-  /* Contenido del modal */
-  .modal-contenido--productoDetalle {
-    background: #FFFFFF; /* Fondo blanco */
-    border-radius: 10px;
-    padding: 20px;
-    max-width: 500px;
-    width: 85%;
-    height: 80%;
-    max-height: 80vh;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
-    animation: slideDown 0.3s ease; /* Animación */
-  }
-  
-  /* Títulos y subtítulos */
-  .titulo-modal--productoDetalle {
-    font-size: 1.8rem;
-    color: var(--color-principal); /* Morado profundo */
-    margin-bottom: 10px;
-  }
-  
-  .subtitulo--productoDetalle {
-    font-size: 1.2rem;
-    color: #333;
-    margin-top: 20px;
-  }
-  
-  /* Descripción */
-  .descripcion--productoDetalle {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 20px;
-  }
-  
-  /* Lista de ingredientes */
-  .lista-ingredientes--productoDetalle {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .ingrediente--productoDetalle {
-    margin-bottom: 10px;
-  }
-  
-  .ingrediente--productoDetalle label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-  }
-  
-  /* Opciones personalizables */
-  .opcion--productoDetalle {
-    margin-top: 10px;
-  }
-  
-  .tipo-opcion--productoDetalle {
-    font-size: 1rem;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .opcion-label--productoDetalle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-  }
-  
-  /* Cantidad */
-  .cantidad--productoDetalle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .boton-cantidad--productoDetalle {
-    background: var(--color-secundario); /* Naranja */
-    color: #FFFFFF;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-  }
-  
-  .boton-cantidad--productoDetalle:hover {
-    background: var(--color-principal); /* Morado */
-    transform: scale(1.1);
-  }
-  
-  .cantidad-valor--productoDetalle {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  /* Botones del modal */
-  .modal-botones--productoDetalle {
-    display: flex;
-    justify-content: space-between;
-    width: fit-content;
-    margin-top: 20px;
-  }
-  
-  .boton-cancelar--productoDetalle,
-  .boton-agregar--productoDetalle {
-    background: var(--color-secundario); /* Naranja */
-    color: #FFFFFF;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .boton-cancelar--productoDetalle:hover,
-  .boton-agregar--productoDetalle:hover {
-    background: var(--color-principal); /* Morado */
-    transform: scale(1.05);
-  }
-
-  .mensaje-producto-textarea{
-    width: auto;
+    gap: 12px;
   }
 
   .modal-botones--productoDetalle {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  /* Botón Cancelar (color secundario) */
-  .boton-cancelar--productoDetalle {
-    background-color: #FF6700;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .boton-cancelar--productoDetalle:hover {
-    background-color: #e35d00;
-    transform: scale(1.05);
-  }
-  
-  /* Botón Agregar (color principal) */
-  .boton-agregar--productoDetalle {
-    background-color: #6A0DAD;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .boton-agregar--productoDetalle:hover {
-    background-color: #5c0998;
-    transform: scale(1.05);
-  }  
-  
-  /* Animación del modal */
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20%);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @media (max-width: 768px) {
-  .modal-contenido--productoDetalle {
+    gap: 12px;
     width: 100%;
-    max-width: 45vh;
-    height: 100%;
-    max-height: 60vh;
-    padding: 15px;
-    overflow-y: auto; /* Activar scroll */
-    overscroll-behavior: contain; /* Evita que se cierre al hacer scroll */
-    scrollbar-width: thin; /* Para Firefox */
-  }
-
-  .modal-contenido--productoDetalle::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  .modal-contenido--productoDetalle::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 10px;
-  }
-
-  .titulo-modal--productoDetalle {
-    font-size: 1.5rem;
-  }
-
-  .descripcion--productoDetalle {
-    font-size: 0.95rem;
   }
 
   .boton-cancelar--productoDetalle,
   .boton-agregar--productoDetalle {
-    font-size: 0.9rem;
-    padding: 8px 16px;
+    flex: 1;
+    width: 50%;
+    padding: 14px;
+    font-size: 1.1rem;
+    border-radius: 8px;
   }
 }

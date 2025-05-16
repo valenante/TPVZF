@@ -1,5 +1,6 @@
 import React from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import "./CarritoOrganizable.css"; // Asegúrate de tener este archivo CSS
 
 const CarritoOrganizable = ({ carritoSecciones, setCarritoSecciones, enviarPedido, isLoading }) => {
 
@@ -9,17 +10,13 @@ const CarritoOrganizable = ({ carritoSecciones, setCarritoSecciones, enviarPedid
         const sourceSection = result.source.droppableId;
         const destSection = result.destination.droppableId;
 
-        // ✅ Evitar acción si se suelta en la misma posición
         if (sourceSection === destSection && result.source.index === result.destination.index) {
             return;
         }
 
         const sourceItems = Array.from(carritoSecciones[sourceSection]);
         const [movedItem] = sourceItems.splice(result.source.index, 1);
-
-        // ✅ Asignar el nuevo campo seccion
         const updatedMovedItem = { ...movedItem, seccion: destSection };
-
         const destItems = Array.from(carritoSecciones[destSection]);
         destItems.splice(result.destination.index, 0, updatedMovedItem);
 
@@ -33,23 +30,16 @@ const CarritoOrganizable = ({ carritoSecciones, setCarritoSecciones, enviarPedid
     return (
         <>
             <DragDropContext onDragEnd={onDragEnd}>
-                <div style={{ display: "block", gap: "10px" }}>
+                <div className="carrito-organizable-container">
                     {["entrante", "medio", "final"].map((section) => (
                         <Droppable key={section} droppableId={section}>
                             {(provided, snapshot) => (
                                 <div
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
-                                    style={{
-                                        border: "1px solid #ccc",
-                                        borderRadius: "5px",
-                                        padding: "10px",
-                                        marginBottom: "15px", // espacio entre secciones
-                                        minHeight: "150px",
-                                        backgroundColor: snapshot.isDraggingOver ? "#f0f0f0" : "white",
-                                    }}
+                                    className={`carrito-section ${snapshot.isDraggingOver ? "drag-over" : ""}`}
                                 >
-                                    <h4>{section.toUpperCase()}</h4>
+                                    <h4 className="carrito-section-title">{section.toUpperCase()}</h4>
                                     {carritoSecciones[section].map((item, index) => (
                                         <Draggable key={item._id + index} draggableId={item._id + index} index={index}>
                                             {(provided, snapshot) => (
@@ -57,15 +47,7 @@ const CarritoOrganizable = ({ carritoSecciones, setCarritoSecciones, enviarPedid
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    style={{
-                                                        ...provided.draggableProps.style,
-                                                        padding: "5px",
-                                                        margin: "5px 0",
-                                                        backgroundColor: snapshot.isDragging ? "#e0e0e0" : "#f5f5f5",
-                                                        border: "1px solid #ddd",
-                                                        borderRadius: "3px",
-                                                        cursor: "grab",
-                                                    }}
+                                                    className={`carrito-item ${snapshot.isDragging ? "dragging" : ""}`}
                                                 >
                                                     {item.nombre} x{item.cantidad}
                                                 </div>
@@ -78,13 +60,17 @@ const CarritoOrganizable = ({ carritoSecciones, setCarritoSecciones, enviarPedid
                         </Droppable>
                     ))}
                 </div>
-            </DragDropContext>
 
-            <div style={{ marginTop: "10px", textAlign: "center" }}>
-                <button onClick={enviarPedido} disabled={isLoading}>
-                    {isLoading ? "Enviando..." : "Enviar Pedido"}
-                </button>
-            </div>
+                <div className="carrito-enviar-container">
+                    <button
+                        onClick={enviarPedido}
+                        disabled={isLoading}
+                        className="carrito-enviar-button"
+                    >
+                        {isLoading ? "Enviando..." : "Enviar Pedido"}
+                    </button>
+                </div>
+            </DragDropContext>
         </>
     );
 };

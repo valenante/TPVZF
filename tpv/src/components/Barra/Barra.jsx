@@ -107,7 +107,6 @@ const Barra = () => {
               <div key={pedido._id} className="pedido-card--barra">
                 <div className="pedido-header--barra">
                   <h3>Mesa: {pedido.mesa.numero}</h3>
-                  <p>Comensales: {pedido.comensales}</p>
                 </div>
                 <p>
                   <strong>Hace:</strong>{" "}

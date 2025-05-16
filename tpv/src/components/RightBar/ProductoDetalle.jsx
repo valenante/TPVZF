@@ -148,12 +148,11 @@ const ProductoDetalle = ({
     <div className="modal-detalle--productoDetalle">
       <div className="modal-contenido--productoDetalle">
         <h2 className="titulo-modal--productoDetalle">
-          Personaliza tu {producto.nombre}
+          {producto.nombre}
         </h2>
 
         {producto.ingredientes.length > 0 && (
           <>
-            <h4>Ingredientes:</h4>
             <ul className="lista-ingredientes--productoDetalle">
               {producto.ingredientes.map((ing) => (
                 <li key={ing} className="ingrediente--productoDetalle">
@@ -175,7 +174,6 @@ const ProductoDetalle = ({
 
         {producto.opcionesPersonalizables.length > 0 && (
           <>
-            <h4>Opciones:</h4>
             {producto.opcionesPersonalizables.map((opcion) => (
               <div key={opcion.tipo}>
                 <h5>{opcion.tipo}</h5>
@@ -196,7 +194,6 @@ const ProductoDetalle = ({
           </>
         )}
 
-        <h4>Cantidad:</h4>
         <div>
           <button onClick={() => manejarCantidad(-1)}>-</button>
           <span>{cantidad}</span>
@@ -204,82 +201,69 @@ const ProductoDetalle = ({
         </div>
 
         {producto.categoria.toLowerCase().includes("vino") ? (
-          <>
-            <h4>Tipo de presentación:</h4>
+          <select
+            className="select-precio--productoDetalle"
+            value={tipoPrecio}
+            onChange={(e) => setTipoPrecio(e.target.value)}
+          >
+            {producto.precios.copa !== null && (
+              <option value="copa">Copa - {producto.precios.copa} €</option>
+            )}
+            {producto.precios.botella !== null && (
+              <option value="botella">Botella - {producto.precios.botella} €</option>
+            )}
+          </select>
+        ) : (
+          Object.entries(producto.precios).some(([_, val]) => typeof val === "number") && (
             <select
+              className="select-precio--productoDetalle"
               value={tipoPrecio}
               onChange={(e) => setTipoPrecio(e.target.value)}
             >
-              {producto.precios.copa !== null && (
-                <option value="copa">Copa - {producto.precios.copa} €</option>
-              )}
-              {producto.precios.botella !== null && (
-                <option value="botella">
-                  Botella - {producto.precios.botella} €
-                </option>
-              )}
+              {Object.entries(producto.precios).map(([key, val]) => {
+                if (typeof val === "number") {
+                  return (
+                    <option key={key} value={key}>
+                      {key.charAt(0).toUpperCase() + key.slice(1)} - {val} €
+                    </option>
+                  );
+                }
+                return null;
+              })}
             </select>
-          </>
-        ) : (
-          Object.entries(producto.precios).some(
-            ([_, val]) => typeof val === "number"
-          ) && (
-            <>
-              <h4>Tipo de precio:</h4>
-              <select
-                value={tipoPrecio}
-                onChange={(e) => setTipoPrecio(e.target.value)}
-              >
-                {Object.entries(producto.precios).map(([key, val]) => {
-                  if (typeof val === "number") {
-                    return (
-                      <option key={key} value={key}>
-                        {key.charAt(0).toUpperCase() + key.slice(1)} - {val} €
-                      </option>
-                    );
-                  }
-                  return null;
-                })}
-              </select>
-            </>
           )
         )}
 
         {producto.tipo !== "bebida" && (
-          <><h4>Tipo de plato:</h4>
-            <select
-              value={tipoPlato}
-              onChange={(e) => setTipoPlato(e.target.value)}
-            >
-              <option value="compartir">Compartir</option>
-              <option value="individual">Individual</option>
-            </select>  </>
+          <select
+            className="select-tipoPlato--productoDetalle"
+            value={tipoPlato}
+            onChange={(e) => setTipoPlato(e.target.value)}
+          >
+            <option value="compartir">Compartir</option>
+            <option value="individual">Individual</option>
+          </select>
         )}
 
         {producto.tipo === "bebida" &&
-          categoriasConAcompanante.includes(
-            producto.categoria.toLowerCase()
-          ) && (
-            <>
-              <h4>Acompañante:</h4>
-              <select
-                value={acompanante}
-                onChange={(e) => setAcompanante(e.target.value)}
-              >
-                <option value="">Selecciona un acompañante</option>
-                {acompanantesDisponibles.map((nombre) => (
-                  <option key={nombre} value={nombre}>
-                    {nombre}
-                  </option>
-                ))}
-                <option value="Sin acompañante">Sin acompañante</option>
-              </select>
-            </>
+          categoriasConAcompanante.includes(producto.categoria.toLowerCase()) && (
+            <select
+              className="select-acompanante--productoDetalle"
+              value={acompanante}
+              onChange={(e) => setAcompanante(e.target.value)}
+            >
+              <option value="">Selecciona un acompañante</option>
+              {acompanantesDisponibles.map((nombre) => (
+                <option key={nombre} value={nombre}>
+                  {nombre}
+                </option>
+              ))}
+              <option value="Sin acompañante">Sin acompañante</option>
+            </select>
           )}
 
         {producto.adicionales && producto.adicionales.length > 0 && (
           <>
-            <h4>Adicionales:</h4>
             <ul>
               {producto.adicionales.map((adicional, index) => (
                 <li key={index}>
@@ -302,13 +286,14 @@ const ProductoDetalle = ({
           </>
         )}
 
+        <textarea
+          placeholder="Mensaje para cocina/barra sobre este producto (opcional)"
+          value={mensajeProducto}
+          onChange={(e) => setMensajeProducto(e.target.value)}
+          className="mensaje-producto-textarea"
+        />
+
         <div className="modal-botones--productoDetalle">
-          <textarea
-            placeholder="Mensaje para cocina/barra sobre este producto (opcional)"
-            value={mensajeProducto}
-            onChange={(e) => setMensajeProducto(e.target.value)}
-            className="mensaje-producto-textarea"
-          />
           <button
             className="boton-cancelar--productoDetalle"
             onClick={cerrarModal}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ModalConfirmacionCSS from "./ModalConfirmacion.css";
+import "./ModalConfirmacion.css"; // Asegúrate de tener este archivo CSS
 
 export default function ModalConfirmacion({ 
   titulo = "Confirmar acción", 
@@ -28,8 +28,8 @@ export default function ModalConfirmacion({
           />
         )}
         <div className="modal-botones">
-          <button onClick={onClose} className="boton-cancelar-modal">Cancelar</button>
-          <button onClick={manejarConfirmacion} className="boton-aceptar-modal">Aceptar</button>
+          <button onClick={onClose} className="boton-cancelar-modal-confirmacion">Cancelar</button>
+          <button onClick={manejarConfirmacion} className="boton-aceptar-modal-confirmacion">Aceptar</button>
         </div>
       </div>
     </div>
