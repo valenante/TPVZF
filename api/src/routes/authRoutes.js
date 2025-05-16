@@ -1,21 +1,26 @@
 import { Router } from 'express';
 import { check, validationResult } from 'express-validator';
 const router = Router();
-import { login, registro, renovarToken, logout, obtenerUsuario } from '../controllers/authController.js';
+import {
+  login,
+  registro,
+  renovarToken,
+  logout,
+  obtenerUsuario,
+} from '../controllers/authController.js';
 import { logAndNotifyLogin } from '../middlewares/failedSesionMiddleware.js';
 import rateLimit from 'express-rate-limit';
-
 
 // Middleware para limitar intentos de inicio de sesión
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 5, // Límite de 5 intentos
-  message: 'Demasiados intentos fallidos. Por favor, inténtalo de nuevo más tarde.',
+  message:
+    'Demasiados intentos fallidos. Por favor, inténtalo de nuevo más tarde.',
 });
 
 // Middleware para registrar intentos de inicio de sesión
 const logIntentoLogin = (req, res, next) => {
-  const { name } = req.body;
   next();
 };
 
@@ -25,9 +30,7 @@ router.post(
   loginLimiter,
   logIntentoLogin,
   logAndNotifyLogin,
-  [
-    check('password', 'La contraseña es obligatoria').notEmpty(),
-  ],
+  [check('password', 'La contraseña es obligatoria').notEmpty()],
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -45,7 +48,10 @@ router.post(
   '/register',
   [
     check('name', 'El nombre es obligatorio').notEmpty(),
-    check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({ min: 6 }),
+    check(
+      'password',
+      'La contraseña debe tener al menos 6 caracteres'
+    ).isLength({ min: 6 }),
     check('role', 'El rol debe ser admin, camarero o cocinero')
       .optional()
       .isIn(['admin', 'camarero', 'cocinero']),

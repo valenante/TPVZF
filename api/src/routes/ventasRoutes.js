@@ -1,6 +1,12 @@
 import { Router } from 'express';
 const router = Router();
-import { obtenerVentasPorId, obtenerVentas, crearVenta, actualizarVenta, eliminarVenta } from '../controllers/ventasController.js';
+import {
+  obtenerVentasPorId,
+  obtenerVentas,
+  crearVenta,
+  actualizarVenta,
+  eliminarVenta,
+} from '../controllers/ventasController.js';
 
 // Obtener todas las ventas
 router.get('/', obtenerVentas);

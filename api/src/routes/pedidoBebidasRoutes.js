@@ -1,6 +1,17 @@
 import { Router } from 'express';
 const router = Router();
-import { verificarPedidosMesa, obtenerPedidos, obtenerPedidosId, obtenerPedidosPendientes, obtenerPedidosFinalizados, actualizarPedido, actualizarProducto, eliminarPedido, crearPedido, agregarProductoBebida } from '../controllers/pedidoBebidasController.js';
+import {
+  verificarPedidosMesa,
+  obtenerPedidos,
+  obtenerPedidosId,
+  obtenerPedidosPendientes,
+  obtenerPedidosFinalizados,
+  actualizarPedido,
+  actualizarProducto,
+  eliminarPedido,
+  crearPedido,
+  agregarProductoBebida,
+} from '../controllers/pedidoBebidasController.js';
 import verificarLider from '../middlewares/verificarLider.js';
 
 // Obtener todos los pedidos

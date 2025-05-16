@@ -1,6 +1,13 @@
 import { Router } from 'express';
 const router = Router();
-import { getCajaDiaria, getCajaDiariaById, createCajaDiaria, updateCajaDiaria, deleteCajaDiaria, obtenerCajasPorRango } from '../controllers/cajaDiariaController.js';
+import {
+  getCajaDiaria,
+  getCajaDiariaById,
+  createCajaDiaria,
+  updateCajaDiaria,
+  deleteCajaDiaria,
+  obtenerCajasPorRango,
+} from '../controllers/cajaDiariaController.js';
 
 // Obtener todos los registros de caja diaria
 router.get('/', getCajaDiaria);
