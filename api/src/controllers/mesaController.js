@@ -1,6 +1,8 @@
 import axios from 'axios';
 import Mesa from '../models/Mesa.js';
 import MesaCerrada from '../models/MesaCerrada.js';
+import Pedido from '../models/Pedido.js';
+import PedidoBebidas from '../models/PedidoBebidas.js';
 import Caja from '../models/Caja.js';
 import Comensal from '../models/Comensal.js';
 import { v4 as uuidv4 } from 'uuid'; // Generador de UUID
@@ -578,5 +580,86 @@ export const registrarComensal = async (req, res) => {
   } catch (error) {
     console.error('Error al guardar comensal:', error);
     res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
+
+export const transferirProducto = async (req, res) => {
+  const { productoId, pedidoId, desde, hacia, tipoPedido } = req.body;
+
+  if (!productoId || !pedidoId || !desde || !hacia || !tipoPedido) {
+    console.error('❌ Datos incompletos');
+    return res.status(400).json({ error: 'Debes proporcionar productoId, pedidoId, desde, hacia y tipoPedido.' });
+  }
+
+  try {
+    const campoPopulate = tipoPedido === 'bebida' ? 'pedidosBebidas' : 'pedidos';
+
+    const mesaOrigen = await Mesa.findById(desde).populate(campoPopulate);
+    const mesaDestino = await Mesa.findById(hacia).populate(campoPopulate);
+
+    if (!mesaOrigen || !mesaDestino) {
+      console.error('❌ Mesa origen o destino no encontrada.');
+      return res.status(404).json({ error: 'Mesa origen o destino no encontrada.' });
+    }
+
+    const pedidosOrigen = tipoPedido === 'bebida' ? mesaOrigen.pedidosBebidas : mesaOrigen.pedidos;
+    const pedidosDestino = tipoPedido === 'bebida' ? mesaDestino.pedidosBebidas : mesaDestino.pedidos;
+
+    const pedidoOrigen = pedidosOrigen.find(p => p._id.toString() === pedidoId);
+    if (!pedidoOrigen) {
+      console.error('❌ Pedido origen no encontrado.');
+      return res.status(404).json({ error: 'Pedido origen no encontrado.' });
+    }
+
+    const productoIndex = pedidoOrigen.productos.findIndex(p => p._id.toString() === productoId);
+    if (productoIndex === -1) {
+      console.error('❌ Producto no encontrado en el pedido origen.');
+      return res.status(404).json({ error: 'Producto no encontrado en el pedido origen.' });
+    }
+
+    const productoMovido = pedidoOrigen.productos.splice(productoIndex, 1)[0];
+    pedidoOrigen.total -= productoMovido.total || 0;
+    mesaOrigen.total -= productoMovido.total || 0;
+
+    // ✅ Seleccionar el modelo correcto para guardar los cambios
+    const ModeloPedido = tipoPedido === 'bebida' ? PedidoBebidas : Pedido;
+    await ModeloPedido.findByIdAndUpdate(pedidoOrigen._id, {
+      productos: pedidoOrigen.productos,
+      total: pedidoOrigen.total
+    });
+
+    let pedidoDestino = pedidosDestino.find(p => p.estado === 'pendiente');
+    if (!pedidoDestino) {
+      pedidoDestino = new ModeloPedido({
+        mesa: mesaDestino._id,
+        productos: [],
+        estado: 'pendiente',
+        total: 0
+      });
+      await pedidoDestino.save();
+      if (tipoPedido === 'bebida') {
+        mesaDestino.pedidosBebidas.push(pedidoDestino._id);
+      } else {
+        mesaDestino.pedidos.push(pedidoDestino._id);
+      }
+    } else {
+      pedidoDestino = await ModeloPedido.findById(pedidoDestino._id);
+    }
+
+    pedidoDestino.productos.push(productoMovido);
+    pedidoDestino.total += productoMovido.total || 0;
+    mesaDestino.total += productoMovido.total || 0;
+
+    await pedidoDestino.save();
+    await mesaOrigen.save();
+    await mesaDestino.save();
+
+    req.io.emit('productoTransferido', { desde, hacia, productoId, pedidoId, tipoPedido });
+
+    return res.json({ mensaje: 'Producto transferido con éxito.' });
+
+  } catch (error) {
+    console.error('❌ Error al transferir producto:', error);
+    return res.status(500).json({ error: 'Error interno al transferir el producto.' });
   }
 };

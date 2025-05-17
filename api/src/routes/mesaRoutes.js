@@ -17,6 +17,7 @@ import {
   crearTokenLider,
   registrarComensal,
   abrirMesaCamarero,
+  transferirProducto,
 } from '../controllers/mesaController.js';
 
 // Rutas
@@ -36,5 +37,6 @@ router.get('/mesas-cerradas/mesas-cerradas', obtenerMesasCerradas);
 router.get('/mesas-abiertas/mesas-abiertas', obtenerMesasAbiertas);
 router.put('/mesas/:id/abrir', abrirMesaCamarero);
 router.delete('/eliminar-mesa', eliminarMesa);
+router.post('/mesas/transferir-producto', transferirProducto);
 
 export default router;
