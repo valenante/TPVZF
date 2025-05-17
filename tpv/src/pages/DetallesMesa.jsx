@@ -8,6 +8,7 @@ import { SocketContext } from "../utils/socket";
 import "../styles/DetallesMesa.css";
 import ModalConfirmacion from "../components/Modal/ModalConfirmacion";
 import AlertaMensaje from "../components/AlertaMensaje/AlertaMensaje";
+import ModalTransferencia from "../components/Modal/ModalTransferencia";
 
 const DetalleMesa = () => {
   const { id } = useParams(); // Obtener el `id` de la mesa desde la URL
@@ -22,6 +23,7 @@ const DetalleMesa = () => {
   const [mostrarModalConfirmacion, setMostrarModalConfirmacion] = useState(false);
   const [accionModal, setAccionModal] = useState(null);
   const [mensajeAlerta, setMensajeAlerta] = useState(null);
+  const [mostrarModalTransferir, setMostrarModalTransferir] = useState(false);
 
   const fetchMesa = async () => {
     try {
@@ -372,10 +374,6 @@ const DetalleMesa = () => {
                     </p>
                   )}
                 </ul>
-                <p className="total-pedido--mesadetalles">
-                  Total Pedido:{" "}
-                  {pedido.total ? pedido.total.toFixed(2) : "0.00"} €
-                </p>
               </li>
             ))
           ) : (
@@ -384,6 +382,8 @@ const DetalleMesa = () => {
             </p>
           )}
         </ul>
+
+
 
         {mesa.estado === "abierta" && (
           <button
@@ -402,24 +402,20 @@ const DetalleMesa = () => {
             Abrir Mesa
           </button>
         )}
-
         {mesa.estado === "abierta" && (
           <div className="contenedor-botones--mesadetalles">
-            <button
-              onClick={imprimirCuenta}
-              className="boton-imprimir--mesadetalles"
-            >
+            <button onClick={imprimirCuenta} className="boton-imprimir--mesadetalles">
               Cuenta
             </button>
-
-            <button
-              onClick={() => setShowModal("factura")}
-              className="boton-factura--mesadetalles"
-            >
+            <button onClick={() => setShowModal("factura")} className="boton-factura--mesadetalles">
               Factura
+            </button>
+            <button onClick={() => setMostrarModalTransferir(true)} className="boton-factura--mesadetalles">
+              Transferir Artículos
             </button>
           </div>
         )}
+
 
 
         {(showModal === "cierre" || showModal === "factura") && (
@@ -455,6 +451,17 @@ const DetalleMesa = () => {
           tipo={mensajeAlerta.tipo}
           mensaje={mensajeAlerta.mensaje}
           onClose={() => setMensajeAlerta(null)}
+        />
+      )}
+
+      {mostrarModalTransferir && (
+        <ModalTransferencia
+          mesaOrigen={mesa}
+          onClose={() => setMostrarModalTransferir(false)}
+          onTransferSuccess={() => {
+            setMostrarModalTransferir(false);
+            fetchMesa(); // Refresca la mesa después de transferir
+          }}
         />
       )}
     </div>

@@ -1,0 +1,5 @@
+api/logs/combined.log
+api/logs/error.log
+api/logs/requests.log
+api/logs/requests.log.1
+api/logs/requests.log.2     

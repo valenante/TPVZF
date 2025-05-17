@@ -36,7 +36,7 @@ const productoSchema = new Schema(
     nombre: { type: String, required: true },
     tipo: {
       type: String,
-      enum: ['plato', 'tapaRacion', 'bebida', 'extra'],
+      enum: ['plato', 'tapaRacion', 'bebida', 'extra', 'postre'],
       required: true,
     }, // Diferencia entre plato y bebida
     categoria: { type: String, required: true }, // Ej: "entrante", "plato principal", "refresco", "licor"

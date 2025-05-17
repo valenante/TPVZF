@@ -159,7 +159,7 @@
 /* Contenedor con 2 columnas */
 .contenedor-botones--mesadetalles {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 /* Botones ya definidos previamente */
@@ -264,7 +264,7 @@
   }
 
   .contenedor-botones--mesadetalles {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
     /* Espacio entre los botones */
   }
