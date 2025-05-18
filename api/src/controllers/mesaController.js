@@ -232,6 +232,7 @@ export const cerrarMesa = async (req, res) => {
       cierre: new Date(),
       comensales: mesa.comensales || 1,
       metodoPago: { efectivo, tarjeta, propina: propinaCalculada, cambio: cambioCalculado },
+      sesionActiva: mesa.sesionActiva,
     });
 
     await mesaCerrada.save();
@@ -329,7 +330,7 @@ export const cerrarMesa = async (req, res) => {
     mesa.pedidosBebidas = [];
     mesa.comensales = null;
     mesa.tokenLider = null;
-    mesa.sesionId = null;  // ✅ Limpiar la sesión
+    mesa.sesionActiva = null;  // ✅ Limpiar la sesión
     await mesa.save();
 
     // ✅ Devolver datos de impresión al Frontend
@@ -430,7 +431,6 @@ export const obtenerMesasAbiertas = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener las mesas abiertas.' });
   }
 };
-
 export const recuperarMesa = async (req, res) => {
   const { mesaId } = req.params; // ID de la mesa cerrada
   try {
@@ -446,71 +446,57 @@ export const recuperarMesa = async (req, res) => {
       return res.status(404).json({ error: 'Mesa activa no encontrada.' });
     }
 
-    // 3️⃣ Transferir los datos de la mesa cerrada a la activa
+    // 3️⃣ Buscar y reactivar la sesión anterior si existe
+    const sesionAnterior = await SesionMesa.findOne({ mesa: mesaActiva._id, estado: 'cerrada' }).sort({ cierre: -1 });
+
+    if (sesionAnterior) {
+      sesionAnterior.estado = 'activa';
+      sesionAnterior.cierre = null; // Limpiar fecha de cierre
+      await sesionAnterior.save();
+      mesaActiva.sesionId = sesionAnterior._id;
+    }
+
+    // 4️⃣ Transferir los datos de la mesa cerrada a la activa
     mesaActiva.pedidos = mesaCerrada.pedidos;
+    mesaActiva.pedidosBebidas = mesaCerrada.pedidoBebidas;  // ✅ También las bebidas
+    mesaActiva.sesionActiva = mesaActiva.sesionId; // Mantener la sesión activa
     mesaActiva.total = mesaCerrada.total;
     mesaActiva.inicio = mesaCerrada.inicio;
     mesaActiva.estado = 'abierta'; // Cambiar el estado a abierta
     mesaActiva.updatedAt = new Date();
 
-    // 4️⃣ Guardar la mesa activa
     await mesaActiva.save();
 
     // 5️⃣ Ajustar la caja actual restando el total de la mesa
     const hoy = new Date();
-    const inicioDelDia = new Date(
-      hoy.getFullYear(),
-      hoy.getMonth(),
-      hoy.getDate(),
-      0,
-      0,
-      0
-    );
-    const finDelDia = new Date(
-      hoy.getFullYear(),
-      hoy.getMonth(),
-      hoy.getDate(),
-      23,
-      59,
-      59
-    );
+    const inicioDelDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
+    const finDelDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
 
-    // Buscar la caja abierta del día actual
     const cajaActual = await Caja.findOne({
       fechaApertura: { $gte: inicioDelDia, $lte: finDelDia },
       estado: 'abierta',
     });
 
-    if (!cajaActual) {
-      console.warn('⚠️ No se encontró una caja abierta para ajustar el total.');
-    } else {
-      // Restar el total de la mesa recuperada
+    if (cajaActual) {
       cajaActual.total -= mesaCerrada.total;
-
-      // Restar las cantidades de los métodos de pago correspondientes
-      cajaActual.detallesMetodoPago.efectivo -=
-        mesaCerrada.metodoPago.efectivo || 0;
-      cajaActual.detallesMetodoPago.tarjeta -=
-        mesaCerrada.metodoPago.tarjeta || 0;
-      cajaActual.detallesMetodoPago.propina -=
-        mesaCerrada.metodoPago.propina || 0;
-
-      // Registrar la operación
+      cajaActual.detallesMetodoPago.efectivo -= mesaCerrada.metodoPago.efectivo || 0;
+      cajaActual.detallesMetodoPago.tarjeta -= mesaCerrada.metodoPago.tarjeta || 0;
+      cajaActual.detallesMetodoPago.propina -= mesaCerrada.metodoPago.propina || 0;
       cajaActual.operaciones.push({
         tipo: 'ajuste',
         monto: -mesaCerrada.total,
         razon: `Recuperación de la mesa número ${mesaCerrada.numero}`,
       });
-
       await cajaActual.save();
     }
 
     // 6️⃣ Eliminar la mesa cerrada
     await MesaCerrada.findByIdAndDelete(mesaId);
 
-    res
-      .status(200)
-      .json({ message: '✅ Mesa recuperada y caja ajustada correctamente.' });
+    res.status(200).json({
+      message: '✅ Mesa recuperada y caja ajustada correctamente.',
+      sesionId: sesionAnterior ? sesionAnterior._id : null,
+    });
   } catch (error) {
     console.error('❌ Error al recuperar la mesa:', error);
     res.status(500).json({ error: 'Error al recuperar la mesa.' });
