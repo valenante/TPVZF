@@ -115,7 +115,7 @@ const DetalleMesa = () => {
   };
 
   const enviarAFacturaPrinter = async (datosImpresion) => {
-    const rutaImpresion = 'http://192.168.1.150:4000/imprimir-factura';
+    const rutaImpresion = 'https://192.168.1.150:4000/imprimir-factura';
     try {
       await axios.post(rutaImpresion, datosImpresion);
     } catch (error) {

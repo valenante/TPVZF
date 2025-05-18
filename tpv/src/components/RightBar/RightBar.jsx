@@ -123,8 +123,8 @@ const RightBar = ({ mesaId }) => {
   const enviarAImpresora = async (datos, tipo = 'platos') => {
     const rutaImpresion =
       tipo === 'bebidas'
-        ? 'http://192.168.1.150:4000/imprimir-bebidas'
-        : 'http://192.168.1.150:4000/imprimir';
+        ? 'https://192.168.1.150:4000/imprimir-bebidas'
+        : 'https://192.168.1.150:4000/imprimir';
 
     try {
       await axios.post(rutaImpresion, datos);
