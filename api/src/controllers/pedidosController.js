@@ -3,6 +3,7 @@ import Mesa from '../models/Mesa.js';
 import Venta from '../models/Ventas.js';
 import Cart from '../models/Cart.js';
 import Producto from '../models/Producto.js';
+import SesionMesa from '../models/SesionMesa.js';
 import { io } from '../../index.js';
 
 // Crear un nuevo pedido
@@ -111,6 +112,12 @@ export const agregarProductoAlPedido = async (req, res) => {
     const mesa = await Mesa.findById(mesaId).populate('pedidos');
     if (!mesa) return res.status(404).json({ error: 'Mesa no encontrada' });
 
+    // ✅ Buscar la sesión activa
+    const sesionActiva = await SesionMesa.findOne({ mesa: mesa._id, estado: 'activa' });
+    if (!sesionActiva) {
+      return res.status(400).json({ error: 'La mesa no tiene una sesión activa. Abre la mesa antes de agregar productos.' });
+    }
+
     let pedidoModificado;
     const pedidoExistente = mesa.pedidos.find(p => p.estado === 'pendiente');
 
@@ -123,6 +130,7 @@ export const agregarProductoAlPedido = async (req, res) => {
     } else {
       const nuevoPedido = new Pedido({
         mesa: mesa._id,
+        sesionId: sesionActiva._id,  // ✅ Asociar el pedido a la sesión activa
         productos,
         estado: 'pendiente',
         total: productos.reduce((sum, p) => sum + p.total, 0),
@@ -136,7 +144,6 @@ export const agregarProductoAlPedido = async (req, res) => {
 
     req.io.emit('nuevoPedido', pedidoModificado);
 
-    // Buscar nombres de los productos en la base de datos
     const idsProductos = productos.map(p => p.producto);
     const productosDB = await Producto.find({ _id: { $in: idsProductos } });
 
@@ -156,12 +163,14 @@ export const agregarProductoAlPedido = async (req, res) => {
       }),
       total: productos.reduce((sum, p) => sum + p.total, 0),
     };
+
     res.json(datosRespuesta);
   } catch (error) {
     console.error('Error al agregar producto:', error);
     res.status(500).json({ error: 'Error al agregar producto' });
   }
 };
+
 
 // Obtener todos los pedidos
 export const obtenerPedidos = async (req, res) => {
@@ -193,7 +202,6 @@ export const obtenerPedidosId = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener el pedido' });
   }
 };
-
 export const obtenerPedidoPorMesaId = async (req, res) => {
   const { mesaId } = req.params;
 
@@ -210,22 +218,30 @@ export const obtenerPedidoPorMesaId = async (req, res) => {
       return res.status(400).json({ error: 'La mesa no está abierta' });
     }
 
-    // Buscar pedido abierto en esa mesa
-    const pedido = await Pedido.findOne({ mesa: mesaId})
+    // Buscar la sesión activa de la mesa
+    const sesionActiva = await SesionMesa.findOne({ mesa: mesa._id, estado: 'activa' });
+    if (!sesionActiva) {
+      console.log('🔴 No se encontró una sesión activa para la mesa:', mesaId);
+      return res.status(404).json({ error: 'No se encontró una sesión activa para esta mesa' });
+    }
+
+    // Buscar pedidos asociados a la mesa y a la sesión activa
+    const pedidos = await Pedido.find({ mesa: mesaId, sesionId: sesionActiva._id })
       .populate('mesa')
       .populate('productos.producto');
 
-    if (!pedido) {
-      console.log('🔴 No se encontró un pedido abierto para la mesa:', mesaId);
-      return res.status(404).json({ error: 'No se encontró un pedido abierto para esta mesa' });
+    if (!pedidos || pedidos.length === 0) {
+      console.log('🔴 No se encontraron pedidos en la sesión activa para la mesa:', mesaId);
+      return res.status(404).json({ error: 'No se encontraron pedidos en la sesión activa para esta mesa' });
     }
 
-    res.status(200).json(pedido);
+    res.status(200).json(pedidos);
   } catch (error) {
-    console.error('🔴 Error al obtener el pedido de la mesa:', error);
-    res.status(500).json({ error: 'Error al obtener el pedido de la mesa' });
+    console.error('🔴 Error al obtener los pedidos de la mesa:', error);
+    res.status(500).json({ error: 'Error al obtener los pedidos de la mesa' });
   }
 };
+
 
 // Obtener pedidos pendientes
 export const obtenerPedidosPendientes = async (req, res) => {

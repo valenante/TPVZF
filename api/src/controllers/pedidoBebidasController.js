@@ -4,6 +4,7 @@ import Mesa from '../models/Mesa.js';
 import Venta from '../models/Ventas.js';
 import Cart from '../models/Cart.js';
 import Producto from '../models/Producto.js';
+import SesionMesa from '../models/SesionMesa.js';
 
 export const crearPedido = async (req, res) => {
   try {
@@ -273,7 +274,8 @@ export const verificarPedidosMesa = async (req, res) => {
     console.error('Error al verificar pedidos de la mesa:', error);
     res.status(500).json({ error: 'Error al verificar pedidos de la mesa.' });
   }
-};export const agregarProductoBebida = async (req, res) => {
+};
+export const agregarProductoBebida = async (req, res) => {
   const { mesaId } = req.params;
   const { productos } = req.body;
 
@@ -290,6 +292,12 @@ export const verificarPedidosMesa = async (req, res) => {
     const mesa = await Mesa.findById(mesaId).populate('pedidosBebidas');
     if (!mesa) return res.status(404).json({ error: 'Mesa no encontrada' });
 
+    // ✅ Buscar la sesión activa de la mesa
+    const sesionActiva = await SesionMesa.findOne({ mesa: mesa._id, estado: 'activa' });
+    if (!sesionActiva) {
+      return res.status(400).json({ error: 'No se encontró una sesión activa para esta mesa.' });
+    }
+
     let pedidoModificado;
     const pedidoExistente = mesa.pedidosBebidas.find(p => p.estado === 'pendiente');
 
@@ -302,6 +310,7 @@ export const verificarPedidosMesa = async (req, res) => {
     } else {
       const nuevoPedidoBebida = new PedidoBebida({
         mesa: mesa._id,
+        sesionId: sesionActiva._id, // ✅ Asociar a la sesión activa
         productos,
         estado: 'pendiente',
         total: productos.reduce((sum, p) => sum + p.total, 0),
@@ -335,6 +344,7 @@ export const verificarPedidosMesa = async (req, res) => {
       }),
       total: productos.reduce((sum, p) => sum + p.total, 0),
     };
+
     res.json(datosRespuesta);
   } catch (error) {
     console.error('Error al agregar bebida:', error);

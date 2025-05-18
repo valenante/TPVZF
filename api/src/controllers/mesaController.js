@@ -5,6 +5,7 @@ import Pedido from '../models/Pedido.js';
 import PedidoBebidas from '../models/PedidoBebidas.js';
 import Caja from '../models/Caja.js';
 import Comensal from '../models/Comensal.js';
+import SesionMesa from '../models/SesionMesa.js';
 import { v4 as uuidv4 } from 'uuid'; // Generador de UUID
 import { registrarFacturaConHash } from '../services/registroFacturaService.js';
 import EventoFactura from '../models/EventosFactura.js';
@@ -127,18 +128,25 @@ export const obtenerMesaPorId = async (req, res) => {
 // Abrir una nueva mesa
 export const abrirMesa = async (req, res) => {
   const { numero } = req.body;
+
   try {
-    // Verificar si la mesa ya está abierta
     const mesaExistente = await Mesa.findOne({ numero, estado: 'abierta' });
     if (mesaExistente) {
       return res.status(400).json({ error: 'La mesa ya está abierta' });
     }
 
-    // Crear una nueva mesa activa
-    const nuevaMesa = new Mesa({ numero });
+    const nuevaMesa = new Mesa({ numero, estado: 'abierta' });
     await nuevaMesa.save();
 
-    // Emitir evento de apertura de mesa
+    const nuevaSesion = new SesionMesa({
+      mesa: nuevaMesa._id,
+      estado: 'activa',
+    });
+    await nuevaSesion.save();
+
+    nuevaMesa.sesionActiva = nuevaSesion._id;
+    await nuevaMesa.save();
+
     req.io.emit('mesaAbierta', nuevaMesa);
 
     res.status(201).json(nuevaMesa);
@@ -148,10 +156,11 @@ export const abrirMesa = async (req, res) => {
   }
 };
 
+
 // Reabrir una mesa existente y actualizar comensales
 export const abrirMesaCamarero = async (req, res) => {
   const { id } = req.params;
-  const { comensales } = req.body; // ✅ Recibir comensales del body
+  const { comensales } = req.body;
 
   try {
     const mesa = await Mesa.findById(id);
@@ -164,7 +173,15 @@ export const abrirMesaCamarero = async (req, res) => {
     }
 
     mesa.estado = 'abierta';
-    mesa.comensales = comensales || mesa.comensales || 1; // ✅ Guardar comensales o mantener el actual
+    mesa.comensales = comensales || mesa.comensales || 1;
+
+    const nuevaSesion = new SesionMesa({
+      mesa: mesa._id,
+      estado: 'activa',
+    });
+    await nuevaSesion.save();
+
+    mesa.sesionActiva = nuevaSesion._id;
     await mesa.save();
 
     req.io.emit('mesaAbierta', mesa);
@@ -298,12 +315,21 @@ export const cerrarMesa = async (req, res) => {
 
     await eventoFactura.save();
 
+    // ✅ Cerrar la sesión activa de la mesa si existe
+    const sesionActiva = await SesionMesa.findOne({ mesa: mesa._id, estado: 'activa' });
+    if (sesionActiva) {
+      sesionActiva.estado = 'cerrada';
+      sesionActiva.cierre = new Date();
+      await sesionActiva.save();
+    }
+
     mesa.estado = 'cerrada';
     mesa.total = 0;
     mesa.pedidos = [];
     mesa.pedidosBebidas = [];
     mesa.comensales = null;
     mesa.tokenLider = null;
+    mesa.sesionId = null;  // ✅ Limpiar la sesión
     await mesa.save();
 
     // ✅ Devolver datos de impresión al Frontend

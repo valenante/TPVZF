@@ -22,6 +22,7 @@ const mesaSchema = new Schema({
     default: 1, // ✅ Por defecto 1 si no se especifica
     min: 1, // ✅ No puede ser menor que 1
   },
+  sesionId: { type: String, default: null },  // Nueva sesión cada vez que se abre la mesa
 });
 
 export default model('Mesa', mesaSchema);
