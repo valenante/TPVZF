@@ -2,17 +2,12 @@ import React from "react";
 import "./ModalProductosCategoria.css";
 
 const ModalProductosCategoria = ({ categoria, productos, onClose, onProductoClick, productosPedidoMesa = [] }) => {
-const contarPedidos = (productoId) => {
-  const coincidencias = productosPedidoMesa.filter(p => {
-    const idProducto = p.producto?._id?.toString() || p.producto?.toString();
-    return idProducto === productoId;
-  });
-
-  const cantidad = coincidencias.reduce((acc, p) => acc + p.cantidad, 0);
-  console.log(`Producto ID: ${productoId} - Cantidad pedida: ${cantidad}`);
+ const contarPedidos = (productoId) => {
+  const coincidencias = productosPedidoMesa
+    .filter(p => p && p._id?.toString() === productoId);
+  const cantidad = coincidencias.reduce((acc, p) => acc + (p.cantidad || 0), 0);
   return cantidad;
 };
-
 
   return (
     <div className="modal-categoria">
@@ -20,7 +15,7 @@ const contarPedidos = (productoId) => {
         <h2>{categoria}</h2>
         <ul>
           {productos.map(p => {
-            const cantidadPedido = contarPedidos(p._id);
+            const cantidadPedido = contarPedidos(p._id?.toString());
 
             return (
               <li key={p._id} onClick={() => onProductoClick(p)} className="producto-item">
