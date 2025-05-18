@@ -143,13 +143,15 @@ const RightBar = ({ mesaId }) => {
     // Obtener productos ya pedidos de la mesa
     try {
       const { data } = await api.get(`/pedidos/mesa/${mesaId}`);
-      const productosMesa = data.productos || [];
+
+      // Combina productos de todos los pedidos
+      const productosMesa = data.flatMap(pedido => pedido.productos) || [];
+
       setProductosYaPedidos(productosMesa);
     } catch (error) {
       console.error("Error al obtener el pedido de la mesa:", error);
       setProductosYaPedidos([]);
     }
-
     setMostrarModalCategoria(true);
   };
 
