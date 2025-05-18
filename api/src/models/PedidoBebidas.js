@@ -7,6 +7,7 @@ const PedidoBebidasSchema = new Schema({
   comensales: { type: Number },
   estado: { type: String, enum: ['pendiente', 'listo'], default: 'pendiente' },
   fecha: { type: Date, default: Date.now },
+  sesionId: { type: Schema.Types.ObjectId, ref: 'SesionMesa' }, // ✅ Sesión de la mesa
   productos: [
     {
       producto: {

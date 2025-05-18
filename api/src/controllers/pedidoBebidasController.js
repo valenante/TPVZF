@@ -275,6 +275,7 @@ export const verificarPedidosMesa = async (req, res) => {
     res.status(500).json({ error: 'Error al verificar pedidos de la mesa.' });
   }
 };
+
 export const agregarProductoBebida = async (req, res) => {
   const { mesaId } = req.params;
   const { productos } = req.body;

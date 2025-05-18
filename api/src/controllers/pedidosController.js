@@ -245,9 +245,13 @@ export const obtenerPedidoPorMesaId = async (req, res) => {
       tipo: 'bebida'
     })));
 
+    console.log('Productos bebidas:', productosBebidas);
+
     const productosUnificados = [...productosComida, ...productosBebidas];
 
-    console.log('Productos unificados:', productosUnificados);
+    console.log('🟢 Productos Comida:', productosComida);
+    console.log('🟢 Productos Bebidas:', productosBebidas);
+
 
     res.status(200).json(productosUnificados);
 
