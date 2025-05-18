@@ -145,9 +145,9 @@ const RightBar = ({ mesaId }) => {
       const { data } = await api.get(`/pedidos/mesa/${mesaId}`);
 
       // Combina productos de todos los pedidos
-      const productosMesa = data.flatMap(pedido => pedido.productos) || [];
-
+      const productosMesa = data || [];
       setProductosYaPedidos(productosMesa);
+
     } catch (error) {
       console.error("Error al obtener el pedido de la mesa:", error);
       setProductosYaPedidos([]);
