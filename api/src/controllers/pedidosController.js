@@ -179,6 +179,7 @@ export const obtenerPedidos = async (req, res) => {
 // Obtener un pedido por ID
 export const obtenerPedidosId = async (req, res) => {
   const { id } = req.params;
+
   try {
     const pedido = await Pedido.findById(id)
       .populate('mesa')
@@ -190,6 +191,24 @@ export const obtenerPedidosId = async (req, res) => {
   } catch (error) {
     console.error('Error al obtener el pedido:', error);
     res.status(500).json({ error: 'Error al obtener el pedido' });
+  }
+};
+export const obtenerPedidoPorMesaId = async (req, res) => {
+  const { mesaId } = req.params;  // Usar el nombre que pones en la ruta
+  try {
+    const pedido = await Pedido.findOne({ mesa: mesaId})
+      .populate('mesa')
+      .populate('productos.producto');
+
+    if (!pedido) {
+      console.log('🔴 No se encontró un pedido abierto para la mesa:', mesaId);
+      return res.status(404).json({ error: 'No se encontró un pedido abierto para esta mesa' });
+    }
+
+    res.status(200).json(pedido);
+  } catch (error) {
+    console.error('🔴 Error al obtener el pedido de la mesa:', error);
+    res.status(500).json({ error: 'Error al obtener el pedido de la mesa' });
   }
 };
 

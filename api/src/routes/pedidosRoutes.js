@@ -11,6 +11,7 @@ import {
   actualizarPedido,
   actualizarProducto,
   eliminarPedido,
+  obtenerPedidoPorMesaId,
 } from '../controllers/pedidosController.js';
 import verificarLider from '../middlewares/verificarLider.js';
 
@@ -28,6 +29,9 @@ router.get('/finalizados/finalizados', obtenerPedidosFinalizados);
 
 //Obtener pedidos finalizados por mesa
 router.get('/pedidos/estado/:numeroMesa', verificarPedidosMesa);
+
+// Obtener pedidos por mesa
+router.get('/mesa/:mesaId', obtenerPedidoPorMesaId);
 
 // Crear un nuevo pedido
 router.post('/', crearPedido, verificarLider);

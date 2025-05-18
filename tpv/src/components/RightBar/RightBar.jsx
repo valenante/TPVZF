@@ -24,7 +24,9 @@ const RightBar = ({ mesaId }) => {
   const [resumen, setResumen] = useState({});
   const [mensajePedido, setMensajePedido] = useState("");
   const [carritoBebidas, setCarritoBebidas] = useState([]);
+  const [productosYaPedidos, setProductosYaPedidos] = useState([]);
   const [carritoSecciones, setCarritoSecciones] = useState({
+
     entrante: [],
     medio: [],
     final: [],
@@ -133,8 +135,21 @@ const RightBar = ({ mesaId }) => {
 
   const handleClickCategoria = async (categoria) => {
     setCategoriaSeleccionada(categoria);
-    const productosCargados = await fetchProducts(categoria); // ✅ Asegúrate que fetchProducts devuelva los productos cargados
+
+    // Cargar productos de la categoría
+    const productosCargados = await fetchProducts(categoria);
     setProductosCategoriaActual(productosCargados);
+
+    // Obtener productos ya pedidos de la mesa
+    try {
+      const { data } = await api.get(`/pedidos/mesa/${mesaId}`);
+      const productosMesa = data.productos || [];
+      setProductosYaPedidos(productosMesa);
+    } catch (error) {
+      console.error("Error al obtener el pedido de la mesa:", error);
+      setProductosYaPedidos([]);
+    }
+
     setMostrarModalCategoria(true);
   };
 
@@ -177,6 +192,7 @@ const RightBar = ({ mesaId }) => {
         <ModalProductosCategoria
           categoria={categoriaSeleccionada}
           productos={productosCategoriaActual}
+          productosPedidoMesa={productosYaPedidos} // ✅ Aqu
           onClose={() => setMostrarModalCategoria(false)}
           onProductoClick={(producto) => {
             setMostrarModalCategoria(false);
