@@ -193,9 +193,24 @@ export const obtenerPedidosId = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener el pedido' });
   }
 };
+
 export const obtenerPedidoPorMesaId = async (req, res) => {
-  const { mesaId } = req.params;  // Usar el nombre que pones en la ruta
+  const { mesaId } = req.params;
+
   try {
+    // Verificar que la mesa existe y está abierta
+    const mesa = await Mesa.findById(mesaId);
+    if (!mesa) {
+      console.log('🔴 Mesa no encontrada:', mesaId);
+      return res.status(404).json({ error: 'Mesa no encontrada' });
+    }
+
+    if (mesa.estado !== 'abierta') {
+      console.log('🔴 La mesa no está abierta:', mesaId);
+      return res.status(400).json({ error: 'La mesa no está abierta' });
+    }
+
+    // Buscar pedido abierto en esa mesa
     const pedido = await Pedido.findOne({ mesa: mesaId})
       .populate('mesa')
       .populate('productos.producto');

@@ -145,20 +145,6 @@ const CerrarCajaModal = ({ onClose }) => {
             </p>
 
             <div className="acciones-caja--cerrar-caja">
-              <div className="botones-modificar--cerrar-caja">
-                <button
-                  onClick={() => setAccion("retirar")}
-                  className="boton-retirar--cerrar-caja"
-                >
-                  Retirar Dinero
-                </button>
-                <button
-                  onClick={() => setAccion("integrar")}
-                  className="boton-integrar--cerrar-caja"
-                >
-                  Integrar Dinero
-                </button>
-              </div>
               {accion && (
                 <>
                   <input
