@@ -28,6 +28,7 @@ import configuracionesReservasRoutes from "./src/routes/configuracionesReservasR
 import reservasRoutes from "./src/routes/reservasRoutes.js"; // ✅ Importamos las rutas de reservas
 import disponibilidadRoutes from "./src/routes/disponibilidadRoutes.js"; // ✅ Importamos las rutas de disponibilidad
 import facturasRoutes from "./src/routes/facturasRoutes.js"; // ✅ Importamos las rutas de facturas
+import imprimirRoutes from "./src/routes/imprimirRoutes.js"; // ✅ Importamos las rutas de impresión
 
 // Configurar dotenv
 config();
@@ -106,6 +107,7 @@ app.use("/api/reservasConfiguracion", configuracionesReservasRoutes); // ✅ Reg
 app.use("/api/reservas", reservasRoutes); // ✅ Registrar las rutas de reservas
 app.use("/api/disponibilidad", disponibilidadRoutes); // ✅ Registrar las rutas de disponibilidad
 app.use("/api/facturas", facturasRoutes); // ✅ Registrar las rutas de facturas
+app.use("/api/imprimir", imprimirRoutes); // ✅ Registrar las rutas de impresión
 
 // Middlewares de error
 app.use(notFoundHandler);

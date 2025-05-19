@@ -63,13 +63,12 @@ const CarritoModal = ({ cerrarModal }) => {
   };
 
   const enviarPedidoAImpresora = async (mesaNumero, comensales, productos, total, tipo = 'platos') => {
-    const rutaImpresion =
-      tipo === 'bebidas'
-        ? 'http://localhost:4000/imprimir-bebidas'
-        : 'http://localhost:4000/imprimir';
+    const rutaBackend = tipo === 'bebidas'
+      ? '/imprimir/imprimir-bebidas'
+      : '/imprimir/imprimir';
 
     try {
-      await axios.post(rutaImpresion, {
+      await api.post(rutaBackend, {
         mesaNumero,
         comensales,
         productos,
