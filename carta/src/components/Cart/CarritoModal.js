@@ -65,8 +65,8 @@ const CarritoModal = ({ cerrarModal }) => {
   const enviarPedidoAImpresora = async (mesaNumero, comensales, productos, total, tipo = 'platos') => {
     const rutaImpresion =
       tipo === 'bebidas'
-        ? 'http://192.168.1.150:4000/imprimir-bebidas'
-        : 'http://192.168.1.150:4000/imprimir';
+        ? 'http://localhost:4000/imprimir-bebidas'
+        : 'http://localhost:4000/imprimir';
 
     try {
       await axios.post(rutaImpresion, {
