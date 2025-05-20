@@ -88,7 +88,6 @@ const RightBar = ({ mesaId }) => {
         }));
 
         const { data } = await api.post(`/pedidos/${mesaId}/agregar-producto`, { productos: payloadPlatos });
-        await enviarAImpresora(data, 'platos');
       }
 
       if (carritoBebidas.length > 0) {
@@ -105,7 +104,6 @@ const RightBar = ({ mesaId }) => {
         }));
 
         const { data } = await api.post(`/pedidosBebidas/${mesaId}/agregar-producto`, { productos: payloadBebidas });
-        await enviarAImpresora(data, 'bebidas');
       }
 
       setCarritoSecciones({ entrante: [], medio: [], final: [] });
@@ -116,20 +114,6 @@ const RightBar = ({ mesaId }) => {
       setMensajeAlerta({ tipo: "error", mensaje: "Error al enviar el pedido." });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Función para enviar a la impresora
-  const enviarAImpresora = async (datos, tipo = 'platos') => {
-    const rutaImpresion =
-      tipo === 'bebidas'
-        ? 'http://localhost:4000/imprimir-bebidas'
-        : 'http://localhost:4000/imprimir';
-
-    try {
-      await axios.post(rutaImpresion, datos);
-    } catch (error) {
-      console.error(`Error al imprimir el pedido de ${tipo}:`, error.message);
     }
   };
 

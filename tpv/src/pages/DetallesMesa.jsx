@@ -115,11 +115,11 @@ const DetalleMesa = () => {
   };
 
   const enviarAFacturaPrinter = async (datosImpresion) => {
-    const rutaImpresion = 'https://localhost:4000/imprimir-factura';
+    console.log("Datos de impresión:", datosImpresion);
     try {
-      await axios.post(rutaImpresion, datosImpresion);
+      await api.post(`/imprimir/${mesa._id}/imprimir-factura`, datosImpresion);
     } catch (error) {
-      console.error(`Error al imprimir la factura:`, error.message);
+      console.error('Error al imprimir la factura:', error);
     }
   };
 

@@ -113,7 +113,7 @@ export const agregarProductoAlPedido = async (req, res) => {
     const mesa = await Mesa.findById(mesaId).populate('pedidos');
     if (!mesa) return res.status(404).json({ error: 'Mesa no encontrada' });
 
-    // ✅ Buscar la sesión activa
+    // Buscar la sesión activa
     const sesionActiva = await SesionMesa.findOne({ mesa: mesa._id, estado: 'activa' });
     if (!sesionActiva) {
       return res.status(400).json({ error: 'La mesa no tiene una sesión activa. Abre la mesa antes de agregar productos.' });
@@ -131,7 +131,7 @@ export const agregarProductoAlPedido = async (req, res) => {
     } else {
       const nuevoPedido = new Pedido({
         mesa: mesa._id,
-        sesionId: sesionActiva._id,  // ✅ Asociar el pedido a la sesión activa
+        sesionId: sesionActiva._id,
         productos,
         estado: 'pendiente',
         total: productos.reduce((sum, p) => sum + p.total, 0),
@@ -165,13 +165,22 @@ export const agregarProductoAlPedido = async (req, res) => {
       total: productos.reduce((sum, p) => sum + p.total, 0),
     };
 
+    // Aquí llamamos al servidor impresión para imprimir el pedido (platos)
+    try {
+      const IMPRESION_SERVER = 'http://100.91.21.52:4000'; // Cambia a la IP correcta de tu servidor impresión
+      await axios.post(`${IMPRESION_SERVER}/imprimir`, datosRespuesta);
+      console.log('Pedido enviado a la impresora correctamente');
+    } catch (error) {
+      console.error('Error al enviar pedido a la impresora:', error.message);
+      // No interrumpimos el flujo, solo logueamos el error
+    }
+
     res.json(datosRespuesta);
   } catch (error) {
     console.error('Error al agregar producto:', error);
     res.status(500).json({ error: 'Error al agregar producto' });
   }
 };
-
 
 // Obtener todos los pedidos
 export const obtenerPedidos = async (req, res) => {

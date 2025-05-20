@@ -153,7 +153,7 @@ export const rectificarFactura = async (req, res) => {
     };
 
     await axios.post(
-      'http://localhost:4000/imprimir-factura-rectificativa',
+      'http://100.91.21.52:4000/imprimir-factura-rectificativa',
       impresionData
     );
 

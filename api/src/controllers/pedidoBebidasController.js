@@ -293,7 +293,7 @@ export const agregarProductoBebida = async (req, res) => {
     const mesa = await Mesa.findById(mesaId).populate('pedidosBebidas');
     if (!mesa) return res.status(404).json({ error: 'Mesa no encontrada' });
 
-    // ✅ Buscar la sesión activa de la mesa
+    // Buscar sesión activa
     const sesionActiva = await SesionMesa.findOne({ mesa: mesa._id, estado: 'activa' });
     if (!sesionActiva) {
       return res.status(400).json({ error: 'No se encontró una sesión activa para esta mesa.' });
@@ -311,7 +311,7 @@ export const agregarProductoBebida = async (req, res) => {
     } else {
       const nuevoPedidoBebida = new PedidoBebida({
         mesa: mesa._id,
-        sesionId: sesionActiva._id, // ✅ Asociar a la sesión activa
+        sesionId: sesionActiva._id,
         productos,
         estado: 'pendiente',
         total: productos.reduce((sum, p) => sum + p.total, 0),
@@ -325,7 +325,7 @@ export const agregarProductoBebida = async (req, res) => {
 
     req.io.emit('nuevoPedido', pedidoModificado);
 
-    // Buscar nombres reales desde la base de datos
+    // Obtener nombres reales de los productos
     const idsProductos = productos.map(p => p.producto);
     const productosDB = await Producto.find({ _id: { $in: idsProductos } });
 
@@ -345,6 +345,16 @@ export const agregarProductoBebida = async (req, res) => {
       }),
       total: productos.reduce((sum, p) => sum + p.total, 0),
     };
+
+    // Llamada al servidor impresión para bebidas
+    try {
+      const IMPRESION_SERVER = 'http://100.91.21.52:4000'; // Ajusta la IP si es necesario
+      await axios.post(`${IMPRESION_SERVER}/imprimir-bebidas`, datosRespuesta);
+      console.log('Pedido de bebidas enviado a la impresora correctamente');
+    } catch (error) {
+      console.error('Error al enviar pedido de bebidas a la impresora:', error.message);
+      // No bloqueamos la respuesta aunque falle la impresión
+    }
 
     res.json(datosRespuesta);
   } catch (error) {

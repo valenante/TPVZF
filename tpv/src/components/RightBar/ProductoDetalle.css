@@ -21,7 +21,7 @@
   padding: 20px;
   max-width: 500px;
   width: 85%;
-  height: 80%;
+  height: auto;
   max-height: 80vh;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   /* Sombra */
@@ -147,6 +147,21 @@
 .mensaje-producto-textarea {
   width: auto;
 }
+
+.select-precio--productoDetalle,
+.select-tipoPlato--productoDetalle,
+.select-acompanante--productoDetalle {
+  width: 100%;
+  padding: 14px 12px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  margin: 1vh 0;
+  border-radius: 8px;
+  appearance: none;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
 
 .modal-botones--productoDetalle {
   display: flex;

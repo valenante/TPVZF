@@ -324,14 +324,18 @@ export const cerrarMesa = async (req, res) => {
       await sesionActiva.save();
     }
 
-    mesa.estado = 'cerrada';
-    mesa.total = 0;
-    mesa.pedidos = [];
-    mesa.pedidosBebidas = [];
-    mesa.comensales = null;
-    mesa.tokenLider = null;
-    mesa.sesionActiva = null;  // ✅ Limpiar la sesión
-    await mesa.save();
+    await Mesa.updateOne(
+      { _id: id },
+      {
+        estado: 'cerrada',
+        total: 0,
+        pedidos: [],
+        pedidosBebidas: [],
+        comensales: null,
+        tokenLider: null,
+        sesionActiva: null,
+      }
+    );
 
     // ✅ Devolver datos de impresión al Frontend
     res.status(200).json({
