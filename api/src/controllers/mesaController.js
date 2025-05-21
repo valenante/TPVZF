@@ -598,23 +598,19 @@ export const registrarComensal = async (req, res) => {
     res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };
-
 export const transferirProducto = async (req, res) => {
-  const { productoId, pedidoId, desde, hacia, tipoPedido } = req.body;
+  const { productoId, pedidoId, desde, hacia, tipoPedido, cantidad } = req.body;
 
-  if (!productoId || !pedidoId || !desde || !hacia || !tipoPedido) {
-    console.error('❌ Datos incompletos');
-    return res.status(400).json({ error: 'Debes proporcionar productoId, pedidoId, desde, hacia y tipoPedido.' });
+  if (!productoId || !pedidoId || !desde || !hacia || !tipoPedido || !cantidad) {
+    return res.status(400).json({ error: 'Faltan datos: productoId, pedidoId, desde, hacia, tipoPedido y cantidad son obligatorios.' });
   }
 
   try {
     const campoPopulate = tipoPedido === 'bebida' ? 'pedidosBebidas' : 'pedidos';
-
     const mesaOrigen = await Mesa.findById(desde).populate(campoPopulate);
     const mesaDestino = await Mesa.findById(hacia).populate(campoPopulate);
 
     if (!mesaOrigen || !mesaDestino) {
-      console.error('❌ Mesa origen o destino no encontrada.');
       return res.status(404).json({ error: 'Mesa origen o destino no encontrada.' });
     }
 
@@ -623,27 +619,43 @@ export const transferirProducto = async (req, res) => {
 
     const pedidoOrigen = pedidosOrigen.find(p => p._id.toString() === pedidoId);
     if (!pedidoOrigen) {
-      console.error('❌ Pedido origen no encontrado.');
       return res.status(404).json({ error: 'Pedido origen no encontrado.' });
     }
 
     const productoIndex = pedidoOrigen.productos.findIndex(p => p._id.toString() === productoId);
     if (productoIndex === -1) {
-      console.error('❌ Producto no encontrado en el pedido origen.');
       return res.status(404).json({ error: 'Producto no encontrado en el pedido origen.' });
     }
 
-    const productoMovido = pedidoOrigen.productos.splice(productoIndex, 1)[0];
-    pedidoOrigen.total -= productoMovido.total || 0;
-    mesaOrigen.total -= productoMovido.total || 0;
+    const productoOriginal = pedidoOrigen.productos[productoIndex];
 
-    // ✅ Seleccionar el modelo correcto para guardar los cambios
+    // Validar cantidad
+    if (cantidad > productoOriginal.cantidad) {
+      return res.status(400).json({ error: 'Cantidad a transferir mayor que la disponible.' });
+    }
+
+    const precioUnitario = (productoOriginal.total || 0) / productoOriginal.cantidad;
+    const totalTransferido = +(precioUnitario * cantidad).toFixed(2);
+
+    // Restar cantidad al producto original
+    if (productoOriginal.cantidad === cantidad) {
+      pedidoOrigen.productos.splice(productoIndex, 1); // eliminar si se transfiere todo
+    } else {
+      productoOriginal.cantidad -= cantidad;
+      productoOriginal.total = +(precioUnitario * productoOriginal.cantidad).toFixed(2);
+    }
+
+    pedidoOrigen.total = +(pedidoOrigen.total - totalTransferido).toFixed(2);
+    mesaOrigen.total = +(mesaOrigen.total - totalTransferido).toFixed(2);
+
+    // Guardar pedido origen
     const ModeloPedido = tipoPedido === 'bebida' ? PedidoBebidas : Pedido;
     await ModeloPedido.findByIdAndUpdate(pedidoOrigen._id, {
       productos: pedidoOrigen.productos,
-      total: pedidoOrigen.total
+      total: pedidoOrigen.total,
     });
 
+    // Buscar o crear pedido destino
     let pedidoDestino = pedidosDestino.find(p => p.estado === 'pendiente');
     if (!pedidoDestino) {
       pedidoDestino = new ModeloPedido({
@@ -662,15 +674,23 @@ export const transferirProducto = async (req, res) => {
       pedidoDestino = await ModeloPedido.findById(pedidoDestino._id);
     }
 
-    pedidoDestino.productos.push(productoMovido);
-    pedidoDestino.total += productoMovido.total || 0;
-    mesaDestino.total += productoMovido.total || 0;
+    // Crear copia del producto con cantidad transferida
+    const productoTransferido = {
+      ...productoOriginal.toObject(),
+      _id: undefined, // para que Mongo genere uno nuevo
+      cantidad: cantidad,
+      total: totalTransferido,
+    };
+
+    pedidoDestino.productos.push(productoTransferido);
+    pedidoDestino.total = +(pedidoDestino.total + totalTransferido).toFixed(2);
+    mesaDestino.total = +(mesaDestino.total + totalTransferido).toFixed(2);
 
     await pedidoDestino.save();
     await mesaOrigen.save();
     await mesaDestino.save();
 
-    req.io.emit('productoTransferido', { desde, hacia, productoId, pedidoId, tipoPedido });
+    req.io.emit('productoTransferido', { desde, hacia, productoId, pedidoId, tipoPedido, cantidad });
 
     return res.json({ mensaje: 'Producto transferido con éxito.' });
 

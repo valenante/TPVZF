@@ -1421,3 +1421,23 @@
 [2025-05-20 13:13:17] INFO: Servidor escuchando en el puerto 3000
 [2025-05-20 13:18:35] INFO: Servidor escuchando en el puerto 3000
 [2025-05-20 13:25:56] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-20T11:25:56.664Z
+[2025-05-21 13:09:48] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 13:12:34] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-21T11:12:34.555Z
+[2025-05-21 13:13:08] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.129, Hora: 2025-05-21T11:13:08.061Z
+[2025-05-21 13:19:56] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-21T11:19:56.332Z
+[2025-05-21 13:20:46] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 13:24:46] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-21T11:24:46.047Z
+[2025-05-21 13:27:54] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-21T11:27:54.283Z
+[2025-05-21 13:29:21] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 13:35:38] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 13:44:54] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-21T11:44:54.499Z
+[2025-05-21 13:49:35] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 13:52:54] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 13:53:06] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-21T11:53:06.988Z
+[2025-05-21 13:53:42] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 13:54:10] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 13:56:16] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 13:57:26] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 14:00:01] INFO: Servidor escuchando en el puerto 3000
+[2025-05-21 14:02:13] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-21T12:02:13.643Z
+[2025-05-21 14:11:09] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-21T12:11:09.070Z

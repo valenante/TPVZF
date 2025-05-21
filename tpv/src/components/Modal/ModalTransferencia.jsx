@@ -8,6 +8,7 @@ export default function ModalTransferirArticulos({ mesaOrigen, onClose }) {
     const [mesaDestino, setMesaDestino] = useState(null);
     const [productosOrigen, setProductosOrigen] = useState([]);
     const [productosDestino, setProductosDestino] = useState([]);
+    const [productosMap, setProductosMap] = useState({});
 
     useEffect(() => {
         const cargarProductosDetalles = async () => {
@@ -20,17 +21,18 @@ export default function ModalTransferirArticulos({ mesaOrigen, onClose }) {
                     params: { ids: productosIds.join(',') }
                 });
 
-                const productosMap = productosData.reduce((acc, producto) => {
+                const map = productosData.reduce((acc, producto) => {
                     acc[producto._id] = producto;
                     return acc;
                 }, {});
+
+                setProductosMap(map); // ✅ esto guarda el map en el estado
 
                 const productosPedidos = mesaOrigen.pedidos.flatMap(pedido =>
                     pedido.productos.map(prod => ({
                         ...prod,
                         pedidoId: pedido._id,
                         tipoPedido: 'comida',
-                        displayNombre: `${prod.cantidad} x ${productosMap[prod.producto]?.nombre || 'Producto desconocido'}`,
                     }))
                 );
 
@@ -39,10 +41,9 @@ export default function ModalTransferirArticulos({ mesaOrigen, onClose }) {
                         ...prod,
                         pedidoId: pedido._id,
                         tipoPedido: 'bebida',
-                        displayNombre: `${prod.cantidad} x ${prod.producto.nombre || 'Bebida'}`,
                     }))
                 );
-                
+
                 setProductosOrigen([...productosPedidos, ...productosBebidas]);
             }
         };
@@ -66,15 +67,62 @@ export default function ModalTransferirArticulos({ mesaOrigen, onClose }) {
 
         if (sourceId === destId) return;
 
+        // ORIGEN -> DESTINO (transferencia)
         if (sourceId === "origen" && destId === "destino" && mesaDestino) {
             const movedItem = productosOrigen[result.source.index];
-            setProductosOrigen(prev => prev.filter((_, idx) => idx !== result.source.index));
-            setProductosDestino(prev => [...prev, movedItem]);
-        } else if (sourceId === "destino" && destId === "origen") {
-            const movedItem = productosDestino[result.source.index];
-            setProductosDestino(prev => prev.filter((_, idx) => idx !== result.source.index));
-            setProductosOrigen(prev => [...prev, movedItem]);
+
+            // 1. Si cantidad > 1, clonar una unidad y reducir cantidad
+            if (movedItem.cantidad > 1) {
+                const actualizado = { ...movedItem, cantidad: movedItem.cantidad - 1 };
+                const clonado = { ...movedItem, cantidad: 1 };
+
+                setProductosOrigen(prev => {
+                    const nuevo = [...prev];
+                    nuevo.splice(result.source.index, 1, actualizado);
+                    return nuevo;
+                });
+
+                setProductosDestino(prev => [...prev, clonado]);
+            } else {
+                // Si cantidad === 1, mover completamente
+                const item = productosOrigen[result.source.index];
+                setProductosOrigen(prev => prev.filter((_, idx) => idx !== result.source.index));
+                setProductosDestino(prev => [...prev, item]);
+            }
         }
+
+        // DESTINO -> ORIGEN (revertir transferencia)
+        if (sourceId === "destino" && destId === "origen") {
+            const movedItem = productosDestino[result.source.index];
+            const precioUnitario = movedItem.total / movedItem.cantidad;
+
+            // Buscar si ya existe uno igual en origen
+            const indexExistente = productosOrigen.findIndex(p =>
+                p.producto === movedItem.producto &&
+                p.pedidoId === movedItem.pedidoId &&
+                p.tipoPedido === movedItem.tipoPedido &&
+                JSON.stringify(p.ingredientesEliminados || []) === JSON.stringify(movedItem.ingredientesEliminados || []) &&
+                JSON.stringify(p.opcionesPersonalizables || []) === JSON.stringify(movedItem.opcionesPersonalizables || [])
+            );
+
+            if (indexExistente !== -1) {
+                // Ya existe: sumar cantidad y total
+                setProductosOrigen(prev => {
+                    const nuevo = [...prev];
+                    const original = nuevo[indexExistente];
+                    original.cantidad += movedItem.cantidad;
+                    original.total = +(original.total + movedItem.total).toFixed(2);
+                    return nuevo;
+                });
+            } else {
+                // No existe: agregar como nuevo
+                setProductosOrigen(prev => [...prev, movedItem]);
+            }
+
+            // Quitar del destino
+            setProductosDestino(prev => prev.filter((_, idx) => idx !== result.source.index));
+        }
+
     };
 
     const confirmarTransferencia = async () => {
@@ -86,6 +134,7 @@ export default function ModalTransferirArticulos({ mesaOrigen, onClose }) {
                     desde: mesaOrigen._id,
                     hacia: mesaDestino,
                     tipoPedido: producto.tipoPedido,
+                    cantidad: producto.cantidad,
                 });
             }
             onClose();
@@ -108,8 +157,7 @@ export default function ModalTransferirArticulos({ mesaOrigen, onClose }) {
                                         <Draggable key={prod._id + index} draggableId={prod._id + index} index={index}>
                                             {(provided) => (
                                                 <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="producto-transferible">
-                                                    {prod.displayNombre}
-                                                </div>
+                                                    {prod.cantidad} x {productosMap[prod.producto]?.nombre || 'Producto'}                                                </div>
                                             )}
                                         </Draggable>
                                     ))}
@@ -134,7 +182,7 @@ export default function ModalTransferirArticulos({ mesaOrigen, onClose }) {
                                             <Draggable key={prod._id + "_destino" + index} draggableId={prod._id + "_destino" + index} index={index}>
                                                 {(provided) => (
                                                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="producto-transferible">
-                                                        {prod.displayNombre}
+                                                        {prod.cantidad} x {productosMap[prod.producto]?.nombre || 'Producto'}
                                                     </div>
                                                 )}
                                             </Draggable>

@@ -2,6 +2,7 @@
   "name": "tpv",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/tpv",
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "@lingui/core": "^5.1.2",

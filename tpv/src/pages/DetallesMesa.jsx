@@ -115,7 +115,6 @@ const DetalleMesa = () => {
   };
 
   const enviarAFacturaPrinter = async (datosImpresion) => {
-    console.log("Datos de impresión:", datosImpresion);
     try {
       await api.post(`/imprimir/${mesa._id}/imprimir-factura`, datosImpresion);
     } catch (error) {

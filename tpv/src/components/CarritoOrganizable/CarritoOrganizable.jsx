@@ -3,7 +3,6 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import "./CarritoOrganizable.css"; // Asegúrate de tener este archivo CSS
 
 const CarritoOrganizable = ({ carritoSecciones, setCarritoSecciones, enviarPedido, isLoading }) => {
-
     const onDragEnd = (result) => {
         if (!result.destination) return;
 
@@ -27,51 +26,69 @@ const CarritoOrganizable = ({ carritoSecciones, setCarritoSecciones, enviarPedid
         });
     };
 
+    const eliminarProducto = (seccion, index) => {
+        const newSectionItems = [...carritoSecciones[seccion]];
+        newSectionItems.splice(index, 1);
+        setCarritoSecciones({
+            ...carritoSecciones,
+            [seccion]: newSectionItems,
+        });
+    };
+
     return (
-        <>
-            <DragDropContext onDragEnd={onDragEnd}>
-                <div className="carrito-organizable-container">
-                    {["entrante", "medio", "final"].map((section) => (
-                        <Droppable key={section} droppableId={section}>
-                            {(provided, snapshot) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                    className={`carrito-section ${snapshot.isDraggingOver ? "drag-over" : ""}`}
-                                >
-                                    <h4 className="carrito-section-title">{section.toUpperCase()}</h4>
-                                    {carritoSecciones[section].map((item, index) => (
-                                        <Draggable key={item._id + index} draggableId={item._id + index} index={index}>
-                                            {(provided, snapshot) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    className={`carrito-item ${snapshot.isDragging ? "dragging" : ""}`}
-                                                >
+        <DragDropContext onDragEnd={onDragEnd}>
+            <div className="carrito-organizable-container">
+                {["entrante", "medio", "final"].map((section) => (
+                    <Droppable key={section} droppableId={section}>
+                        {(provided, snapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                className={`carrito-section ${snapshot.isDraggingOver ? "drag-over" : ""}`}
+                            >
+                                <h4 className="carrito-section-title">{section.toUpperCase()}</h4>
+                                {carritoSecciones[section].map((item, index) => (
+                                    <Draggable key={item._id + index} draggableId={item._id + index} index={index}>
+                                        {(provided, snapshot) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                className={`carrito-item ${snapshot.isDragging ? "dragging" : ""}`}
+                                            >
+                                                <div className="carrito-item-nombre">
                                                     {item.nombre} x{item.cantidad}
                                                 </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    ))}
-                </div>
+                                                <div className="carrito-item-eliminar">
+                                                    <button
+                                                        onClick={() => eliminarProducto(section, index)}
+                                                        className="carrito-eliminar-button"
+                                                        title="Eliminar"
+                                                    >
+                                                        ❌
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                ))}
+            </div>
 
-                <div className="carrito-enviar-container">
-                    <button
-                        onClick={enviarPedido}
-                        disabled={isLoading}
-                        className="carrito-enviar-button"
-                    >
-                        {isLoading ? "Enviando..." : "Enviar Pedido"}
-                    </button>
-                </div>
-            </DragDropContext>
-        </>
+            <div className="carrito-enviar-container">
+                <button
+                    onClick={enviarPedido}
+                    disabled={isLoading}
+                    className="carrito-enviar-button"
+                >
+                    {isLoading ? "Enviando..." : "Enviar Pedido"}
+                </button>
+            </div>
+        </DragDropContext>
     );
 };
 

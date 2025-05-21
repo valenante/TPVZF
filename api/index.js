@@ -37,10 +37,12 @@ config();
 const app = express();
 const server = createServer(app);
 
+
+// Middleware para parsear cookies
+app.use(cookieParser());
 // Configurar CORS
 app.use(cors(corsOptions));
-
-// Configurar sesión
+// Configurar sesión 
 app.use(session(sessionConfig));
 
 app.use((req, res, next) => {
@@ -55,8 +57,6 @@ app.use((req, res, next) => {
 // Middleware de compresión HTTP
 app.use(compression());
 
-// Middleware para parsear cookies
-app.use(cookieParser());
 
 // Middleware para parsear JSON y formularios
 app.use(express.json({ limit: '10kb' })); 

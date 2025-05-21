@@ -100,6 +100,8 @@ export const agregarProductoAlPedido = async (req, res) => {
   const { mesaId } = req.params;
   const { productos } = req.body;
 
+  console.log(req.body);
+
   if (!Array.isArray(productos) || productos.length === 0) {
     return res.status(400).json({ error: 'Debes enviar al menos un producto válido.' });
   }
@@ -157,19 +159,28 @@ export const agregarProductoAlPedido = async (req, res) => {
           nombre: productoInfo?.nombre || 'Producto desconocido',
           cantidad: p.cantidad,
           opcionesPersonalizables: p.opcionesPersonalizables,
+          precioSeleccionado: p.precioSeleccionado,
+          total: p.total,
+          tipoPlato: p.tipoPlato,
+          acompanante: p.acompanante,
+          ingredientes: p.ingredientes,
+          categoria: p.categoria,
+          mensaje: p.mensaje,
+          adicionales: p.adicionales,
+          tipo: p.tipo,
           alergiasComensal: p.alergiasComensal,
           tipoPrecio: p.tipoPrecio,
           seccion: p.seccion,
         };
       }),
       total: productos.reduce((sum, p) => sum + p.total, 0),
+      horaSalida: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) // ✅ AÑADIDO
     };
 
     // Aquí llamamos al servidor impresión para imprimir el pedido (platos)
     try {
       const IMPRESION_SERVER = 'http://100.91.21.52:4000'; // Cambia a la IP correcta de tu servidor impresión
       await axios.post(`${IMPRESION_SERVER}/imprimir`, datosRespuesta);
-      console.log('Pedido enviado a la impresora correctamente');
     } catch (error) {
       console.error('Error al enviar pedido a la impresora:', error.message);
       // No interrumpimos el flujo, solo logueamos el error
@@ -215,8 +226,6 @@ export const obtenerPedidosId = async (req, res) => {
 export const obtenerPedidoPorMesaId = async (req, res) => {
   const { mesaId } = req.params;
 
-  console.log('mesaId:', mesaId);
-
   try {
     const mesa = await Mesa.findById(mesaId);
     if (!mesa) {
@@ -254,13 +263,7 @@ export const obtenerPedidoPorMesaId = async (req, res) => {
       tipo: 'bebida'
     })));
 
-    console.log('Productos bebidas:', productosBebidas);
-
     const productosUnificados = [...productosComida, ...productosBebidas];
-
-    console.log('🟢 Productos Comida:', productosComida);
-    console.log('🟢 Productos Bebidas:', productosBebidas);
-
 
     res.status(200).json(productosUnificados);
 
