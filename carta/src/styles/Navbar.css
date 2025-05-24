@@ -1,174 +1,134 @@
-/* Estilo para el navbar */
+/* === VARIABLES GLOBALES === */
+:root {
+  --color-principal: #6A0DAD;
+  --color-principal-oscuro: #5c0bb8;
+  --color-secundario: #FF6700;
+  --blanco: #ffffff;
+  --gris-claro: #f5f5f5;
+  --gris-oscuro: #333333;
+
+  --espaciado-base: 1rem;
+  --borde-redondeado: 0.5rem;
+  --sombra-suave: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  --fuente-principal: 'Inter', sans-serif;
+  --tamano-texto-base: 1rem;
+}
+
+/* === NAVBAR === */
 .navbar {
-    display: flex;
-    justify-content: center; /* Centrar contenido horizontalmente */
-    align-items: center; /* Centrar contenido verticalmente */
-    padding: 10px 20px;
-    background-color: #ffffff; /* Fondo blanco */
-    margin-bottom: 2em;
-  }
-  
-  /* Estilo para el select */
-  .navbar-select {
-    padding: 8px 12px;
-    font-size: 16px;
-    border: 1px solid var(--color-principal);
-    border-radius: 4px;
-    background-color: #ffffff;
-    color: rgb(84, 20, 108);
-    outline: none;
-    cursor: pointer;
-  }
-  
-  .navbar-select:hover {
-    background-color: rgba(84, 20, 108, 0.1);
-  }
+  width: 100%;
+  background-color: var(--blanco);
+  border-bottom: 1px solid var(--gris-claro);
+  padding: 0.5rem 1rem;
+  box-shadow: var(--sombra-suave);
+  z-index: 1000;
+}
 
-  .navbar-btn, .btn-idioma{
-    width: auto;
-    border: none;
-    border-radius: 5px;
-    margin-right: 15px;
-    padding: 10px;
-    color: var(--color-principal);
-    background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-bottom: 2px solid var(--color-principal);
-    transition: 200ms all;
-  }
+.navbar-select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: var(--borde-redondeado);
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease;
+  font-family: var(--fuente-principal);
+}
 
-  .navbar-btn:hover, .btn-idioma:hover{
-    background-color: rgba(84, 20, 108, 0.1);
-    cursor: pointer;
-    transform: scale(1.1);
-  }
+.navbar-select:focus {
+  border-color: var(--color-principal);
+}
 
-  .navbar-check{
-    width: auto;
-    border: none;
-    border-radius: 5px;
-    margin-right: 15px;
-    padding: 10px;
-    color: white;
-    background-color: var(--color-principal);
-    transition: 200ms all;
-  }
+.navbar-btn,
+.navbar-check {
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--borde-redondeado);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--fuente-principal);
+}
 
-  .navbar-check:hover{
-    background-color: rgba(84, 20, 108, 0.8);
-    cursor: pointer;
-    transform: scale(1.1);
-  }
-  
-  /* Estilo para el ícono del carrito */
-  .carrito-icono {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--color-principal);
-    font-size: 20px;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .carrito-icono:hover {
-    transform: scale(1.1);
-  }
-  
-  /* Modal del carrito (opcional, por si se usa) */
-  .carrito-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 400px;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 2px solid var(--color-principal);
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Otros elementos del modal */
-  .carrito-modal button {
-    background-color: var(--color-principal);
-    color: #ffffff;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .carrito-modal button:hover {
-    background-color: rgba(84, 20, 108, 0.8);
-  }
-  
-/* 📌 Estilos para pantallas pequeñas */
-@media (max-width: 768px) {
-  .navbar-contenedor {
-    display: flex;
-    flex-direction: column; /* 🔹 Apilar en 3 filas */
-    align-items: center;
-    width: 100%;
-    gap: 10px;
-  }
+.navbar-btn {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+}
 
-  /* Fila 1: Idiomas (centrado) */
-  .navbar-fila-idiomas {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
+.navbar-btn:hover {
+  background-color: #e25500;
+}
 
-  .idiomas-navbar {
-    display: flex;
-  }
+.navbar-check {
+  background-color: var(--color-principal);
+  color: var(--blanco);
+}
 
-  /* Fila 2: Select + Botón Bebidas/Platos + Carrito */
-  .navbar-fila-opciones {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 15px;
-    gap: 10px;
-  }
+.navbar-check:hover {
+  background-color: var(--color-principal-oscuro);
+}
 
-  .navbar-select{
-    max-width: 20vh;
-  }
+.idiomas-navbar {
+  display: flex;
+  gap: 0.5rem;
+}
 
-  /* Asegurar que los elementos se alineen bien en la fila 2 */
+.btn-idioma {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  border: 2px solid var(--color-principal);
+  border-radius: var(--borde-redondeado);
+  background-color: transparent;
+  color: var(--color-principal);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-idioma:hover,
+.btn-idioma.activo {
+  background-color: var(--color-principal);
+  color: var(--blanco);
+}
+
+.carrito-icono {
+  margin-left: 1rem;
+}
+
+/* === MOBILE === */
+.navbar-contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--blanco);
+  border-bottom: 1px solid var(--gris-claro);
+  box-shadow: var(--sombra-suave);
+}
+
+.navbar-fila {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.navbar-fila-idiomas,
+.navbar-fila-opciones,
+.navbar-fila-cuenta {
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem;
+  }
   .navbar-select,
   .navbar-btn,
-  .carrito-icono {
-    flex: 1;
-    text-align: center;
-    margin: 0;
-  }
-
-  /* Fila 3: Botón Cuenta (centrado) */
-  .navbar-fila-cuenta {
-    display: flex;
-    justify-content: center;
+  .navbar-check {
     width: 100%;
   }
-
-  .navbar-check {
-    width: auto;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    background-color: rgb(84, 20, 108);
-    transition: 200ms all;
-  }
-
-  .navbar-check:hover {
-    background-color: rgba(84, 20, 108, 0.8);
-    cursor: pointer;
-    transform: scale(1.1);
+  .carrito-icono {
+    margin-left: 0;
   }
 }

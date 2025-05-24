@@ -1,19 +1,19 @@
+/* === FORMULARIO DE RESERVA === */
 .reserva-form {
   max-width: 600px;
-  margin: 3rem auto;
+  margin: 2rem auto;
+  background-color: var(--blanco);
   padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 1.5rem;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+  border-radius: var(--borde-redondeado);
+  box-shadow: var(--sombra-suave);
+  font-family: var(--fuente-principal);
 }
 
-.reserva-form h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+.reserva-form h2,
+.reserva-form h4 {
+  color: var(--color-principal);
+  margin-bottom: 1rem;
   text-align: center;
-  color: var(--color-principal); /* Morado principal */
 }
 
 .reserva-form form {
@@ -22,32 +22,38 @@
   gap: 1rem;
 }
 
-.reserva-form label {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
-.reserva-form input[type="text"],
-.reserva-form input[type="email"],
-.reserva-form input[type="tel"],
-.reserva-form input[type="number"],
-.reserva-form input[type="date"],
+.reserva-form input,
 .reserva-form select,
 .reserva-form textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
   font-size: 1rem;
-  transition: border-color 0.3s;
+  padding: 0.75rem;
+  border: 1px solid var(--gris-claro);
+  border-radius: var(--borde-redondeado);
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 .reserva-form input:focus,
 .reserva-form select:focus,
 .reserva-form textarea:focus {
   border-color: var(--color-principal);
-  outline: none;
+  box-shadow: 0 0 6px rgba(140, 30, 255, 0.2);
+}
+
+.reserva-form button[type="submit"] {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--borde-redondeado);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reserva-form button[type="submit"]:hover {
+  background-color: #cc2e33;
 }
 
 .reserva-form .acepta-terminos {
@@ -55,49 +61,32 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
+  color: var(--gris-oscuro);
 }
 
-.reserva-form .acepta-terminos a {
-  color: #FF6700;
+.reserva-form .link {
+  color: var(--color-principal);
   text-decoration: underline;
-}
-
-.reserva-form button {
-  background-color: var(--color-principal);
-  color: white;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-.reserva-form button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.reserva-form button:hover:not(:disabled) {
-  background-color: #5a0ab8;
-}
-
-.reserva-form .reserva-info-importante {
+.reserva-info-importante {
   margin-top: 2rem;
+  background-color: var(--gris-claro);
   padding: 1rem;
-  background-color: #f9f7fd;
-  border-left: 5px solid var(--color-principal);
-  border-radius: 0.5rem;
+  border-radius: var(--borde-redondeado);
   font-size: 0.95rem;
 }
 
-.reserva-form .reserva-info-importante ul {
-  padding-left: 1.2rem;
+.reserva-info-importante h4 {
+  margin-bottom: 0.5rem;
+  color: var(--color-secundario);
 }
 
-.reserva-form .reserva-info-importante li {
-  margin-bottom: 0.75rem;
+.privacidad-link {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--gris-oscuro);
 }
 
 .modal-overlay {
@@ -106,67 +95,50 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 1000;
 }
 
 .modal-contenido {
-  background-color: #fff;
+  background-color: var(--blanco);
   padding: 2rem;
-  border-radius: 1rem;
-  max-width: 700px;
-  max-height: 80vh;
+  border-radius: var(--borde-redondeado);
+  max-width: 600px;
+  width: 90%;
+  box-shadow: var(--sombra-suave);
   overflow-y: auto;
-  position: relative;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  font-size: 1rem;
-  color: #333;
+  max-height: 90vh;
 }
 
 .modal-contenido h2 {
-  color: #6A0DAD;
-  margin-bottom: 1rem;
-}
-
-.modal-contenido ul {
-  padding-left: 1.2rem;
+  color: var(--color-principal);
   margin-bottom: 1rem;
 }
 
 .modal-contenido button {
-  background-color: var(--color-principal);
-  color: white;
+  background-color: var(--color-secundario);
+  color: var(--blanco);
   padding: 0.6rem 1rem;
   border: none;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  cursor: pointer;
+  border-radius: var(--borde-redondeado);
+  font-size: 1rem;
   margin-top: 1rem;
-}
-
-.link {
-  color: #FF6700;
   cursor: pointer;
-  text-decoration: underline;
+  transition: background-color 0.3s ease;
 }
 
-.privacidad-link {
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-  color: #666;
+.modal-contenido button:hover {
+  background-color: #cc2e33;
 }
 
-
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .reserva-form {
-    padding: 1.5rem;
-    margin: 1.5rem;
+    padding: 1rem;
   }
-
-  .reserva-form h2 {
-    font-size: 1.5rem;
+  .modal-contenido {
+    padding: 1rem;
   }
 }

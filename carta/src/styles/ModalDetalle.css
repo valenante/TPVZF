@@ -1,146 +1,295 @@
-/* Fondo del modal superpuesto */
+/* === VARIABLES GLOBALES === */
+:root {
+  --color-principal: #8C1EFF;
+  --color-principal-oscuro: #6B00CC;
+  --color-secundario: #FF3B3F;
+  --blanco: #ffffff;
+  --gris-claro: #f7f7f7;
+  --gris-oscuro: #2e2e2e;
+
+  --espaciado-base: 1rem;
+  --borde-redondeado: 0.5rem;
+  --sombra-suave: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  --fuente-principal: 'Inter', sans-serif;
+  --tamano-texto-base: 1rem;
+}
+
+/* === FORMULARIO DE RESERVA === */
+.reserva-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  background-color: var(--blanco);
+  padding: 2rem;
+  border-radius: var(--borde-redondeado);
+  box-shadow: var(--sombra-suave);
+  font-family: var(--fuente-principal);
+}
+
+.reserva-form h2,
+.reserva-form h4 {
+  color: var(--color-principal);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.reserva-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reserva-form input,
+.reserva-form select,
+.reserva-form textarea {
+  font-size: 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--gris-claro);
+  border-radius: var(--borde-redondeado);
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reserva-form input:focus,
+.reserva-form select:focus,
+.reserva-form textarea:focus {
+  border-color: var(--color-principal);
+  box-shadow: 0 0 6px rgba(140, 30, 255, 0.2);
+}
+
+.reserva-form button[type="submit"] {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--borde-redondeado);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reserva-form button[type="submit"]:hover {
+  background-color: #cc2e33;
+}
+
+.reserva-form .acepta-terminos {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--gris-oscuro);
+}
+
+.reserva-form .link {
+  color: var(--color-principal);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.reserva-info-importante {
+  margin-top: 2rem;
+  background-color: var(--gris-claro);
+  padding: 1rem;
+  border-radius: var(--borde-redondeado);
+  font-size: 0.95rem;
+}
+
+.reserva-info-importante h4 {
+  margin-bottom: 0.5rem;
+  color: var(--color-secundario);
+}
+
+.privacidad-link {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--gris-oscuro);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-contenido {
+  background-color: var(--blanco);
+  padding: 2rem;
+  border-radius: var(--borde-redondeado);
+  max-width: 600px;
+  width: 90%;
+  box-shadow: var(--sombra-suave);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.modal-contenido h2 {
+  color: var(--color-principal);
+  margin-bottom: 1rem;
+}
+
+.modal-contenido button {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: var(--borde-redondeado);
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-contenido button:hover {
+  background-color: #cc2e33;
+}
+
+/* === MODAL DETALLE DE PRODUCTO === */
 .modal-detalle {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Asegura que esté sobre otros elementos */
+  z-index: 2000;
+  padding: 1rem;
 }
 
-/* Contenido del modal */
 .modal-contenido-detalle {
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 20px;
-  width: 90%;
+  background-color: var(--blanco);
+  padding: 2rem;
+  border-radius: var(--borde-redondeado);
+  width: 100%;
   max-width: 600px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  font-family: "Roboto", sans-serif; /* Fuente moderna y fina */
-  color: #333;
-  position: relative;
-  overflow-y: auto; /* Permite scroll si hay mucho contenido */
-  max-height: 80%;
+  box-shadow: var(--sombra-suave);
+  overflow-y: auto;
+  max-height: 90vh;
+  font-family: var(--fuente-principal);
 }
 
-/* Títulos y descripciones */
-.modal-contenido-detalle h2 {
-  font-size: 1.8rem;
-  margin-bottom: 10px;
-  color: rgb(84, 20, 108); /* Morado */
-}
-
-.modal-contenido-detalle p {
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-/* Ingredientes y opciones */
-.modal-contenido-detalle h4 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: rgb(84, 20, 108); /* Morado */
+.modal-contenido-detalle h2,
+.modal-contenido-detalle h4,
+.modal-contenido-detalle h5 {
+  color: var(--color-principal);
+  margin-bottom: 0.5rem;
 }
 
 .modal-contenido-detalle ul {
   list-style: none;
-  padding: 0;
-  margin-bottom: 20px;
+  padding-left: 0;
+  margin-bottom: 1rem;
 }
 
-.modal-contenido-detalle ul li {
-  margin-bottom: 10px;
+.modal-contenido-detalle li {
+  margin-bottom: 0.5rem;
 }
 
 .modal-contenido-detalle label {
   font-size: 1rem;
-  color: #333;
-}
-
-/* Cantidad */
-.cantidad-detalle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.cantidad-detalle button {
-  background-color: rgb(84, 20, 108);
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
+  color: var(--gris-oscuro);
   cursor: pointer;
-  font-size: 1rem;
 }
 
-.cantidad-detalle button:hover {
-  background-color: rgba(84, 20, 108, 0.8);
+.modal-contenido-detalle input[type="checkbox"],
+.modal-contenido-detalle input[type="radio"] {
+  margin-right: 0.5rem;
 }
 
-/* Botones */
-.modal-botones-detalle {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.modal-botones-detalle button {
-  background-color: #ddd;
-  color: #333;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.modal-botones-detalle button:hover {
-  background-color: #ccc;
-}
-
-.modal-botones-detalle button:last-child {
-  background-color: rgb(84, 20, 108);
-  color: #fff;
-}
-
-.modal-botones-detalle button:last-child:hover {
-  background-color: rgba(84, 20, 108, 0.8);
-}
-
-.ingrediente-label-detalle input {
-  font-size: 1rem;
-  color: #333;
-  margin: 5px;
-  line-height: 1.5;
-}
-/* Estilo específico para cuando el select es colocado en la parte derecha */
-.tipo-plato-select-container-detalle {
-  display: flex;
+.tipo-precio-select-detalle,
+.tipo-plato-select-detalle,
+.acompanante-select-detalle {
   width: 100%;
-  justify-content: flex-start; /* Alinea el select a la derecha */
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  border-radius: var(--borde-redondeado);
+  border: 1px solid var(--gris-claro);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
-.tipo-precio-select-detalle, .tipo-plato-select-detalle {
-  color: var(--color-principal);
-  padding: .8vh;
-  border-radius: 10px;
-  border: 1px solid var(--color-principal);
-  margin-bottom: 0.7vh;
+.tipo-precio-select-detalle:focus,
+.tipo-plato-select-detalle:focus,
+.acompanante-select-detalle:focus {
+  border-color: var(--color-principal);
+  box-shadow: 0 0 6px rgba(140, 30, 255, 0.2);
 }
 
-
-.tipo-precio-select-detalle:hover, .tipo-plato-select-detalle:hover {
+.cantidad-btn {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  margin: 0 0.5rem;
+  border-radius: var(--borde-redondeado);
+  font-size: 1.2rem;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cantidad-btn:hover {
+  background-color: #cc2e33;
   transform: scale(1.1);
-  transition: 200ms;
+}
+
+.cancelar-btn,
+.agregar-btn {
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--borde-redondeado);
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: bold;
+}
+
+.cancelar-btn {
+  background-color: var(--blanco);
+  color: var(--color-secundario);
+  border: 2px solid var(--color-secundario);
+}
+
+.cancelar-btn:hover {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  transform: scale(1.05);
+}
+
+.agregar-btn {
+  background-color: var(--color-principal);
+  color: var(--blanco);
+  border: none;
+}
+
+.agregar-btn:hover {
+  background-color: var(--color-principal-oscuro);
+  transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+  .reserva-form {
+    padding: 1rem;
+  }
+  .modal-contenido,
+  .modal-contenido-detalle {
+    padding: 1rem;
+  }
+  .cantidad-btn {
+    font-size: 1rem;
+  }
+  .cancelar-btn,
+  .agregar-btn {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
 }

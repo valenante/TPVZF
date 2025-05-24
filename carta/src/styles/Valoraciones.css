@@ -1,59 +1,124 @@
+/* === VARIABLES GLOBALES === */
+:root {
+  --color-principal: #8C1EFF;
+  --color-principal-oscuro: #6B00CC;
+  --color-secundario: #FF3B3F;
+  --blanco: #ffffff;
+  --gris-claro: #f7f7f7;
+  --gris-oscuro: #2e2e2e;
+
+  --espaciado-base: 1rem;
+  --borde-redondeado: 0.5rem;
+  --sombra-suave: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  --fuente-principal: 'Inter', sans-serif;
+  --tamano-texto-base: 1rem;
+}
+
+/* === VALORACIONES === */
 .contenedor-valoraciones {
-    padding: 20px;
-    background-color: #f5f5f5; /* Gris claro */
-    color: #333;
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: var(--blanco);
+  border-radius: var(--borde-redondeado);
+  box-shadow: var(--sombra-suave);
+  font-family: var(--fuente-principal);
+}
+
+.titulo-valoraciones {
+  font-size: 2rem;
+  color: var(--color-principal);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.mensaje-sin-productos-valoraciones {
+  text-align: center;
+  color: var(--gris-oscuro);
+  font-size: 1rem;
+}
+
+.formulario-valoraciones {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.producto-valoraciones {
+  background-color: var(--gris-claro);
+  padding: 1rem;
+  border-radius: var(--borde-redondeado);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.producto-nombre-valoraciones {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-principal);
+  margin-bottom: 0.5rem;
+}
+
+.select-valoraciones {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid var(--gris-claro);
+  border-radius: var(--borde-redondeado);
+  margin-bottom: 0.75rem;
+}
+
+.select-valoraciones:focus {
+  border-color: var(--color-principal);
+  box-shadow: 0 0 5px rgba(140, 30, 255, 0.2);
+}
+
+.textarea-valoraciones {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: var(--borde-redondeado);
+  border: 1px solid var(--gris-claro);
+  resize: vertical;
+}
+
+.textarea-valoraciones:focus {
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 5px rgba(255, 59, 63, 0.2);
+}
+
+.boton-enviar-valoraciones {
+  align-self: center;
+  background-color: var(--color-principal);
+  color: var(--blanco);
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: var(--borde-redondeado);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-enviar-valoraciones:hover {
+  background-color: var(--color-principal-oscuro);
+}
+
+@media (max-width: 480px) {
+  .contenedor-valoraciones {
+    padding: 1rem;
   }
-  
+
   .titulo-valoraciones {
-    text-align: center;
-    font-size: 2rem;
-    color: var(--color-principal); /* Morado */
-    margin-bottom: 20px;
-  }
-  
-  .producto-valoraciones {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .producto-nombre-valoraciones {
     font-size: 1.5rem;
-    color: #ff6700; /* Naranja */
   }
-  
-  .etiqueta-valoraciones {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: bold;
-  }
-  
+
   .select-valoraciones,
   .textarea-valoraciones {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 1vh;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
-  
+
   .boton-enviar-valoraciones {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: var(--color-principal);
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    width: 100%;
   }
-  
-  .boton-enviar-valoraciones:hover {
-    background-color: #5a0095; /* Morado más oscuro */
-  }
-  
+}
