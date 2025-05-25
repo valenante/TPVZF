@@ -31,7 +31,7 @@
 }
 
 .boton-aceptar-modal{
-    background-color: var(--color-principal);
+    background-color: red;
     color: #fff;
     border: none;
     padding: 10px 20px;

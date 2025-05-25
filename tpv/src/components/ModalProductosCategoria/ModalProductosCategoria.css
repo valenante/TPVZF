@@ -14,7 +14,7 @@
 
 /* Contenido del modal */
 .modal-contenido {
-  background: white;
+  background: var(--blanco);
   padding: 20px;
   border-radius: 10px;
   max-width: 90%;
@@ -25,7 +25,7 @@
 /* Título */
 .modal-contenido h2 {
   text-align: center;
-  color: #6A0DAD;
+  color: var(--color-principal);
   margin-bottom: 20px;
 }
 
@@ -38,12 +38,13 @@
   list-style: none;
   justify-content: center;
 }
+
 /* Bloques clicables de productos */
 .modal-contenido li {
   width: 100px;
   height: 100px;
-  background: var(--color-secundario); /* Tu naranja */
-  color: white;
+  background: var(--color-secundario);
+  color: var(--blanco);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -53,7 +54,7 @@
   transition: background-color 0.3s;
 }
 .modal-contenido li:hover {
-  background: var(--color-principal); /* Tu morado */
+  background: var(--color-principal);
 }
 
 /* Cantidad en la esquina superior derecha */
@@ -61,8 +62,8 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  background-color: #6A0DAD;
-  color: #fff;
+  background-color: var(--color-principal);
+  color: var(--blanco);
   border-radius: 50%;
   padding: 5px 8px;
   font-size: 0.8rem;
@@ -74,23 +75,23 @@
   width: 100%;
   padding: 10px;
   background-color: var(--color-principal);
-  color: white;
+  color: var(--blanco);
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .modal-contenido button:first-of-type {
-  background-color: #FF6700;
-  color: #fff;
+  background-color: var(--color-secundario);
+  color: var(--blanco);
 }
 
 .modal-contenido button:first-of-type:hover {
-  background-color: #6A0DAD;
+  background-color: var(--color-principal);
 }
 
 .modal-contenido button:last-of-type {
-  background-color: #ccc;
+  background-color: var(--color-principal);
 }
 
 .modal-contenido button:last-of-type:hover {
@@ -108,14 +109,13 @@
   top: -5px;
   right: -5px;
   background: var(--color-principal);
-  color: white;
+  color: var(--blanco);
   border-radius: 50%;
   padding: 0.3em 0.6em;
   font-size: 1.2rem;
   font-weight: bold;
   box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
-
 
 /* Responsive */
 @media (max-width: 480px) {

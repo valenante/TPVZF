@@ -1,116 +1,78 @@
-/* Contenedor principal */
+/* === CREAR USUARIO - REGISTER === */
 .crear-usuario--register {
-    display: flex;
-    flex-direction: column; /* Asegura que el contenido interno esté en columna */
-    width: 50vh;
-    height: 50vh; /* Ajusta el contenedor para ocupar toda la altura */
-    margin: 10vh auto;
-    justify-content: center; /* Centra el contenido verticalmente */
-    align-items: center; /* Centra el contenido horizontalmente */
-    background-color: #f5f5f5; /* Gris claro */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--gris-claro);
+  padding: 2rem;
+  border-radius: var(--borde-redondeado);
+  max-width: 500px;
+  margin: 2rem auto;
+  box-shadow: var(--sombra-suave);
+}
+
+.titulo--register {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-principal);
+}
+
+.formulario--register {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.input--register,
+.select--register {
+  padding: 0.8rem;
+  font-size: 1rem;
+  border-radius: var(--borde-redondeado);
+  border: 1px solid var(--gris);
+  width: 90%;
+}
+
+.select--register {
+  background-color: var(--blanco);
+  color: var(--gris-oscuro);
+}
+
+.boton--register {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  border: none;
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: var(--borde-redondeado);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton--register:hover {
+  background-color: var(--color-secundario-oscuro);
+}
+
+.error--register {
+  color: var(--color-error);
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .crear-usuario--register {
+    padding: 1rem;
+    margin: 1rem;
   }
-  
-  /* Título */
+
   .titulo--register {
-    font-size: 2rem;
-    color: var(--color-principal); /* Morado profundo */
-    text-align: center;
-    margin-bottom: 20px;
+    font-size: 1.4rem;
   }
-  
-  /* Formulario */
-  .formulario--register {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  /* Etiquetas */
-  .label--register {
-    font-size: 1rem;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  /* Entradas */
+
   .input--register,
-  .select--register {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--color-principal); /* Morado profundo */
-    border-radius: 5px;
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  .input--register:focus,
-  .select--register:focus {
-    outline: none;
-    border-color: var(--color-secundario); /* Naranja vibrante */
-    box-shadow: 0 0 5px rgba(255, 103, 0, 0.5);
-  }
-  
-  /* Errores */
-  .error--register {
-    font-size: 0.7rem;
-    color: #ff0000; /* Rojo */
-    font-style: italic;
-  }
-  
-  /* Botón */
+  .select--register,
   .boton--register {
-    padding: 10px;
-    background-color: var(--color-principal); /* Morado profundo */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    font-size: 0.95rem;
+    padding: 0.7rem;
   }
-  
-  .boton--register:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-  
-  .boton--register:hover:not(:disabled) {
-    background-color: var(--color-secundario); /* Naranja vibrante */
-    transform: scale(1.05);
-  }
-  
-/* Estilos para pantallas pequeñas */
-@media (max-width: 768px) {
-    .crear-usuario--register {
-        width: 90%;
-        height: auto;
-        padding: 15px;
-    }
-
-    .titulo--register {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-    }
-
-    .formulario--register {
-        gap: 10px;
-    }
-
-    .input--register,
-    .select--register {
-        padding: 8px;
-        font-size: 0.9rem;
-    }
-
-    .boton--register {
-        padding: 8px;
-        font-size: 0.9rem;
-    }
-
-    .error--register {
-        font-size: 0.8rem;
-    }
 }

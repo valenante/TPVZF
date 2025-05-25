@@ -2,13 +2,14 @@
 .detalle-mesa--mesadetalles {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   gap: 20px;
   min-height: 90vh;
 }
 
 /* Contenido principal centrado */
 .contenido-mesa--mesadetalles {
-  width: 60%;
+  width: fit-content;
   overflow-y: auto;
   background-color: #FFFFFF;
   /* Blanco */
@@ -243,6 +244,10 @@
     padding: 15px;
   }
 
+  .contenido-mesa--mesadetalles{
+    width: 100px;
+  }
+
   .modal-contenido input,
   .modal-contenido button {
     font-size: 0.9rem;
@@ -259,16 +264,17 @@
 
   .contenido-mesa--mesadetalles,
   .rightbar--mesadetalles {
-    width: auto;
+    width: fit-content;
     /* Ocupan el ancho completo */
   }
 
   .contenedor-botones--mesadetalles {
-    grid-template-columns: 1fr 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     gap: 10px;
-    /* Espacio entre los botones */
+    margin-top: 1rem;
   }
-
   .boton-imprimir--mesadetalles,
   .boton-factura--mesadetalles {
     width: 100%;
@@ -290,7 +296,7 @@
     border: none;
     margin: 0;
     height: auto;
-    width: auto;
+    width: 5vh;
     font-size: 1rem;
     border-radius: 5px;
     transition: background-color 0.3s ease, transform 0.2s ease;

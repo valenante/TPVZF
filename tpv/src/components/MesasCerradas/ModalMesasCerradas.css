@@ -1,114 +1,254 @@
-/* Contenedor del modal */
+/* === DETALLE MESA - TPV === */
+.detalle-mesa--mesadetalles {
+  display: flex;
+  flex-direction: row;
+  gap: var(--espaciado-base);
+  min-height: 90vh;
+}
+
+/* Contenido principal */
+.contenido-mesa--mesadetalles {
+  width: 60%;
+  overflow-y: auto;
+  background-color: var(--blanco);
+  padding: var(--espaciado-base);
+  border-radius: var(--borde-redondeado);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.titulo-mesa--mesadetalles {
+  font-size: 2rem;
+  color: var(--color-principal);
+  margin-bottom: 0.5rem;
+}
+
+.total-mesa--mesadetalles,
+.estado-mesa--mesadetalles,
+.pedido-comensales--mesadetalles,
+.pedido-alergias--mesadetalles,
+.pedido-estado--mesadetalles,
+.total-pedido--mesadetalles {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.lista-pedidos--mesadetalles,
+.lista-productos--mesadetalles {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.lista-pedidos--mesadetalles::-webkit-scrollbar {
+  width: 8px;
+}
+
+.lista-pedidos--mesadetalles::-webkit-scrollbar-thumb {
+  background-color: var(--color-principal);
+  border-radius: 4px;
+}
+
+.pedido--mesadetalles {
+  margin-bottom: 2vh;
+  border-radius: var(--borde-redondeado);
+  max-height: 30vh;
+  overflow-y: auto;
+  box-shadow: var(--sombra-media);
+}
+
+.pedido--mesadetalles::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pedido--mesadetalles::-webkit-scrollbar-thumb {
+  background-color: var(--color-secundario);
+  border-radius: 4px;
+}
+
+.producto--mesadetalles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--gris-claro);
+}
+
+.producto-listo {
+  color: var(--verde-ok);
+  font-weight: bold;
+}
+
+.boton-eliminar--mesadetalles,
+.boton-cerrar--mesadetalles,
+.boton-imprimir--mesadetalles,
+.boton-factura--mesadetalles,
+.boton-abrir--mesadetalles {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  border: none;
+  font-size: 1rem;
+  border-radius: var(--borde-redondeado);
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-eliminar--mesadetalles:hover,
+.boton-cerrar--mesadetalles:hover,
+.boton-imprimir--mesadetalles:hover,
+.boton-factura--mesadetalles:hover,
+.boton-abrir--mesadetalles:hover {
+  background-color: var(--color-principal);
+  transform: scale(1.05);
+}
+
+.rightbar--mesadetalles {
+  width: 40%;
+  background-color: var(--blanco);
+  padding: var(--espaciado-base);
+  border-radius: var(--borde-redondeado);
+  box-shadow: var(--sombra-suave);
+}
+
+.contenedor-botones--mesadetalles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* === MODAL FACTURA === */
+.modal-factura,
 .modal--recuperar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100%;
-    max-width: 70;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-contenido,
+.modal-content--recuperar {
+  background: var(--blanco);
+  padding: var(--espaciado-base);
+  border-radius: var(--borde-redondeado);
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--sombra-media);
+  text-align: center;
+}
+
+.modal-content--recuperar h2.titulo--recuperar {
+  color: var(--color-principal);
+  font-size: 1.5rem;
+}
+
+.lista-mesas--recuperar {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 40vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.lista-mesas--recuperar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-mesas--recuperar::-webkit-scrollbar-thumb {
+  background: var(--color-secundario);
+  border-radius: 4px;
+}
+
+.mesa-item--recuperar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--gris-claro);
+  padding: 0.75rem;
+  border-radius: var(--borde-redondeado);
+  margin-bottom: 0.5rem;
+}
+
+.boton-recuperar--recuperar,
+.boton-cerrar--recuperar {
+  padding: 0.5rem 1rem;
+  background-color: var(--color-principal);
+  color: var(--blanco);
+  border: none;
+  border-radius: var(--borde-redondeado);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-recuperar--recuperar:hover,
+.boton-cerrar--recuperar:hover {
+  background-color: var(--color-secundario);
+}
+
+.mensaje-vacio--recuperar {
+  font-style: italic;
+  color: var(--gris);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .detalle-mesa--mesadetalles {
+    flex-direction: column;
   }
-  
-  /* Contenido del modal */
-  .modal-content--recuperar {
-    background-color: #ffffff; /* Blanco */
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
-    text-align: center;
-    animation: fadeIn 0.3s ease-in-out;
+
+  .contenido-mesa--mesadetalles,
+  .rightbar--mesadetalles {
+    width: 100%;
   }
-  
-  /* Título */
-  .titulo--recuperar {
-    font-size: 1.8rem;
-    color: var(--color-principal); /* Morado profundo */
-    margin-bottom: 20px;
+
+  .contenedor-botones--mesadetalles {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
   }
-  
-  /* Mensaje vacío */
-  .mensaje-vacio--recuperar {
-    font-size: 1.4rem;
-    color: var(--color-principal); /* Morado profundo */
-    font-style: italic;
+
+  .boton-eliminar--mesadetalles,
+  .boton-cerrar--mesadetalles,
+  .boton-imprimir--mesadetalles,
+  .boton-factura--mesadetalles,
+  .boton-abrir--mesadetalles {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
   }
-  
-  /* Lista de mesas */
-  .lista-mesas--recuperar {
-    list-style: none;
+
+  .rightbar--mesadetalles {
     padding: 0;
-    margin: 20px 0;
-    max-height: 300px; /* Limita la altura visible */
-    overflow-y: auto;  /* Habilita scroll vertical si se excede */
-    border: 1px solid #ddd; /* (opcional) para distinguir el área */
-    border-radius: 5px;
+    margin: 0;
   }
-  
-  .mesa-item--recuperar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #f5f5f5; /* Gris claro */
-    border-radius: 5px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
+
+  .modal-contenido,
+  .modal-content--recuperar {
+    padding: 1rem;
   }
-  
-  /* Botón Recuperar */
-  .boton-recuperar--recuperar {
-    padding: 10px 15px;
-    background-color: var(--color-secundario); /* Naranja vibrante */
-    border: none;
-    color: #fff;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+
+  .modal-contenido input,
+  .modal-contenido button,
+  .modal-content--recuperar button {
+    font-size: 0.9rem;
+    padding: 0.5rem;
   }
-  
-  .boton-recuperar--recuperar:disabled {
-    background-color: #cccccc; /* Gris desactivado */
-    cursor: not-allowed;
-  }
-  
-  .boton-recuperar--recuperar:hover:enabled {
-    background-color: #e55b00;
-    transform: scale(1.05);
-  }
-  
-  /* Botón Cerrar */
-  .boton-cerrar--recuperar {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: var(--color-principal); /* Morado profundo */
-    border: none;
-    color: #fff;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .boton-cerrar--recuperar:hover {
-    background-color: #5a0c9a;
-    transform: scale(1.05);
-  }
-  
-  /* Animación de entrada */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
+}

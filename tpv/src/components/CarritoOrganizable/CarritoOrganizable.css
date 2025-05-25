@@ -92,13 +92,27 @@
   text-align: center;
 }
 
+.carrito-enviar-button {
+  background-color: var(--color-principal);
+  color: var(--blanco);
+  border: none;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: var(--borde-redondeado);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
 .carrito-enviar-button:hover:enabled {
-  background-color: #5c0998;
+  background-color: var(--color-principal-oscuro);
+  transform: scale(1.05);
 }
 
 .carrito-enviar-button:disabled {
-  background-color: #ccc;
+  background-color: var(--gris);
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 /* Responsive */

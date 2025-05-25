@@ -1,60 +1,68 @@
-/* Contenedor principal */
+/* === PRODUCTS === */
 .products--products {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80vh; /* Ocupa toda la altura de la pantalla */
-  }
-  
-  /* Contenedor de categorías */
-  .categories--products {
-    text-align: center;
-  }
-  
-  /* Título de categorías */
-  .titulo-categorias--products {
-    font-size: 1.8rem;
-    color: #FFFFFF; /* Blanco */
-    margin-bottom: 20px;
-  }
-  
-  /* Mensaje de carga */
-  .cargando-categorias--products {
-    font-size: 1.2rem;
-    color: var(--color-secundario); /* Naranja vibrante */
-    margin-top: 10px;
-  }
-  
-  /* Contenedor de botones */
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: var(--espaciado-base);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: var(--borde-redondeado);
+}
+
+.categories--products {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cargando-categorias--products {
+  color: var(--color-principal);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.buttons--products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+}
+
+.button--products {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--borde-redondeado);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.button--products:hover {
+  background-color: var(--color-principal);
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
   .buttons--products {
-    display: grid; /* Diseño en grid */
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas iguales */
-    gap: 20px; /* Espaciado entre botones */
-    justify-items: center; /* Centrar botones horizontalmente */
-    align-items: center; /* Centrar botones verticalmente */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
   
-  /* Botones estilizados */
   .button--products {
-    background-color: var(--color-principal); /* Morado profundo */
-    color: #FFFFFF; /* Texto blanco */
-    border: 2px solid var(--color-secundario);
-    border-radius: 10px; /* Bordes redondeados */
-    padding: 15px 30px; /* Tamaño del botón */
-    font-size: 1.2rem; /* Tamaño del texto */
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    height: 80px;
   }
-  
-  /* Hover y efecto de interacción */
-  .button--products:hover {
-    background-color: var(--color-secundario); /* Naranja vibrante */
-    transform: scale(1.1); /* Ampliar ligeramente */
-  }
-  
-  /* Animación en el clic */
-  .button--products:active {
-    transform: scale(0.95); /* Reducir ligeramente */
-  }
-  
+}

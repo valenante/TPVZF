@@ -1,62 +1,36 @@
-/* Fondo global */
-html, body {
-  background-color: #6A0DAD; /* Fondo morado */
-  font-family: 'Roboto', sans-serif;
-}
-
-/* Eliminar subrayado en enlaces por defecto */
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
+/* === VARIABLES GLOBALES === */
 :root {
   --color-principal: #6A0DAD;
-  --color-principal-oscuro: #5c0bb8; /* una versión ligeramente más oscura */
+  --color-principal-oscuro: #5c0bb8;
   --color-secundario: #FF6700;
   --blanco: #ffffff;
   --gris-claro: #f5f5f5;
   --gris-oscuro: #333333;
+
+  --espaciado-base: 1rem;
+  --borde-redondeado: 0.5rem;
+  --sombra-suave: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  --fuente-principal: 'Inter', sans-serif;
+  --tamano-texto-base: 1rem;
 }
 
-/* Clases de colores */
-.bg-principal {
+/* === RESETEO Y BASE === */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: var(--fuente-principal);
+  font-size: var(--tamano-texto-base);
   background-color: var(--color-principal);
-}
-
-.bg-principal-oscuro {
-  background-color: var(--color-principal-oscuro);
-}
-
-.bg-secundario {
-  background-color: var(--color-secundario);
-}
-
-.text-principal {
-  color: var(--color-principal);
-}
-
-.text-principal-oscuro {
-  color: var(--color-principal-oscuro);
-}
-
-.text-secundario {
-  color: var(--color-secundario);
-}
-
-/* Extras */
-.text-blanco {
-  color: var(--blanco);
-}
-
-.bg-blanco {
-  background-color: var(--blanco);
-}
-
-.bg-gris-claro {
-  background-color: var(--gris-claro);
-}
-
-.text-gris-oscuro {
   color: var(--gris-oscuro);
 }
+
+/* === UTILITARIOS === */
+.mt-2 { margin-top: 2rem; }
+.mb-1 { margin-bottom: 1rem; }
+.p-3 { padding: 3rem; }
+.text-center { text-align: center; }
+.shadow-suave { box-shadow: var(--sombra-suave); }
+.rounded { border-radius: var(--borde-redondeado); }

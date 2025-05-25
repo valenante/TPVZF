@@ -1,5 +1,5 @@
 .reservas-info {
-  max-height: 500px; /* Puedes ajustar la altura */
+  max-height: 500px;
   overflow-y: auto;
   padding: 1rem;
   border: 1px solid #ddd;
@@ -53,15 +53,14 @@
   opacity: 0.9;
 }
 
+/* ✅ Cambiado el verde por el color secundario */
 .reservas-info button:nth-child(1) {
-  background-color: #28a745;
-  /* aceptar */
+  background-color: var(--color-principal);
   color: white;
 }
 
 .reservas-info button:nth-child(2) {
-  background-color: var(--color-principal);
-  /* cancelar o rechazar */
+  background-color: var(--color-secundario);
   color: white;
 }
 
@@ -88,9 +87,9 @@
   width: 260px;
 }
 
-/* Día con reservas (verde claro) */
+/* Día con reservas (usa color principal) */
 .reserva-dia {
-  background-color: #98ff98 !important;
+  background-color: var(--color-principal);
   border-radius: 50% !important;
 }
 

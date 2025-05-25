@@ -1,87 +1,290 @@
-/* Contenedor principal */
+/* === DETALLE MESA - TPV === */
+.detalle-mesa--mesadetalles {
+  display: flex;
+  flex-direction: row;
+  gap: var(--espaciado-base);
+  min-height: 90vh;
+}
+
+.total-mesa--mesadetalles,
+.estado-mesa--mesadetalles,
+.pedido-comensales--mesadetalles,
+.pedido-alergias--mesadetalles,
+.pedido-estado--mesadetalles,
+.total-pedido--mesadetalles {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.lista-pedidos--mesadetalles,
+.lista-productos--mesadetalles {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.lista-pedidos--mesadetalles::-webkit-scrollbar {
+  width: 8px;
+}
+
+.lista-pedidos--mesadetalles::-webkit-scrollbar-thumb {
+  background-color: var(--color-principal);
+  border-radius: 4px;
+}
+
+.pedido--mesadetalles {
+  margin-bottom: 2vh;
+  border-radius: var(--borde-redondeado);
+  max-height: 30vh;
+  overflow-y: auto;
+  box-shadow: var(--sombra-media);
+}
+
+.pedido--mesadetalles::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pedido--mesadetalles::-webkit-scrollbar-thumb {
+  background-color: var(--color-secundario);
+  border-radius: 4px;
+}
+
+.producto--mesadetalles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--gris-claro);
+}
+
+.producto-listo {
+  color: var(--verde-ok);
+  font-weight: bold;
+}
+
+.boton-eliminar--mesadetalles,
+.boton-cerrar--mesadetalles,
+.boton-imprimir--mesadetalles,
+.boton-factura--mesadetalles,
+.boton-abrir--mesadetalles {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  border: none;
+  font-size: 1rem;
+  border-radius: var(--borde-redondeado);
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-eliminar--mesadetalles:hover,
+.boton-cerrar--mesadetalles:hover,
+.boton-imprimir--mesadetalles:hover,
+.boton-factura--mesadetalles:hover,
+.boton-abrir--mesadetalles:hover {
+  background-color: var(--color-principal);
+  transform: scale(1.05);
+}
+
+.rightbar--mesadetalles {
+  width: 40%;
+  background-color: var(--blanco);
+  padding: var(--espaciado-base);
+  border-radius: var(--borde-redondeado);
+  box-shadow: var(--sombra-suave);
+}
+
+.contenedor-botones--mesadetalles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* === MODAL FACTURA === */
+.modal-factura,
+.modal--recuperar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-contenido,
+.modal-content--recuperar {
+  background: var(--blanco);
+  padding: var(--espaciado-base);
+  border-radius: var(--borde-redondeado);
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--sombra-media);
+  text-align: center;
+}
+
+.modal-content--recuperar h2.titulo--recuperar {
+  color: var(--color-principal);
+  font-size: 1.5rem;
+}
+
+.lista-mesas--recuperar {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 40vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.lista-mesas--recuperar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-mesas--recuperar::-webkit-scrollbar-thumb {
+  background: var(--color-secundario);
+  border-radius: 4px;
+}
+
+.mesa-item--recuperar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--gris-claro);
+  padding: 0.75rem;
+  border-radius: var(--borde-redondeado);
+  margin-bottom: 0.5rem;
+}
+
+.boton-recuperar--recuperar,
+.boton-cerrar--recuperar {
+  padding: 0.5rem 1rem;
+  background-color: var(--color-principal);
+  color: var(--blanco);
+  border: none;
+  border-radius: var(--borde-redondeado);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-recuperar--recuperar:hover,
+.boton-cerrar--recuperar:hover {
+  background-color: var(--color-secundario);
+}
+
+.mensaje-vacio--recuperar {
+  font-style: italic;
+  color: var(--gris);
+}
+
+/* === MESAS CERRADAS === */
 .mesas-cerradas--mesas-cerradas {
-    padding: 20px;
-    background-color: #f5f5f5; /* Gris claro */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  /* Título */
-  .titulo--mesas-cerradas {
-    font-size: 2rem;
-    color: var(--color-principal); /* Morado profundo */
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  /* Mensaje vacío */
-  .mensaje-vacio--mesas-cerradas {
-    font-size: 1.4rem;
-    color: var(--color-principal);
-    text-align: center;
-    font-style: italic;
-  }
-  
-  /* Contenedor de la tabla */
-  .tabla-container--mesas-cerradas {
-    max-height: 70vh; /* Altura máxima */
-    overflow-y: auto; /* Scroll vertical */
-    border-radius: 10px;
-    border: 1px solid #e0e0e0;
-    padding: 10px;
-    background-color: #ffffff; /* Fondo blanco */
-  }
-  
-  /* Tabla */
-  .tabla--mesas-cerradas {
-    width: 100%;
-    border-collapse: collapse; /* Eliminar espacios entre celdas */
-    font-size: 1rem;
-    text-align: left;
-  }
-  
-  .tabla--mesas-cerradas thead th {
-    background-color: var(--color-principal); /* Morado profundo */
-    color: #ffffff; /* Blanco */
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .tabla--mesas-cerradas tbody td {
-    padding: 10px;
-    border-bottom: 1px solid #e0e0e0; /* Línea de separación */
-  }
-  
-  .tabla--mesas-cerradas tr:nth-child(even) {
-    background-color: #f9f9f9; /* Fila alterna */
-  }
-  
-  .tabla--mesas-cerradas tr:hover {
-    background-color: var(--color-secundario); /* Naranja vibrante */
-    color: #ffffff; /* Texto blanco */
-  }
-  
-  /* Scroll personalizado */
-  .tabla-container--mesas-cerradas::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .tabla-container--mesas-cerradas::-webkit-scrollbar-thumb {
-    background-color: var(--color-principal); /* Morado profundo */
-    border-radius: 4px;
-  }
-  
-  .tabla-container--mesas-cerradas::-webkit-scrollbar-thumb:hover {
-    background-color: var(--color-secundario); /* Naranja vibrante */
-  }
-  
-  /* Contenedor de los botones */
+  padding: var(--espaciado-base);
+}
+
+.titulo--mesas-cerradas {
+  color: var(--color-principal);
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: var(--espaciado-base);
+}
+
 .botones-container-mesas-cerradas {
   display: flex;
-  justify-content: center; /* Centra horizontalmente */
-  gap: 15px; /* Espacio entre los botones */
-  margin-bottom: 20px;
+  justify-content: center;
+  gap: var(--espaciado-base);
+  margin-bottom: var(--espaciado-base);
+}
+
+.mensaje-vacio--mesas-cerradas {
+  text-align: center;
+  color: var(--gris);
+  font-style: italic;
+}
+
+.tabla-container--mesas-cerradas {
+  overflow-x: auto;
+  background-color: var(--blanco);
+  padding: var(--espaciado-base);
+  border-radius: var(--borde-redondeado);
+  box-shadow: var(--sombra-suave);
+}
+
+.tabla--mesas-cerradas {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.tabla--mesas-cerradas th,
+.tabla--mesas-cerradas td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--gris-claro);
+}
+
+.tabla--mesas-cerradas th {
+  background-color: var(--color-principal);
+  color: var(--blanco);
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .detalle-mesa--mesadetalles {
+    flex-direction: column;
+  }
+
+  .rightbar--mesadetalles {
+    width: 100%;
+  }
+
+  .contenedor-botones--mesadetalles {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .boton-cerrar--mesadetalles,
+  .boton-imprimir--mesadetalles,
+  .boton-factura--mesadetalles,
+  .boton-abrir--mesadetalles {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .rightbar--mesadetalles {
+    padding: 0;
+    margin: 0;
+  }
+
+  .modal-contenido,
+  .modal-content--recuperar {
+    padding: 1rem;
+  }
+
+  .modal-contenido input,
+  .modal-contenido button,
+  .modal-content--recuperar button {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  .tabla--mesas-cerradas th,
+  .tabla--mesas-cerradas td {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
 }

@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import MetodoPago from "../components/DetallesMesa/MetodoPago";
 import RightBar from "../components/RightBar/RightBar";
 import { SocketContext } from "../utils/socket";
 import "../styles/DetallesMesa.css";
-import ModalConfirmacion from "../components/Modal/ModalConfirmacion";
 import AlertaMensaje from "../components/AlertaMensaje/AlertaMensaje";
 import ModalTransferencia from "../components/Modal/ModalTransferencia";
 
@@ -142,30 +140,6 @@ const DetalleMesa = () => {
     }
   };
 
-  const abrirMesa = () => {
-    setAccionModal({
-      titulo: "Abrir Mesa",
-      mensaje: "¿Cuántos comensales hay?",
-      placeholder: "Número de comensales",
-      onConfirm: async (comensalesInput) => {
-        if (!comensalesInput || isNaN(comensalesInput) || Number(comensalesInput) <= 0) {
-          setMensajeAlerta({ tipo: "error", mensaje: "Número de comensales inválido." });
-          return;
-        }
-
-        try {
-          await api.put(`/mesas/mesas/${mesa._id}/abrir`, { comensales: Number(comensalesInput) });
-          setMensajeAlerta({ tipo: "exito", mensaje: "Mesa abierta con éxito" });
-          fetchMesa(); // ✅ Reutiliza tu función existente;
-        } catch (error) {
-          console.error("Error al abrir la mesa:", error);
-        }
-      },
-    });
-
-    setMostrarModalConfirmacion(true);
-  };
-
   const imprimirCuenta = async () => {
     try {
       await api.post(`/cuenta/${mesa._id}/imprimir-cuenta`);
@@ -248,6 +222,8 @@ const DetalleMesa = () => {
       },
     });
 
+    console.log("Mostrando modal de confirmación para eliminar producto");
+
     setMostrarModalConfirmacion(true);
   };
 
@@ -312,8 +288,7 @@ const DetalleMesa = () => {
                             : "Cargando producto..."}
                           <button
                             onClick={() =>
-                              eliminarProducto(pedido._id, producto.producto)
-                            }
+                              eliminarProducto(pedido._id, producto.producto?._id || producto.producto)}
                             className="boton-eliminar--mesadetalles"
                           >
                             x
@@ -392,15 +367,6 @@ const DetalleMesa = () => {
             Cerrar Mesa
           </button>
         )}
-
-        {mesa.estado === "cerrada" && (
-          <button
-            onClick={abrirMesa}
-            className="boton-abrir--mesadetalles"
-          >
-            Abrir Mesa
-          </button>
-        )}
         {mesa.estado === "abierta" && (
           <div className="contenedor-botones--mesadetalles">
             <button onClick={imprimirCuenta} className="boton-imprimir--mesadetalles">
@@ -433,18 +399,6 @@ const DetalleMesa = () => {
           />
         )}
       </div>
-      {mostrarModalConfirmacion && (
-        <ModalConfirmacion
-          titulo={accionModal?.titulo}
-          mensaje={accionModal?.mensaje}
-          placeholder={accionModal?.placeholder}
-          onConfirm={(valor) => {
-            accionModal?.onConfirm(valor);
-            setMostrarModalConfirmacion(false);
-          }}
-          onClose={() => setMostrarModalConfirmacion(false)}
-        />
-      )}
       {mensajeAlerta && (
         <AlertaMensaje
           tipo={mensajeAlerta.tipo}

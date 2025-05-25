@@ -1,158 +1,144 @@
-/* Contenedor del SubNavbar */
+/* === SUBNAVBAR - TPV === */
 .subnavbar--subnavbar {
   background-color: var(--color-principal);
-  /* Morado profundo */
-  padding: 10px 20px;
+  padding: var(--espaciado-base) calc(var(--espaciado-base) * 2);
   position: relative;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Sombra */
-  border-top: 1px solid white;
+  box-shadow: var(--sombra-suave);
+  border-top: 1px solid var(--blanco);
 }
 
-/* Encabezado del SubNavbar (menú hamburguesa en pantalla pequeña) */
 .subnavbar-header--subnavbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* Botón de hamburguesa (pantallas grandes: ocultar) */
+/* Botón hamburguesa (oculto por defecto en desktop) */
 .hamburger-button--subnavbar {
   display: none;
-  /* Ocultarlo por defecto */
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: var(--color-secundario);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--borde-redondeado);
+  transition: background-color 0.3s ease;
 }
 
+.hamburger-button--subnavbar:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Menú del subnavbar */
 .subnavbar-menu--subnavbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  gap: var(--espaciado-base);
+  margin-top: var(--espaciado-base);
 }
 
-/* Menú abierto */
 .subnavbar-menu--subnavbar.open--subnavbar {
   max-height: 100vh;
-  /* Expandir completamente */
   opacity: 1;
 }
 
-/* Botones del SubNavbar */
-.subnavbar-button--subnavbar {
-  background-color: var(--color-secundario);
-  /* Naranja vibrante */
-  color: #FFFFFF;
-  /* Texto blanco */
-  border: none;
-  /* Eliminar bordes */
-  border-radius: 5px;
-  /* Bordes redondeados opcionales */
-  padding: 10px 15px;
-  /* Espaciado interno */
-  cursor: pointer;
-  /* Cambiar cursor al pasar por encima */
-  transition: transform 0.2s ease, background-color 0.3s ease;
-  /* Animación */
-  font-size: 1rem;
-  /* Tamaño de fuente */
+.subnavbar-menu--subnavbar.closed--subnavbar {
+  display: none;
 }
 
+/* Botones */
+.subnavbar-button--subnavbar {
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  border: none;
+  border-radius: var(--borde-redondeado);
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-align: center;
+}
 
-/* Hover en botones */
 .subnavbar-button--subnavbar:hover {
-  background-color: #FFFFFF;
+  background-color: var(--blanco);
   color: var(--color-secundario);
   transform: scale(1.05);
 }
 
-/* Estilos específicos para cerrar caja */
+/* Select dentro del botón */
+.subnavbar-button--subnavbar select {
+  background-color: var(--blanco);
+  color: var(--color-principal);
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: var(--borde-redondeado);
+  border: 1px solid var(--color-principal);
+  cursor: pointer;
+  transition: border 0.3s ease;
+  appearance: none;
+  width: 100%;
+}
+
+.subnavbar-button--subnavbar select:hover {
+  border-color: var(--color-principal-oscuro);
+}
+
+/* Botón de cerrar caja */
 .btn-cerrar-caja--subnavbar {
   background-color: var(--color-principal);
 }
 
 .btn-cerrar-caja--subnavbar.disabled {
-  background-color: gray;
+  background-color: #bbb;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
 .btn-cerrar-caja--subnavbar.disabled:hover {
-  background-color: gray;
-  color: white;
+  background-color: #bbb;
+  color: var(--blanco);
   transform: none;
-  cursor: not-allowed;
-  opacity: 0.6;
 }
 
-
-/* Responsive: SubNavbar en pantallas pequeñas */
+/* === Responsive === */
 @media (max-width: 768px) {
-    .subnavbar-menu--subnavbar.open--subnavbar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Añadido para centrar verticalmente */
-    gap: 10px; /* Separación entre botones */
-  }
-
-
-  .subnavbar-button--subnavbar {
-    width: 80%; /* Para que no se vean tan pegados a los bordes */
-    max-width: 300px; /* Límite de tamaño en pantallas grandes */
-    margin: 5px 0;
-    text-align: center; /* Centra el texto dentro del botón */
-  }
-
-  .subnavbar-button--subnavbar select {
-    width: 100%;
-  }
-
-  .subnavbar-menu--subnavbar {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-  }
-
-  .subnavbar-header--subnavbar{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  /* Botón de hamburguesa (estilo moderno) */
   .hamburger-button--subnavbar {
     display: block;
     width: 100%;
-    height: auto;
-    font-size: 3vh;
-    color: var(--color-secundario);
-    position: relative;
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
+    font-size: 2rem;
   }
 
-  .subnavbar-button--subnavbar {
-    width: 100%;
-    margin: 1vh;
-    font-weight: 700;
-    background-color: #630ea0;
-    border-bottom: 2px solid var(--color-secundario);
-    border-radius: 5px;
+  .subnavbar-menu--subnavbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    display: none;
   }
 
   .subnavbar-menu--subnavbar.open--subnavbar {
     display: flex;
   }
 
-  .subnavbar-menu--subnavbar.closed--subnavbar {
-    display: none;
+  .subnavbar-button--subnavbar {
+    width: 90%;
+    max-width: 300px;
+    margin: 0.5rem 0;
+    background-color: var(--color-principal);
+    border-bottom: 2px solid var(--color-secundario);
   }
 
-  .hamburger-button--subnavbar {
-    display: block;
+  .subnavbar-button--subnavbar:hover {
+    background-color: var(--blanco);
+    color: var(--color-principal);
+  }
+}
+
+@media (min-width: 769px) {
+  .subnavbar-menu--subnavbar {
+    display: flex !important; /* Fuerza visibilidad en escritorio */
   }
 }

@@ -89,7 +89,6 @@ const MesasCerradas = () => {
 
   return (
     <div className="mesas-cerradas--mesas-cerradas">
-      <h1 className="titulo--mesas-cerradas">Gestión de Mesas Cerradas</h1>
       <div className="botones-container">
         <div className="botones-container-mesas-cerradas">
           <button

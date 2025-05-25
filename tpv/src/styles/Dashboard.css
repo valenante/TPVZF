@@ -1,105 +1,99 @@
-/* General container for the dashboard */
+/* === DASHBOARD TPV === */
+
 .container--dashboard {
-  padding: 20px;
-  background-color: var(--color-principal); /* Morado Profundo */
+  padding: 2rem;
+  background-color: var(--color-principal);
   width: 100%;
-  align-items: center;
+  display: flex;
   justify-content: center;
-  border-right: #F5F5F5 2px solid; /* Borde gris claro */
+  border-right: 2px solid var(--gris-claro);
   min-height: 50vh;
 }
 
-/* Subnavbar styling */
 .subnavbar--dashboard {
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
-/* Dashboard grid layout */
 .dashboard--dashboard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  align-items: start;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 20px;
+  gap: 1.5rem;
+  max-width: 150vh;
+  width: 100%;
 }
 
-/* Mesa individual styling - Responsive */
 .mesa--dashboard {
-  background-color: #F5F5F5; /* Gris Claro */
-  border-radius: 10px;
-  padding: 5%; /* Relative padding */
-  width: 6vw; /* Relative width based on viewport width */
-  height: 6vw; /* Relative height to maintain square shape */
-  max-width: 100px; /* Limit max size for smaller screens */
-  max-height: 100px; /* Limit max size for smaller screens */
+  background-color: var(--gris-claro);
+  border-radius: var(--borde-redondeado);
+  width: 6vw;
+  height: 6vw;
+  max-width: 100px;
+  max-height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8vw; /* Relative font size based on viewport width */
+  font-size: 0.8vw;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--sombra-suave);
+  border: 2px solid transparent;
 }
 
-/* Hover effect */
 .mesa--dashboard:hover {
   transform: translateY(-3%);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Mesa number styling */
 .mesa-number--dashboard {
   font-size: 1.5rem;
-  color: #333;
+  color: var(--gris-oscuro);
 }
 
-/* Estado styling */
 .mesa--dashboard.abierta--dashboard {
-  background-color: var(--color-secundario); /* Naranja Vibrante */
-  color: white;
+  background-color: var(--color-secundario);
+  color: var(--blanco);
+  border-color: var(--color-secundario);
 }
 
 .mesa--dashboard.cerrada--dashboard {
-  background-color: #f7f7f7; /* Verde Menta */
-  color: black;
+  background-color: var(--gris-claro);
+  color: var(--gris-oscuro);
+  border-color: var(--gris-claro);
 }
 
-/* Contenedor principal para centrar el formulario */
 .search-container--dashboard {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 60vh; 
+  height: 60vh;
   width: 43vh;
 }
 
-
-/* Estilo responsive para pantallas pequeñas */
 @media (max-width: 600px) {
-   .dashboard--dashboard {
-    grid-template-columns: repeat(4, 1fr); /* Siempre 4 columnas */
-    gap: 10px; /* Menor separación entre cajas */
-    justify-items: center; /* Centra las cajas en su columna */
+  .dashboard--dashboard {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    justify-items: center;
+    width: 100%;
+  }
+
+  .mesa--dashboard {
+    width: 100%;
+    max-width: 80px;
+    height: 80px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
   }
 
   .container--dashboard {
-    width: 100%;
-    height: 100%;
-    padding: 0;
+    padding: 0rem;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .mesa--dashboard {
-    width: 60px;
-    height: 60px;
-    font-size: 1rem;
-    padding: 10px;
-    max-width: none;
-    max-height: none;
+    width: 100%;
+    overflow-x: hidden;
   }
 }

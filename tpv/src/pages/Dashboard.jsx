@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import "../styles/Dashboard.css";
 import SubNavbar from "../components/Subnavbar/Subnavbar";
+import ModalConfirmacion from "../components/Modal/ModalConfirmacion";
 import { SocketContext } from "../utils/socket";
 
 const Dashboard = () => {
@@ -10,6 +11,9 @@ const Dashboard = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Detecta si la pantalla es pequeña
   const navigate = useNavigate();
   const { socket } = useContext(SocketContext); // Obtener el socket del contexto
+  const [mesaSeleccionada, setMesaSeleccionada] = useState(null);
+  const [mostrarModalConfirmacion, setMostrarModalConfirmacion] = useState(false);
+  const [accionModal, setAccionModal] = useState(null);
 
   const fetchMesas = async () => {
     try {
@@ -43,8 +47,35 @@ const Dashboard = () => {
     };
   }, [socket]);
 
-  const handleMesaClick = (mesaId) => {
-    navigate(`/mesas/${mesaId}`);
+  const handleMesaClick = (mesa) => {
+    if (mesa.estado === "cerrada") {
+      setMesaSeleccionada(mesa);
+      setAccionModal({
+        titulo: "Abrir Mesa",
+        mensaje: `¿Cuántos comensales hay en la mesa ${mesa.numero}?`,
+        placeholder: "Número de comensales",
+        onConfirm: async (comensalesInput) => {
+          if (!comensalesInput || isNaN(comensalesInput) || Number(comensalesInput) <= 0) {
+            alert("Número de comensales inválido."); // O tu sistema de alerta
+            return;
+          }
+
+          try {
+            await api.put(`/mesas/mesas/${mesa._id}/abrir`, {
+              comensales: Number(comensalesInput),
+            });
+            fetchMesas();
+            setMostrarModalConfirmacion(false);
+            navigate(`/mesas/${mesa._id}`);
+          } catch (error) {
+            console.error("Error al abrir la mesa:", error);
+          }
+        },
+      });
+      setMostrarModalConfirmacion(true);
+    } else {
+      navigate(`/mesas/${mesa._id}`);
+    }
   };
 
   return (
@@ -55,18 +86,29 @@ const Dashboard = () => {
 
       <div className="container--dashboard">
 
-          <div className="dashboard--dashboard">
-            {mesas.map((mesa) => (
-              <div
-                key={mesa._id}
-                className={`mesa--dashboard ${mesa.estado}--dashboard`}
-                onClick={() => handleMesaClick(mesa._id)}
-              >
-                <p className="mesa-number--dashboard">{mesa.numero}</p>
-              </div>
-            ))}
-          </div>
+        <div className="dashboard--dashboard">
+          {mesas.map((mesa) => (
+            <div
+              key={mesa._id}
+              className={`mesa--dashboard ${mesa.estado}--dashboard`}
+              onClick={() => handleMesaClick(mesa)}
+            >
+              <p className="mesa-number--dashboard">{mesa.numero}</p>
+            </div>
+          ))}
+        </div>
       </div>
+      {mostrarModalConfirmacion && (
+        <ModalConfirmacion
+          titulo={accionModal?.titulo}
+          mensaje={accionModal?.mensaje}
+          placeholder={accionModal?.placeholder}
+          onConfirm={(valor) => {
+            accionModal?.onConfirm(valor);
+          }}
+          onClose={() => setMostrarModalConfirmacion(false)}
+        />
+      )}
     </>
   );
 };
