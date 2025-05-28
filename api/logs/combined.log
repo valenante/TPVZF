@@ -1490,3 +1490,12 @@
 [2025-05-25 12:49:33] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-25T10:49:33.479Z
 [2025-05-25 12:49:42] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-25T10:49:42.183Z
 [2025-05-25 12:49:52] INFO: Servidor escuchando en el puerto 3000
+[2025-05-25 12:59:12] INFO: Servidor escuchando en el puerto 3000
+[2025-05-25 12:59:43] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-25T10:59:43.546Z
+[2025-05-25 12:59:50] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-25T10:59:50.971Z
+[2025-05-26 12:07:54] INFO: Servidor escuchando en el puerto 3000
+[2025-05-26 12:08:30] INFO: [LOGIN ATTEMPT] Usuario: 2, IP: ::ffff:192.168.1.150, Hora: 2025-05-26T10:08:30.425Z
+[2025-05-26 12:08:36] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-26T10:08:36.713Z
+[2025-05-28 12:52:20] INFO: Servidor escuchando en el puerto 3000
+[2025-05-28 12:52:40] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.150, Hora: 2025-05-28T10:52:40.159Z
+[2025-05-28 12:53:43] INFO: [LOGIN ATTEMPT] Usuario: Valen, IP: ::ffff:192.168.1.129, Hora: 2025-05-28T10:53:43.025Z
