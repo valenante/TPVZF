@@ -81,17 +81,29 @@ export const crearTokenLider = async (req, res) => {
         .json({ error: 'El tokenLider ya existe para esta mesa' });
     }
 
-    // Generar tokenLider y cambiar estado a "abierto"
+    // 🟡 Generar token y abrir mesa
     mesaDoc.tokenLider = uuidv4();
     mesaDoc.estado = 'abierta';
 
-    req.io.emit('mesaAbierta', mesaDoc); // Emitir evento de apertura de mesa
+    // 🟢 Crear nueva sesión de mesa
+    const nuevaSesion = new SesionMesa({
+      mesa: mesaDoc._id,
+      estado: 'activa',
+    });
+    await nuevaSesion.save();
+
+    mesaDoc.sesionActiva = nuevaSesion._id;
 
     await mesaDoc.save();
 
-    res
-      .status(201)
-      .json({ tokenLider: mesaDoc.tokenLider, estado: mesaDoc.estado });
+    // 🔁 Emitir evento en tiempo real
+    req.io.emit('mesaAbierta', mesaDoc);
+
+    res.status(201).json({
+      tokenLider: mesaDoc.tokenLider,
+      estado: mesaDoc.estado,
+      sesionActiva: nuevaSesion._id,
+    });
   } catch (error) {
     console.error('Error al crear el tokenLider:', error);
     res.status(500).json({ error: 'Error al procesar la solicitud' });
@@ -124,38 +136,6 @@ export const obtenerMesaPorId = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener la mesa' });
   }
 };
-
-// Abrir una nueva mesa
-export const abrirMesa = async (req, res) => {
-  const { numero } = req.body;
-
-  try {
-    const mesaExistente = await Mesa.findOne({ numero, estado: 'abierta' });
-    if (mesaExistente) {
-      return res.status(400).json({ error: 'La mesa ya está abierta' });
-    }
-
-    const nuevaMesa = new Mesa({ numero, estado: 'abierta' });
-    await nuevaMesa.save();
-
-    const nuevaSesion = new SesionMesa({
-      mesa: nuevaMesa._id,
-      estado: 'activa',
-    });
-    await nuevaSesion.save();
-
-    nuevaMesa.sesionActiva = nuevaSesion._id;
-    await nuevaMesa.save();
-
-    req.io.emit('mesaAbierta', nuevaMesa);
-
-    res.status(201).json(nuevaMesa);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al abrir la mesa' });
-  }
-};
-
 
 // Reabrir una mesa existente y actualizar comensales
 export const abrirMesaCamarero = async (req, res) => {
