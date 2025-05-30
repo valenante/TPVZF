@@ -290,7 +290,11 @@ export const agregarProductoBebida = async (req, res) => {
   }
 
   try {
-    const mesa = await Mesa.findById(mesaId).populate('pedidosBebidas');
+    // Buscar mesa por ID o número
+    const mesa = /^[0-9a-fA-F]{24}$/.test(mesaId)
+      ? await Mesa.findById(mesaId).populate('pedidosBebidas')
+      : await Mesa.findOne({ numero: parseInt(mesaId, 10) }).populate('pedidosBebidas');
+
     if (!mesa) return res.status(404).json({ error: 'Mesa no encontrada' });
 
     // Buscar sesión activa
@@ -299,11 +303,27 @@ export const agregarProductoBebida = async (req, res) => {
       return res.status(400).json({ error: 'No se encontró una sesión activa para esta mesa.' });
     }
 
+    // Obtener datos completos de productos para completar campos obligatorios
+    const idsProductos = productos.map(p => p.producto);
+    const productosDB = await Producto.find({ _id: { $in: idsProductos } });
+
+    // Completar productos con datos obligatorios
+    const productosCompletos = productos.map(p => {
+      const productoInfo = productosDB.find(prod => prod._id.toString() === p.producto.toString());
+
+      return {
+        ...p,
+        tipoPrecio: p.tipoPrecio || productoInfo?.tipoPrecio || 'precioBase', // default para bebida puede ser 'precioBase'
+        categoria: p.categoria || productoInfo?.categoria || 'bebida',
+        tipo: p.tipo || productoInfo?.tipo || 'bebida',
+      };
+    });
+
     let pedidoModificado;
     const pedidoExistente = mesa.pedidosBebidas.find(p => p.estado === 'pendiente');
 
     if (pedidoExistente) {
-      productos.forEach(p => {
+      productosCompletos.forEach(p => {
         pedidoExistente.productos.push({ ...p });
         pedidoExistente.total += p.total;
       });
@@ -312,27 +332,23 @@ export const agregarProductoBebida = async (req, res) => {
       const nuevoPedidoBebida = new PedidoBebida({
         mesa: mesa._id,
         sesionId: sesionActiva._id,
-        productos,
+        productos: productosCompletos,
         estado: 'pendiente',
-        total: productos.reduce((sum, p) => sum + p.total, 0),
+        total: productosCompletos.reduce((sum, p) => sum + p.total, 0),
       });
       pedidoModificado = await nuevoPedidoBebida.save();
       mesa.pedidosBebidas.push(pedidoModificado._id);
     }
 
-    mesa.total += productos.reduce((sum, p) => sum + p.total, 0);
+    mesa.total += productosCompletos.reduce((sum, p) => sum + p.total, 0);
     await mesa.save();
 
     req.io.emit('nuevoPedido', pedidoModificado);
 
-    // Obtener nombres reales de los productos
-    const idsProductos = productos.map(p => p.producto);
-    const productosDB = await Producto.find({ _id: { $in: idsProductos } });
-
     const datosRespuesta = {
       mesaNumero: mesa.numero,
       comensales: mesa.comensales || 0,
-      productos: productos.map(p => {
+      productos: productosCompletos.map(p => {
         const productoInfo = productosDB.find(prod => prod._id.toString() === p.producto);
         return {
           nombre: productoInfo?.nombre || 'Producto desconocido',
@@ -342,19 +358,16 @@ export const agregarProductoBebida = async (req, res) => {
           alergiasComensal: p.alergiasComensal || '',
           mensaje: p.mensaje || '',
           acompanante: p.acompanante || null,
-          mensaje: p.mensaje || '',
         };
       }),
-      total: productos.reduce((sum, p) => sum + p.total, 0),
+      total: productosCompletos.reduce((sum, p) => sum + p.total, 0),
     };
 
-    // Llamada al servidor impresión para bebidas
     try {
       const IMPRESION_SERVER = 'http://100.91.21.52:4000'; // Ajusta la IP si es necesario
       await axios.post(`${IMPRESION_SERVER}/imprimir-bebidas`, datosRespuesta);
     } catch (error) {
       console.error('Error al enviar pedido de bebidas a la impresora:', error.message);
-      // No bloqueamos la respuesta aunque falle la impresión
     }
 
     res.json(datosRespuesta);

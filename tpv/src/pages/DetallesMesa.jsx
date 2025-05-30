@@ -222,8 +222,6 @@ const DetalleMesa = () => {
       },
     });
 
-    console.log("Mostrando modal de confirmación para eliminar producto");
-
     setMostrarModalConfirmacion(true);
   };
 

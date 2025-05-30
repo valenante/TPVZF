@@ -97,10 +97,8 @@ export const crearPedido = async (req, res) => {
 };
 
 export const agregarProductoAlPedido = async (req, res) => {
-  const { mesaId } = req.params;
+  const { mesaId } = req.params; // puede ser ID o número
   const { productos } = req.body;
-
-  console.log(req.body);
 
   if (!Array.isArray(productos) || productos.length === 0) {
     return res.status(400).json({ error: 'Debes enviar al menos un producto válido.' });
@@ -112,7 +110,11 @@ export const agregarProductoAlPedido = async (req, res) => {
   }
 
   try {
-    const mesa = await Mesa.findById(mesaId).populate('pedidos');
+    // Buscar la mesa por ID o por número
+    const mesa = /^[0-9a-fA-F]{24}$/.test(mesaId)
+      ? await Mesa.findById(mesaId).populate('pedidos')
+      : await Mesa.findOne({ numero: parseInt(mesaId, 10) }).populate('pedidos');
+
     if (!mesa) return res.status(404).json({ error: 'Mesa no encontrada' });
 
     // Buscar la sesión activa
@@ -121,11 +123,27 @@ export const agregarProductoAlPedido = async (req, res) => {
       return res.status(400).json({ error: 'La mesa no tiene una sesión activa. Abre la mesa antes de agregar productos.' });
     }
 
+    // Obtener datos completos de productos para completar campos obligatorios
+    const idsProductos = productos.map(p => p.producto);
+    const productosDB = await Producto.find({ _id: { $in: idsProductos } });
+
+    // Completar productos con datos obligatorios
+    const productosCompletos = productos.map(p => {
+      const productoInfo = productosDB.find(prod => prod._id.toString() === p.producto.toString());
+
+      return {
+        ...p,
+        tipoPrecio: p.tipoPrecio || productoInfo?.tipoPrecio || 'tapa', // ajustar valor por defecto según convenga
+        categoria: p.categoria || productoInfo?.categoria || 'general',
+        tipo: p.tipo || productoInfo?.tipo || 'producto',
+      };
+    });
+
     let pedidoModificado;
     const pedidoExistente = mesa.pedidos.find(p => p.estado === 'pendiente');
 
     if (pedidoExistente) {
-      productos.forEach(p => {
+      productosCompletos.forEach(p => {
         pedidoExistente.productos.push({ ...p });
         pedidoExistente.total += p.total;
       });
@@ -134,26 +152,23 @@ export const agregarProductoAlPedido = async (req, res) => {
       const nuevoPedido = new Pedido({
         mesa: mesa._id,
         sesionId: sesionActiva._id,
-        productos,
+        productos: productosCompletos,
         estado: 'pendiente',
-        total: productos.reduce((sum, p) => sum + p.total, 0),
+        total: productosCompletos.reduce((sum, p) => sum + p.total, 0),
       });
       pedidoModificado = await nuevoPedido.save();
       mesa.pedidos.push(pedidoModificado._id);
     }
 
-    mesa.total += productos.reduce((sum, p) => sum + p.total, 0);
+    mesa.total += productosCompletos.reduce((sum, p) => sum + p.total, 0);
     await mesa.save();
 
     req.io.emit('nuevoPedido', pedidoModificado);
 
-    const idsProductos = productos.map(p => p.producto);
-    const productosDB = await Producto.find({ _id: { $in: idsProductos } });
-
     const datosRespuesta = {
       mesaNumero: mesa.numero,
       comensales: mesa.comensales || 0,
-      productos: productos.map(p => {
+      productos: productosCompletos.map(p => {
         const productoInfo = productosDB.find(prod => prod._id.toString() === p.producto);
         return {
           nombre: productoInfo?.nombre || 'Producto desconocido',
@@ -173,17 +188,15 @@ export const agregarProductoAlPedido = async (req, res) => {
           seccion: p.seccion,
         };
       }),
-      total: productos.reduce((sum, p) => sum + p.total, 0),
-      horaSalida: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) // ✅ AÑADIDO
+      total: productosCompletos.reduce((sum, p) => sum + p.total, 0),
+      horaSalida: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
     };
 
-    // Aquí llamamos al servidor impresión para imprimir el pedido (platos)
     try {
-      const IMPRESION_SERVER = 'http://100.91.21.52:4000'; // Cambia a la IP correcta de tu servidor impresión
+      const IMPRESION_SERVER = 'http://100.91.21.52:4000';
       await axios.post(`${IMPRESION_SERVER}/imprimir`, datosRespuesta);
     } catch (error) {
       console.error('Error al enviar pedido a la impresora:', error.message);
-      // No interrumpimos el flujo, solo logueamos el error
     }
 
     res.json(datosRespuesta);

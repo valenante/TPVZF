@@ -9,6 +9,7 @@ import {
   eliminarProducto,
   eliminarProductoPedido,
   obtenerProductoPorId,
+  buscarProductoPorNombre
 } from '../controllers/productosController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { checkRole } from '../middlewares/checkRole.js';
@@ -52,6 +53,10 @@ router.post(
   ],
   crearProducto
 );
+
+// GET /api/productos/buscar?nombre=cerveza
+router.get('/buscar/buscar', buscarProductoPorNombre);
+
 
 // Actualizar un producto por ID (solo usuarios autenticados y con rol admin)
 router.put(

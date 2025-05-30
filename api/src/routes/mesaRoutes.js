@@ -1,7 +1,6 @@
 import { Router } from 'express';
 const router = Router();
 import {
-  abrirMesa,
   cerrarMesa,
   obtenerMesasAbiertas,
   obtenerMesasCerradas,
@@ -23,7 +22,6 @@ import {
 // Rutas
 router.get('/', obtenerMesas); // Obtener todas las mesas activas
 router.get('/:id', obtenerMesaPorId); // Obtener una mesa activa por ID
-router.post('/', abrirMesa); // Abrir una nueva mesa
 router.post('/crear-mesa/crear-mesa', crearMesa);
 router.post('/recuperar-mesa/:mesaId', recuperarMesa);
 router.post('/comensal', registrarComensal);

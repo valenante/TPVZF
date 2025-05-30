@@ -48,7 +48,7 @@ const PedidoSchema = new Schema({
       seccion: {
         type: String,
         enum: ['entrante', 'medio', 'final', null],
-        default: null,
+        default: 'medio',
       }, // ✅
       sabor: {
         type: [

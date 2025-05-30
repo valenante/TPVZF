@@ -1,0 +1,98 @@
+/* Ocultar por defecto en pantallas grandes */
+.tpv-voz-container {
+  display: none;
+}
+
+/* Mantener toda la apariencia actual para móviles */
+@media (max-width: 400px) {
+  .tpv-voz-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    max-width: 90vw;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .boton-mic {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    z-index: 9999;
+    border-radius: 24px;
+    box-shadow: 0 4px 10px rgba(106, 13, 173, 0.7);
+    background-color: #6A0DAD;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .boton-mic:hover:not(:disabled) {
+    background-color: #7e1dcf;
+    box-shadow: 0 6px 8px rgba(126, 29, 207, 0.6);
+  }
+
+  .boton-mic:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .boton-mic.escuchando {
+    width: 160px;
+    font-size: 1.1rem;
+    border: 2px solid #FF6700;
+    box-shadow: 0 0 15px #FF6700;
+    transform: translateX(-50%) scale(1.1);
+  }
+
+  /* Padding extra para que dashboard no quede tapado */
+  .container--dashboard {
+    padding-bottom: 80px;
+  }
+
+  .transcripcion {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 320px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow-wrap: break-word;
+    user-select: text;
+    text-align: center;
+    min-height: 48px;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .transcripcion.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .estado {
+    font-size: 0.9rem;
+    color: #333;
+    text-align: center;
+    word-wrap: break-word;
+    max-width: 100%;
+    font-weight: 600;
+  }
+}

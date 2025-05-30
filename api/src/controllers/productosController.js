@@ -269,3 +269,27 @@ export const eliminarProductoPedido = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar producto/bebida.' });
   }
 };
+
+export const buscarProductoPorNombre = async (req, res) => {
+  let nombre = req.query.nombre;
+  if (!nombre) return res.status(400).json({ error: 'Falta el nombre del producto' });
+
+  const nombreNormalizado = nombre.toLowerCase().replace(/[\s\-]+/g, '');
+
+  try {
+    const productos = await Producto.find({
+      $or: [
+        { nombreNormalizado: { $regex: nombreNormalizado, $options: 'i' } },
+        { aliases: { $elemMatch: { $regex: nombreNormalizado, $options: 'i' } } },
+      ]
+    });
+
+    if (productos.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });
+
+    res.json(productos[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al buscar producto' });
+  }
+};
+

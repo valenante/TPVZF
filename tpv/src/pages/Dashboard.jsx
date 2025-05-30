@@ -5,6 +5,7 @@ import "../styles/Dashboard.css";
 import SubNavbar from "../components/Subnavbar/Subnavbar";
 import ModalConfirmacion from "../components/Modal/ModalConfirmacion";
 import { SocketContext } from "../utils/socket";
+import TPVVoice from "../components/TPVVoiceAssistant/TPVVoice";
 
 const Dashboard = () => {
   const [mesas, setMesas] = useState([]);
@@ -109,6 +110,7 @@ const Dashboard = () => {
           onClose={() => setMostrarModalConfirmacion(false)}
         />
       )}
+      <TPVVoice />
     </>
   );
 };
