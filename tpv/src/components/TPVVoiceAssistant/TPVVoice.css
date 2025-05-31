@@ -4,7 +4,7 @@
 }
 
 /* Mantener toda la apariencia actual para móviles */
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .tpv-voz-container {
     display: flex;
     flex-direction: column;
