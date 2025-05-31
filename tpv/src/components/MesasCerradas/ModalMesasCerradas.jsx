@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
+import AlertaMensaje from "../AlertaMensaje/AlertaMensaje"; // Componente para mostrar alertas"
 import "./ModalMesasCerradas.css";
 
 const RecuperarMesaModal = ({ onClose }) => {
   const [mesasCerradas, setMesasCerradas] = useState([]);
   const [mesasAbiertas, setMesasAbiertas] = useState([]);
   const [recuperando, setRecuperando] = useState(false);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null); // Mensaje de alerta
+
 
   useEffect(() => {
     // Obtener mesas cerradas
@@ -47,7 +50,7 @@ const RecuperarMesaModal = ({ onClose }) => {
       onClose();
     } catch (error) {
       console.error("Error al recuperar la mesa:", error);
-      alert("Hubo un problema al recuperar la mesa.");
+      setMensajeAlerta({ tipo: "error", mensaje: "Hubo un error al recuperar las mesas" });
     } finally {
       setRecuperando(false);
     }
@@ -77,8 +80,15 @@ const RecuperarMesaModal = ({ onClose }) => {
         )}
         <button onClick={onClose} className="boton-cerrar--recuperar">Cerrar</button>
       </div>
+      {mensajeAlerta && (
+        <AlertaMensaje
+          tipo={mensajeAlerta.tipo}
+          mensaje={mensajeAlerta.mensaje}
+          onClose={() => setMensajeAlerta(null)}
+        />
+      )}
     </div>
-  );  
+  );
 };
 
 export default RecuperarMesaModal;

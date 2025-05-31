@@ -1,143 +1,23 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
+
 import ProductoDetalle from "./ProductoDetalle.jsx";
-import { useCategorias } from "../../context/CategoriasContext";
-import api from "../../utils/api";
+import { useRightBar } from "../../hooks/useRightBar";
 import AlertaMensaje from "../AlertaMensaje/AlertaMensaje"; // ✅ Asegúrate de tenerlo creado
 import ModalProductosCategoria from "../ModalProductosCategoria/ModalProductosCategoria";
 import CarritoOrganizable from "../CarritoOrganizable/CarritoOrganizable";
 import "./RightBar.css";
 
 const RightBar = ({ mesaId }) => {
-  const [tipo, setTipo] = useState("plato");
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
-  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
-  const [preciosSeleccionados, setPreciosSeleccionados] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [carrito, setCarrito] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [mensajeAlerta, setMensajeAlerta] = useState(null);
-  const [mostrarModalCategoria, setMostrarModalCategoria] = useState(false);
-  const [productosCategoriaActual, setProductosCategoriaActual] = useState([]);
-  const { categories, fetchCategories, products, fetchProducts } = useCategorias();
-  const [mostrarResumen, setMostrarResumen] = useState(false);
-  const [resumen, setResumen] = useState({});
-  const [mensajePedido, setMensajePedido] = useState("");
-  const [carritoBebidas, setCarritoBebidas] = useState([]);
-  const [productosYaPedidos, setProductosYaPedidos] = useState([]);
-  const [carritoSecciones, setCarritoSecciones] = useState({
-
-    entrante: [],
-    medio: [],
-    final: [],
-  });
-
-  useEffect(() => { fetchCategories(tipo); }, [tipo]);
-  useEffect(() => { if (categoriaSeleccionada) fetchProducts(categoriaSeleccionada); }, [categoriaSeleccionada]);
-
-  const abrirModal = (producto) => {
-    const precioSeleccionado = preciosSeleccionados[producto._id] !== undefined
-      ? preciosSeleccionados[producto._id]
-      : producto.tipo === "tapaRacion"
-        ? producto.precios.tapa || producto.precios.racion
-        : producto.precios.precioBase;
-
-    setProductoSeleccionado({ ...producto, precioSeleccionado });
-    setShowModal(true);
-  };
-
-  const cerrarModal = () => {
-    setProductoSeleccionado(null);
-    setShowModal(false);
-  };
-
-  const agregarAlCarrito = (productoPersonalizado) => {
-    if (productoPersonalizado.tipo === "bebida") {
-      setCarritoBebidas((prev) => [...prev, productoPersonalizado]);
-    } else {
-      setCarritoSecciones((prev) => ({
-        ...prev,
-        medio: [...prev.medio, { ...productoPersonalizado, seccion: 'medio' }],
-      }));
-    }
-    cerrarModal();
-  };
-
-  const enviarPedido = async () => {
-    try {
-      setIsLoading(true);
-
-      const pedidoOrdenado = [...carritoSecciones.entrante, ...carritoSecciones.medio, ...carritoSecciones.final];
-
-      if (pedidoOrdenado.length > 0) {
-        const payloadPlatos = pedidoOrdenado.map(p => ({
-          producto: p._id,
-          cantidad: p.cantidad,
-          total: p.precioSeleccionado * p.cantidad,
-          precioSeleccionado: p.precioSeleccionado,
-          tipoPrecio: p.tipoPrecio,
-          tipoPlato: p.tipoPlato || null,
-          acompanante: p.acompanante || null,
-          tipo: p.tipo,
-          categoria: p.categoria,
-          ingredientes: p.ingredientes || [],
-          opcionesPersonalizables: p.opciones ? Object.entries(p.opciones).map(([tipo, opcion]) => ({ tipo, opcion })) : [],
-          mensaje: p.mensaje || "",
-          adicionales: p.adicionales || [],
-          seccion: p.seccion || null,
-        }));
-
-        const { data } = await api.post(`/pedidos/${mesaId}/agregar-producto`, { productos: payloadPlatos });
-      }
-
-      if (carritoBebidas.length > 0) {
-        const payloadBebidas = carritoBebidas.map(p => ({
-          producto: p._id,
-          cantidad: p.cantidad,
-          total: p.precioSeleccionado * p.cantidad,
-          precioSeleccionado: p.precioSeleccionado,
-          tipoPrecio: p.tipoPrecio,
-          acompanante: p.acompanante || null,
-          tipo: p.tipo,
-          categoria: p.categoria,
-          mensaje: p.mensaje || "",
-        }));
-
-        const { data } = await api.post(`/pedidosBebidas/${mesaId}/agregar-producto`, { productos: payloadBebidas });
-      }
-
-      setCarritoSecciones({ entrante: [], medio: [], final: [] });
-      setCarritoBebidas([]);
-      setMensajeAlerta({ tipo: "exito", mensaje: "Pedido enviado correctamente." });
-    } catch (error) {
-      console.error("Error al enviar el pedido:", error);
-      setMensajeAlerta({ tipo: "error", mensaje: "Error al enviar el pedido." });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleClickCategoria = async (categoria) => {
-    setCategoriaSeleccionada(categoria);
-
-    // Cargar productos de la categoría
-    const productosCargados = await fetchProducts(categoria);
-    setProductosCategoriaActual(productosCargados);
-
-    // Obtener productos ya pedidos de la mesa
-    try {
-      const { data } = await api.get(`/pedidos/mesa/${mesaId}`);
-
-      // Combina productos de todos los pedidos
-      const productosMesa = data || [];
-      setProductosYaPedidos(productosMesa);
-
-    } catch (error) {
-      console.error("Error al obtener el pedido de la mesa:", error);
-      setProductosYaPedidos([]);
-    }
-    setMostrarModalCategoria(true);
-  };
+  const {
+    tipo, setTipo, categoriaSeleccionada, setCategoriaSeleccionada,
+    productoSeleccionado, preciosSeleccionados, setPreciosSeleccionados,
+    showModal, abrirModal, cerrarModal, agregarAlCarrito,
+    carritoSecciones, setCarritoSecciones, carritoBebidas, setCarritoBebidas,
+    enviarPedido, mensajeAlerta, setMensajeAlerta, isLoading,
+    mostrarResumen, setMostrarResumen, categories,
+    handleClickCategoria, mostrarModalCategoria,
+    productosCategoriaActual, productosYaPedidos, setMostrarModalCategoria
+  } = useRightBar(mesaId);
 
   return (
     <div className="right-bar--rightbar">

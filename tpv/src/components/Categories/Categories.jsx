@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useCategorias } from "../../context/CategoriasContext";
 import EditProduct from "./EditProducts";
 import CrearProducto from "./CrearProducto"
+import AlertaMensaje from "../AlertaMensaje/AlertaMensaje"; // Componente para mostrar alertas
 import "./Categories.css";
 
 const Categories = ({ category }) => {
   const [editingProduct, setEditingProduct] = useState(null); // Producto en edición
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null); // Mensaje de alerta
 
   const { products, fetchProducts, updateProduct, deleteProduct } = useCategorias();
 
@@ -33,15 +35,15 @@ const Categories = ({ category }) => {
   const handleDeleteProduct = async (id) => {
     const confirmacion = window.confirm("¿Estás seguro de que quieres eliminar este producto?");
     if (!confirmacion) return;
-  
+
     try {
       await deleteProduct(id); // Usa el método del contexto
       await fetchProducts(category); // Refresca los productos después de eliminar
-      alert("Producto eliminado con éxito.");
+      setMensajeAlerta({ tipo: "exito", mensaje: "Producto eliminado con exito" });
     } catch (error) {
       console.error("Error al eliminar producto:", error);
     }
-  };  
+  };
 
   const handleCancel = () => {
     setEditingProduct(null); // Cancela la edición
@@ -96,8 +98,14 @@ const Categories = ({ category }) => {
           <CrearProducto onClose={() => setMostrarFormulario(false)} />
         </>
       )}
+      {mensajeAlerta && (
+        <AlertaMensaje
+          tipo={mensajeAlerta.tipo}
+          mensaje={mensajeAlerta.mensaje}
+          onClose={() => setMensajeAlerta(null)}
+        />
+      )}
     </div>
-
   );
 };
 

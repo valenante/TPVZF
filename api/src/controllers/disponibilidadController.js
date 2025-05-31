@@ -1,13 +1,11 @@
-// controllers/disponibilidadController.js
 import Disponibilidad from '../models/Disponibilidad.js';
 
-// Obtener la configuración actual
+// Obtener configuración actual o crear por defecto
 export const obtenerDisponibilidad = async (req, res) => {
   try {
     let disponibilidad = await Disponibilidad.findOne();
 
     if (!disponibilidad) {
-      // Crear por defecto: todos los días habilitados
       disponibilidad = await Disponibilidad.create({
         domingo: true,
         lunes: true,
@@ -19,39 +17,28 @@ export const obtenerDisponibilidad = async (req, res) => {
       });
     }
 
-    res.json({
-      domingo: disponibilidad.domingo,
-      lunes: disponibilidad.lunes,
-      martes: disponibilidad.martes,
-      miércoles: disponibilidad.miércoles,
-      jueves: disponibilidad.jueves,
-      viernes: disponibilidad.viernes,
-      sábado: disponibilidad.sábado,
-    });
+    // Devolver solo los días, sin _id ni __v
+    const {
+      domingo, lunes, martes, miércoles, jueves, viernes, sábado
+    } = disponibilidad;
+
+    res.json({ domingo, lunes, martes, miércoles, jueves, viernes, sábado });
   } catch (error) {
-    console.error('Error al obtener disponibilidad:', error);
+    console.error('❌ Error al obtener disponibilidad:', error);
     res.status(500).json({ mensaje: 'Error al obtener la disponibilidad.' });
   }
 };
 
-// Actualizar los días habilitados
+// Actualizar días habilitados
 export const actualizarDisponibilidad = async (req, res) => {
-  const { domingo, lunes, martes, miércoles, jueves, viernes, sábado } =
-    req.body;
-
   try {
-    let disponibilidad = await Disponibilidad.findOne();
+    const valores = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    const nuevosValores = Object.fromEntries(
+      valores.map((dia) => [dia, !!req.body[dia]])
+    );
+    nuevosValores.actualizadoEn = new Date();
 
-    const nuevosValores = {
-      domingo: !!domingo,
-      lunes: !!lunes,
-      martes: !!martes,
-      miércoles: !!miércoles,
-      jueves: !!jueves,
-      viernes: !!viernes,
-      sábado: !!sábado,
-      actualizadoEn: new Date(),
-    };
+    let disponibilidad = await Disponibilidad.findOne();
 
     if (!disponibilidad) {
       disponibilidad = new Disponibilidad(nuevosValores);
@@ -62,7 +49,7 @@ export const actualizarDisponibilidad = async (req, res) => {
     await disponibilidad.save();
     res.json({ mensaje: 'Disponibilidad actualizada correctamente.' });
   } catch (error) {
-    console.error('Error al actualizar disponibilidad:', error);
+    console.error('❌ Error al actualizar disponibilidad:', error);
     res.status(500).json({ mensaje: 'Error al actualizar la disponibilidad.' });
   }
 };

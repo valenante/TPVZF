@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from "react";
-import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ProductosContext } from "../../context/ProductosContext";
 import { useComensal } from "../../context/ComensalesContext"; // 👈 Importar el hook
 import api from "../../utils/api";
+import AlertaMensaje from "../AlertaMensaje/AlertaMensaje";
 import "../../styles/CarritoModal.css";
 
 const CarritoModal = ({ cerrarModal }) => {
@@ -13,6 +13,7 @@ const CarritoModal = ({ cerrarModal }) => {
   const numeroMesa = searchParams.get("mesa");
   const { comensal } = useComensal();
   const { comensales, alergias } = comensal;
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
 
   useEffect(() => {
     // Aquí estamos llamando a la función para obtener el ID de la mesa (asumiendo que la mesa es la 1, o puedes pasar otro número de mesa)
@@ -35,7 +36,7 @@ const CarritoModal = ({ cerrarModal }) => {
 
   const eliminarProducto = async (itemId) => {
     if (!(await esLider())) {
-      alert("Solo el líder puede eliminar productos del carrito.");
+      setMensajeAlerta({ tipo: "error", mensaje: "Solo el líder puede eliminar productos del carrito." });
       return;
     }
 
@@ -81,7 +82,7 @@ const CarritoModal = ({ cerrarModal }) => {
 
   const enviarPedido = async () => {
     if (!(await esLider())) {
-      alert("Solo el líder puede enviar el pedido.");
+      setMensajeAlerta({ tipo: "error", mensaje: "Solo el líder puede enviar el pedido." });
       return;
     }
 
@@ -279,6 +280,13 @@ const CarritoModal = ({ cerrarModal }) => {
           Enviar Pedido
         </button>
       </div>
+      {mensajeAlerta && (
+        <AlertaMensaje
+          tipo={mensajeAlerta.tipo}
+          mensaje={mensajeAlerta.mensaje}
+          onClose={() => setMensajeAlerta(null)}
+        />
+      )}
     </div>
   );
 };

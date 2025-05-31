@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
+import AlertaMensaje from "../AlertaMensaje/AlertaMensaje"; // Componente para mostrar alertas
 import "../../styles/ReservasModal.css";
 
 const FormularioReservaModal = ({ visible, onClose, onSuccess }) => {
@@ -13,6 +14,7 @@ const FormularioReservaModal = ({ visible, onClose, onSuccess }) => {
     horaSeleccionada: "",
   });
 
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
   const fechaHoy = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ const FormularioReservaModal = ({ visible, onClose, onSuccess }) => {
       onClose();
     } catch (err) {
       console.error("Error al crear reserva:", err);
-      alert("Hubo un error al crear la reserva.");
+      setMensajeAlerta({ tipo: "error", mensaje: "Hubo un error al crear la reserva" });
     }
   };
 
@@ -103,6 +105,13 @@ const FormularioReservaModal = ({ visible, onClose, onSuccess }) => {
           </div>
         </form>
       </div>
+       {mensajeAlerta && (
+              <AlertaMensaje
+                tipo={mensajeAlerta.tipo}
+                mensaje={mensajeAlerta.mensaje}
+                onClose={() => setMensajeAlerta(null)}
+              />
+            )}
     </div>
   );
 };

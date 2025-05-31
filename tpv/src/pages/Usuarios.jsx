@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import api from "../utils/api";
+import AlertaMensaje from "../components/AlertaMensaje/AlertaMensaje"; // Componente para mostrar alertas
 import "../styles/Usuarios.css";
 
 const CrearUsuario = () => {
@@ -11,6 +12,7 @@ const CrearUsuario = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
 
   // Validaciones
   const validateField = (name, value) => {
@@ -70,11 +72,11 @@ const CrearUsuario = () => {
         password: formData.contraseña,
         role: formData.role,
       });
-      alert("Usuario creado exitosamente.");
+      setMensajeAlerta({ tipo: "exito", mensaje: "Usuario creado exitosamente" });
       setFormData({ name: "", password: "", confirmPassword: "", role: "" });
     } catch (error) {
       console.error("Error al crear el usuario:", error);
-      alert("Hubo un error al crear el usuario.");
+      setMensajeAlerta({ tipo: "error", mensaje: "Error al crear el usuario" });
     } finally {
       setIsLoading(false);
     }
@@ -137,6 +139,13 @@ const CrearUsuario = () => {
           {isLoading ? "Creando..." : "Crear Usuario"}
         </button>
       </form>
+      {mensajeAlerta && (
+              <AlertaMensaje
+                tipo={mensajeAlerta.tipo}
+                mensaje={mensajeAlerta.mensaje}
+                onClose={() => setMensajeAlerta(null)}
+              />
+            )}
     </div>
   );
 };

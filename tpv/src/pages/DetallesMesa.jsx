@@ -32,9 +32,7 @@ const DetalleMesa = () => {
   const [showModal, setShowModal] = useState(false);
   const [mostrarFacturaModal, setMostrarFacturaModal] = useState(false);
   const [metodoPagoFactura, setMetodoPagoFactura] = useState(null);
-  const [mostrarModalConfirmacion, setMostrarModalConfirmacion] =
-    useState(false);
-  const [accionModal, setAccionModal] = useState(null);
+  useState(false);
   const [mostrarModalTransferir, setMostrarModalTransferir] = useState(false);
 
   // ⛔ AÑADE ESTO AQUÍ ANTES DEL RETURN
@@ -70,7 +68,7 @@ const DetalleMesa = () => {
                   setDatosFactura({ ...datosFactura, nif: e.target.value })
                 }
               />
-              <button onClick={() => emitirFactura()}>Emitir Factura</button>
+              <button onClick={() => emitirFactura(metodoPagoFactura)}>Emitir Factura</button>
               <button onClick={() => setMostrarFacturaModal(false)}>
                 Cancelar
               </button>

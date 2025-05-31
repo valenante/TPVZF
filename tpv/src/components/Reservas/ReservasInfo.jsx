@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import api from "../../utils/api";
 import "../../styles/ReservasInfo.css";
 import ReactCalendar from "react-calendar";
+import AlertaMensaje from "../AlertaMensaje/AlertaMensaje"; // Componente para mostrar alertas
 import "react-calendar/dist/Calendar.css";
 
 const ReservasInfo = () => {
@@ -11,6 +12,7 @@ const ReservasInfo = () => {
   );
   const [fechasConReservas, setFechasConReservas] = useState([]);
   const [mostrarCalendario, setMostrarCalendario] = useState(false);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
 
   const calendarioRef = useRef();
 
@@ -48,7 +50,8 @@ const ReservasInfo = () => {
 
   const cancelarReserva = async (id) => {
     const razon = window.prompt("Escribe el motivo de cancelación:");
-    if (!razon || razon.trim() === "") return alert("Cancelación abortada.");
+    if (!razon || razon.trim() === "") return setMensajeAlerta({ tipo: "error", mensaje: "Error al cancelar la reserva" });
+;
     try {
       await api.put(`/reservas/${id}/cancelar`, { razon });
       obtenerReservas(fechaSeleccionada);
@@ -165,6 +168,13 @@ const ReservasInfo = () => {
           </tbody>
         </table>
       )}
+       {mensajeAlerta && (
+              <AlertaMensaje
+                tipo={mensajeAlerta.tipo}
+                mensaje={mensajeAlerta.mensaje}
+                onClose={() => setMensajeAlerta(null)}
+              />
+            )}
     </div>
   );
 };

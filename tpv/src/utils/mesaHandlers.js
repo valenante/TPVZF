@@ -16,11 +16,7 @@ export const abrirMesaConModal = (mesa, setAccionModal, setMesaSeleccionada, set
     mensaje: `¿Cuántos comensales hay en la mesa ${mesa.numero}?`,
     placeholder: "Número de comensales",
     onConfirm: async (comensalesInput) => {
-      if (!comensalesInput || isNaN(comensalesInput) || Number(comensalesInput) <= 0) {
-        alert("Número de comensales inválido.");
-        return;
-      }
-
+      
       try {
         await api.put(`/mesas/mesas/${mesa._id}/abrir`, {
           comensales: Number(comensalesInput),

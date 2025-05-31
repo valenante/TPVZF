@@ -4,6 +4,7 @@ import { Trans } from "@lingui/react";
 import DOMPurify from "dompurify"; // Para sanitizar entradas de texto
 import api from "../utils/api"; // Configuración de Axios
 import { useMesas } from "../context/MesasContext"; // ✅ Importar el hook useMesas
+import AlertaMensaje from "../components/AlertaMensaje/AlertaMensaje"; // Componente para mostrar alertas
 import "../styles/Valoraciones.css"; // Archivo de estilos
 
 const Valoraciones = () => {
@@ -11,6 +12,7 @@ const Valoraciones = () => {
   const { mesaId } = useMesas(); // ✅ Acceder al ID de la mesa con useMesas
   const [valoraciones, setValoraciones] = useState([]);
   const [error, setError] = useState(null);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,7 +62,7 @@ const Valoraciones = () => {
     const comentarioSanitizado = DOMPurify.sanitize(comentario);
 
     if (comentarioSanitizado.length > 80) {
-      alert("El comentario no puede exceder los 80 caracteres.");
+      setMensajeAlerta({ tipo: "error", mensaje: "El comentario no puede exceder los 80 caracteres" });
       return;
     }
 
@@ -84,12 +86,12 @@ const Valoraciones = () => {
 
       await api.post(`/valoraciones?mesaId=${mesaId}`, valoracionesAEnviar);
 
-      alert("¡Gracias por tu valoración!");
+      setMensajeAlerta({ tipo: "exito", mensaje: "Gracias por sus valoraciones" });
       localStorage.clear();
       window.location.href = "https://www.google.com/search?client=safari&sca_esv=e6182da575e8b716&rls=en&sxsrf=AHTn8zqqgHqdZwmypsIJqc9la2CMPknULw:1739570436727&si=APYL9bs7Hg2KMLB-4tSoTdxuOx8BdRvHbByC_AuVpNyh0x2KzX5KKmkHLDdoPn7kYismFYbhKPchvUpAro8JFhU7uCggslmn8wuQxGhNj-JBF61qAnaIxihmVEG7vfCsKZRB89gYAR-NY-OZxafcF_nrV8K130Xwf3VoTmwAwoC0TcuNXfCM-tAp1Kt8tr2E_RRGxHp4_0LX&q=ZABOR+FETEN+-+Restaurante,+Bar+y+Tapas+en+Torremolinos+Rese%C3%B1as&sa=X&ved=2ahUKEwjHjMXvlMSLAxUR9LsIHSuEK7IQ0bkNegQILBAE&biw=1470&bih=840&dpr=2";
     } catch (error) {
       console.error("Error al enviar las valoraciones:", error);
-      alert("Hubo un problema al enviar las valoraciones. Intenta nuevamente.");
+      setMensajeAlerta({ tipo: "error", mensaje: "Hubo en error al enviar las valoraciones" });
     }
   };
 
@@ -144,6 +146,14 @@ const Valoraciones = () => {
             <Trans id="enviar-valoraciones">Enviar Valoraciones</Trans>
           </button>
         </form>
+
+      )}
+      {mensajeAlerta && (
+        <AlertaMensaje
+          tipo={mensajeAlerta.tipo}
+          mensaje={mensajeAlerta.mensaje}
+          onClose={() => setMensajeAlerta(null)}
+        />
       )}
     </div>
   );

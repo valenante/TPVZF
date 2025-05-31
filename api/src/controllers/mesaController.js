@@ -123,7 +123,6 @@ export const obtenerMesas = async (req, res) => {
 
 // Obtener una mesa activa por ID
 export const obtenerMesaPorId = async (req, res) => {
-  ('nanananannana');
   const { id } = req.params;
   try {
     const mesa = await Mesa.findById(id).populate('pedidos');
@@ -172,14 +171,15 @@ export const abrirMesaCamarero = async (req, res) => {
     res.status(500).json({ error: 'Error al reabrir la mesa' });
   }
 };
-
 export const cerrarMesa = async (req, res) => {
   const { id } = req.params;
   const { metodoPago, clienteNombre, clienteNIF } = req.body;
 
   try {
+    const ahora = new Date();
     let numeroFactura = null;
     let hashFactura = null;
+
     const mesa = await Mesa.findById(id)
       .populate({
         path: 'pedidos',
@@ -189,6 +189,10 @@ export const cerrarMesa = async (req, res) => {
         path: 'pedidosBebidas',
         populate: { path: 'productos.producto' },
       });
+
+    if (!mesa) {
+      return res.status(404).json({ error: 'Mesa no encontrada' });
+    }
 
     const { efectivo = 0, tarjeta = 0, propina = 0 } = metodoPago || {};
     const totalPagado = efectivo + tarjeta;
@@ -207,19 +211,24 @@ export const cerrarMesa = async (req, res) => {
       numero: mesa.numero,
       pedidos: mesa.pedidos.map((pedido) => pedido._id),
       pedidoBebidas: mesa.pedidosBebidas.map((pedido) => pedido._id),
-      total: mesa.total,
+      total: totalMesa,
       inicio: mesa.inicio,
-      cierre: new Date(),
+      cierre: ahora,
       comensales: mesa.comensales || 1,
-      metodoPago: { efectivo, tarjeta, propina: propinaCalculada, cambio: cambioCalculado },
+      metodoPago: {
+        efectivo,
+        tarjeta,
+        propina: propinaCalculada,
+        cambio: cambioCalculado,
+      },
       sesionActiva: mesa.sesionActiva,
     });
 
     await mesaCerrada.save();
 
-    const hoy = new Date();
-    const inicioDelDia = new Date(hoy.setHours(0, 0, 0, 0));
-    const finDelDia = new Date(hoy.setHours(23, 59, 59, 999));
+    const inicioDelDia = new Date(ahora.setHours(0, 0, 0, 0));
+    const finDelDia = new Date(ahora.setHours(23, 59, 59, 999));
+
     const caja = await Caja.findOne({
       fechaApertura: { $gte: inicioDelDia, $lte: finDelDia },
       estado: 'abierta',
@@ -243,28 +252,18 @@ export const cerrarMesa = async (req, res) => {
       const nuevaCaja = new Caja({
         total: totalMesa,
         detallesMetodoPago: { efectivo, tarjeta, propina: propinaCalculada },
-        operaciones: [{ tipo: 'cierre', monto: totalMesa, razon: `Cierre de la mesa número ${mesa.numero}` }],
+        operaciones: [{
+          tipo: 'cierre',
+          monto: totalMesa,
+          razon: `Cierre de la mesa número ${mesa.numero}`,
+        }],
       });
       await nuevaCaja.save();
     }
 
     numeroFactura = await obtenerNumeroFactura();
-    hashFactura = await registrarFacturaConHash({
-      numeroFactura,
-      fechaExpedicion: new Date(),
-      clienteNombre: clienteNombre || 'Consumidor Final',
-      clienteNIF: clienteNIF || 'N/A',
-      productos: mesa.pedidos.flatMap((pedido) =>
-        pedido.productos.map((p) => ({
-          nombre: p.producto.nombre || 'Producto desconocido',
-          cantidad: p.cantidad,
-          precio: p.precioSeleccionado || 0,
-        }))
-      ),
-      importeTotal: mesa.total,
-    });
 
-    const productos = mesa.pedidos.flatMap((pedido) =>
+    const productosPlatos = mesa.pedidos.flatMap((pedido) =>
       pedido.productos.map((p) => ({
         nombre: p.producto.nombre || 'Producto desconocido',
         cantidad: p.cantidad,
@@ -280,15 +279,24 @@ export const cerrarMesa = async (req, res) => {
       }))
     );
 
-    productos.push(...productosBebidas);
+    const productos = [...productosPlatos, ...productosBebidas];
+
+    hashFactura = await registrarFacturaConHash({
+      numeroFactura,
+      fechaExpedicion: ahora,
+      clienteNombre: clienteNombre || 'Consumidor Final',
+      clienteNIF: clienteNIF || 'N/A',
+      productos,
+      importeTotal: totalMesa,
+    });
 
     const eventoFactura = new EventoFactura({
       tipoEvento: 'creación',
-      numeroFactura: numeroFactura,
+      numeroFactura,
       clienteNombre: clienteNombre || 'Consumidor Final',
       clienteNIF: clienteNIF || 'N/A',
       motivo: 'Generación de la factura al cierre de la mesa',
-      importeTotal: mesa.total,
+      importeTotal: totalMesa,
       hashFactura: hashFactura.hash,
       facturaOriginalId: null,
       facturaRectificativaId: null,
@@ -296,11 +304,10 @@ export const cerrarMesa = async (req, res) => {
 
     await eventoFactura.save();
 
-    // ✅ Cerrar la sesión activa de la mesa si existe
     const sesionActiva = await SesionMesa.findOne({ mesa: mesa._id, estado: 'activa' });
     if (sesionActiva) {
       sesionActiva.estado = 'cerrada';
-      sesionActiva.cierre = new Date();
+      sesionActiva.cierre = ahora;
       await sesionActiva.save();
     }
 
@@ -317,25 +324,24 @@ export const cerrarMesa = async (req, res) => {
       }
     );
 
-    // ✅ Devolver datos de impresión al Frontend
     res.status(200).json({
       message: 'Mesa cerrada con éxito',
       mesaCerrada,
       propina: propinaCalculada,
       cambio: cambioCalculado,
       facturaEmitida: !!hashFactura,
-      numeroFactura: numeroFactura,
+      numeroFactura,
       hashFactura: hashFactura?.hash || null,
-      fechaExpedicion: new Date().toISOString(),
+      fechaExpedicion: ahora.toISOString(),
       datosImpresion: {
         mesaNumero: mesa.numero,
         comensales: mesa.comensales || 1,
         clienteNombre: clienteNombre || 'Consumidor Final',
         clienteNIF: clienteNIF || 'N/A',
         numeroFactura,
-        fechaExpedicion: new Date().toISOString(),
+        fechaExpedicion: ahora.toISOString(),
         productos,
-        total: mesa.total,
+        total: totalMesa,
         hash: hashFactura.hash,
       },
     });

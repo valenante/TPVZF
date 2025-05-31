@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { i18n } from "@lingui/core";  // Importa i18n
 import { useComensal } from "../../context/ComensalesContext"; // Contexto para manejar comensales
 import { LanguageContext } from "../../context/LanguageContext"; // Contexto para cambiar el idioma
+import AlertaMensaje from "../../components/AlertaMensaje/AlertaMensaje"; // Componente para mostrar alertas
 import api from "../../utils/api";
 import './PreMenu.css'
 
@@ -19,6 +20,7 @@ const PreMenu = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [esLider, setEsLider] = useState(false);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
 
   const { locale, cambiarIdioma } = useContext(LanguageContext); // Obtén el contexto de idioma
   const mesa = searchParams.get("mesa");
@@ -31,7 +33,7 @@ const PreMenu = () => {
         setEsLider(!tokenLider); // Si no hay tokenLider, el usuario será el líder
       } catch (error) {
         console.error("Error al verificar el tokenLider:", error);
-        alert("No se pudo verificar la mesa.");
+      setMensajeAlerta({ tipo: "error", mensaje: "No se pudo verificar la mesa" });
         navigate("/");
       }
     };
@@ -152,7 +154,7 @@ const PreMenu = () => {
       navigate(`/carta?mesa=${mesa}`);
     } catch (error) {
       console.error("❌ Error al procesar la solicitud:", error);
-      alert("Hubo un error al procesar tu solicitud. Intenta nuevamente.");
+      setMensajeAlerta({ tipo: "error", mensaje: "Hubo un error al procesar la solicitud." });
     } finally {
       setIsLoading(false);
     }

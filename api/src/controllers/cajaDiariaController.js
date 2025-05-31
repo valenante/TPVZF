@@ -1,155 +1,129 @@
 import CajaDiaria from '../models/CajaDiaria.js';
 
-// Obtener todos los registros de caja diaria
+// Obtener todos los registros, ordenados por fecha descendente
 export const getCajaDiaria = async (req, res) => {
   try {
-    const registros = await CajaDiaria.find().sort({ fecha: -1 }); // Ordenar por fecha descendente
+    const registros = await CajaDiaria.find().sort({ fecha: -1 });
     res.status(200).json(registros);
   } catch (error) {
-    console.error('Error al obtener los registros de caja diaria:', error);
-    res
-      .status(500)
-      .json({ error: 'Error al obtener los registros de caja diaria.' });
+    console.error('❌ Error al obtener registros de caja diaria:', error);
+    res.status(500).json({ error: 'Error al obtener los registros de caja diaria.' });
   }
 };
 
-// Obtener un registro de caja diaria por ID
+// Obtener un registro por ID
 export const getCajaDiariaById = async (req, res) => {
   const { id } = req.params;
   try {
     const registro = await CajaDiaria.findById(id);
     if (!registro) {
-      return res
-        .status(404)
-        .json({ error: 'Registro de caja diaria no encontrado.' });
+      return res.status(404).json({ error: 'Registro no encontrado.' });
     }
     res.status(200).json(registro);
   } catch (error) {
-    console.error('Error al obtener el registro de caja diaria:', error);
-    res
-      .status(500)
-      .json({ error: 'Error al obtener el registro de caja diaria.' });
+    console.error('❌ Error al obtener registro por ID:', error);
+    res.status(500).json({ error: 'Error al obtener el registro de caja diaria.' });
   }
 };
 
-// Crear un nuevo registro de caja diaria
+// Crear un nuevo registro (si no existe ya uno con la misma fecha)
 export const createCajaDiaria = async (req, res) => {
-  const { fecha, ingresos, egresos, saldoInicial, saldoFinal } = req.body;
+  const { fecha, ingresos = 0, egresos = 0, saldoInicial = 0, saldoFinal } = req.body;
 
   try {
-    // Verificar si ya existe un registro para la fecha
-    const registroExistente = await CajaDiaria.findOne({ fecha });
-    if (registroExistente) {
-      return res
-        .status(400)
-        .json({ error: 'Ya existe un registro para esta fecha.' });
+    const existe = await CajaDiaria.findOne({ fecha });
+    if (existe) {
+      return res.status(400).json({ error: 'Ya existe un registro para esta fecha.' });
     }
 
-    // Crear un nuevo registro de caja diaria
     const nuevoRegistro = new CajaDiaria({
       fecha,
-      ingresos: ingresos || 0,
-      egresos: egresos || 0,
-      saldoInicial: saldoInicial || 0,
-      saldoFinal: saldoFinal || saldoInicial + (ingresos || 0) - (egresos || 0),
+      ingresos,
+      egresos,
+      saldoInicial,
+      saldoFinal: saldoFinal ?? saldoInicial + ingresos - egresos,
     });
 
     await nuevoRegistro.save();
 
     res.status(201).json({
-      message: 'Registro de caja diaria creado con éxito.',
+      message: 'Registro creado con éxito.',
       registro: nuevoRegistro,
     });
   } catch (error) {
-    console.error('Error al crear el registro de caja diaria:', error);
-    res
-      .status(400)
-      .json({ error: 'Error al crear el registro de caja diaria.' });
+    console.error('❌ Error al crear registro de caja diaria:', error);
+    res.status(400).json({ error: 'Error al crear el registro.' });
   }
 };
 
-// Actualizar un registro de caja diaria por ID
+// Actualizar un registro por ID
 export const updateCajaDiaria = async (req, res) => {
   const { id } = req.params;
   const { ingresos, egresos, saldoInicial, saldoFinal } = req.body;
 
   try {
     const registro = await CajaDiaria.findById(id);
-
     if (!registro) {
-      return res
-        .status(404)
-        .json({ error: 'Registro de caja diaria no encontrado.' });
+      return res.status(404).json({ error: 'Registro no encontrado.' });
     }
 
-    // Actualizar los campos permitidos
     if (ingresos !== undefined) registro.ingresos += ingresos;
     if (egresos !== undefined) registro.egresos += egresos;
     if (saldoInicial !== undefined) registro.saldoInicial = saldoInicial;
-    registro.saldoFinal =
-      saldoFinal ||
-      registro.saldoInicial + registro.ingresos - registro.egresos;
+
+    registro.saldoFinal = saldoFinal ?? (registro.saldoInicial + registro.ingresos - registro.egresos);
 
     await registro.save();
 
     res.status(200).json({
-      message: 'Registro de caja diaria actualizado con éxito.',
+      message: 'Registro actualizado con éxito.',
       registro,
     });
   } catch (error) {
-    console.error('Error al actualizar el registro de caja diaria:', error);
-    res
-      .status(400)
-      .json({ error: 'Error al actualizar el registro de caja diaria.' });
+    console.error('❌ Error al actualizar registro de caja diaria:', error);
+    res.status(400).json({ error: 'Error al actualizar el registro.' });
   }
 };
 
-// Eliminar un registro de caja diaria por ID
+// Eliminar un registro por ID
 export const deleteCajaDiaria = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const registroEliminado = await CajaDiaria.findByIdAndDelete(id);
-
-    if (!registroEliminado) {
-      return res
-        .status(404)
-        .json({ error: 'Registro de caja diaria no encontrado.' });
+    const eliminado = await CajaDiaria.findByIdAndDelete(id);
+    if (!eliminado) {
+      return res.status(404).json({ error: 'Registro no encontrado.' });
     }
 
     res.status(200).json({
-      message: 'Registro de caja diaria eliminado con éxito.',
-      registro: registroEliminado,
+      message: 'Registro eliminado con éxito.',
+      registro: eliminado,
     });
   } catch (error) {
-    console.error('Error al eliminar el registro de caja diaria:', error);
-    res
-      .status(500)
-      .json({ error: 'Error al eliminar el registro de caja diaria.' });
+    console.error('❌ Error al eliminar registro de caja diaria:', error);
+    res.status(500).json({ error: 'Error al eliminar el registro.' });
   }
 };
 
+// Obtener registros por rango de fechas
 export const obtenerCajasPorRango = async (req, res) => {
   const { fechaInicio, fechaFin } = req.query;
 
-  try {
-    // Verifica que las fechas estén presentes
-    if (!fechaInicio || !fechaFin) {
-      return res
-        .status(400)
-        .json({ error: 'Debe proporcionar un rango de fechas.' });
-    }
+  if (!fechaInicio || !fechaFin) {
+    return res.status(400).json({ error: 'Debe proporcionar un rango de fechas.' });
+  }
 
-    // Consulta las cajas en el rango de fechas
+  try {
     const cajas = await CajaDiaria.find({
       fecha: {
         $gte: new Date(fechaInicio),
         $lte: new Date(fechaFin),
       },
-    }).sort({ fecha: 1 }); // Ordena por fecha ascendente
+    }).sort({ fecha: 1 });
+
     res.status(200).json(cajas);
   } catch (error) {
-    console.error('Error al obtener cajas:', error);
+    console.error('❌ Error al obtener cajas por rango:', error);
     res.status(500).json({ error: 'Error al obtener cajas.' });
   }
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../../utils/api";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import AlertaMensaje from "../AlertaMensaje/AlertaMensaje"; // Componente para mostrar alertas
 import "../../styles/ConfiguracionReservas.css";
 
 const ConfiguracionReservas = () => {
@@ -10,6 +11,8 @@ const ConfiguracionReservas = () => {
     { horaInicio: "19:30", horaFin: "24:00", maxReservas: 15 },
   ]);
   const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
+  
 
   const [diasHabilitados, setDiasHabilitados] = useState({
     domingo: true,
@@ -76,10 +79,10 @@ const ConfiguracionReservas = () => {
 
       await api.put("/disponibilidad", diasHabilitados);
 
-      alert("Configuración y disponibilidad guardadas correctamente.");
+      setMensajeAlerta({ tipo: "exito", mensaje: "Configuración y disponibilidad guardadas correctamente" });
     } catch (err) {
       console.error("Error al guardar:", err);
-      alert("Hubo un error al guardar la configuración.");
+      setMensajeAlerta({ tipo: "error", mensaje: "Error al guardar la configuración" });
     }
   };
 
@@ -167,6 +170,13 @@ const ConfiguracionReservas = () => {
       </div>
 
       <button onClick={guardarConfiguracion}>💾 Guardar configuración</button>
+       {mensajeAlerta && (
+              <AlertaMensaje
+                tipo={mensajeAlerta.tipo}
+                mensaje={mensajeAlerta.mensaje}
+                onClose={() => setMensajeAlerta(null)}
+              />
+            )}
     </div>
   );
 };

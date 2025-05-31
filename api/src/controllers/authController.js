@@ -12,9 +12,10 @@ const generarAccessToken = (user) => {
   );
 };
 
+// Generar refresh token
 const generarRefreshToken = (user) => {
   return jwt.sign(
-    { id: user._id, name: user.name, role: user.role }, // ✅ Incluir `role`
+    { id: user._id, name: user.name, role: user.role },
     process.env.JWT_REFRESH_SECRET,
     { expiresIn: '7d' }
   );
@@ -28,19 +29,13 @@ export const renovarToken = async (req, res) => {
   }
 
   try {
-    // Verificar si el token está en la lista negra
     const tokenRevocado = await TokenRevocado.findOne({ token: refreshToken });
     if (tokenRevocado) {
-      return res
-        .status(403)
-        .json({ error: 'Este refresh token ha sido revocado.' });
+      return res.status(403).json({ error: 'Este refresh token ha sido revocado.' });
     }
 
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-
-    // Generar un nuevo access token
     const user = { id: decoded.id, role: decoded.role, name: decoded.name };
-
     const newAccessToken = generarAccessToken(user);
 
     res.status(200).json({ accessToken: newAccessToken });
@@ -55,7 +50,6 @@ export const renovarToken = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  // Obtener el token del cuerpo de la solicitud o de las cookies
   const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
 
   if (!refreshToken) {
@@ -65,45 +59,35 @@ export const logout = async (req, res) => {
   }
 
   try {
-    // Verificar si el token es válido
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
-    // Crear un registro en la base de datos para revocar el token
     const tokenRevocado = new TokenRevocado({
       token: refreshToken,
-      expiracion: new Date(decoded.exp * 1000), // Convertir la expiración a milisegundos
+      expiracion: new Date(decoded.exp * 1000),
     });
 
-    await tokenRevocado.save(); // Guardar en la base de datos
+    await tokenRevocado.save();
 
-    // Limpiar la cookie en el cliente
     res.clearCookie('refreshToken', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
-      sameSite: 'Strict', // Protección CSRF
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
     });
 
     res.status(200).json({ message: 'Cierre de sesión exitoso.' });
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
       console.error('Token inválido:', error.message);
-      return res
-        .status(401)
-        .json({ error: 'El token proporcionado es inválido.' });
+      return res.status(401).json({ error: 'El token proporcionado es inválido.' });
     }
 
     if (error.name === 'TokenExpiredError') {
-      console.warn(
-        'Intento de cerrar sesión con un token expirado:',
-        error.message
-      );
+      console.warn('Intento de cerrar sesión con un token expirado:', error.message);
       return res.status(401).json({ error: 'El token ya ha expirado.' });
     }
 
     console.error('Error inesperado al cerrar sesión:', error);
-    res
-      .status(500)
-      .json({ error: 'Ocurrió un error inesperado al cerrar sesión.' });
+    res.status(500).json({ error: 'Ocurrió un error inesperado al cerrar sesión.' });
   }
 };
 
@@ -111,23 +95,19 @@ export const registro = async (req, res) => {
   const { name, password, role } = req.body;
 
   try {
-    // Crear el usuario
     const nuevoUsuario = new User({ name, password, role });
     await nuevoUsuario.save();
 
-    // Generar tokens
     const accessToken = generarAccessToken(nuevoUsuario);
     const refreshToken = generarRefreshToken(nuevoUsuario);
 
-    // Configurar cookie con el refresh token
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true, // Proteger la cookie contra acceso del cliente (JavaScript)
-      secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
-      sameSite: 'Strict', // Asegura que solo se envíe con solicitudes del mismo sitio
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días en milisegundos
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    // Respuesta al cliente
     res.status(201).json({
       message: 'Usuario registrado exitosamente',
       user: {
@@ -135,7 +115,7 @@ export const registro = async (req, res) => {
         name: nuevoUsuario.name,
         role: nuevoUsuario.role,
       },
-      accessToken, // Devuelve el access token en el cuerpo de la respuesta
+      accessToken,
     });
   } catch (error) {
     console.error('Error al registrar el usuario:', error);
@@ -150,13 +130,10 @@ export const login = async (req, res) => {
     const user = await User.findOne({ name });
     if (!user) {
       req.session.failedAttempts = (req.session.failedAttempts || 0) + 1;
-      await req.session.save(); // Guardar la sesión después de modificarla
-      return res
-        .status(404)
-        .json({ error: 'Usuario o contraseña incorrectos.' });
+      await req.session.save();
+      return res.status(404).json({ error: 'Usuario o contraseña incorrectos.' });
     }
 
-    // Verifica si la cuenta está bloqueada
     if (user.isBlocked) {
       const timeLeft = Math.ceil((user.blockedUntil - Date.now()) / 60000);
       return res.status(403).json({
@@ -170,40 +147,32 @@ export const login = async (req, res) => {
 
       if (req.session.failedAttempts >= 5) {
         user.isBlocked = true;
-        user.blockedUntil = new Date(Date.now() + 15 * 60 * 1000); // Bloqueo de 15 minutos
+        user.blockedUntil = new Date(Date.now() + 15 * 60 * 1000);
         await user.save();
-        await req.session.save(); // Guardar la sesión después de bloquear la cuenta
-        return res
-          .status(403)
-          .json({ error: 'Cuenta bloqueada por múltiples intentos fallidos.' });
+        await req.session.save();
+        return res.status(403).json({ error: 'Cuenta bloqueada por múltiples intentos fallidos.' });
       }
 
-      await req.session.save(); // Guardar la sesión después de incrementar intentos fallidos
-      return res
-        .status(401)
-        .json({ error: 'Usuario o contraseña incorrectos.' });
+      await req.session.save();
+      return res.status(401).json({ error: 'Usuario o contraseña incorrectos.' });
     }
 
-    // Restablece el contador de intentos fallidos en sesión
     req.session.failedAttempts = 0;
-
-    // Establecer información adicional en la sesión
     req.session.user = {
       id: user._id,
       name: user.name,
       role: user.role,
     };
 
-    await req.session.save(); // Guardar la sesión después de configurarla
+    await req.session.save();
 
-    // Generar tokens
     const accessToken = generarAccessToken(user);
     const refreshToken = generarRefreshToken(user);
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Solo funciona con HTTPS
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // ✅ permite cookies cross-site si es necesario
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -217,10 +186,7 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(
-      '[ERROR] Fallo en el inicio de sesión:',
-      error.message || error
-    );
+    console.error('[ERROR] Fallo en el inicio de sesión:', error.message || error);
     return res.status(500).json({
       error: 'No se pudo completar el inicio de sesión. Intenta más tarde.',
     });
@@ -228,14 +194,11 @@ export const login = async (req, res) => {
 };
 
 export const obtenerUsuario = async (req, res) => {
-  'Sesión:', req.session;
   try {
-    // ✅ Verifica si el usuario está en la sesión
     if (!req.session.user) {
       return res.status(401).json({ error: 'No autorizado. Inicia sesión.' });
     }
 
-    // ✅ Devuelve los datos del usuario autenticado
     return res.status(200).json({ user: req.session.user });
   } catch (error) {
     console.error('❌ Error al obtener usuario:', error);
@@ -244,36 +207,27 @@ export const obtenerUsuario = async (req, res) => {
 };
 
 export const protegerRuta = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del encabezado
+  const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
     warn('Intento de acceso no autorizado: Token no proporcionado');
-    return res
-      .status(401)
-      .json({ error: 'Acceso no autorizado. Se requiere un token válido.' });
+    return res.status(401).json({ error: 'Acceso no autorizado. Se requiere un token válido.' });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verificar token
-    req.user = decoded; // Guardar los datos del usuario en req.user
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
       warn('Intento de acceso con token expirado');
-      return res.status(401).json({
-        error: 'El token ha expirado. Por favor, inicia sesión nuevamente.',
-      });
+      return res.status(401).json({ error: 'El token ha expirado. Por favor, inicia sesión nuevamente.' });
     }
     if (error.name === 'JsonWebTokenError') {
       warn('Intento de acceso con token inválido');
-      return res.status(401).json({
-        error: 'Token inválido. Por favor, verifica tu autenticación.',
-      });
+      return res.status(401).json({ error: 'Token inválido. Por favor, verifica tu autenticación.' });
     }
-    error(`Error desconocido al verificar el token: ${error.message}`);
-    return res
-      .status(500)
-      .json({ error: 'Ocurrió un error al procesar la autenticación.' });
+    console.error(`Error desconocido al verificar el token: ${error.message}`);
+    return res.status(500).json({ error: 'Ocurrió un error al procesar la autenticación.' });
   }
 };
