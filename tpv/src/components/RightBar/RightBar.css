@@ -1,11 +1,3 @@
-/* Estilo general */
-:root {
-  --font-size-normal: 1.2rem;
-  --font-size-large: 1.4rem;
-  --font-weight-normal: 400;
-  --font-weight-bold: 600;
-}
-
 /* Contenedor principal del RightBar */
 .right-bar--rightbar {
   background-color: #F5F5F5;
@@ -275,13 +267,6 @@
 
 /* Media Query para pantallas pequeñas */
 @media (max-width: 768px) {
-  :root {
-    --font-size-normal: 1.2rem;
-    --font-size-large: 1.4rem;
-    --font-weight-normal: 400;
-    --font-weight-bold: 800;
-  }
-
   /* Contenedor principal del RightBar */
   .right-bar--rightbar {
     background-color: #ffffff;
